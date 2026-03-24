@@ -1,0 +1,233 @@
+{
+  "_comment": "Configuración de contenido de la landing page — versión ES. Estructurado por bloques de UI para facilitar i18n, CMS y componentización.",
+
+  "demo": {
+    "_comment": "Configuraciones globales de idioma y entorno de demostración.",
+    "lang": "Español"
+  },
+
+  "hero": {
+    "_comment": "Sección principal (above the fold). Contiene propuesta de valor, headline modular y CTAs primarios.",
+    "badge": "Génesis",
+    "title": "Mundo Digital",
+    "title_bridge": "El Ecosistema",
+    "title_highlight": "Interplanetario",
+    "description": "El puente definitivo entre el mundo físico y el digital. Infraestructura basada en blockchain que conecta RWA con DeFi e IA sobre una red descentralizada y sin fronteras.",
+    "buttons": {
+      "_comment": "CTAs primarios de la parte superior de la página.",
+      "whitepaper": "Whitepaper",
+      "ecossistema": "Ecosistema"
+    }
+  },
+
+  "ecosystem": {
+    "_comment": "Sección de presentación de la arquitectura del ecosistema. Estructurada en pilares tecnológicos y operativos.",
+    "badge": "Ecosistema",
+    "title": "Infraestructura",
+    "title_bridge": "Digital de",
+    "title_highlight": "Nueva Generación",
+    "description": "Arquitecturas seguras e interoperables diseñadas para escalar la gobernanza técnica, la eficiencia operativa y el impacto económico en la era Web3.",
+
+    "items": {
+      "_comment": "Pilares del ecosistema mostrados como tarjetas o cuadrícula.",
+      "tech": {
+        "title": "Tecnología de Base",
+        "description": "Blockchain, IA y protocolos Web3 aplicados a la digitalización y seguridad de procesos críticos."
+      },
+      "gov": {
+        "title": "Gobernanza Digital",
+        "description": "Identidad soberana, credenciales verificables y trazabilidad total on-chain."
+      },
+      "business": {
+        "title": "Innovación y Eficiencia",
+        "description": "Arquitectura escalable orientada a la viabilidad económica y optimización de activos."
+      },
+      "rwa": {
+        "title": "Activos Digitales (RWA)",
+        "description": "Tokenización de activos reales conectando la liquidez de DeFi con el valor del mundo físico."
+      }
+    },
+
+    "cta": {
+      "_comment": "CTA secundario de la sección de ecosistema.",
+      "label": "Explorar Ecosistema",
+      "target": "ecosystem"
+    }
+  },
+
+  "integrations": {
+    "_comment": "Sección de telemetría y conectividad global. Muestra métricas en tiempo real de la red, blockchain e infraestructura.",
+    "badge": "Conectividad",
+    "title": "Sistema de",
+    "title_bridge": "Red y Activos",
+    "title_highlight": "Global",
+
+    "panels": {
+      "_comment": "Paneles visuales estilo dashboard.",
+      "chain": {
+        "title": "ESTADO_DE_LA_CHAIN",
+        "label": "BLOCKCHAIN_LEDGER"
+      },
+      "power": {
+        "title": "PODER_DE_CÁLCULO",
+        "label": "BLOCKCHAIN_MINING"
+      },
+      "network": {
+        "title": "CONSOLA_DE_RED",
+        "label": "NETWORK_TRAFFIC"
+      },
+      "latency": {
+        "title": "LATENCIA_GLOBAL",
+        "label": "NETWORK_TOPOLOGY"
+      }
+    },
+
+    "metrics": {
+      "_comment": "Métricas mostradas dentro de los paneles.",
+      "block": "ÚLTIMO BLOQUE",
+      "consensus": "CONSENSO",
+      "hashrate": "HASH_RATE",
+      "tps": "TPS_ACTUAL",
+      "traffic": "TRÁFICO",
+      "key": "CLAVE",
+      "ping": "PING_MEDIO",
+      "downstream": "DOWNSTREAM"
+    }
+  },
+
+  "community": {
+    "_comment": "Sección de capital social, gobernanza y escala de activos bajo gestión.",
+    "badge": "Comunidad",
+    "title": "Potencial de",
+    "title_bridge": "Mercado y",
+    "title_highlight": "Escalabilidad",
+    "description": "ASPPIBRA-DAO provee infraestructura para la gestión de activos de alto valor, como cadenas de café agroecológico, garantizando seguridad jurídica y liquidez on-chain mediante gobernanza descentralizada.",
+
+    "metrics": {
+      "_comment": "Indicadores de escala del ecosistema. Ideal para datos dinámicos.",
+      "members": "Network Stewards",
+      "area": "Hectáreas Gestionadas",
+      "aum": "Activos Bajo Soberanía"
+    },
+
+    "hub": {
+      "_comment": "Bloque institucional de sinergia e integración de socios.",
+      "title": "Sinergia de Red",
+      "description": "Gobernanza que integra corporaciones, cooperativas y productores en un ecosistema de liquidez global orientado a la valorización de activos reales tangibles."
+    },
+
+    "buttons": {
+      "_comment": "Claves sincronizadas con las llamadas t() del componente HomeCommunity.",
+      "governance": "Acceder a Gobernanza",
+      "data": "Datos On-chain"
+    }
+  },
+
+  "team": {
+    "_comment": "Sección de presentación del equipo y consejo de la DAO.",
+    "badge": "Equipo",
+    "title": "Uniendo",
+    "title_bridge": "Experiencia e",
+    "title_highlight": "Innovación",
+    "description": "El equipo de ASPPIBRA-DAO combina décadas de experiencia en agroecología con especialistas en tecnología blockchain y gobernanza institucional para transformar el sector rural.",
+    "button": "Ver Todos los Miembros"
+  },
+  
+  "news": {
+    "_comment": "Sección de blog y actualizaciones del ecosistema.",
+    "badge": "Últimas Noticias",
+    "title": "Novedades",
+    "title_bridge": "y",
+    "title_highlight": "Actualizaciones",
+    "description": "Mantente al tanto de las novedades, anuncios técnicos y análisis estratégicos del ecosistema ASPPIBRA-DAO.",
+    "button_view_all": "Ver Todo",
+    "posts": {
+      "post1": {
+        "category": "Nuevas Funciones",
+        "title": "Lanzamiento de DEX V2: Más Rápida y Segura",
+        "description": "Mejoramos nuestra infraestructura para garantizar liquidez descentralizada y auditabilidad total on-chain."
+      },
+      "post2": {
+        "category": "Alianza",
+        "title": "Alianza Estratégica: Agroecología y Web3",
+        "description": "Integramos a productores de café agroecológico en nuestro ecosistema de activos reales (RWA) vía blockchain."
+      },
+      "post3": {
+        "category": "Análisis",
+        "title": "El Futuro de los Activos Reales y la Gobernanza",
+        "description": "Cómo ASPPIBRA-DAO utiliza la gobernanza institucional para gestionar activos tangibles con seguridad jurídica."
+      }
+    }
+  },
+
+  "roadmap": {
+    "_comment": "Cronograma estratégico de evolución de ASPPIBRA-DAO.",
+    "badge": "Roadmap",
+    "title": "Hoja de Ruta de",
+    "title_bridge": "Nuestro",
+    "title_highlight": "Proyecto",
+    "description": "Nuestra jornada está guiada por la transparencia y el compromiso de llevar al productor rural al centro de la nueva economía digital a través de la Web3.",
+    "phases": {
+      "p1": {
+        "label": "Fase 01",
+        "time": "Q1-Q2 2024",
+        "title": "Fundación y Compliance",
+        "description": "Establecimiento de la estructura jurídica de la DAO, gobernanza institucional y registro oficial (CAR) de los primeros productores rurales."
+      },
+      "p2": {
+        "label": "Fase 02",
+        "time": "Q3-Q4 2024",
+        "title": "Tokenización RWA (MVP)",
+        "description": "Lanzamiento del Identity Provider (IdP) soberano y primera tokenización de activos reales enfocada en la producción de café agroecológico."
+      },
+      "p3": {
+        "label": "Fase 03",
+        "time": "Q1-Q2 2025",
+        "title": "Escala y Listado en Binance",
+        "description": "Expansión del ecosistema de crédito agrícola vía IA y sumisión del proceso de listado del token en exchanges globales."
+      },
+      "p4": {
+        "label": "Fase 04",
+        "time": "2025+",
+        "title": "Ecosistema Global Agro",
+        "description": "Integración plena de activos RWA internacionales y red global de agroecología sustentada por la infraestructura ASPPIBRA-DAO."
+      }
+    }
+  },  
+
+  "faqs": {
+    "_comment": "Bloque de preguntas frecuentes. Estructura compatible con componentes accordion.",
+    "title": "FAQs",
+    "heading": "Tenemos las",
+    "heading_highlight": "Respuestas",
+
+    "items": [
+      {
+        "question": "¿Cómo puedo obtener actualizaciones sobre el proyecto?",
+        "answer": "Las actualizaciones sobre la gobernanza de la DAO y la tokenización RWA se publican en nuestros canales oficiales de Discord y Telegram."
+      },
+      {
+        "question": "¿Cuál es el papel de ASPPIBRA-DAO en la agroecología?",
+        "answer": "Actuamos en la digitalización de procesos y trazabilidad para productores rurales, como las cadenas de café agroecológico en Paraty, promoviendo la transparencia y valorización del producto."
+      },
+      {
+        "question": "¿El proyecto cuenta con cumplimiento jurídico?",
+        "answer": "Sí. La Fase 01 de la hoja de ruta establece la estructura jurídica y el cumplimiento institucional para garantizar la seguridad regulatoria y operativa."
+      },
+      {
+        "question": "¿Cómo funciona la seguridad de los activos?",
+        "answer": "La seguridad se basa en contratos inteligentes auditables, garantizando inmutabilidad, transparencia y soberanía en las transacciones de activos tokenizados."
+      }
+    ]
+  },
+
+  "cta": {
+    "_comment": "Banner de cierre (CTA Final) antes del footer.",
+    "badge": "Próximo Paso",
+    "title": "¿Listo para",
+    "title_bridge": "Comenzar a",
+    "title_highlight": "Evolucionar?",
+    "description": "Únete a la revolución de los activos reales. Explora nuestra gobernanza, sigue la liquidez on-chain y forma parte de un ecosistema de impacto global.",
+    "button": "Explorar Ahora"
+  }
+}

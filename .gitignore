@@ -1,0 +1,117 @@
+# --- DEPENDÊNCIAS & GESTÃO DE PACOTES ---
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+jspm_packages/
+package-lock.json
+yarn.lock
+bun.lockb
+
+# --- NEXT.JS, REACT & BUILDS ---
+.next/
+out/
+build/
+dist/
+.turbo/
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# --- AMBIENTE E SEGURANÇA (CRÍTICO - PROTEÇÃO CONTRA VAZAMENTOS) ---
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+*.env
+*.env.bak
+.vault
+.secrets
+secrets.json
+
+# --- CHAVES E CERTIFICADOS (WEB3/RWA SAFETY) ---
+*.pem
+*.key
+*.pub
+*.cert
+*.pfx
+*.p12
+*.crt
+.ssh/
+auth.json
+# Bloqueia arquivos comuns de carteiras e mnemonics acidentais
+*secret*
+*mnemonic*
+*seed*
+*.wallet
+wallet.json
+
+# --- VERCEL & CLOUD INFRA ---
+.vercel
+.amplify/
+.serverless/
+.terraform/
+*.tfstate*
+
+# --- LOGS, DEBUG & PERFORMANCE ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+access.log
+error.log
+logs/
+*.cpuprofile
+*.heapprofile
+
+# --- TESTES & QUALIDADE (CYPRESS, PLAYWRIGHT, JEST) ---
+coverage/
+.nyc_output/
+cypress/videos/
+cypress/screenshots/
+test-results/
+playwright-report/
+blob-report/
+playwright/.local-browsers
+
+# --- FERRAMENTAS DE DESIGN & ASSETS ---
+.expo/
+*.sketch
+*.fig
+*.psd
+*.ai
+# Evita subir assets temporários de auditoria de imagem
+scripts/temp/
+image-auditor-results/
+
+# --- SISTEMA OPERACIONAL & EDITORES ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editores (VSCode, IntelliJ, Sublime)
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
+*.iws
+*.iml
+*.ipr
+.project
+.settings/
+.classpath
+
+# --- TYPESCRIPT & COMPILAÇÃO ---
+*.tsbuildinfo
+next-env.d.ts
+# Se você gera tipos automaticamente, às vezes é melhor ignorar os temporários
+# src/types/generated/

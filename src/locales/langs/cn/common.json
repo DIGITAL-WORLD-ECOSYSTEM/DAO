@@ -1,0 +1,233 @@
+{
+  "_comment": "登陆页面内容配置 — 中文版本。按 UI 模块结构化，以利于国际化 (i18n)、CMS 和组件化。",
+
+  "demo": {
+    "_comment": "语言和演示环境的全局设置。",
+    "lang": "简体中文"
+  },
+
+  "hero": {
+    "_comment": "主视觉区域（首屏）。包含价值主张、模块化标题和主要 CTA。",
+    "badge": "创世阶段",
+    "title": "数字世界",
+    "title_bridge": "构建",
+    "title_highlight": "星际生态",
+    "description": "连接物理世界与数字世界的终极桥梁。基于区块链的基础设施，通过去中心化且无国界的网络，将真实世界资产 (RWA)、DeFi 与人工智能 (AI) 完美结合。",
+    "buttons": {
+      "_comment": "页面顶部的核心 CTA。",
+      "whitepaper": "白皮书",
+      "ecossistema": "生态系统"
+    }
+  },
+
+  "ecosystem": {
+    "_comment": "生态系统架构展示部分。按技术和运营支柱结构化。",
+    "badge": "生态系统",
+    "title": "基础设施",
+    "title_bridge": "下一代",
+    "title_highlight": "数字化",
+    "description": "安全且可互操作的架构，旨在 Web3 时代扩展技术治理、运营效率和经济影响。",
+
+    "items": {
+      "_comment": "以卡片或网格形式显示的生态系统支柱。",
+      "tech": {
+        "title": "底层技术",
+        "description": "应用于关键流程数字化和安全的区块链、AI 和 Web3 协议。"
+      },
+      "gov": {
+        "title": "数字治理",
+        "description": "自主身份、可验证凭证和全流程链上溯源。"
+      },
+      "business": {
+        "title": "创新与效率",
+        "description": "以经济可行性和资产优化为导向的可扩展架构。"
+      },
+      "rwa": {
+        "title": "数字资产 (RWA)",
+        "description": "现实世界资产代币化，将 DeFi 流动性与物理世界价值相连。"
+      }
+    },
+
+    "cta": {
+      "_comment": "生态系统部分的次要 CTA。",
+      "label": "探索生态系统",
+      "target": "ecosystem"
+    }
+  },
+
+  "integrations": {
+    "_comment": "遥测和全球连接部分。显示网络、区块链和基础设施的实时指标。",
+    "badge": "互联互通",
+    "title": "系统",
+    "title_bridge": "网络与资产",
+    "title_highlight": "全球化",
+
+    "panels": {
+      "_comment": "仪表盘风格的视觉面板。",
+      "chain": {
+        "title": "链状态",
+        "label": "区块链账本"
+      },
+      "power": {
+        "title": "算力",
+        "label": "区块链挖矿"
+      },
+      "network": {
+        "title": "网络控制台",
+        "label": "网络流量"
+      },
+      "latency": {
+        "title": "全球延迟",
+        "label": "网络拓扑"
+      }
+    },
+
+    "metrics": {
+      "_comment": "面板内显示的指标。",
+      "block": "最新区块",
+      "consensus": "共识机制",
+      "hashrate": "哈希率",
+      "tps": "实时 TPS",
+      "traffic": "流量",
+      "key": "密钥",
+      "ping": "平均延迟",
+      "downstream": "下行速度"
+    }
+  },
+
+  "community": {
+    "_comment": "社会资本、治理和管理资产规模部分。",
+    "badge": "社区",
+    "title": "市场潜力",
+    "title_bridge": "与",
+    "title_highlight": "可扩展性",
+    "description": "ASPPIBRA-DAO 为高价值资产管理（如生态咖啡产业链）提供基础设施，通过去中心化治理确保法律安全和链上流动性。",
+
+    "metrics": {
+      "_comment": "生态系统规模指标。适用于动态数据。",
+      "members": "网络管理员",
+      "area": "管理公顷数",
+      "aum": "主权管理资产"
+    },
+
+    "hub": {
+      "_comment": "合作伙伴协同与整合的制度模块。",
+      "title": "网络协同",
+      "description": "整合企业、合作社和生产者的治理体系，构建以有形资产增值为导向的全球流动性生态系统。"
+    },
+
+    "buttons": {
+      "_comment": "与 HomeCommunity 组件的 t() 调用同步的键。",
+      "governance": "访问治理",
+      "data": "链上数据"
+    }
+  },
+
+  "team": {
+    "_comment": "DAO 团队和委员会介绍部分。",
+    "badge": "团队",
+    "title": "凝聚",
+    "title_bridge": "专业与",
+    "title_highlight": "创新",
+    "description": "ASPPIBRA-DAO 团队结合了数十年的生态农业经验与区块链技术及制度治理专家，致力于变革农村部门。",
+    "button": "查看所有成员"
+  },
+  
+  "news": {
+    "_comment": "博客和生态系统更新部分。",
+    "badge": "最新动态",
+    "title": "新闻",
+    "title_bridge": "与",
+    "title_highlight": "更新",
+    "description": "随时了解 ASPPIBRA-DAO 生态系统的最新资讯、技术公告和战略分析。",
+    "button_view_all": "查看全部",
+    "posts": {
+      "post1": {
+        "category": "新功能",
+        "title": "DEX V2 上线：更快速、更安全",
+        "description": "我们改进了基础设施，以确保去中心化流动性和全链上可审计性。"
+      },
+      "post2": {
+        "category": "合作伙伴",
+        "title": "战略合作：生态农业与 Web3",
+        "description": "通过区块链将生态咖啡生产者整合到我们的现实资产 (RWA) 生态中。"
+      },
+      "post3": {
+        "category": "深度分析",
+        "title": "现实资产的未来与治理",
+        "description": "ASPPIBRA-DAO 如何利用制度治理在法律合规下管理有形资产。"
+      }
+    }
+  },
+
+  "roadmap": {
+    "_comment": "ASPPIBRA-DAO 演进战略路线图。",
+    "badge": "路线图",
+    "title": "项目",
+    "title_bridge": "我们的",
+    "title_highlight": "规划",
+    "description": "我们的旅程以透明度为指引，致力于通过 Web3 将农村生产者带入新数字经济的核心。",
+    "phases": {
+      "p1": {
+        "label": "第一阶段",
+        "time": "2024 Q1-Q2",
+        "title": "基金会与合规",
+        "description": "建立 DAO 的法律结构、制度治理以及首批农村生产者的官方注册 (CAR)。"
+      },
+      "p2": {
+        "label": "第二阶段",
+        "time": "2024 Q3-Q4",
+        "title": "RWA 代币化 (MVP)",
+        "description": "推出主权身份提供商 (IdP)，并启动以生态咖啡生产为核心的首个现实资产代币化项目。"
+      },
+      "p3": {
+        "label": "第三阶段",
+        "time": "2025 Q1-Q2",
+        "title": "扩展与币安上市",
+        "description": "通过 AI 扩展农业信贷生态系统，并提交代币在全球交易所的上市流程。"
+      },
+      "p4": {
+        "label": "第四阶段",
+        "time": "2025+",
+        "title": "全球农业生态",
+        "description": "全面整合国际 RWA 资产，构建由 ASPPIBRA-DAO 基础设施支撑的全球可持续农业网络。"
+      }
+    }
+  },  
+
+  "faqs": {
+    "_comment": "常见问题模块。结构兼容折叠组件。",
+    "title": "常见问题",
+    "heading": "为您",
+    "heading_highlight": "解答",
+
+    "items": [
+      {
+        "question": "如何获取项目更新？",
+        "answer": "有关 DAO 治理和 RWA 代币化的更新将发布在我们的 Discord 和 Telegram 官方频道。"
+      },
+      {
+        "question": "ASPPIBRA-DAO 在生态农业中扮演什么角色？",
+        "answer": "我们致力于为农村生产者（如帕拉蒂的生态咖啡链）提供流程数字化和溯源服务，提升产品的透明度与价值。"
+      },
+      {
+        "question": "项目是否符合法律监管？",
+        "answer": "是的。路线图的第一阶段即确立了法律框架和制度合规，以确保监管和运营安全。"
+      },
+      {
+        "question": "资产安全性如何保障？",
+        "answer": "安全性基于可审计的智能合约，确保代币化资产交易的不可篡改性、透明度和主权。"
+      }
+    ]
+  },
+
+  "cta": {
+    "_comment": "页脚前的结束横幅（最终 CTA）。",
+    "badge": "下一步",
+    "title": "准备好",
+    "title_bridge": "开启",
+    "title_highlight": "进化了吗？",
+    "description": "加入现实资产革命。探索我们的治理，跟踪链上流动性，成为全球影响力生态系统的一部分。",
+    "button": "立即探索"
+  }
+}

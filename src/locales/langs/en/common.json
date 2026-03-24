@@ -1,0 +1,233 @@
+{
+  "_comment": "Landing page content configuration — EN version. Structured by UI blocks to facilitate i18n, CMS, and componentization.",
+
+  "demo": {
+    "_comment": "Global language and demo environment settings.",
+    "lang": "English"
+  },
+
+  "hero": {
+    "_comment": "Main section (above the fold). Contains value proposition, modular headline, and primary CTAs.",
+    "badge": "Genesis",
+    "title": "Digital World",
+    "title_bridge": "The Interplanetary",
+    "title_highlight": "Ecosystem",
+    "description": "The definitive bridge between the physical and digital worlds. Blockchain-based infrastructure connecting RWA to DeFi with AI over a decentralized and borderless network.",
+    "buttons": {
+      "_comment": "Primary CTAs at the top of the page.",
+      "whitepaper": "Whitepaper",
+      "ecossistema": "Ecosystem"
+    }
+  },
+
+  "ecosystem": {
+    "_comment": "Ecosystem architecture presentation section. Structured into technological and operational pillars.",
+    "badge": "Ecosystem",
+    "title": "Next-Gen",
+    "title_bridge": "Digital",
+    "title_highlight": "Infrastructure",
+    "description": "Secure and interoperable architectures designed to scale technical governance, operational efficiency, and economic impact in the Web3 era.",
+
+    "items": {
+      "_comment": "Ecosystem pillars displayed as cards or grid.",
+      "tech": {
+        "title": "Core Technology",
+        "description": "Blockchain, AI, and Web3 protocols applied to the digitalization and security of critical processes."
+      },
+      "gov": {
+        "title": "Digital Governance",
+        "description": "Self-sovereign identity, verifiable credentials, and full on-chain traceability."
+      },
+      "business": {
+        "title": "Innovation & Efficiency",
+        "description": "Scalable architecture oriented towards economic viability and asset optimization."
+      },
+      "rwa": {
+        "title": "Digital Assets (RWA)",
+        "description": "Real-world asset tokenization connecting DeFi liquidity to physical world value."
+      }
+    },
+
+    "cta": {
+      "_comment": "Secondary CTA for the ecosystem section.",
+      "label": "Explore Ecosystem",
+      "target": "ecosystem"
+    }
+  },
+
+  "integrations": {
+    "_comment": "Telemetry and global connectivity section. Displays real-time network, blockchain, and infrastructure metrics.",
+    "badge": "Connectivity",
+    "title": "Global",
+    "title_bridge": "Network & Asset",
+    "title_highlight": "System",
+
+    "panels": {
+      "_comment": "Dashboard-style visual panels.",
+      "chain": {
+        "title": "CHAIN_STATE",
+        "label": "BLOCKCHAIN_LEDGER"
+      },
+      "power": {
+        "title": "COMPUTING_POWER",
+        "label": "BLOCKCHAIN_MINING"
+      },
+      "network": {
+        "title": "NETWORK_CONSOLE",
+        "label": "NETWORK_TRAFFIC"
+      },
+      "latency": {
+        "title": "GLOBAL_LATENCY",
+        "label": "NETWORK_TOPOLOGY"
+      }
+    },
+
+    "metrics": {
+      "_comment": "Metrics displayed within the panels.",
+      "block": "LAST BLOCK",
+      "consensus": "CONSENSUS",
+      "hashrate": "HASH_RATE",
+      "tps": "CURRENT_TPS",
+      "traffic": "TRAFFIC",
+      "key": "KEY",
+      "ping": "AVG_PING",
+      "downstream": "DOWNSTREAM"
+    }
+  },
+
+  "community": {
+    "_comment": "Social capital, governance, and assets under management scale section.",
+    "badge": "Community",
+    "title": "Market Potential",
+    "title_bridge": "&",
+    "title_highlight": "Scalability",
+    "description": "ASPPIBRA-DAO provides infrastructure for high-value asset management, such as agroecological coffee chains, ensuring legal certainty and on-chain liquidity through decentralized governance.",
+
+    "metrics": {
+      "_comment": "Ecosystem scale indicators. Ideal for dynamic data.",
+      "members": "Network Stewards",
+      "area": "Managed Hectares",
+      "aum": "Assets Under Sovereignty"
+    },
+
+    "hub": {
+      "_comment": "Institutional block for synergy and partner integration.",
+      "title": "Network Synergy",
+      "description": "Governance that integrates corporations, cooperatives, and producers into a global liquidity ecosystem oriented toward the valuation of tangible real assets."
+    },
+
+    "buttons": {
+      "_comment": "Keys synchronized with t() calls from the HomeCommunity component.",
+      "governance": "Access Governance",
+      "data": "On-chain Data"
+    }
+  },
+
+  "team": {
+    "_comment": "Section for team presentation and DAO council.",
+    "badge": "Team",
+    "title": "Uniting",
+    "title_bridge": "Expertise &",
+    "title_highlight": "Innovation",
+    "description": "The ASPPIBRA-DAO team combines decades of experience in agroecology with experts in blockchain technology and institutional governance to transform the rural sector.",
+    "button": "View All Members"
+  },
+  
+  "news": {
+    "_comment": "Blog and ecosystem updates section.",
+    "badge": "Latest News",
+    "title": "News",
+    "title_bridge": "&",
+    "title_highlight": "Updates",
+    "description": "Stay up to date with news, technical announcements, and strategic analysis from the ASPPIBRA-DAO ecosystem.",
+    "button_view_all": "View All",
+    "posts": {
+      "post1": {
+        "category": "New Features",
+        "title": "DEX V2 Launch: Faster and More Secure",
+        "description": "We have enhanced our infrastructure to ensure decentralized liquidity and full on-chain auditability."
+      },
+      "post2": {
+        "category": "Partnership",
+        "title": "Strategic Partnership: Agroecology and Web3",
+        "description": "Integrating agroecological coffee producers into our Real World Asset (RWA) ecosystem via blockchain."
+      },
+      "post3": {
+        "category": "Analysis",
+        "title": "The Future of Real Assets and Governance",
+        "description": "How ASPPIBRA-DAO uses institutional governance to manage tangible assets with legal certainty."
+      }
+    }
+  },
+
+  "roadmap": {
+    "_comment": "Strategic evolution timeline of ASPPIBRA-DAO.",
+    "badge": "Roadmap",
+    "title": "Our",
+    "title_bridge": "Project",
+    "title_highlight": "Timeline",
+    "description": "Our journey is guided by transparency and a commitment to bringing the rural producer to the center of the new digital economy through Web3.",
+    "phases": {
+      "p1": {
+        "label": "Phase 01",
+        "time": "Q1-Q2 2024",
+        "title": "Foundation & Compliance",
+        "description": "Establishment of the DAO's legal structure, institutional governance, and official registration (CAR) of the first rural producers."
+      },
+      "p2": {
+        "label": "Phase 02",
+        "time": "Q3-Q4 2024",
+        "title": "RWA Tokenization (MVP)",
+        "description": "Launch of the sovereign Identity Provider (IdP) and first tokenization of real assets focused on agroecological coffee production."
+      },
+      "p3": {
+        "label": "Phase 03",
+        "time": "Q1-Q2 2025",
+        "title": "Scale & Binance Listing",
+        "description": "Expansion of the agricultural credit ecosystem via AI and submission of the token listing process to global exchanges."
+      },
+      "p4": {
+        "label": "Phase 04",
+        "time": "2025+",
+        "title": "Global Agro Ecosystem",
+        "description": "Full integration of international RWA assets and a global agroecology network sustained by the ASPPIBRA-DAO infrastructure."
+      }
+    }
+  },  
+
+  "faqs": {
+    "_comment": "Frequently asked questions block. Compatible with accordion components.",
+    "title": "FAQs",
+    "heading": "We Have the",
+    "heading_highlight": "Answers",
+
+    "items": [
+      {
+        "question": "How can I get updates about the project?",
+        "answer": "Updates on DAO governance and RWA tokenization are published on our official Discord and Telegram channels."
+      },
+      {
+        "question": "What is the role of ASPPIBRA-DAO in agroecology?",
+        "answer": "We act in the digitalization of processes and traceability for rural producers, such as agroecological coffee chains in Paraty, promoting transparency and product valuation."
+      },
+      {
+        "question": "Does the project have legal compliance?",
+        "answer": "Yes. Phase 01 of the roadmap establishes the legal structure and institutional compliance to ensure regulatory and operational security."
+      },
+      {
+        "question": "How does asset security work?",
+        "answer": "Security is based on auditable smart contracts, ensuring immutability, transparency, and sovereignty of tokenized asset transactions."
+      }
+    ]
+  },
+
+  "cta": {
+    "_comment": "Closing banner (Final CTA) before the footer.",
+    "badge": "Next Step",
+    "title": "Ready to",
+    "title_bridge": "Start",
+    "title_highlight": "Evolving?",
+    "description": "Join the real asset revolution. Explore our governance, track on-chain liquidity, and become part of a global impact ecosystem.",
+    "button": "Explore Now"
+  }
+}

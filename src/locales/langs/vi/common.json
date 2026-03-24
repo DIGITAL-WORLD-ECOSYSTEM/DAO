@@ -1,0 +1,233 @@
+{
+  "_comment": "Cấu hình nội dung trang landing page — phiên bản VI. Được cấu trúc theo các khối giao diện để hỗ trợ i18n, CMS và đóng gói thành phần.",
+
+  "demo": {
+    "_comment": "Cài đặt toàn cầu về ngôn ngữ và môi trường thử nghiệm.",
+    "lang": "Tiếng Việt"
+  },
+
+  "hero": {
+    "_comment": "Phần chính (above the fold). Chứa tuyên bố giá trị, tiêu đề mô-đun và các CTA chính.",
+    "badge": "Gênesis",
+    "title": "Thế giới Số",
+    "title_bridge": "Hệ sinh thái",
+    "title_highlight": "Liên hành tinh",
+    "description": "Cầu nối tối thượng giữa thế giới vật lý và kỹ thuật số. Cơ sở hạ tầng dựa trên blockchain kết nối RWA với DeFi bằng AI trên một mạng lưới phi tập trung không biên giới.",
+    "buttons": {
+      "_comment": "Các nút kêu gọi hành động (CTA) chính ở đầu trang.",
+      "whitepaper": "Sách trắng",
+      "ecossistema": "Hệ sinh thái"
+    }
+  },
+
+  "ecosystem": {
+    "_comment": "Phần giới thiệu kiến trúc hệ sinh thái. Cấu trúc theo các trụ cột công nghệ và vận hành.",
+    "badge": "Hệ sinh thái",
+    "title": "Cơ sở hạ tầng",
+    "title_bridge": "Kỹ thuật số",
+    "title_highlight": "Thế hệ mới",
+    "description": "Kiến trúc an toàn và có khả năng tương tác được thiết kế để mở rộng quản trị kỹ thuật, hiệu quả vận hành và tác động kinh tế trong kỷ nguyên Web3.",
+
+    "items": {
+      "_comment": "Các trụ cột của hệ sinh thái hiển thị dưới dạng thẻ hoặc lưới.",
+      "tech": {
+        "title": "Công nghệ nền tảng",
+        "description": "Blockchain, AI và các giao thức Web3 được ứng dụng vào số hóa và bảo mật các quy trình trọng yếu."
+      },
+      "gov": {
+        "title": "Quản trị kỹ thuật số",
+        "description": "Định danh tự chủ, chứng chỉ có thể xác minh và khả năng truy xuất nguồn gốc toàn diện on-chain."
+      },
+      "business": {
+        "title": "Đổi mới & Hiệu quả",
+        "description": "Kiến trúc có khả năng mở rộng hướng tới tính khả thi kinh tế và tối ưu hóa tài sản."
+      },
+      "rwa": {
+        "title": "Tài sản số (RWA)",
+        "description": "Mã hóa tài sản thực (tokenization), kết nối thanh khoản DeFi với giá trị của thế giới vật lý."
+      }
+    },
+
+    "cta": {
+      "_comment": "CTA phụ của phần hệ sinh thái.",
+      "label": "Khám phá hệ sinh thái",
+      "target": "ecosystem"
+    }
+  },
+
+  "integrations": {
+    "_comment": "Phần đo lường từ xa và kết nối toàn cầu. Hiển thị các chỉ số thời gian thực của mạng lưới, blockchain và hạ tầng.",
+    "badge": "Kết nối",
+    "title": "Hệ thống",
+    "title_bridge": "Mạng lưới và Tài sản",
+    "title_highlight": "Toàn cầu",
+
+    "panels": {
+      "_comment": "Các bảng điều khiển trực quan dạng dashboard.",
+      "chain": {
+        "title": "TRẠNG_THÁI_CHAIN",
+        "label": "SỔ_CÁI_BLOCKCHAIN"
+      },
+      "power": {
+        "title": "NĂNG_LỰC_TÍNH_TOÁN",
+        "label": "KHAI_THÁC_BLOCKCHAIN"
+      },
+      "network": {
+        "title": "BẢNG_ĐIỀU_KHIỂN_MẠNG",
+        "label": "LƯU_LƯỢNG_MẠNG"
+      },
+      "latency": {
+        "title": "ĐỘ_TRỄ_TOÀN_CẦU",
+        "label": "CẤU_TRÚC_MẠNG"
+      }
+    },
+
+    "metrics": {
+      "_comment": "Các chỉ số hiển thị trong bảng điều khiển.",
+      "block": "KHỐI MỚI NHẤT",
+      "consensus": "ĐỒNG THUẬN",
+      "hashrate": "TỶ LỆ BĂM",
+      "tps": "TPS HIỆN TẠI",
+      "traffic": "LƯU LƯỢNG",
+      "key": "KHÓA",
+      "ping": "PING TRUNG BÌNH",
+      "downstream": "DOWNSTREAM"
+    }
+  },
+
+  "community": {
+    "_comment": "Phần vốn xã hội, quản trị và quy mô tài sản đang quản lý.",
+    "badge": "Cộng đồng",
+    "title": "Tiềm năng",
+    "title_bridge": "Thị trường &",
+    "title_highlight": "Khả năng mở rộng",
+    "description": "ASPPIBRA-DAO cung cấp cơ sở hạ tầng để quản lý tài sản giá trị cao, chẳng hạn như chuỗi cà phê nông nghiệp sinh thái, đảm bảo tính pháp lý và thanh khoản on-chain thông qua quản trị phi tập trung.",
+
+    "metrics": {
+      "_comment": "Các chỉ số quy mô hệ sinh thái. Lý tưởng cho dữ liệu động.",
+      "members": "Người điều hành mạng lưới",
+      "area": "Héc-ta được quản lý",
+      "aum": "Tài sản thuộc chủ quyền"
+    },
+
+    "hub": {
+      "_comment": "Khối thể chế về sự cộng hưởng và tích hợp đối tác.",
+      "title": "Cộng hưởng mạng lưới",
+      "description": "Quản trị tích hợp các tập đoàn, hợp tác xã và nhà sản xuất vào một hệ sinh thái thanh khoản toàn cầu hướng tới giá trị của các tài sản thực hữu hình."
+    },
+
+    "buttons": {
+      "_comment": "Các khóa đồng bộ với hàm gọi t() của thành phần HomeCommunity.",
+      "governance": "Truy cập Quản trị",
+      "data": "Dữ liệu On-chain"
+    }
+  },
+
+  "team": {
+    "_comment": "Phần giới thiệu đội ngũ và hội đồng DAO.",
+    "badge": "Đội ngũ",
+    "title": "Kết hợp",
+    "title_bridge": "Chuyên môn &",
+    "title_highlight": "Đổi mới",
+    "description": "Đội ngũ ASPPIBRA-DAO kết hợp hàng thập kỷ kinh nghiệm trong nông nghiệp sinh thái với các chuyên gia về công nghệ blockchain và quản trị thể chế để chuyển đổi khu vực nông thôn.",
+    "button": "Xem tất cả thành viên"
+  },
+  
+  "news": {
+    "_comment": "Phần blog và cập nhật hệ sinh thái.",
+    "badge": "Tin tức mới nhất",
+    "title": "Tin tức",
+    "title_bridge": "&",
+    "title_highlight": "Cập nhật",
+    "description": "Cập nhật những tin tức mới nhất, thông báo kỹ thuật và phân tích chiến lược từ hệ sinh thái ASPPIBRA-DAO.",
+    "button_view_all": "Xem tất cả",
+    "posts": {
+      "post1": {
+        "category": "Tính năng mới",
+        "title": "Ra mắt DEX V2: Nhanh hơn và An toàn hơn",
+        "description": "Chúng tôi đã cải thiện cơ sở hạ tầng để đảm bảo tính thanh khoản phi tập trung và khả năng kiểm toán toàn diện on-chain."
+      },
+      "post2": {
+        "category": "Đối tác",
+        "title": "Đối tác chiến lược: Nông nghiệp sinh thái và Web3",
+        "description": "Chúng tôi tích hợp các nhà sản xuất cà phê nông nghiệp sinh thái vào hệ sinh thái tài sản thực (RWA) thông qua blockchain."
+      },
+      "post3": {
+        "category": "Phân tích",
+        "title": "Tương lai của tài sản thực và Quản trị",
+        "description": "Cách ASPPIBRA-DAO sử dụng quản trị thể chế để quản lý tài sản hữu hình với sự đảm bảo về pháp lý."
+      }
+    }
+  },
+
+  "roadmap": {
+    "_comment": "Lộ trình chiến lược phát triển của ASPPIBRA-DAO.",
+    "badge": "Lộ trình",
+    "title": "Lộ trình",
+    "title_bridge": "Của",
+    "title_highlight": "Dự án",
+    "description": "Hành trình của chúng tôi được dẫn dắt bởi sự minh bạch và cam kết đưa người nông dân vào trung tâm của nền kinh tế số mới thông qua Web3.",
+    "phases": {
+      "p1": {
+        "label": "Giai đoạn 01",
+        "time": "Quý 1-Quý 2 2024",
+        "title": "Nền tảng & Tuân thủ",
+        "description": "Thiết lập cấu trúc pháp lý của DAO, quản trị thể chế và đăng ký chính thức (CAR) cho những nhà sản xuất nông thôn đầu tiên."
+      },
+      "p2": {
+        "label": "Giai đoạn 02",
+        "time": "Quý 3-Quý 4 2024",
+        "title": "Mã hóa RWA (MVP)",
+        "description": "Ra mắt Nhà cung cấp danh tính (IdP) tự chủ và đợt mã hóa tài sản thực đầu tiên tập trung vào sản xuất cà phê nông nghiệp sinh thái."
+      },
+      "p3": {
+        "label": "Giai đoạn 03",
+        "time": "Quý 1-Quý 2 2025",
+        "title": "Mở rộng & Niêm yết Binance",
+        "description": "Mở rộng hệ sinh thái tín dụng nông nghiệp thông qua AI và nộp hồ sơ niêm yết token trên các sàn giao dịch toàn cầu."
+      },
+      "p4": {
+        "label": "Giai đoạn 04",
+        "time": "2025+",
+        "title": "Hệ sinh thái Nông nghiệp Toàn cầu",
+        "description": "Tích hợp toàn diện các tài sản RWA quốc tế và mạng lưới nông nghiệp sinh thái toàn cầu được hỗ trợ bởi hạ tầng ASPPIBRA-DAO."
+      }
+    }
+  },  
+
+  "faqs": {
+    "_comment": "Khối các câu hỏi thường gặp. Cấu trúc tương thích với các thành phần accordion.",
+    "title": "FAQs",
+    "heading": "Chúng tôi có các",
+    "heading_highlight": "Câu trả lời",
+
+    "items": [
+      {
+        "question": "Làm thế nào để tôi nhận được cập nhật về dự án?",
+        "answer": "Các cập nhật về quản trị DAO và mã hóa RWA được công bố trên các kênh chính thức của chúng tôi tại Discord và Telegram."
+      },
+      {
+        "question": "Vai trò của ASPPIBRA-DAO trong nông nghiệp sinh thái là gì?",
+        "answer": "Chúng tôi hoạt động trong việc số hóa các quy trình và truy xuất nguồn gốc cho các nhà sản xuất nông thôn, chẳng hạn như chuỗi cà phê nông nghiệp sinh thái tại Paraty, thúc đẩy tính minh bạch và nâng cao giá trị sản phẩm."
+      },
+      {
+        "question": "Dự án có tuân thủ pháp lý không?",
+        "answer": "Có. Giai đoạn 01 của lộ trình thiết lập cấu trúc pháp lý và tuân thủ thể chế để đảm bảo an toàn về quy định và vận hành."
+      },
+      {
+        "question": "Cơ chế bảo mật tài sản hoạt động như thế nào?",
+        "answer": "Bảo mật dựa trên các hợp đồng thông minh có thể kiểm chứng, đảm bảo tính bất biến, minh bạch và chủ quyền của các giao dịch tài sản đã được mã hóa."
+      }
+    ]
+  },
+
+  "cta": {
+    "_comment": "Biểu ngữ kết thúc (CTA cuối cùng) trước footer.",
+    "badge": "Bước tiếp theo",
+    "title": "Sẵn sàng để",
+    "title_bridge": "Bắt đầu",
+    "title_highlight": "Phát triển?",
+    "description": "Hãy tham gia cuộc cách mạng tài sản thực. Khám phá quản trị của chúng tôi, theo dõi thanh khoản on-chain và trở thành một phần của hệ sinh thái tác động toàn cầu.",
+    "button": "Khám phá ngay"
+  }
+}
