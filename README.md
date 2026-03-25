@@ -183,21 +183,21 @@ SocialFi/
         │   ├── favicon.ico                      # ✅ OK
         │   ├── logo/                            # ✅ OK (icons Android/Chrome)
         │   │
-        │   ├── llms.txt                         # 🆕 [CRIAR] Diretrizes para agentes de IA
-        │   ├── ai-policy.txt                    # 🆕 [CRIAR] Permissões de scraping e treino
-        │   ├── humans.txt                       # 🆕 [CRIAR] Autoria técnica
-        │   ├── security.txt                     # 🆕 [CRIAR] RFC 9116
-        │   ├── ads.txt                          # 🆕 [CRIAR] Transparência de monetização
-        │
-        │   ├── .well-known/                     # 🆕 [CRIAR] Padronização web moderna
-        │   │   ├── ai-plugin.json               # 🆕 integração futura com agentes
-        │   │   ├── assetlinks.json              # 🆕 associação de apps/mobile
+        │   ├── llms.txt                         # ✅ OK (Diretrizes IA)
+        │   ├── ai-policy.txt                    # ✅ OK (Políticas IA/Scraping)
+        │   ├── humans.txt                       # ✅ OK (Autoria técnica)
+        │   ├── security.txt                     # ✅ OK (Segurança/RFC 9116)
+        │   ├── ads.txt                          # ✅ OK (Transparência/Ads)
         │   │
-        │   ├── schemas/                         # 🆕 JSON-LD estáticos
-        │   │   ├── organization.json            # 🆕 entidade institucional
-        │   │   ├── website.json                 # 🆕 WebSite + SearchAction
-        │   │   ├── product.json                 # 🆕 ativos tokenizados
-        │   │   ├── breadcrumb.json              # 🆕 navegação semântica base
+        │   ├── .well-known/                     # ✅ OK (Padronização web moderna)
+        │   │   ├── ai-plugin.json               # ✅ OK (Integração de agentes)
+        │   │   └── assetlinks.json              # ✅ OK (Associação mobile)
+        │   │
+        │   ├── schemas/                         # ✅ OK (JSON-LD estáticos)
+        │   │   ├── organization.json            # ✅ OK (Institucional)
+        │   │   ├── website.json                 # ✅ OK (Busca/SearchAction)
+        │   │   ├── product.json                 # ✅ OK (Base de tokens)
+        │   │   └── breadcrumb.json              # ✅ OK (Navegação estruturada)
         │   │
         │   └── rss.xml                          # 🆕 feed global
         │

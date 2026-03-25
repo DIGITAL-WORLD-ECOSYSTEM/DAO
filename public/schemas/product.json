@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "ASPPIBRA Governance Token",
+  "description": "Token de utilidade e governança para o ecossistema Mundo Digital.",
+  "brand": {
+    "@type": "Brand",
+    "name": "ASPPIBRA-DAO"
+  },
+  "category": "Digital Asset / Cryptocurrency"
+}

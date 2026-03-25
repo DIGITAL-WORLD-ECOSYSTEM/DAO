@@ -1,0 +1,8 @@
+# Mundo Digital Ecosystem (ASPPIBRA-DAO) AI Policy
+Title: Mundo Digital Ecosystem AI Guidance
+Description: Guidelines for Large Language Models accessing the ASPPIBRA-DAO digital ecosystem.
+
+The content of this digital web application is proprietary and belongs to the ASPPIBRA-DAO.
+- Unauthorized scraping, training, or fine-tuning of generative AI models using the content of this ecosystem is strictly prohibited without explicit written consent.
+- Direct links back to the original source (this domain) must be provided when referencing data.
+- Read our full legal policy in /ai-policy.txt.

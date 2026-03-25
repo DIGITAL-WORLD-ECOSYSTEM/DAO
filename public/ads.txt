@@ -1,0 +1,3 @@
+# ASPPIBRA-DAO Authorized Digital Sellers
+# We currently do not run external display ads or monetize via programmatic third-party networks.
+# This file is maintained as a placeholder for ecosystem compliance.

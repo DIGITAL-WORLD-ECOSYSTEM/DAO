@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "ASPPIBRADAO",
+  "name_for_human": "Mundo Digital DAO Ecosystem",
+  "description_for_model": "Plugin for accessing public DAO proposals, tokenomics, and Web3 blog content from the ASPPIBRA-DAO ecosystem.",
+  "description_for_human": "Explore the Mundo Digital DAO ecosystem and RWA bridging.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://asppibra-dao.org/openapi.yaml"
+  },
+  "logo_url": "https://asppibra-dao.org/logo/logo-512x512.png",
+  "contact_email": "support@asppibra-dao.org",
+  "legal_info_url": "https://asppibra-dao.org/legal/terms"
+}

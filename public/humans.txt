@@ -1,0 +1,10 @@
+/* TEAM */
+  DAO: ASPPIBRA-DAO (Mundo Digital)
+  Role: Connect RWA to DeFi using AI
+  Contact: contact@asppibra-dao.org
+  Location: Interplanetary & Decentralized
+
+/* SITE */
+  Last update: 2026/03/25
+  Language: Portuguese (BR)
+  Tech Stack: Next.js 16, React 19, TypeScript, MUI, Zod

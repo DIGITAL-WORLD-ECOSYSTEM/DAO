@@ -1,0 +1,13 @@
+AI AND DATA SCRAPING POLICY
+===========================
+
+Last Updated: March 2026
+
+1. PROHIBITED USES:
+The ASPPIBRA-DAO expressly prohibits the use of its data, text, images, code, and smart-contract ABIs published on this domain for the purposes of training, fine-tuning, or developing Artificial Intelligence (AI) models, including but not limited to Large Language Models (LLMs), without prior written authorization.
+
+2. BOT ACCESS:
+Crawling by search engine bots (Googlebot, Bingbot) for standard web indexing is permitted as per the /robots.txt directives. Scraping bots designed to mass-harvest data for AI corporative databases (e.g., GPTBot, CCBot, Anthropic-ai) are strictly forbidden.
+
+3. CONTACT:
+To request a commercial data licensing agreement, contact: legal@asppibra-dao.org.
