@@ -209,11 +209,11 @@ SocialFi/
         │   │   └── _categories.ts               # 🆕 categorias
         │
         │   ├── lib/
-        │   │   └── seo/                         # 🆕 lógica reutilizável
-        │   │       ├── metadata.ts              # 🆕 generateMetadata helpers
-        │   │       ├── schema.ts                # 🆕 geradores JSON-LD
-        │   │       ├── openGraph.ts             # 🆕 configs OG base
-        │   │       └── robots.ts                # 🆕 regras centralizadas
+        │   │   └── seo/                         # ✅ OK (lógica reutilizável)
+        │   │       ├── metadata.ts              # ✅ OK (generateMetadata helpers)
+        │   │       ├── schema.ts                # ✅ OK (geradores JSON-LD)
+        │   │       ├── openGraph.ts             # ✅ OK (configs OG base)
+        │   │       └── robots.ts                # ✅ OK (regras centralizadas)
         │
         │   ├── actions/                         # ✅ SSR / prerender
         │
@@ -221,12 +221,12 @@ SocialFi/
         │   │   ├── seo/
         │   │   │   ├── analytics.tsx            # ✅ Core Web Vitals
         │   │   │   ├── json-ld.tsx              # ✅ Hub de structured data
-        │   │   │   ├── breadcrumb.tsx           # 🆕 navegação semântica
-        │   │   │   └── canonical.tsx            # 🆕 canonical override
+        │   │   │   ├── breadcrumb.tsx           # ✅ OK (navegação semântica)
+        │   │   │   └── canonical.tsx            # ✅ OK (canonical override)
         │   │
-        │   │   └── image/                       # 🆕 otimização de mídia
+        │   │   └── image/                       # ✅ OK (otimização de mídia)
         │   │       ├── index.tsx
-        │   │       └── og-image.tsx
+        │   │       └── og-image.tsx             # ✅ OK (Satori engine)
         │
         │
         │   └── app/
