@@ -11,7 +11,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 // Este componente agora orquestra o Space, FlowerOfLife, GlassCube e SceneController
 import { HomeBackground } from 'src/components/background';
 import { BackToTopButton } from 'src/components/animate/back-to-top-button';
-import { ScrollProgress, useScrollProgress } from 'src/components/animate/scroll-progress'; 
 import { LazyRender } from 'src/components/animate/lazy-render';
 
 // Componentes Críticos (Immediate Loading para LCP)
@@ -31,7 +30,6 @@ const HomeCountdownDialog = dynamic(() => import('../components/home-countdown-d
 // ----------------------------------------------------------------------
 
 export function HomeView() {
-  const pageProgress = useScrollProgress();
   const countdown = useBoolean(true);
 
   // DATA ALVO: Lançamento SocialFi Alpha (15 de Abril de 2026)
@@ -39,12 +37,6 @@ export function HomeView() {
 
   return (
     <>
-      <ScrollProgress
-        variant="linear"
-        progress={pageProgress.scrollYProgress}
-        sx={[(theme) => ({ position: 'fixed', zIndex: theme.zIndex.appBar + 1 })]}
-      />
-
       <BackToTopButton />
 
       {/* 🌌 FUNDO ÚNICO E MODULAR: 
