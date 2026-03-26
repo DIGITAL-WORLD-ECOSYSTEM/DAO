@@ -5,7 +5,7 @@ import type { Breakpoint } from '@mui/material/styles';
 
 import { useCallback } from 'react';
 
-import Box from '@mui/material/Box'; 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Divider from '@mui/material/Divider';
@@ -74,7 +74,7 @@ export function Footer({
   layoutQuery = 'md',
   ...other
 }: FooterProps & { layoutQuery?: Breakpoint }) {
-  
+
   const contractAddress = "0x0697AB2B003FD2Cbaea2dF1ef9b404E45bE59d4C";
 
   const handleCopy = useCallback(() => {
@@ -88,13 +88,13 @@ export function Footer({
     <FooterRoot sx={sx} {...other}>
       <Container>
         <Grid container spacing={5} sx={{ mb: 8, alignItems: 'flex-start' }}>
-          
+
           {/* Coluna 1: Logo & Bio */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Box sx={{ mb: 3, height: 40, display: 'flex', alignItems: 'center' }}>
-               <Logo sx={{ color: '#FFF' }} />
+              <Logo sx={{ color: '#FFF' }} />
             </Box>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3, height: 24 }}>
               <Box
                 sx={{
@@ -107,10 +107,10 @@ export function Footer({
               />
               <Typography
                 variant="caption"
-                sx={{ 
-                  color: '#00ff7f', 
-                  fontWeight: 'bold', 
-                  letterSpacing: 2, 
+                sx={{
+                  color: '#00ff7f',
+                  fontWeight: 'bold',
+                  letterSpacing: 2,
                   fontSize: '0.75rem',
                   fontFamily: '"Orbitron", sans-serif',
                   textTransform: 'uppercase'
@@ -120,19 +120,19 @@ export function Footer({
               </Typography>
             </Box>
 
-            <Typography 
-              variant="body2" 
-              sx={{ 
-                color: 'grey.500', 
-                maxWidth: 360, 
-                mb: 5, 
-                lineHeight: 1.8, 
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'grey.500',
+                maxWidth: 360,
+                mb: 5,
+                lineHeight: 1.8,
                 textAlign: 'justify', // Bio Justificada
-                fontFamily: '"Public Sans", sans-serif' 
+                fontFamily: '"Public Sans", sans-serif'
               }}
             >
-              A <strong>ASPPIBRA</strong> é a associação desenvolvedora deste ecossistema, 
-              redefinindo ativos reais no mundo digital com governança descentralizada, 
+              A <strong>ASPPIBRA</strong> é a associação desenvolvedora deste ecossistema,
+              redefinindo ativos reais no mundo digital com governança descentralizada,
               transparência e inovação através de tecnologia Web3.
             </Typography>
 
@@ -148,10 +148,10 @@ export function Footer({
                       p: 1,
                       color: 'grey.600',
                       transition: 'all 0.3s',
-                      '&:hover': { 
-                        color: 'common.white', 
+                      '&:hover': {
+                        color: 'common.white',
                         bgcolor: 'rgba(255,255,255,0.08)',
-                        transform: 'translateY(-2px)' 
+                        transform: 'translateY(-2px)'
                       },
                     }}
                   >
@@ -175,15 +175,15 @@ export function Footer({
             >
               {LINKS.map((list) => (
                 <Box key={list.headline} sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                  <Typography 
-                    variant="subtitle2" 
-                    sx={{ 
-                      color: 'common.white', 
-                      fontWeight: 'bold', 
-                      letterSpacing: 1.5, 
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      color: 'common.white',
+                      fontWeight: 'bold',
+                      letterSpacing: 1.5,
                       fontSize: '0.8rem',
                       fontFamily: '"Orbitron", sans-serif',
-                      height: 24, 
+                      height: 24,
                       display: 'flex',
                       alignItems: 'center'
                     }}
@@ -204,9 +204,9 @@ export function Footer({
                         textAlign: 'justify', // Texto Justificado
                         transition: 'all 0.2s',
                         fontFamily: '"Public Sans", sans-serif',
-                        '&:hover': { 
-                            color: '#00ff7f', 
-                            pl: 0.5 
+                        '&:hover': {
+                          color: '#00ff7f',
+                          pl: 0.5
                         },
                       }}
                     >
@@ -223,19 +223,19 @@ export function Footer({
             <Box sx={{ height: 40, mb: 3 }} />
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              
+
               {/* 1° Suporte */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                <Typography 
-                  variant="subtitle2" 
-                  sx={{ 
-                    color: 'common.white', 
-                    fontWeight: 'bold', 
-                    letterSpacing: 1.5, 
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: 'common.white',
+                    fontWeight: 'bold',
+                    letterSpacing: 1.5,
                     fontSize: '0.8rem',
                     fontFamily: '"Orbitron", sans-serif',
                     textTransform: 'uppercase',
-                    height: 24, 
+                    height: 24,
                     display: 'flex',
                     alignItems: 'center'
                   }}
@@ -243,7 +243,7 @@ export function Footer({
                   SUPORTE
                 </Typography>
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>                  
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <Link
                     component={RouterLink}
                     href={paths.faqs}
@@ -255,9 +255,9 @@ export function Footer({
                       transition: 'all 0.2s',
                       fontFamily: '"Public Sans", sans-serif',
                       fontWeight: 500,
-                      '&:hover': { 
-                          color: '#00ff7f', 
-                          pl: 0.5 
+                      '&:hover': {
+                        color: '#00ff7f',
+                        pl: 0.5
                       },
                     }}
                   >
@@ -268,13 +268,13 @@ export function Footer({
 
               {/* 2° Token Contract */}
               <Box sx={{ mt: { xs: 5, md: 9.1 } }}>
-                <Typography 
-                  variant="subtitle2" 
-                  sx={{ 
-                    color: 'common.white', 
-                    fontWeight: 'bold', 
-                    mb: 2.5, 
-                    letterSpacing: 1.5, 
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: 'common.white',
+                    fontWeight: 'bold',
+                    mb: 2.5,
+                    letterSpacing: 1.5,
                     fontSize: '0.8rem',
                     fontFamily: '"Orbitron", sans-serif'
                   }}
@@ -290,9 +290,9 @@ export function Footer({
                     endAdornment: (
                       <InputAdornment position="end">
                         <Tooltip title="Copiar endereço" arrow>
-                          <IconButton 
-                            edge="end" 
-                            sx={{ color: 'grey.500', '&:hover': { color: '#00ff7f' } }} 
+                          <IconButton
+                            edge="end"
+                            sx={{ color: 'grey.500', '&:hover': { color: '#00ff7f' } }}
                             onClick={handleCopy}
                           >
                             <Iconify icon="solar:copy-bold" width={22} />
@@ -335,10 +335,13 @@ export function Footer({
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 4 }}>
-            <Link href="#" variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
+            <Link component={RouterLink} href={paths.terms} variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
+              Termos de Uso
+            </Link>
+            <Link component={RouterLink} href={paths.privacy} variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
               Privacidade
             </Link>
-            <Link href="#" variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
+            <Link component={RouterLink} href={paths.cookies} variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
               Cookies
             </Link>
           </Box>

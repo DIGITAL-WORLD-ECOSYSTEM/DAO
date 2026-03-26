@@ -21,6 +21,9 @@ export const paths = {
   payment: '/payment',
   about: '/about-us',
   contact: '/contact-us',
+  privacy: '/privacy',
+  terms: '/terms',
+  cookies: '/cookies',
   faqs: '/faqs',
   page403: '/error/403',
   page404: '/error/404',
@@ -32,7 +35,7 @@ export const paths = {
   minimalStore: 'https://mui.com/store/items/minimal-dashboard/',
   freeUI: 'https://mui.com/store/items/minimal-dashboard-free/',
   figmaUrl: 'https://www.figma.com/design/WadcoP3CSejUDj7YZc87xj/%5BPreview%5D-Minimal-Web.v7.3.0',
-  
+
   // POSTS PÚBLICOS (Essencial para SEO e Sitemap)
   post: {
     root: `/post`,
