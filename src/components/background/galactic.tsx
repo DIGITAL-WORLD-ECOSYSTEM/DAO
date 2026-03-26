@@ -369,28 +369,26 @@ export function GalacticCore({
       </points>
 
       <group>
-
         <mesh ref={coreRef}>
-
-          <sphereGeometry args={[0.2, 32, 32]} />
-
-          <meshBasicMaterial color="#ffffcc" />
-
-        </mesh>
-
-        <mesh ref={glowRef}>
-
-          <sphereGeometry args={[1.2, 32, 32]} />
-
-          <meshBasicMaterial
-            color="#ff6600"
+          <sphereGeometry args={[0.15, 32, 32]} />
+          <meshBasicMaterial 
+            color="#ffffff"
             transparent
-            opacity={0.15}
+            opacity={0.9}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending} 
+          />
+        </mesh>
+        <mesh ref={glowRef}>
+          <sphereGeometry args={[1.5, 32, 32]} />
+          <meshBasicMaterial
+            color="#00B8D9"
+            transparent
+            opacity={0.08}
+            depthWrite={false}
             blending={THREE.AdditiveBlending}
           />
-
         </mesh>
-
       </group>
 
     </group>
