@@ -10,10 +10,9 @@ import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
 import countries from 'src/assets/data/world.json';
 
-import type { ArcData, Hotspot, GlobeConfig } from './types';
+import type { Hotspot, GlobeConfig } from './types';
 
 interface WorldProps {
-  data: ArcData[];
   hotspots?: Hotspot[];
   globeConfig?: GlobeConfig;
 }
@@ -35,13 +34,8 @@ const DEFAULT_CONFIG: Required<GlobeConfig> = {
 };
 
 const VISUAL_CONFIG = {
-  arcStroke: 0.7,
-  arcDashGap: 2.4,
   ringSpeed: 2,
-  arcsTransition: 1000,
 };
-
-const MAX_CONNECTIONS = 3;
 
 // ======================================================
 // HUBS
@@ -65,49 +59,6 @@ const HUBS: Hotspot[] = [
 const seededRandom = (seed: number): number => {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
-};
-
-const distance = (a: ArcData): number =>
-  Math.sqrt(
-    (a.startLat - a.endLat) ** 2 +
-    (a.startLng - a.endLng) ** 2
-  );
-
-const calculateArcAltitude = (arc: ArcData): number => {
-  const d = distance(arc) / 90;
-  return THREE.MathUtils.clamp(d * 0.7, 0.15, 0.6);
-};
-
-// ======================================================
-// NETWORK GENERATION
-// ======================================================
-
-const generateClusterArcs = (hubs: Hotspot[]): ArcData[] => {
-  const arcs: ArcData[] = [];
-  let order = 0;
-
-  hubs.forEach((hub, i) => {
-    const targets = hubs
-      .map((h, idx) => ({ hub: h, idx }))
-      .filter(({ idx }) => idx !== i)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, hub.connections ?? MAX_CONNECTIONS);
-
-    targets.forEach(({ hub: target, idx }) => {
-      if (i < idx) {
-        arcs.push({
-          order: order++,
-          startLat: hub.lat,
-          startLng: hub.lng,
-          endLat: target.lat,
-          endLng: target.lng,
-          color: '#60a5fa',
-        });
-      }
-    });
-  });
-
-  return arcs;
 };
 
 // ======================================================
@@ -176,7 +127,6 @@ function GlobeAnimator({ globe }: { globe: any }) {
 
 function useGlobeLogic(
   globe: any,
-  arcs: ArcData[],
   hotspots: Hotspot[],
   config: Required<GlobeConfig>
 ) {
@@ -227,35 +177,13 @@ function useGlobeLogic(
         1200 + seededRandom((d as Hotspot).lat) * 800
       );
 
-    globe
-      .arcsData(arcs)
-      .arcStartLat((d: object) => (d as ArcData).startLat)
-      .arcStartLng((d: object) => (d as ArcData).startLng)
-      .arcEndLat((d: object) => (d as ArcData).endLat)
-      .arcEndLng((d: object) => (d as ArcData).endLng)
-      .arcColor((d: object) => (d as ArcData).color)
-      .arcAltitude((d: object) => {
-        const arc = d as ArcData;
-        return arc.arcAlt ?? calculateArcAltitude(arc);
-      })
-      .arcStroke(VISUAL_CONFIG.arcStroke)
-      .arcDashLength(config.arcLength)
-      .arcDashGap(VISUAL_CONFIG.arcDashGap)
-      .arcDashAnimateTime((d: object) => {
-        const arc = d as ArcData;
-        const dist = distance(arc);
-        return THREE.MathUtils.mapLinear(dist, 5, 120, 1200, 4000);
-      })
-      .arcsTransitionDuration(VISUAL_CONFIG.arcsTransition);
-
     return () => {
       globe
-        .arcsData([])
         .ringsData([])
         .hexPolygonsData([])
         .htmlElementsData([]);
     };
-  }, [globe, arcs, hotspots, config]);
+  }, [globe, hotspots, config]);
 }
 
 // ======================================================
@@ -263,7 +191,6 @@ function useGlobeLogic(
 // ======================================================
 
 export default function World({
-  data,
   hotspots = HUBS,
   globeConfig = {},
 }: WorldProps) {
@@ -293,17 +220,7 @@ export default function World({
     };
   }, []);
 
-  const clusterArcs = useMemo(
-    () => generateClusterArcs(hotspots),
-    [hotspots]
-  );
-
-  const arcs = useMemo(
-    () => [...data, ...clusterArcs],
-    [data, clusterArcs]
-  );
-
-  useGlobeLogic(globe, arcs, hotspots, config);
+  useGlobeLogic(globe, hotspots, config);
 
   return (
     <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>

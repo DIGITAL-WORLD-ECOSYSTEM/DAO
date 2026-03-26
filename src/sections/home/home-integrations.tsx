@@ -1,7 +1,6 @@
 'use client';
 
 // Importação de tipos para integridade com o componente 3D
-import type { ArcData } from 'src/components/threeglobe/types';
 
 import { m } from 'framer-motion';
 import dynamic from 'next/dynamic';
@@ -83,7 +82,6 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
               }}
             >
               <World 
-                data={SAMPLE_ARCS} 
                 globeConfig={{
                   autoRotate: true,
                   autoRotateSpeed: 0.8,
@@ -334,9 +332,3 @@ function DataPanel({ title, label, metrics, side, sx }: any) {
     </Box>
   );
 }
-
-const SAMPLE_ARCS: ArcData[] = [
-  { order: 1, startLat: -15.78, startLng: -47.92, endLat: 40.71, endLng: -74.0, arcAlt: 0.3, color: '#00B8D9' },
-  { order: 2, startLat: -15.78, startLng: -47.92, endLat: 51.5, endLng: -0.12, arcAlt: 0.4, color: '#00B8D9' },
-  { order: 3, startLat: -15.78, startLng: -47.92, endLat: 1.35, endLng: 103.8, arcAlt: 0.5, color: '#00B8D9' },
-];
