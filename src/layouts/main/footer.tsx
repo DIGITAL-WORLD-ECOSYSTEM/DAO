@@ -34,6 +34,12 @@ const pulse = keyframes`
 
 const LINKS = [
   {
+    headline: 'A ASSOCIAÇÃO',
+    children: [
+      { name: 'Core Team', href: paths.team },
+    ],
+  },
+  {
     headline: 'ECOSSISTEMA',
     children: [
       { name: 'Swap & Pools', href: '#' },

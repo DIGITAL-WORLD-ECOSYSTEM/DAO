@@ -21,6 +21,7 @@ export const paths = {
   payment: '/payment',
   about: '/about-us',
   contact: '/contact-us',
+  team: '/team',
   privacy: '/privacy',
   terms: '/terms',
   cookies: '/cookies',
