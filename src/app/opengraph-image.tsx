@@ -6,7 +6,7 @@ import { CONFIG } from 'src/global-config';
 
 export const runtime = 'nodejs';
 
-export const alt = `DEX World - ${CONFIG.appName} Governance & RWA`;
+export const alt = `Digital World - ${CONFIG.appName} Governance & RWA`;
 
 export const size = {
   width: 1200,
@@ -38,7 +38,7 @@ export default async function Image() {
           backgroundImage: 'radial-gradient(circle at 25% 25%, #00A15D 0%, transparent 55%)', // Gradiente Verde Agro-Tech
         }}
       >
-        {/* LOGO ASPPIBRA / DEX WORLD */}
+        {/* LOGO ASPPIBRA / DIGITAL WORLD */}
         <svg width="120" height="40" viewBox="0 0 105 30" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fillRule="evenodd" clipRule="evenodd" d="M3.08862 2.76632C1.70887 1.25983 0 2.21953 0 4.29821V25.7018C0 27.7805 1.70887 28.7402 3.08862 27.2337L10.3239 19.349C11.6631 17.8863 11.6631 12.1137 10.3239 10.651L3.08862 2.76632Z" fill="#00A15D"/>
           <path fillRule="evenodd" clipRule="evenodd" d="M26.7937 19.349C28.1329 17.8863 28.1329 12.1137 26.7937 10.651L19.5585 2.76632C18.1787 1.25983 16.4699 2.21953 16.4699 4.29821V25.7018C16.4699 27.7805 18.1787 28.7402 19.5585 27.2337L26.7937 19.349Z" fill="#00A15D"/>

@@ -6,7 +6,7 @@ import { CONFIG } from 'src/global-config';
 
 export const runtime = 'nodejs';
 
-export const alt = `DEX World - ${CONFIG.appName} Governance & RWA`;
+export const alt = `Digital World - ${CONFIG.appName} Governance & RWA`;
 
 export const size = {
   width: 1200,

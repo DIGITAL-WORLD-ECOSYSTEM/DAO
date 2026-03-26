@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export const metadata = {
-  title: 'DEX World: Monitorização e Notícias Cripto',
+  title: 'Digital World: Monitorização e Notícias Cripto',
   description: 'Acompanhe as principais comunidades, vídeos e tendências do mercado blockchain em tempo real.',
 };
 

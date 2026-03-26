@@ -113,7 +113,7 @@ export function AuthCenteredLayout({
         { 
             position: 'relative',
             overflow: 'hidden', // Evita scroll causado pelas partículas
-            bgcolor: '#030712' // Cor de base bem escura (DEX World)
+            bgcolor: '#030712' // Cor de base bem escura (Digital World)
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

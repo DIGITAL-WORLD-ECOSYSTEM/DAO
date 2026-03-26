@@ -10,7 +10,7 @@ import { CONFIG } from 'src/global-config';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `DEX World - ${CONFIG.appName} Governance`, 
+    name: `Digital World - ${CONFIG.appName} Governance`, 
     short_name: 'ASPPIBRA-DAO',
     description: 'Infraestrutura de Governança Digital e RWA: Integração nativa com DeFi, storage IPFS descentralizado e IA aplicada à gestão de ativos tokenizados em Blockchain.',
     start_url: '/',
