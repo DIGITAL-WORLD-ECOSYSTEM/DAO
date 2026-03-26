@@ -30,6 +30,8 @@ const nextConfig: NextConfig = {
    * 🛠️ Otimizações de pacotes e flags experimentais.
    * O Next.js 16 detecta automaticamente o arquivo de proxy/middleware na pasta src.
    */
+  serverExternalPackages: ['three', 'three-globe'],
+
   experimental: {
     // Reduz o tempo de bloqueio (TBT) carregando apenas o necessário do MUI e Iconify.
     optimizePackageImports: [

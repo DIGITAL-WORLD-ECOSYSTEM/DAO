@@ -18,7 +18,7 @@ import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
-const World = dynamic(() => import('src/components/threeglobe/globe').then((mod) => mod.World), {
+const World = dynamic(() => import('src/components/threeglobe/globe'), {
   ssr: false,
   loading: () => (
     <Box sx={{ height: { xs: 400, md: 600 }, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
