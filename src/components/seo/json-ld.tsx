@@ -1,3 +1,4 @@
+import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ export function generateBreadcrumbs(links: { name: string; href: string }[]) {
       "@type": "ListItem",
       "position": index + 1,
       "name": link.name,
-      "item": link.href.startsWith('http') ? link.href : `https://www.asppibra.com${link.href}`,
+      "item": link.href.startsWith('http') ? link.href : `${CONFIG.siteUrl}${link.href}`,
     })),
   };
 }
@@ -48,11 +49,11 @@ export function generateArticleSchema(data: {
     "publisher": {
       "@type": "Organization",
       "name": "ASPPIBRA",
-      "logo": { "@type": "ImageObject", "url": "https://www.asppibra.com/logo/logo_single.png" }
+      "logo": { "@type": "ImageObject", "url": `${CONFIG.siteUrl}/logo/logo_single.png` }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://www.asppibra.com${data.url}`
+      "@id": `${CONFIG.siteUrl}${data.url}`
     }
   };
 }

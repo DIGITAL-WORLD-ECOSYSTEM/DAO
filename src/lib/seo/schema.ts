@@ -1,3 +1,5 @@
+import { CONFIG } from 'src/global-config';
+
 export function generateArticleSchema({
   title,
   url,
@@ -23,19 +25,19 @@ export function generateArticleSchema({
     author: [{
       '@type': 'Person',
       name: authorName,
-      url: `https://asppibra-dao.org/authors/${authorName.toLowerCase().replace(/ /g, '-')}`,
+      url: `${CONFIG.siteUrl}/authors/${authorName.toLowerCase().replace(/ /g, '-')}`,
     }],
     publisher: {
       '@type': 'Organization',
       name: 'ASPPIBRA-DAO',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://asppibra-dao.org/logo/logo-512x512.png',
+        url: `${CONFIG.siteUrl}/logo/logo-512x512.png`,
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': url,
+      '@id': url.startsWith('http') ? url : `${CONFIG.siteUrl}${url}`,
     },
   };
 }

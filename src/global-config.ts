@@ -38,8 +38,14 @@ export const CONFIG: ConfigValue = {
   /**
    * FRONTEND SITE URL
    * SSOT para Metadados, Sitemaps e Links Canônicos.
+   * Fallback dinâmico para Vercel Previews e Localhost para evitar rejeição de Crawlers.
    */
-  siteUrl: (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.asppibra.com').replace(/\/$/, ''),
+  siteUrl: (
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NEXT_PUBLIC_VERCEL_URL
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : 'http://localhost:8082')
+  ).replace(/\/$/, ''),
 
   /**
    * CLOUDFLARE R2 PUBLIC URL
