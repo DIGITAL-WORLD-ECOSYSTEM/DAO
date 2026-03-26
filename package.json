@@ -22,7 +22,7 @@
     "tsc:print": "npx tsc --showConfig"
   },
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
