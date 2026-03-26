@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
 
-import { _posts } from 'src/_mock/_blog';
 import { CONFIG } from 'src/global-config'; 
 
 // ----------------------------------------------------------------------
@@ -18,27 +17,16 @@ export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  params: {
-    title: string;
-  };
-};
-
-export default async function GET(props: Props) {
-  const { title } = props.params;
-
-  // Busca o post específico no mock ou usa dados padrão do ecossistema
-  const post = _posts.find((p: any) => p.title === title);
-
-  // Carregamento de fontes via CDN para garantir consistência visual no Edge
+export default async function Image() {
+  // Carregamento de fontes via CDN para garantir consistência visual no SSG/Node
   const [getFont, getFontBold] = await Promise.all([
     fetch(new URL('https://fonts.cdnfonts.com/s/15068/Inter-Regular.woff')).then((res) => res.arrayBuffer()),
     fetch(new URL('https://fonts.cdnfonts.com/s/15068/Inter-Bold.woff')).then((res) => res.arrayBuffer()),
   ]);
 
   const shared = {
-    title: post?.title ?? CONFIG.appName,
-    description: post?.description ?? 'Infraestrutura de Governança Digital, DeFi e Ativos Reais (RWA).',
+    title: CONFIG.appName,
+    description: 'Infraestrutura de Governança Digital, DeFi e Ativos Reais (RWA).',
   };
 
   return new ImageResponse(
