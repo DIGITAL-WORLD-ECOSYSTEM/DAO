@@ -22,7 +22,7 @@
     "tsc:print": "npx tsc --showConfig"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -58,6 +58,7 @@
     "@tiptap/react": "^3.18.0",
     "@tiptap/starter-kit": "^3.18.0",
     "@vercel/analytics": "^1.6.1",
+    "@vercel/speed-insights": "^2.0.0",
     "accept-language": "^3.0.20",
     "apexcharts": "^5.3.6",
     "autosuggest-highlight": "^3.3.4",
