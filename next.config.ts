@@ -10,8 +10,8 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // 1. ROTEAMENTO E SEGURANÇA
-  // Mantém barras no final para consistência de indexação e evita redirects 301.
-  trailingSlash: true,
+  // Desativado (false) para evitar redirects 308 agressivos em toda a árvore do sitemap e conflitos com Canonical URLs.
+  trailingSlash: false,
 
   // 🔒 Ativa o modo estrito para garantir a integridade dos estados da DAO.
   reactStrictMode: true,
