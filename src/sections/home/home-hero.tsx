@@ -7,10 +7,8 @@
 
 import type { BoxProps } from '@mui/material/Box';
 import type { Breakpoint } from '@mui/material/styles';
-import type { MotionProps, MotionValue } from 'framer-motion';
 
 import { useRef } from 'react';
-import { m, useScroll, useTransform } from 'framer-motion';
 
 // ----------------------------------------------------------------------
 // Imports — MUI e App
@@ -28,16 +26,11 @@ import { RouterLink } from 'src/routes/components';
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
-import { varFade, MotionContainer } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 // Configurações
 // ----------------------------------------------------------------------
 const mdKey: Breakpoint = 'md';
-
-const motionProps: MotionProps = {
-  variants: varFade('inUp', { distance: 24 }),
-};
 
 // ----------------------------------------------------------------------
 // Componente Principal
@@ -45,11 +38,6 @@ const motionProps: MotionProps = {
 export function HomeHero({ sx, ...other }: BoxProps) {
   const theme = useTheme();
   const { t } = useTranslate();
-  const { elementRef, scrollY } = useScrollData();
-
-  // Efeitos de Scroll: Profundidade Profissional
-  const opacity: MotionValue<number> = useTransform(scrollY, [0, 500], [1, 0]);
-  const scale: MotionValue<number> = useTransform(scrollY, [0, 500], [1, 0.95]);
 
   // --- Render Helpers ---
 
@@ -103,20 +91,17 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         <br />
         <Box 
           component="span" 
-          sx={{ color: alpha(theme.palette.common.white, 0.5) }}
+          sx={{ color: alpha(theme.palette.common.white, 0.85) }}
         >
           {t('hero.title_bridge')}
         </Box>
         <br />
         <Box
-          component={m.span}
-          animate={{ backgroundPosition: ['0% center', '200% center'] }}
-          transition={{ duration: 8, ease: 'linear', repeat: Infinity }}
+          component="span"
           sx={{
             ...theme.mixins.textGradient(
               `300deg, ${theme.palette.primary.main} 0%, ${theme.palette.info.main} 50%, ${theme.palette.primary.light} 100%`
             ),
-            backgroundSize: '200% auto',
             display: 'inline-block',
             textShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.35)}`,
           }}
@@ -153,7 +138,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
       spacing={2}
       sx={{ mt: 5 }}
     >
-      <m.div {...motionProps}>
+      <Box>
         {/* 🟢 Botão Principal: Estilo Crystal (Fundo Deep + Borda Reativa Ciano) */}
         <Button
           component={RouterLink}
@@ -199,9 +184,9 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         >
           {t('hero.buttons.whitepaper')}
         </Button>
-      </m.div>
+      </Box>
 
-      <m.div {...motionProps}>
+      <Box>
         {/* ✨ Botão Secundário: Estilo Crystal (Borda Reativa Info/Ciano) */}
         <Button
           component={RouterLink}
@@ -247,13 +232,12 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         >
           {t('hero.buttons.ecossistema')}
         </Button>
-      </m.div>
+      </Box>
     </Stack>
   );
 
   return (
     <Box
-      ref={elementRef}
       component="section"
       sx={[
         {
@@ -274,11 +258,9 @@ export function HomeHero({ sx, ...other }: BoxProps) {
       {...other}
     >
       <Box
-        component={m.div}
-        style={{ opacity, scale }}
         sx={{ width: 1, position: 'relative', zIndex: 10 }}
       >
-        <Container component={MotionContainer}>
+        <Container>
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             alignItems="center"
@@ -292,18 +274,9 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             </Box>
 
             {/* Espaço reservado para o Ativo Visual (Globo Integrations) */}
-            <Box sx={{ flex: 1, display: { xs: 'none', md: 'block' }, minHeight: 500 }} />
           </Stack>
         </Container>
       </Box>
     </Box>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function useScrollData() {
-  const elementRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-  return { elementRef, scrollY };
 }
