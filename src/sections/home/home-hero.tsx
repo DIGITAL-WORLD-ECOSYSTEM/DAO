@@ -3,8 +3,7 @@
 // ----------------------------------------------------------------------
 // Imports — Fontes, tipos e motion
 // ----------------------------------------------------------------------
-import '@fontsource/orbitron/900.css'; 
-import '@fontsource/orbitron/700.css'; 
+// Fontes agora importadas via app/layout.tsx e NextFont
 
 import type { BoxProps } from '@mui/material/Box';
 import type { Breakpoint } from '@mui/material/styles';
@@ -55,7 +54,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
   // --- Render Helpers ---
 
   const renderHeading = () => (
-    <m.div {...motionProps}>
+    <Box>
       {/* 💊 A Pílula Padronizada (Padrão 2026) */}
       <Box
         sx={{
@@ -71,7 +70,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         <Typography
           component="span"
           sx={{
-            fontFamily: "'Orbitron', sans-serif",
+            fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
             fontWeight: 700,
             fontSize: 12,
             letterSpacing: '0.2em',
@@ -95,7 +94,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           fontSize: { xs: '2.5rem', md: '4.5rem' },
           lineHeight: { xs: 1.1, md: 1.05 },
           textAlign: { xs: 'center', md: 'left' },
-          fontFamily: "'Orbitron', sans-serif",
+          fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
         }}
       >
         <Box component="span" sx={{ color: 'common.white' }}>
@@ -125,11 +124,11 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           {t('hero.title_highlight')}
         </Box>
       </Box>
-    </m.div>
+    </Box>
   );
 
   const renderText = () => (
-    <m.div {...motionProps}>
+    <Box>
       <Typography
         sx={{
           maxWidth: 640,
@@ -138,13 +137,13 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           fontSize: { xs: 18, md: 20 },
           lineHeight: 1.6,
           fontWeight: 500,
-          fontFamily: "'Public Sans', sans-serif",
+          fontFamily: 'var(--font-public-sans), "Public Sans", sans-serif',
           textAlign: { xs: 'center', md: 'left' },
         }}
       >
         {t('hero.description')}
       </Typography>
-    </m.div>
+    </Box>
   );
 
   const renderButtons = () => (
@@ -165,7 +164,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             height: 60,
             px: 4,
             fontSize: 16,
-            fontFamily: "'Orbitron', sans-serif",
+            fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
             fontWeight: 700,
             borderRadius: 1.5,
             textTransform: 'uppercase',
@@ -213,7 +212,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             height: 60,
             px: 4,
             fontSize: 16,
-            fontFamily: "'Orbitron', sans-serif",
+            fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
             fontWeight: 700,
             borderRadius: 1.5,
             textTransform: 'uppercase',

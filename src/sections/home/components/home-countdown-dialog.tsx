@@ -16,8 +16,7 @@ import { alpha, useTheme, keyframes } from '@mui/material/styles';
 
 import { Iconify } from 'src/components/iconify';
 
-// Importando a fonte do botão para manter o padrão
-import '@fontsource/orbitron/700.css';
+// Removida importação estática da fonte orbitron para evitar Render Blocking
 
 // ----------------------------------------------------------------------
 // 1. CONSTANTES E TIPAGENS
@@ -138,7 +137,7 @@ export default function HomeCountdownDialog({
   const getCrystalButtonStyle = (colorColor: string) => ({
     height: 56,
     fontSize: 15,
-    fontFamily: "'Orbitron', sans-serif", 
+    fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif', 
     fontWeight: 700,
     borderRadius: 1.5,
     textTransform: 'uppercase',
@@ -175,6 +174,8 @@ export default function HomeCountdownDialog({
     <Dialog
       open={open}
       onClose={onClose}
+      aria-labelledby="countdown-dialog-title"
+      aria-describedby="countdown-dialog-description"
       {...other}
       PaperProps={{
         sx: {
@@ -233,7 +234,7 @@ export default function HomeCountdownDialog({
               <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <Stack direction="row" alignItems="center" justifyContent="center" spacing={1.5} sx={{ mb: 3 }}>
                   <Stack direction="row" alignItems="center" spacing={0.5}>
-                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#00E599', boxShadow: '0 0 10px #00E599', animation: `${pulseAnimation} 2s infinite` }} />
+                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#00E599', filter: 'drop-shadow(0 0 5px #00E599)', animation: `${pulseAnimation} 2s infinite` }} />
                     <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: 'grey.500', letterSpacing: 0.5 }}>
                       Digital WORLD: <Box component="span" sx={{ color: 'common.white' }}>$0.0423</Box>
                     </Typography>
@@ -244,11 +245,11 @@ export default function HomeCountdownDialog({
                   </Box>
                 </Stack>
 
-                <Typography variant="h3" sx={{ mb: 2, fontWeight: 900, letterSpacing: -1 }}>
+                <Typography id="countdown-dialog-title" variant="h3" sx={{ mb: 2, fontWeight: 900, letterSpacing: -1 }}>
                   RESERVE SEU <Box component="span" sx={{ color: '#00E599', textShadow: '0 0 20px rgba(0, 229, 153, 0.3)' }}>@ARROBA</Box>
                 </Typography>
 
-                <Typography sx={{ color: 'grey.500', mb: 4, fontSize: '0.9rem', lineHeight: 1.6, textAlign: 'center', px: 1 }}>
+                <Typography id="countdown-dialog-description" sx={{ color: 'grey.500', mb: 4, fontSize: '0.9rem', lineHeight: 1.6, textAlign: 'center', px: 1 }}>
                   Membros da DAO serão os primeiros beneficiados no sistema de remuneração.                
                   Garanta seu <strong>@arroba exclusivo</strong> na gênese da <strong>Digital World</strong> e posicione-se agora.
                 </Typography>

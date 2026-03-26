@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -31,18 +32,17 @@ export function Logo({
   ...other
 }: LogoProps) {
 
-  // ÍCONE DO GLOBO (Base)
   const logoIcon = (
-    <Box
-      component="img"
-      alt="ASPPIBRA-DAO Icon"
-      src="/logo/android-chrome-192x192.png"
-      sx={{ 
-        width: 40, 
-        height: 40, 
-        objectFit: 'contain' 
-      }}
-    />
+    <Box sx={{ width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Image
+        alt="ASPPIBRA-DAO Icon"
+        src="/logo/android-chrome-192x192.png"
+        width={40}
+        height={40}
+        style={{ objectFit: 'contain' }}
+        priority // Consideramos a logo crítica (LCP helper)
+      />
+    </Box>
   );
 
   // VERSÃO 1: APENAS ÍCONE

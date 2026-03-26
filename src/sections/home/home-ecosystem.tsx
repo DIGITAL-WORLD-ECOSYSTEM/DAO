@@ -43,28 +43,28 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
         title: t('ecosystem.items.tech.title'),
         description: t('ecosystem.items.tech.description'),
         icon: 'solar:programming-2-bold-duotone',
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.light, // Melhor contraste
       },
       {
         id: 'gov',
         title: t('ecosystem.items.gov.title'),
         description: t('ecosystem.items.gov.description'),
         icon: 'solar:shield-check-bold-duotone',
-        color: theme.palette.info.main,
+        color: theme.palette.info.light, // Melhor contraste
       },
       {
         id: 'business',
         title: t('ecosystem.items.business.title'),
         description: t('ecosystem.items.business.description'),
         icon: 'solar:lightbulb-bold-duotone',
-        color: theme.palette.secondary.main,
+        color: theme.palette.secondary.light, // Melhor contraste
       },
       {
         id: 'rwa',
         title: t('ecosystem.items.rwa.title'),
         description: t('ecosystem.items.rwa.description'),
         icon: 'solar:graph-up-bold-duotone',
-        color: theme.palette.warning.main,
+        color: theme.palette.warning.light, // Melhor contraste
       },
     ],
     [theme, t]
@@ -110,12 +110,12 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                   <Typography
                     component="span"
                     sx={{
-                      fontFamily: "'Orbitron', sans-serif",
+                      fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
                       fontWeight: 700,
                       fontSize: 12,
                       letterSpacing: '0.2em',
                       textTransform: 'uppercase',
-                      color: 'info.main',
+                      color: 'info.light',
                     }}
                   >
                     {t('ecosystem.badge') || 'ECOSYSTEM'}
@@ -127,7 +127,7 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                 <Typography
                   component="h2"
                   sx={{
-                    fontFamily: "'Orbitron', sans-serif",
+                    fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
                     fontWeight: 900,
                     fontSize: { xs: '2.2rem', md: '3rem' },
                     letterSpacing: '0.05em',
@@ -159,7 +159,7 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                 sx={{
                   height: 56,
                   px: 4,
-                  fontFamily: "'Orbitron', sans-serif",
+                  fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
                   fontWeight: 700,
                   borderRadius: 1.5,
                   color: 'common.white',
@@ -262,7 +262,7 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                       variant="h6" 
                       sx={{ 
                         color: 'common.white', 
-                        fontFamily: "'Orbitron', sans-serif",
+                        fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
                         fontWeight: 800,
                         zIndex: 3 
                       }}

@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
   // Ativa compressão para reduzir o bundle de JS (essencial para conexões rurais).
   compress: true,
 
-  // Remove Source Maps no build de produção para reduzir peso e proteger a lógica.
-  productionBrowserSourceMaps: false,
+  // Habilita Source Maps obrigatórios para debug de performance no PageSpeed e auditorias.
+  productionBrowserSourceMaps: true,
 
   /**
    * 🛠️ Otimizações de pacotes e flags experimentais.

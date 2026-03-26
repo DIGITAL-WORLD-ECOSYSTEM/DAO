@@ -9,6 +9,29 @@ import 'src/global.css';
 
 import type { Metadata, Viewport } from 'next';
 
+import { Public_Sans, Barlow, Orbitron } from 'next/font/google';
+
+const publicSans = Public_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-public-sans',
+  display: 'swap',
+});
+
+const barlow = Barlow({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-barlow',
+  display: 'swap',
+});
+
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-orbitron',
+  display: 'swap',
+});
+
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -145,7 +168,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }} 
         />
       </head>
-      <body>
+      <body className={`${publicSans.variable} ${barlow.variable} ${orbitron.variable}`}>
         <InitColorSchemeScript
           modeStorageKey={themeConfig.modeStorageKey}
           attribute={themeConfig.cssVariables.colorSchemeSelector}
