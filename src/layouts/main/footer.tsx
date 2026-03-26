@@ -42,6 +42,7 @@ const LINKS = [
   {
     headline: 'ECOSSISTEMA',
     children: [
+      { name: 'Visão Geral do Ecossistema', href: paths.ecosystem },
       { name: 'Swap & Pools', href: '#' },
     ],
   },

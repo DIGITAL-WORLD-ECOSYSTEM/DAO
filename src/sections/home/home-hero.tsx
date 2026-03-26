@@ -206,7 +206,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         {/* ✨ Botão Secundário: Estilo Crystal (Borda Reativa Info/Ciano) */}
         <Button
           component={RouterLink}
-          href="/ecosystem"
+          href={paths.ecosystem}
           size="large"
           endIcon={<Iconify width={24} icon="solar:double-alt-arrow-right-bold-duotone" />}
           sx={{

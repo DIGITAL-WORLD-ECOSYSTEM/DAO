@@ -23,6 +23,7 @@ export const paths = {
   contact: '/contact-us',
   team: '/team',
   whitepaper: '/whitepaper',
+  ecosystem: '/ecosystem',
   privacy: '/privacy',
   terms: '/terms',
   cookies: '/cookies',
