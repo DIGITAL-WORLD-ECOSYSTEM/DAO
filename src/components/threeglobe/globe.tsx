@@ -2,6 +2,7 @@
 
 /* eslint-disable react/no-unknown-property */
 
+import './polyfill';
 import * as THREE from 'three';
 import { useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
