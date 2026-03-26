@@ -10,6 +10,7 @@ import { m } from 'framer-motion';
 // MUI
 // ----------------------------------------------------------------------
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -197,8 +198,9 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
                 }}
               >
                 <m.div variants={varFade('inUp')} transition={{ delay: index * 0.2 }}>
-                  <Card
-                    sx={{
+                  <Link component={RouterLink} href={paths.post.details(post.title)} underline="none">
+                    <Card
+                      sx={{
                       position: 'relative',
                       height: 420,
                       borderRadius: 3,
@@ -298,6 +300,7 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
                       </Typography>
                     </Stack>
                   </Card>
+                  </Link>
                 </m.div>
               </Grid>
             ))}
