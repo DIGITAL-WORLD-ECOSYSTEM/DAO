@@ -48,7 +48,7 @@ const LINKS = [
   {
     headline: 'DOCUMENTAÇÃO',
     children: [
-      { name: 'Whitepaper', href: '#' },
+      { name: 'Whitepaper (Docs)', href: paths.whitepaper },
     ],
   },
 ];

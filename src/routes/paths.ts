@@ -22,6 +22,7 @@ export const paths = {
   about: '/about-us',
   contact: '/contact-us',
   team: '/team',
+  whitepaper: '/whitepaper',
   privacy: '/privacy',
   terms: '/terms',
   cookies: '/cookies',
