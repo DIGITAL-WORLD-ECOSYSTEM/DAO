@@ -18,11 +18,6 @@ export const contentType = 'image/png';
 // ----------------------------------------------------------------------
 
 export default async function Image() {
-  // Carregamento de fontes via CDN para garantir consistência visual no SSG/Node
-  const [getFont, getFontBold] = await Promise.all([
-    fetch(new URL('https://fonts.cdnfonts.com/s/15068/Inter-Regular.woff')).then((res) => res.arrayBuffer()),
-    fetch(new URL('https://fonts.cdnfonts.com/s/15068/Inter-Bold.woff')).then((res) => res.arrayBuffer()),
-  ]);
 
   const shared = {
     title: CONFIG.appName,
@@ -106,10 +101,6 @@ export default async function Image() {
     ),
     {
       ...size,
-      fonts: [
-        { name: 'Inter-Regular', data: getFont, weight: 400, style: 'normal' },
-        { name: 'Inter-Bold', data: getFontBold, weight: 700, style: 'normal' },
-      ],
     }
   );
 }

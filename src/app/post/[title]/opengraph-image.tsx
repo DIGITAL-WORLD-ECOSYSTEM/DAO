@@ -22,11 +22,6 @@ export default async function Image({ params }: Props) {
   // 🟢 CORREÇÃO: Busca usando kebabCase para bater com a URL
   const post = _posts.find((p) => kebabCase(p.title) === params.title);
 
-  // Fonte para branding profissional
-  const fontData = await fetch(
-    new URL('https://fonts.cdnfonts.com/s/15068/Inter-Bold.woff')
-  ).then((res) => res.arrayBuffer());
-
   return new ImageResponse(
     (
       <div
@@ -88,7 +83,6 @@ export default async function Image({ params }: Props) {
     ),
     {
       ...size,
-      fonts: [{ name: 'Inter', data: fontData, style: 'normal', weight: 700 }],
     }
   );
 }

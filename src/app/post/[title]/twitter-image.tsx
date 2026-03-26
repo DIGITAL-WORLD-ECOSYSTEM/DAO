@@ -22,11 +22,6 @@ export default async function Image({ params }: Props) {
   // 🟢 CORREÇÃO: Busca resiliente por slug
   const post = _posts.find((p) => kebabCase(p.title) === params.title);
 
-  // Fonte Inter Bold para o padrão visual do X
-  const fontData = await fetch(
-    new URL('https://fonts.cdnfonts.com/s/15068/Inter-Bold.woff')
-  ).then((res) => res.arrayBuffer());
-
   return new ImageResponse(
     (
       <div
@@ -85,7 +80,6 @@ export default async function Image({ params }: Props) {
     ),
     {
       ...size,
-      fonts: [{ name: 'Inter', data: fontData, style: 'normal', weight: 700 }],
     }
   );
 }

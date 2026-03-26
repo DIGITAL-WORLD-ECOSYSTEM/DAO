@@ -18,11 +18,6 @@ export const contentType = 'image/png';
 // ----------------------------------------------------------------------
 
 export default async function Image() {
-  // Busca de fonte otimizada para o Edge Runtime
-  const fontData = await fetch(
-    new URL('https://fonts.cdnfonts.com/s/15068/Inter-Bold.woff')
-  ).then((res) => res.arrayBuffer());
-
   return new ImageResponse(
     (
       <div
@@ -100,15 +95,7 @@ export default async function Image() {
       </div>
     ),
     {
-      ...size,
-      fonts: [
-        {
-          name: 'Inter',
-          data: fontData,
-          style: 'normal',
-          weight: 700,
-        },
-      ],
+      ...size
     }
   );
 }
