@@ -23,6 +23,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
+import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
@@ -157,7 +158,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         {/* 🟢 Botão Principal: Estilo Crystal (Fundo Deep + Borda Reativa Ciano) */}
         <Button
           component={RouterLink}
-          href="/whitepaper"
+          href={paths.whitepaper}
           size="large"
           startIcon={<Iconify width={24} icon="solar:file-bold-duotone" />}
           sx={{
