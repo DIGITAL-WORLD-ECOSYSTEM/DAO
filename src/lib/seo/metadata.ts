@@ -8,7 +8,7 @@ interface MetadataProps {
   noIndex?: boolean;
 }
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://asppibra-dao.org';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://www.asppibra.com';
 
 export function constructMetadata({
   title,

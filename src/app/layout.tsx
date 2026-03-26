@@ -107,13 +107,16 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ASPPIBRA - Infraestrutura RWA & DeFi',
-    description: 'Conectando o agronegócio brasileiro à economia digital descentralizada.',
-    images: ['/opengraph-image.png'],
-  },
-};
+    twitter: {
+      card: 'summary_large_image',
+      title: 'ASPPIBRA - Infraestrutura RWA & DeFi',
+      description: 'Conectando o agronegócio brasileiro à economia digital descentralizada.',
+      images: ['/opengraph-image.png'],
+    },
+    alternates: {
+      canonical: '/',
+    },
+  };
 
 // ----------------------------------------------------------------------
 
@@ -160,11 +163,31 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <JsonLd 
           schema={{
             "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "ASPPIBRA Governance Portal",
-            "alternateName": "ASPPIBRA DAO",
-            "url": CONFIG.siteUrl,
-            "description": "Plataforma de governança digital e tokenização de ativos reais (RWA)."
+            "@graph": [
+              {
+                "@type": "WebSite",
+                "name": "ASPPIBRA Governance Portal",
+                "alternateName": "ASPPIBRA DAO",
+                "url": CONFIG.siteUrl,
+                "description": "Plataforma de governança digital e tokenização de ativos reais (RWA)."
+              },
+              {
+                "@type": "Organization",
+                "name": "ASPPIBRA",
+                "url": CONFIG.siteUrl,
+                "logo": `${CONFIG.siteUrl}/logo/logo-512x512.png`,
+                "sameAs": [
+                  "https://t.me/asppibra_official",
+                  "https://discord.gg/asppibra"
+                ],
+                "knowsAbout": [
+                  "Blockchain", 
+                  "Agribusiness Tokenization", 
+                  "Real World Assets (RWA)", 
+                  "DeFi"
+                ]
+              }
+            ]
           }} 
         />
       </head>

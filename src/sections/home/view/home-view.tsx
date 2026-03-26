@@ -12,6 +12,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { HomeBackground } from 'src/components/background';
 import { BackToTopButton } from 'src/components/animate/back-to-top-button';
 import { ScrollProgress, useScrollProgress } from 'src/components/animate/scroll-progress'; 
+import { LazyRender } from 'src/components/animate/lazy-render';
 
 // Componentes Críticos (Immediate Loading para LCP)
 import { HomeHero } from '../home-hero';
@@ -61,21 +62,38 @@ export function HomeView() {
         <HomeHero />
 
         <Stack sx={{ position: 'relative', bgcolor: 'transparent' }}>
-          <HomeEcosystem />
+          
+          <LazyRender minHeight={800}>
+            <HomeEcosystem />
+          </LazyRender>
 
-          <HomeIntegrations />
+          <LazyRender minHeight={950}>
+            <HomeIntegrations />
+          </LazyRender>
 
-          <HomeCommunity />
+          <LazyRender minHeight={800}>
+            <HomeCommunity />
+          </LazyRender>
 
-          <HomeTeam />
+          <LazyRender minHeight={800}>
+            <HomeTeam />
+          </LazyRender>
 
-          <HomeLatestNews />
+          <LazyRender minHeight={800}>
+            <HomeLatestNews />
+          </LazyRender>
 
-          <HomeRoadmap />
+          <LazyRender minHeight={900}>
+            <HomeRoadmap />
+          </LazyRender>
 
-          <HomeFAQs />
+          <LazyRender minHeight={600}>
+            <HomeFAQs />
+          </LazyRender>
 
-          <CtaBanner />
+          <LazyRender minHeight={400}>
+            <CtaBanner />
+          </LazyRender>
         </Stack>
       </Box>
 
