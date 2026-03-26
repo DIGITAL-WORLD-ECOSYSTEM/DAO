@@ -3,8 +3,7 @@
 /* eslint-disable react/no-unknown-property */
 
 import * as THREE from 'three';
-import ThreeGlobe from 'three-globe';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
@@ -83,12 +82,10 @@ const calculateArcAltitude = (arc: ArcData): number => {
 // ======================================================
 
 const generateClusterArcs = (hubs: Hotspot[]): ArcData[] => {
-
   const arcs: ArcData[] = [];
   let order = 0;
 
   hubs.forEach((hub, i) => {
-
     const targets = hubs
       .map((h, idx) => ({ hub: h, idx }))
       .filter(({ idx }) => idx !== i)
@@ -96,7 +93,6 @@ const generateClusterArcs = (hubs: Hotspot[]): ArcData[] => {
       .slice(0, hub.connections ?? MAX_CONNECTIONS);
 
     targets.forEach(({ hub: target, idx }) => {
-
       if (i < idx) {
         arcs.push({
           order: order++,
@@ -107,13 +103,10 @@ const generateClusterArcs = (hubs: Hotspot[]): ArcData[] => {
           color: '#60a5fa',
         });
       }
-
     });
-
   });
 
   return arcs;
-
 };
 
 // ======================================================
@@ -121,9 +114,7 @@ const generateClusterArcs = (hubs: Hotspot[]): ArcData[] => {
 // ======================================================
 
 const createHexNode = (color: string): HTMLDivElement => {
-
   const wrapper = document.createElement('div');
-
   wrapper.style.cssText = `
     width:24px;
     height:24px;
@@ -133,7 +124,6 @@ const createHexNode = (color: string): HTMLDivElement => {
   `;
 
   const hex = document.createElement('div');
-
   hex.style.cssText = `
     width:14px;
     height:14px;
@@ -144,7 +134,6 @@ const createHexNode = (color: string): HTMLDivElement => {
   `;
 
   const center = document.createElement('div');
-
   center.style.cssText = `
     width:4px;
     height:4px;
@@ -161,31 +150,23 @@ const createHexNode = (color: string): HTMLDivElement => {
   wrapper.appendChild(hex);
 
   return wrapper;
-
 };
 
 // ======================================================
 // ANIMATION
 // ======================================================
 
-function GlobeAnimator({ globe }: { globe: ThreeGlobe }) {
-
+function GlobeAnimator({ globe }: { globe: any }) {
   useFrame(({ clock }) => {
-
-    const material =
-      globe.globeMaterial() as THREE.MeshPhongMaterial | null;
-
+    if (!globe) return;
+    const material = globe.globeMaterial() as THREE.MeshPhongMaterial | null;
     if (!material) return;
 
     const t = clock.getElapsedTime();
-
-    material.emissiveIntensity =
-      0.85 + Math.sin(t * 1.4) * 0.1;
-
+    material.emissiveIntensity = 0.85 + Math.sin(t * 1.4) * 0.1;
   });
 
   return null;
-
 }
 
 // ======================================================
@@ -193,12 +174,11 @@ function GlobeAnimator({ globe }: { globe: ThreeGlobe }) {
 // ======================================================
 
 function useGlobeLogic(
-  globe: ThreeGlobe,
+  globe: any,
   arcs: ArcData[],
   hotspots: Hotspot[],
   config: Required<GlobeConfig>
 ) {
-
   const material = useMemo(() =>
     new THREE.MeshPhongMaterial({
       color: new THREE.Color(config.globeColor),
@@ -210,14 +190,13 @@ function useGlobeLogic(
   [config.globeColor]);
 
   useEffect(() => {
-
+    if (!globe) return;
     globe.globeMaterial(material);
-
     return () => material.dispose();
-
   }, [globe, material]);
 
   useEffect(() => {
+    if (!globe) return;
 
     const geo = countries as GeoFeatureCollection;
 
@@ -255,49 +234,34 @@ function useGlobeLogic(
       .arcEndLng((d: object) => (d as ArcData).endLng)
       .arcColor((d: object) => (d as ArcData).color)
       .arcAltitude((d: object) => {
-
         const arc = d as ArcData;
         return arc.arcAlt ?? calculateArcAltitude(arc);
-
       })
       .arcStroke(VISUAL_CONFIG.arcStroke)
       .arcDashLength(config.arcLength)
       .arcDashGap(VISUAL_CONFIG.arcDashGap)
       .arcDashAnimateTime((d: object) => {
-
         const arc = d as ArcData;
         const dist = distance(arc);
-
-        return THREE.MathUtils.mapLinear(
-          dist,
-          5,
-          120,
-          1200,
-          4000
-        );
-
+        return THREE.MathUtils.mapLinear(dist, 5, 120, 1200, 4000);
       })
       .arcsTransitionDuration(VISUAL_CONFIG.arcsTransition);
 
     return () => {
-
       globe
         .arcsData([])
         .ringsData([])
         .hexPolygonsData([])
         .htmlElementsData([]);
-
     };
-
   }, [globe, arcs, hotspots, config]);
-
 }
 
 // ======================================================
 // MAIN COMPONENT
 // ======================================================
 
-export function World({
+export default function World({
   data,
   hotspots = HUBS,
   globeConfig = {},
@@ -308,13 +272,25 @@ export function World({
     ...globeConfig,
   }), [globeConfig]);
 
-  const globe = useMemo(() => new ThreeGlobe(), []);
+  const [globe, setGlobe] = useState<any>(null);
 
   useEffect(() => {
+    let instance: any = null;
+
+    // Async import explicitly blocks Node.js Turbopack compilation 
+    // guaranteeing initialization strictly on browser runtime.
+    import('three-globe').then((mod) => {
+      const ThreeGlobeClass = mod.default;
+      instance = new ThreeGlobeClass();
+      setGlobe(instance);
+    });
+
     return () => {
-      (globe as any).dispose?.();
+      if (instance) {
+        instance.dispose?.();
+      }
     };
-  }, [globe]);
+  }, []);
 
   const clusterArcs = useMemo(
     () => generateClusterArcs(hotspots),
@@ -329,9 +305,7 @@ export function World({
   useGlobeLogic(globe, arcs, hotspots, config);
 
   return (
-
     <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-
       <PerspectiveCamera
         makeDefault
         position={[0, 0, 380]}
@@ -358,12 +332,9 @@ export function World({
         color="#60a5fa"
       />
 
-      <primitive object={globe} />
-
-      <GlobeAnimator globe={globe} />
+      {globe && <primitive object={globe} />}
+      {globe && <GlobeAnimator globe={globe} />}
 
     </Canvas>
-
   );
-
 }
