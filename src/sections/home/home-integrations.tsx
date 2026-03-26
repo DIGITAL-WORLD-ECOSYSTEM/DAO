@@ -1,7 +1,7 @@
 'use client';
 
 // Importação de tipos para integridade com o componente 3D
-import type { ArcData } from 'src/components/threeglobe/globe';
+import type { ArcData } from 'src/components/threeglobe/types';
 
 import { m } from 'framer-motion';
 import dynamic from 'next/dynamic';
