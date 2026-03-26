@@ -4,7 +4,7 @@ import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export const alt = `DEX World - ${CONFIG.appName} Governance & RWA`;
 

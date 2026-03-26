@@ -5,7 +5,7 @@ import { CONFIG } from 'src/global-config';
 // ----------------------------------------------------------------------
 
 // Edge runtime para geração instantânea e baixo custo de latência
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 // Resolução padrão Apple para telas Retina (iPhone/iPad)
 export const size = {
