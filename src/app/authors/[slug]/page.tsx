@@ -1,4 +1,4 @@
-import { constructMetadata } from '@/lib/seo/metadata';
+import { constructMetadata } from 'src/lib/seo/metadata';
 import { ComingSoonView } from 'src/sections/coming-soon/view';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {

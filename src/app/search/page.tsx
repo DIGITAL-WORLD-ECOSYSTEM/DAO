@@ -1,4 +1,4 @@
-import { constructMetadata } from '@/lib/seo/metadata';
+import { constructMetadata } from 'src/lib/seo/metadata';
 
 export const metadata = constructMetadata({
   title: 'Busca Semântica do Ecossistema',
