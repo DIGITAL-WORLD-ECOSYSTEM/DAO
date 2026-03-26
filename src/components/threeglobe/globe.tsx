@@ -235,6 +235,8 @@ export default function World({
         enablePan={false}
         autoRotate
         autoRotateSpeed={0.6}
+        minPolarAngle={Math.PI / 2}
+        maxPolarAngle={Math.PI / 2}
       />
 
       <ambientLight intensity={1.2} />
