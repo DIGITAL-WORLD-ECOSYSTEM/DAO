@@ -127,7 +127,7 @@ export function HomeTeam({ sx, ...other }: BoxProps) {
           <m.div variants={varFade('inRight')}>
             <Button
               component={RouterLink}
-              href={paths.about}
+              href={paths.team}
               endIcon={<Iconify icon="solar:double-alt-arrow-right-bold-duotone" />}
               sx={{
                 height: 56,
