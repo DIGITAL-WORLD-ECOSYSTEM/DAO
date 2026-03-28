@@ -1,0 +1,3 @@
+packages:
+  - 'frontend'     # Frontend isolado em sua própria pasta
+  - 'backend'      # Backend isolado em sua própria pasta
