@@ -1,5 +1,5 @@
 {
-  "name": "asppibra-monorepo",
+  "name": "gov-system-monorepo",
   "private": true,
   "scripts": {
     "dev": "pnpm --filter frontend dev",

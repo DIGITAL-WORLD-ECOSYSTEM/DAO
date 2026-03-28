@@ -43,7 +43,7 @@ export const _mock = {
   
   // ✅ CORREÇÃO 2: Mantendo a função companyNames
   companyNames: (index: number) => 
-    ['Minimals UI', 'Google', 'Stripe', 'Airbnb', 'Facebook', 'Amazon', 'Netflix', 'Tesla'][index % 8],
+    ['Gov System', 'Google', 'Stripe', 'Airbnb', 'Facebook', 'Amazon', 'Netflix', 'Tesla'][index % 8],
 
   // ✅ CORREÇÃO 3: Mantendo a função sentence
   sentence: (index: number) => 
@@ -55,7 +55,7 @@ export const _mock = {
 
   // ✅ CORREÇÃO 5 (NOVA): Adicionando a função courseNames que quebrou o último build
   courseNames: (index: number) => 
-    ['Minimal UI Design', 'Python for Beginners', 'React Masterclass', 'Data Science 101', 'Digital Marketing Strategy'][index % 5],
+    ['Agro System Design', 'Python for Beginners', 'React Masterclass', 'Data Science 101', 'Digital Marketing Strategy'][index % 5],
 
   // Contact
   email: (index: number) => _emails[index],

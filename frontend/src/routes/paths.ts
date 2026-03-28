@@ -32,12 +32,12 @@ export const paths = {
   page404: '/error/404',
   page500: '/error/500',
   components: '/components',
-  docs: 'https://docs.minimals.cc/',
-  changelog: 'https://docs.minimals.cc/changelog/',
+  docs: 'https://docs.asppibra.com/',
+  changelog: 'https://docs.asppibra.com/changelog/',
   zoneStore: 'https://mui.com/store/items/zone-landing-page/',
-  minimalStore: 'https://mui.com/store/items/minimal-dashboard/',
+  minimalStore: 'https://asppibra.com/',
   freeUI: 'https://mui.com/store/items/minimal-dashboard-free/',
-  figmaUrl: 'https://www.figma.com/design/WadcoP3CSejUDj7YZc87xj/%5BPreview%5D-Minimal-Web.v7.3.0',
+  figmaUrl: 'https://asppibra.com/',
 
   // POSTS PÚBLICOS (Essencial para SEO e Sitemap)
   post: {
