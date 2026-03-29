@@ -40,7 +40,7 @@ export function generateArticleSchema(data: {
 }) {
   return {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": "BlogSoFiing",
     "headline": data.title,
     "description": data.description,
     "image": [data.coverUrl],

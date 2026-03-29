@@ -17,7 +17,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { SettingsDrawer } from 'src/components/settings/drawer';
 import { defaultSettings } from 'src/components/settings/settings-config';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useMockedUser } from 'src/identity/hooks';
 
 import { NavMobile } from './nav-mobile';
 import { VerticalDivider } from './content';

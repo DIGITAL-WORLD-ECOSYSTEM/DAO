@@ -1,7 +1,7 @@
 'use client';
 
 import type { SWRConfiguration } from 'swr';
-import type { IPostItem } from 'src/types/blog';
+import type { ISoFiItem } from 'src/types/blog';
 
 import useSWR from 'swr';
 import { useMemo } from 'react';
@@ -18,24 +18,24 @@ const swrOptions: SWRConfiguration = {
 
 // ----------------------------------------------------------------------
 
-type PostsData = {
-  posts: IPostItem[];
+type SoFisData = {
+  sofi: ISoFiItem[];
 };
 
-export function useGetPosts() {
+export function useGetSoFis() {
   const url = endpoints.post.list;
 
-  const { data, isLoading, error, isValidating } = useSWR<PostsData>(url, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR<SoFisData>(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
-      posts: data?.posts || [],
-      postsLoading: isLoading,
-      postsError: error,
-      postsValidating: isValidating,
-      postsEmpty: !isLoading && !data?.posts?.length,
+      sofi: data?.sofi || [],
+      sofiLoading: isLoading,
+      sofiError: error,
+      sofiValidating: isValidating,
+      sofiEmpty: !isLoading && !data?.sofi?.length,
     }),
-    [data?.posts, error, isLoading, isValidating]
+    [data?.sofi, error, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -44,22 +44,22 @@ export function useGetPosts() {
 // ----------------------------------------------------------------------
 
 /**
- * Busca posts por categoria específica (Ex: DEX, Análise)
+ * Busca sofi por categoria específica (Ex: DEX, Análise)
  */
-export function useGetPostsByCategory(category: string) {
+export function useGetSoFisByCategory(category: string) {
   const url = category ? [endpoints.post.list, { params: { category } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR<PostsData>(url, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR<SoFisData>(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
-      posts: data?.posts || [],
-      postsLoading: isLoading,
-      postsError: error,
-      postsValidating: isValidating,
-      postsEmpty: !isLoading && !data?.posts?.length,
+      sofi: data?.sofi || [],
+      sofiLoading: isLoading,
+      sofiError: error,
+      sofiValidating: isValidating,
+      sofiEmpty: !isLoading && !data?.sofi?.length,
     }),
-    [data?.posts, error, isLoading, isValidating]
+    [data?.sofi, error, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -67,15 +67,15 @@ export function useGetPostsByCategory(category: string) {
 
 // ----------------------------------------------------------------------
 
-type PostData = {
-  post: IPostItem;
+type SoFiData = {
+  post: ISoFiItem;
 };
 
-export function useGetPost(title: string) {
+export function useGetSoFi(title: string) {
   // Ajustado para garantir que use a função de detalhes se disponível ou o params
   const url = title ? [endpoints.post.details(title), { params: { title } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR<PostData>(url, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR<SoFiData>(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
@@ -92,25 +92,25 @@ export function useGetPost(title: string) {
 
 // ----------------------------------------------------------------------
 
-type LatestPostsData = {
-  latestPosts: IPostItem[];
+type LatestSoFisData = {
+  latestSoFis: ISoFiItem[];
 };
 
-export function useGetLatestPosts(title: string) {
+export function useGetLatestSoFis(title: string) {
   // ✅ CORREÇÃO: Usando o endpoint 'list' com parâmetro 'latest' para evitar erro TS2339
   const url = title ? [endpoints.post.list, { params: { title, latest: true } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR<LatestPostsData>(url, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR<LatestSoFisData>(url, fetcher, swrOptions);
 
   const memoizedValue = useMemo(
     () => ({
-      latestPosts: data?.latestPosts || [],
-      latestPostsLoading: isLoading,
-      latestPostsError: error,
-      latestPostsValidating: isValidating,
-      latestPostsEmpty: !isLoading && !data?.latestPosts?.length,
+      latestSoFis: data?.latestSoFis || [],
+      latestSoFisLoading: isLoading,
+      latestSoFisError: error,
+      latestSoFisValidating: isValidating,
+      latestSoFisEmpty: !isLoading && !data?.latestSoFis?.length,
     }),
-    [data?.latestPosts, error, isLoading, isValidating]
+    [data?.latestSoFis, error, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -119,10 +119,10 @@ export function useGetLatestPosts(title: string) {
 // ----------------------------------------------------------------------
 
 type SearchResultsData = {
-  results: IPostItem[];
+  results: ISoFiItem[];
 };
 
-export function useSearchPosts(query: string) {
+export function useSearchSoFis(query: string) {
   // ✅ CORREÇÃO: Usando o endpoint 'list' com parâmetro 'query' para busca
   const url = query ? [endpoints.post.list, { params: { query } }] : '';
 

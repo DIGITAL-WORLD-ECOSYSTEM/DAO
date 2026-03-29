@@ -1,4 +1,4 @@
-import type { IPostComment } from 'src/types/blog';
+import type { ISoFiComment } from 'src/types/blog';
 
 import { _mock } from './_mock';
 
@@ -59,7 +59,7 @@ const _favoritePeople: { name: string; avatarUrl: string }[] = [...Array(5)].map
   avatarUrl: _mock.image.avatar(i),
 }));
 
-const _comments: IPostComment[] = [...Array(3)].map((_, i) => ({
+const _comments: ISoFiComment[] = [...Array(3)].map((_, i) => ({
   id: _mock.id(i),
   name: _mock.fullName(i),
   avatarUrl: _mock.image.avatar(i),
@@ -69,7 +69,7 @@ const _comments: IPostComment[] = [...Array(3)].map((_, i) => ({
   replyComment: [],
 }));
 
-export const _posts = POST_TITLES.map((title, index) => {
+export const _sofi = POST_TITLES.map((title, index) => {
   const categoryIndex = index % 4;
   const categoriesMap = ['Economia', 'Tecnologia', 'Meio Ambiente', 'Geopolítica'];
   const category = categoriesMap[categoryIndex];

@@ -14,7 +14,7 @@ export function getRobotsRules(isProduction: boolean) {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/dashboard/', '/api/', '/auth/'], // Protect private DAO elements
+        disallow: ['/dashboard/', '/api/', '/identity/'], // Protect private DAO elements
       },
       {
         // Advanced 2026 AI Scraping block matching the llms.txt policies

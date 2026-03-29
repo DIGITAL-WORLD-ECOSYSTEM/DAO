@@ -39,23 +39,23 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
   const theme = useTheme();
   const { t } = useTranslate();
 
-  const displayPosts = useMemo(
+  const displaySoFis = useMemo(
     () => [
       {
         id: 'post-1',
-        title: t('news.posts.post1.title'),
+        title: t('news.sofi.post1.title'),
         coverUrl: _mock.image.cover(4),
         createdAt: new Date().toISOString(),
       },
       {
         id: 'post-2',
-        title: t('news.posts.post2.title'),
+        title: t('news.sofi.post2.title'),
         coverUrl: _mock.image.cover(5),
         createdAt: new Date().toISOString(),
       },
       {
         id: 'post-3',
-        title: t('news.posts.post3.title'),
+        title: t('news.sofi.post3.title'),
         coverUrl: _mock.image.cover(6),
         createdAt: new Date().toISOString(),
       },
@@ -187,7 +187,7 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
 
           {/* GRID COM BORDAS REATIVAS NOS CARDS */}
           <Grid container spacing={4}>
-            {displayPosts.map((post, index) => (
+            {displaySoFis.map((post, index) => (
               <Grid
                 key={post.id}
                 size={{

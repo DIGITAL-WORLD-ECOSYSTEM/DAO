@@ -1,23 +1,23 @@
 'use client';
 
-import type { IPostItem } from 'src/types/blog';
+import type { ISoFiItem } from 'src/types/blog';
 
 import { useState, useCallback } from 'react';
 
 // ----------------------------------------------------------------------
 
 type ReturnType = {
-  posts: {
-    all: IPostItem[];
-    featured: IPostItem[];
-    paginated: IPostItem[];
+  sofi: {
+    all: ISoFiItem[];
+    featured: ISoFiItem[];
+    paginated: ISoFiItem[];
   };
   filters: {
     page: number;
     sortBy: string;
     search: {
       query: string;
-      results: IPostItem[];
+      results: ISoFiItem[];
     };
   };
   methods: {
@@ -27,7 +27,7 @@ type ReturnType = {
   };
 };
 
-export function useBlog(posts: IPostItem[]): ReturnType {
+export function useBlog(sofi: ISoFiItem[]): ReturnType {
   const [sortBy, setSortBy] = useState('latest');
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,16 +45,16 @@ export function useBlog(posts: IPostItem[]): ReturnType {
     setSearchQuery(event.target.value);
   }, []);
 
-  const filteredPosts = applyFilter(posts, sortBy, searchQuery);
+  const filteredSoFis = applyFilter(sofi, sortBy, searchQuery);
 
-  const searchResults = searchQuery ? filteredPosts : [];
-  const paginatedPosts = applyPagination(filteredPosts, page);
+  const searchResults = searchQuery ? filteredSoFis : [];
+  const paginatedSoFis = applyPagination(filteredSoFis, page);
 
   return {
-    posts: {
-      all: filteredPosts,
-      featured: posts.filter((post) => post.featured),
-      paginated: paginatedPosts,
+    sofi: {
+      all: filteredSoFis,
+      featured: sofi.filter((post) => post.featured),
+      paginated: paginatedSoFis,
     },
     filters: {
       page,
@@ -74,36 +74,36 @@ export function useBlog(posts: IPostItem[]): ReturnType {
 
 // ----------------------------------------------------------------------
 
-function applyFilter(posts: IPostItem[], sortBy: string, searchQuery: string) {
-  const newPosts = posts || [];
+function applyFilter(sofi: ISoFiItem[], sortBy: string, searchQuery: string) {
+  const newSoFis = sofi || [];
   // SORT
   if (sortBy === 'latest') {
-    newPosts.sort(
+    newSoFis.sort(
       (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
     );
   }
   if (sortBy === 'oldest') {
-    newPosts.sort(
+    newSoFis.sort(
       (a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime()
     );
   }
   if (sortBy === 'popular') {
-    newPosts.sort((a, b) => b.totalViews - a.totalViews);
+    newSoFis.sort((a, b) => b.totalViews - a.totalViews);
   }
 
   // SEARCH
   if (searchQuery) {
-    return newPosts.filter(
+    return newSoFis.filter(
       (post) => post.title.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
     );
   }
 
-  return newPosts;
+  return newSoFis;
 }
 
 // ----------------------------------------------------------------------
 
-function applyPagination(posts: IPostItem[], page: number) {
+function applyPagination(sofi: ISoFiItem[], page: number) {
   const POSTS_PER_PAGE = 8;
-  return posts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+  return sofi.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 }

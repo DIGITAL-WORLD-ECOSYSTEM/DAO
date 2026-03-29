@@ -1,12 +1,12 @@
-import type { IPostItem } from 'src/types/blog';
+import type { ISoFiItem } from 'src/types/blog';
 
 // ----------------------------------------------------------------------
 
 /**
- * MAPPER: Transforma dados brutos (API/D1/YouTube) no formato IPostItem.
+ * MAPPER: Transforma dados brutos (API/D1/YouTube) no formato ISoFiItem.
  * Esta função protege a UI de mudanças no Backend.
  */
-export function mapToPostItem(apiData: any): IPostItem {
+export function mapToSoFiItem(apiData: any): ISoFiItem {
   return {
     id: String(apiData.id || ''),
     title: apiData.title || 'Sem título',
@@ -59,7 +59,7 @@ export function mapToPostItem(apiData: any): IPostItem {
 /**
  * MAPPER DE LISTA: Facilita a conversão de arrays vindos do banco de dados.
  */
-export function mapToPostList(apiList: any[]): IPostItem[] {
+export function mapToSoFiList(apiList: any[]): ISoFiItem[] {
   if (!Array.isArray(apiList)) return [];
-  return apiList.map(mapToPostItem);
+  return apiList.map(mapToSoFiItem);
 }

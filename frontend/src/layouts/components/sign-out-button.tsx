@@ -11,8 +11,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { toast } from 'src/components/snackbar';
 
-import { useAuthContext } from 'src/auth/hooks';
-import { signOut as jwtSignOut } from 'src/auth/context/action';
+import { useAuthContext } from 'src/identity/hooks';
+import { signOut as jwtSignOut } from 'src/identity/context/action';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
       
       // ✅ CORREÇÃO: Em vez de .refresh() (que não existe no seu hook), 
       // usamos o .replace() para redirecionar o usuário para a home ou login.
-      router.replace(paths.auth.signIn); 
+      router.replace(paths.identity.signIn); 
       
     } catch (error) {
       console.error(error);

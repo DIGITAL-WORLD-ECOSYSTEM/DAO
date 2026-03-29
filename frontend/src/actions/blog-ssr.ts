@@ -1,7 +1,7 @@
 // src/actions/blog-ssr.ts
 import { kebabCase } from 'es-toolkit';
 
-import { _posts } from 'src/_mock/_blog'; // Fonte estática de verdade
+import { _sofi } from 'src/_mock/_blog'; // Fonte estática de verdade
 import { CONFIG } from 'src/global-config';
 
 const API_URL = CONFIG.serverUrl;
@@ -9,27 +9,27 @@ const API_URL = CONFIG.serverUrl;
 // ----------------------------------------------------------------------
 
 /**
- * BUSCA PRINCIPAL: Retorna todos os posts.
+ * BUSCA PRINCIPAL: Retorna todos os sofi.
  * Prioriza a API, mas usa o MOCK como fallback durante o desenvolvimento.
  */
-export async function getPosts() {
+export async function getSoFis() {
   try {
-    const url = `${API_URL}/api/posts`;
+    const url = `${API_URL}/api/sofi`;
     
     // Se estivermos em dev ou banco vazio, podemos forçar o mock aqui
     if (!API_URL || API_URL.includes('localhost')) {
-       return { posts: _posts };
+       return { sofi: _sofi };
     }
 
     const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return { posts: _posts }; // Fallback para Mock se a API falhar
+    if (!res.ok) return { sofi: _sofi }; // Fallback para Mock se a API falhar
 
     const data = await res.json();
-    const posts = Array.isArray(data) ? data : (data.posts || []);
+    const sofi = Array.isArray(data) ? data : (data.sofi || []);
 
-    return { posts: posts.length > 0 ? posts : _posts };
+    return { sofi: sofi.length > 0 ? sofi : _sofi };
   } catch (error) {
-    return { posts: _posts };
+    return { sofi: _sofi };
   }
 }
 
@@ -38,12 +38,12 @@ export async function getPosts() {
 /**
  * BUSCA INDIVIDUAL: Pega um post específico pelo Título (Slug).
  */
-export async function getPost(paramTitle: string) {
+export async function getSoFi(paramTitle: string) {
   if (!paramTitle) return { post: null };
 
   try {
     // 🟢 Lógica de busca no Mock (Padrão 2026 com Slug)
-    const post = _posts.find((p) => kebabCase(p.title) === paramTitle);
+    const post = _sofi.find((p) => kebabCase(p.title) === paramTitle);
 
     return { post: post || null };
   } catch (error) {
@@ -54,18 +54,18 @@ export async function getPost(paramTitle: string) {
 // ----------------------------------------------------------------------
 
 /**
- * BUSCA RELACIONADOS: Retorna os últimos posts.
+ * BUSCA RELACIONADOS: Retorna os últimos sofi.
  */
-export async function getLatestPosts(paramTitle: string) {
+export async function getLatestSoFis(paramTitle: string) {
   try {
-    const { posts } = await getPosts();
+    const { sofi } = await getSoFis();
     
-    const latestPosts = posts
+    const latestSoFis = sofi
       .filter((p: any) => kebabCase(p.title) !== paramTitle)
       .slice(0, 4);
 
-    return { latestPosts }; // 🟢 Corresponde ao que a Page.tsx desestrutura
+    return { latestSoFis }; // 🟢 Corresponde ao que a Page.tsx desestrutura
   } catch (error) {
-    return { latestPosts: [] };
+    return { latestSoFis: [] };
   }
 }

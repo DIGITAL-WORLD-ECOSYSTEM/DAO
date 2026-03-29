@@ -91,7 +91,7 @@ export const _userCards = Array.from({ length: 21 }, (_, index) => ({
   coverUrl: _mock.image.cover(index),
   avatarUrl: _mock.image.avatar(index),
   totalFollowers: _mock.number.nativeL(index),
-  totalPosts: _mock.number.nativeL(index + 2),
+  totalSoFis: _mock.number.nativeL(index + 2),
   totalFollowing: _mock.number.nativeL(index + 1),
 }));
 

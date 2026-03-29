@@ -9,8 +9,8 @@ import type { AxiosRequestConfig } from 'axios';
 
 import axios from 'axios';
 
-import { setSession } from 'src/auth/context/utils';
-import { JWT_STORAGE_KEY } from 'src/auth/context/constant';
+import { setSession } from 'src/identity/context/utils';
+import { JWT_STORAGE_KEY } from 'src/identity/context/constant';
 
 // ----------------------------------------------------------------------
 
@@ -94,19 +94,19 @@ export const fetcher = async <T = unknown>(
  */
 export const endpoints = {
   auth: {
-    me: '/api/core/auth/me',
-    signIn: '/api/core/auth/login',
-    signUp: '/api/core/auth/register',
-    resetPassword: '/api/core/auth/reset-password',
-    updatePassword: '/api/core/auth/update-password',
-    verify: '/api/core/auth/verify',
+    me: '/api/core/identity/me',
+    signIn: '/api/core/identity/login',
+    signUp: '/api/core/identity/register',
+    resetPassword: '/api/core/identity/reset-password',
+    updatePassword: '/api/core/identity/update-password',
+    verify: '/api/core/identity/verify',
   },
   // 🚀 SocialFi & Blog Integration
   post: {
-    list: '/api/posts',
-    details: (title: string) => `/api/posts/${title}`,
-    latest: '/api/posts/latest',
-    search: '/api/posts/search',
+    list: '/api/sofi',
+    details: (title: string) => `/api/sofi/${title}`,
+    latest: '/api/sofi/latest',
+    search: '/api/sofi/search',
   },
   // Agroecological Management
   agro: {

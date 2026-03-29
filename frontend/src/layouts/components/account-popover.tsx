@@ -18,7 +18,7 @@ import { RouterLink } from 'src/routes/components';
 import { Label } from 'src/components/label';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useMockedUser } from 'src/identity/hooks';
 
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';

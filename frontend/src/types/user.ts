@@ -49,7 +49,7 @@ export type IUserProfileFriend = {
   avatarUrl: string;
 };
 
-export type IUserProfilePost = {
+export type IUserProfileSoFi = {
   id: string;
   media: string;
   message: string;
@@ -69,7 +69,7 @@ export type IUserCard = {
   role: string;
   coverUrl: string;
   avatarUrl: string;
-  totalPosts: number;
+  totalSoFis: number;
   totalFollowers: number;
   totalFollowing: number;
 };

@@ -2,11 +2,11 @@ import type { IDateValue } from './common';
 
 // ----------------------------------------------------------------------
 
-export type IPostFilters = {
+export type ISoFiFilters = {
   publish: boolean;
 };
 
-export type IPostHero = {
+export type ISoFiHero = {
   title: string;
   createdAt?: IDateValue;
   coverUrl: File | string | null;
@@ -16,7 +16,7 @@ export type IPostHero = {
   };
 };
 
-export type IPostComment = {
+export type ISoFiComment = {
   id: string;
   name: string;
   message: string;
@@ -36,7 +36,7 @@ export type IPostComment = {
   }[];
 };
 
-export type IPostItem = {
+export type ISoFiItem = {
   id: string;
   title: string;
   tags: string[];
@@ -53,7 +53,7 @@ export type IPostItem = {
   totalFavorites: number;
   metaKeywords: string[];
   metaDescription: string;
-  comments: IPostComment[];
+  comments: ISoFiComment[];
   author: {
     name: string;
     avatarUrl: string;

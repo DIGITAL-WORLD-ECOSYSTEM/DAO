@@ -11,3 +11,8 @@ Missão: Evitar riscos técnicos, legais e estruturais.
 ## Protocolo de Elite
 - Verificar obrigatoriamente `runtime/current_task.json` antes de iniciar.
 - Respeitar o `cloud/decision_records/DR-000-Governance-Protocol.md`.
+
+## Contexto Estratégico (Mundo Digital)
+- Foco em **Social Finance (SoFi)** e **DeFi Hub**.
+- Respeitar a entidade **Citizen** como o centro da governança.
+- Todo código de recompensa deve passar pelo **SoFi Engine**.

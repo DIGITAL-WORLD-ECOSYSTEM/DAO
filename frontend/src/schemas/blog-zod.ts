@@ -34,7 +34,7 @@ const postCommentSchema = zod.object({
   ),
 });
 
-// 2. Schema para o Item do Post (Consumo de Dados/API)
+// 2. Schema para o Item do SoFi (Consumo de Dados/API)
 export const postItemSchema = zod.object({
   id: zod.string(),
   title: zod.string(),
@@ -65,13 +65,13 @@ export const postItemSchema = zod.object({
   ),
 });
 
-export const postsSchema = zod.array(postItemSchema);
+export const sofiSchema = zod.array(postItemSchema);
 
 // ----------------------------------------------------------------------
 
 // 3. NOVO: Schema para Criação/Edição (Management)
-// Este é o que será usado no seu PostCreateEditForm
-export const NewPostSchema = zod.object({
+// Este é o que será usado no seu SoFiCreateEditForm
+export const NewSoFiSchema = zod.object({
   title: zod.string().min(1, 'O título é obrigatório'),
   description: zod.string().min(1, 'A descrição é obrigatória'),
   content: zod.string().min(1, 'O conteúdo é obrigatório'),

@@ -62,13 +62,13 @@ export const navData: NavSectionProps['data'] = [
       },
       {
         title: 'Blog',
-        path: paths.dashboard.post.root,
+        path: paths.dashboard.sofi.root,
         icon: ICONS.blog,
         children: [
-          { title: 'List', path: paths.dashboard.post.root },
-          { title: 'Details', path: paths.dashboard.post.demo.details },
-          { title: 'Create', path: paths.dashboard.post.new },
-          { title: 'Edit', path: paths.dashboard.post.demo.edit },
+          { title: 'List', path: paths.dashboard.sofi.root },
+          { title: 'Details', path: paths.dashboard.sofi.demo.details },
+          { title: 'Create', path: paths.dashboard.sofi.new },
+          { title: 'Edit', path: paths.dashboard.sofi.demo.edit },
         ],
       },
     ],

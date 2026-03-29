@@ -36,7 +36,7 @@ import { JsonLd } from 'src/components/seo/json-ld';
 import { detectSettings } from 'src/components/settings/server';
 import { defaultSettings, SettingsProvider } from 'src/components/settings';
 
-import { AuthProvider as JwtAuthProvider } from 'src/auth/context'; 
+import { AuthProvider as JwtAuthProvider } from 'src/identity/context'; 
 
 import App from './app';
 

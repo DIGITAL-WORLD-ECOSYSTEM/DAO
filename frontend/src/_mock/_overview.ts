@@ -71,7 +71,7 @@ export const _analyticTasks = Array.from({ length: 5 }, (_, index) => ({
   name: _mock.taskNames(index),
 }));
 
-export const _analyticPosts = Array.from({ length: 5 }, (_, index) => ({
+export const _analyticSoFis = Array.from({ length: 5 }, (_, index) => ({
   id: _mock.id(index),
   postedAt: _mock.time(index),
   title: _mock.postTitle(index),

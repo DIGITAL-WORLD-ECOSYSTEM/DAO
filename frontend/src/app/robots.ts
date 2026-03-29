@@ -17,7 +17,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           '/api/',        // Bloqueia rotas de backend (segurança e SEO técnico)
           '/dashboard/',  // Áreas logadas não devem gastar Crawl Budget
-          '/auth/',       // Protege fluxos de autenticação (sign-in/sign-up)
+          '/identity/',       // Protege fluxos de autenticação (sign-in/sign-up)
           '/_next/',      // Arquivos de sistema do Next.js
           '/static/',     // Assets estáticos não indexáveis diretamente
         ],
@@ -25,11 +25,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         /**
          * PROTEÇÃO DE CONTEÚDO (IA/LLM)
-         * Evita que o GPTBot utilize seus posts de governança e ativos RWA 
+         * Evita que o GPTBot utilize seus sofi de governança e ativos RWA 
          * para treinamento sem gerar tráfego direto.
          */
         userAgent: 'GPTBot',
-        disallow: ['/post/'], 
+        disallow: ['/sofi/'], 
       },
       {
         /**

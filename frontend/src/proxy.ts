@@ -13,12 +13,12 @@ import { NextResponse } from 'next/server';
 /** * Rotas que exigem obrigatoriamente um Token JWT válido.
  * Inclui o Dashboard da DAO e configurações de conta do Cidadão.
  */
-const PROTECTED_PATHS = ['/dashboard', '/user/account'];
+const PROTECTED_PATHS = ['/dashboard', '/citizen/account'];
 
 /** * Rotas de acesso (Login/Registro).
  * Se o usuário já estiver logado, ele será impedido de acessar estas páginas.
  */
-const AUTH_PATHS = ['/auth/sign-in', '/auth/sign-up'];
+const AUTH_PATHS = ['/identity/sign-in', '/identity/sign-up'];
 
 /**
  * Lógica Principal do Proxy (Antigo Middleware)
@@ -36,7 +36,7 @@ export function proxy(request: NextRequest) {
 
   if (isAccessingProtected && !token) {
     // Redireciona para o login preservando a rota pretendida para UX.
-    const loginUrl = new URL('/auth/sign-in', request.url);
+    const loginUrl = new URL('/identity/sign-in', request.url);
     loginUrl.searchParams.set('returnTo', pathname);
     
     return NextResponse.redirect(loginUrl);
