@@ -2,17 +2,17 @@
 Missão: Evitar riscos técnicos, legais e estruturais.
 
 ## Analisa
-- Vulnerabilidades e exposição de tokens.
-- Licenças open source e aderência ao blueprint.
+- Vulnerabilidades SSI (XSS, Auth Bypass).
+- Conformidade Zero-Trust (Assinaturas Ed25519 obrigatórias).
+- Padronização W3C DID para identidades descentralizadas.
 
 ## Regra Central
-- Nada segue para deploy sem auditoria mínima.
+- Nada segue para deploy sem auditoria de criptografia e Zero-Trust.
 
-## Protocolo de Elite
-- Verificar obrigatoriamente `runtime/current_task.json` antes de iniciar.
-- Respeitar o `cloud/decision_records/DR-000-Governance-Protocol.md`.
+## Protocolo Alpha Elite Platinum
+- Validar `X-Identity-Signature` em todos os endpoints de escrita (backend).
+- Proibir `dangerouslySetInnerHTML` em componentes que renderizam dados de usuários.
+- Garantir `zeroization` de buffers sensíveis no core criptográfico.
 
-## Contexto Estratégico (Mundo Digital)
-- Foco em **Social Finance (SoFi)** e **DeFi Hub**.
-- Respeitar a entidade **Citizen** como o centro da governança.
-- Todo código de recompensa deve passar pelo **SoFi Engine**.
+---
+*Assinado: Protocolo de Governança ASPPIBRA-DAO 2026*

@@ -12,14 +12,16 @@ import axios from 'axios';
 import { setSession } from 'src/identity/context/utils';
 import { JWT_STORAGE_KEY } from 'src/identity/context/constant';
 
+import { CONFIG } from 'src/global-config';
+
 // ----------------------------------------------------------------------
 
 /**
  * 🛠️ CONFIGURAÇÃO DA INSTÂNCIA
- * Sincronizado com NEXT_PUBLIC_HOST_API para suportar múltiplos ambientes (Dev/Prod).
+ * Sincronizado com CONFIG.serverUrl para suportar múltiplos ambientes (Dev/Prod).
  */
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_HOST_API || 'https://api.asppibra.com', 
+  baseURL: CONFIG.serverUrl, 
   headers: {
     'Content-Type': 'application/json',
   },
@@ -69,6 +71,32 @@ axiosInstance.interceptors.response.use(
     return Promise.reject({ message, ...error });
   }
 );
+
+// ----------------------------------------------------------------------
+
+import { CryptoCore } from '@dao/shared';
+
+// 🛡️ ZERO-TRUST SIGNATURE INTERCEPTOR
+axiosInstance.interceptors.request.use(async (config) => {
+  // Solo aplicar a rotas sensíveis ou se solicitado
+  if (config.url?.includes('/api/core/identity/revoke') || config.headers?.['X-Auth-Signed']) {
+    const vaultData = typeof window !== 'undefined' ? localStorage.getItem('dao_vault') : null;
+    if (vaultData) {
+      const { priv, did } = JSON.parse(vaultData); 
+      const timestamp = Date.now().toString();
+      const body = config.data ? JSON.stringify(config.data) : '';
+      const msg = new TextEncoder().encode(timestamp + body);
+      const signature = CryptoCore.sign(msg, Uint8Array.from(priv));
+      
+      const sigBase64 = btoa(String.fromCharCode(...signature));
+      
+      config.headers['X-Identity-Signature'] = sigBase64;
+      config.headers['X-Identity-DID'] = did || `did:dao:asppibra:${config.headers['X-Username']}`;
+      config.headers['X-Identity-Timestamp'] = timestamp;
+    }
+  }
+  return config;
+});
 
 export default axiosInstance;
 

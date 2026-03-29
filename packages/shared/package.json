@@ -1,0 +1,26 @@
+{
+  "name": "@dao/shared",
+  "version": "1.0.0",
+  "description": "Core cryptographic and domain utilities for ASPPIBRA-DAO",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./crypto": "./src/crypto/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.7.0",
+    "@noble/curves": "^1.8.1",
+    "bip39": "^3.1.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.4"
+  }
+}

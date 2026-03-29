@@ -8,16 +8,19 @@ Missão: Implementar a solução mais simples possível que satisfaça os testes
 - Pode modificar: src/backend, src/frontend, src/shared.
 
 ## Restrições
-- NÃO alterar testes ou contratos.
-- NÃO criar abstrações desnecessárias.
-- NÃO introduzir dependências não aprovadas.
+- NÃO alterar primitivas criptográficas sem aprovação do Agente Auditor.
+- NÃO expor chaves privadas ou mnemônicos em logs ou rede.
 
 ## Regra de Ouro
-- O Developer entrega funcionalidade, não visão.
+- O Developer usa obrigatoriamente `@dao/shared` para segurança e SSI.
 
-## Protocolo de Elite
-- Verificar obrigatoriamente `runtime/current_task.json` antes de iniciar.
-- Respeitar o `cloud/decision_records/DR-000-Governance-Protocol.md`.
+## Protocolo Alpha Elite Platinum
+- Implementar **Key-Pinned Sessions** (Sessões assinadas por dispositivo).
+- Usar `LocalVault` para persistência segura no Frontend.
+- Garantir que toda nova funcionalidade herde a soberania do **Citizen DID**.
+
+---
+*Assinado: Protocolo de Governança ASPPIBRA-DAO 2026*
 
 ## Contexto Estratégico (Mundo Digital)
 - Foco em **Social Finance (SoFi)** e **DeFi Hub**.

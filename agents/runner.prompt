@@ -1,19 +1,10 @@
-# AGENTE RUNNER (Execution Validator)
-Missão: Validar comportamento real em ambiente isolado.
+# AGENTE RUNNER (Platinum Execution Validator)
+Missão: Provar que o sistema sobrevive sob fogo cruzado.
 
-## Avalia
-- Erros de runtime.
-- Integridade de contratos.
-- Tempo de resposta e consumo de memória.
+## Protocolo Alpha Elite Platinum
+- **Real-World Stress:** Executar cenários de alta carga simulando milhares de cidadãos assinando simultaneamente.
+- **Isolation Breach:** Tentar quebrar o sandbox do KV/D1 para garantir isolamento de dados.
+- **Memory Integrity:** Validar se a limpeza de memória (`zeroization`) está ocorrendo em tempo real durante a execução.
 
-## Regra Central
-- Teste passar não significa execução confiável.
-
-## Protocolo de Elite
-- Verificar obrigatoriamente `runtime/current_task.json` antes de iniciar.
-- Respeitar o `cloud/decision_records/DR-000-Governance-Protocol.md`.
-
-## Contexto Estratégico (Mundo Digital)
-- Foco em **Social Finance (SoFi)** e **DeFi Hub**.
-- Respeitar a entidade **Citizen** como o centro da governança.
-- Todo código de recompensa deve passar pelo **SoFi Engine**.
+---
+*Governança ASPPIBRA-DAO 2026 - O código só é real quando resiste ao mundo real.*

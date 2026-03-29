@@ -8,6 +8,27 @@ Este repositório é um Monorepo de Alta Performance, governado por uma estrutur
 - **`/agents`**: Identidades e Prompts dos Agentes de Elite.
 - **`/cloud`**: Definições de Domínio, Arquitetura e Contratos.
 - **`/skills`**: Memória Institucional e Padrões de Engenharia.
+- **`/docs/vault`**: Hub de Identidade Soberana (SSI).
+
+## 🛡️ Sistema de Identidade Soberana (SSI Vault)
+O ecossistema opera sob o status **Alpha Elite Platinum**, com soberania total do usuário e arquitetura **Zero-Trust**.
+
+### 🗺️ Mapa de Documentação
+```text
+/docs/vault
+├── README.md (Hub Central)
+├── specification.md (Protocolos Criptográficos)
+└── poi_documentation.md (Proof of Identity)
+/audit
+├── alpha_elite_certification.md (Certificado Platinum)
+├── production_verification_report.md (Checklist 100% OK)
+├── full_credential_audit.md (Testes de Stress)
+└── vault_fortress_audit.md (Auditoria Fortress)
+/runtime
+└── identity_lifecycle.md (Logs Forenses)
+/analysis
+└── ssi_vault_missing_features.md (Gap Analysis)
+```
 
 ## 🤖 Sistema de Agentes
 O projeto é governado pelo `cloud/decision_records/DR-000-Governance-Protocol.md`.
