@@ -1,6 +1,16 @@
 {
   "name": "gov-system-monorepo",
   "private": true,
+  "devDependencies": {
+    "wrangler": "^3.109.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "unrs-resolver",
+      "workerd"
+    ]
+  },
   "scripts": {
     "dev": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",

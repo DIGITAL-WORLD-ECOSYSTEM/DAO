@@ -16,9 +16,6 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.7.5
         version: 0.7.6(hono@4.12.9)(zod@4.3.6)
-      bcryptjs:
-        specifier: ^2.4.3
-        version: 2.4.3
       drizzle-orm:
         specifier: ^0.44.7
         version: 0.44.7(@cloudflare/workers-types@4.20260317.1)
@@ -50,9 +47,6 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20251217.0
         version: 4.20260317.1
-      '@types/bcryptjs':
-        specifier: ^2.4.6
-        version: 2.4.6
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
@@ -3052,9 +3046,6 @@ packages:
   '@types/autosuggest-highlight@3.2.3':
     resolution: {integrity: sha512-8Mb21KWtpn6PvRQXjsKhrXIcxbSloGqNH50RntwGeJsGPW4xvNhfml+3kKulaKpO/7pgZfOmzsJz7VbepArlGQ==}
 
-  '@types/bcryptjs@2.4.6':
-    resolution: {integrity: sha512-9xlo6R2qDs5uixm0bcIqCeMCE6HiQsIyel9KQySStiyqNl2tnj2mP3DX1Nf56MD6KMenNNlBBsy3LJ7gUEQPXQ==}
-
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
 
@@ -3693,9 +3684,6 @@ packages:
   bcp47@1.1.2:
     resolution: {integrity: sha512-JnkkL4GUpOvvanH9AZPX38CxhiLsXMBicBY2IAtqiVN8YulGDQybUydWA4W6yAMtw6iShtw+8HEF6cfrTHU+UQ==}
     engines: {node: '>=0.10'}
-
-  bcryptjs@2.4.3:
-    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
 
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
@@ -9482,8 +9470,6 @@ snapshots:
 
   '@types/autosuggest-highlight@3.2.3': {}
 
-  '@types/bcryptjs@2.4.6': {}
-
   '@types/chai@5.2.3':
     dependencies:
       '@types/deep-eql': 4.0.2
@@ -10111,8 +10097,6 @@ snapshots:
   baseline-browser-mapping@2.10.11: {}
 
   bcp47@1.1.2: {}
-
-  bcryptjs@2.4.3: {}
 
   bidi-js@1.0.3:
     dependencies:

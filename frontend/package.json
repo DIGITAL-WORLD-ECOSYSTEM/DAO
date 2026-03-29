@@ -133,11 +133,5 @@
     "typescript-eslint": "^8.54.0",
     "vite": "^8.0.3"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "sharp",
-      "unrs-resolver"
-    ]
-  },
   "type": "module"
 }
