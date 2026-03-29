@@ -31,7 +31,7 @@ describe('CryptoCore: SSI Vault Primitives', () => {
     const seed = new Uint8Array(64).fill(2);
     const { priv, pub } = CryptoCore.getEd25519KeyPair(seed);
     const msg = new TextEncoder().encode('ASPPIBRA-DAO-SSI-TEST');
-    
+    const sig = CryptoCore.sign(msg, priv);
     const isValid = CryptoCore.verify(sig, msg, pub);
     
     expect(isValid).toBe(true);
@@ -64,5 +64,5 @@ describe('CryptoCore: SSI Vault Primitives', () => {
     expect(seed1).toEqual(seed2);
     expect(keys1.pub).toEqual(keys2.pub);
     expect(keys1.priv).toEqual(keys2.priv);
-  });
+  }, 20000); // 20s timeout for double derivation
 });
