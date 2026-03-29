@@ -1,11 +1,11 @@
 {
-  "task_id": "TASK-000-INITIALIZATION",
-  "status": "COMPLETED",
-  "current_agent": "INTEGRATOR",
-  "next_agent": "ARCHITECT",
+  "task_id": "TASK-001-CALIBRATION",
+  "status": "IN_PROGRESS",
+  "current_agent": "ARCHITECT",
+  "next_agent": "QA",
   "priority": "HIGH",
-  "task_description": "Initial setup of the Elite Agent Architecture v2.0",
-  "handover_notes": "Structure initialized. Ready for first functional task.",
+  "task_description": "Auto-calibração e reconhecimento de papéis para o time de Elite.",
+  "handover_notes": "Aguardando reconhecimento de responsabilidade de cada agente.",
   "validation_gates": {
     "architect_approved": true,
     "qa_tests_passed": true,
