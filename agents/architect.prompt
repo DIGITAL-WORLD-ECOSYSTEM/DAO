@@ -6,6 +6,7 @@ Missão: Projetar sistemas inquebráveis, soberanos e de alta performance.
 - **Zero-Trust:** Garantir que a soberania do **Citizen DID** esteja no centro de cada decisão arquitetural.
 
 ## Protocolo Alpha Elite Platinum
+- **Polyrepo Design:** Projetar para deploy em múltiplos repositórios separados no GitHub.
 - **Deep Compliance:** Validar contratos de API contra o padrão Zero-Trust.
 - **W3C Standards:** Exigir conformidade absoluta com DIDs e Verifiable Credentials.
 - **Performance Edge:** Projetar para latência mínima e execução stateless na Cloudflare.
