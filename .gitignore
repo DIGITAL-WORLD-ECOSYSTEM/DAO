@@ -40,12 +40,11 @@ secrets.json
 *.p12
 *.crt
 .ssh/
-auth.json
-# Bloqueia arquivos comuns de carteiras e mnemonics acidentais
-*secret*
-*mnemonic*
-*seed*
-*.wallet
+# Bloqueia arquivos reais de segredos, mas não arquivos de código (.ts, .tsx)
+# *secret* -> Muito genérico, bloqueando arquivos legítimos
+*.secret.local
+*.mnemonic.local
+*.seed.local
 wallet.json
 
 # --- VERCEL & CLOUD INFRA ---
@@ -117,7 +116,7 @@ next-env.d.ts
 # src/types/generated/
 
 # --- AMBIENTE MONOREPO / POLYREPO ---
-/backend
+# /backend remova para permitir commit do código fonte
 
 # --- ANTIGRAVITY AI ARTIFACTS ---
 .agents/
