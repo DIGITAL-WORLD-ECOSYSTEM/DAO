@@ -1,6 +1,4 @@
-import { OpenGraph } from 'next/dist/lib/metadata/types/opengraph-types';
-
-export const sharedOpenGraph: OpenGraph = {
+export const sharedOpenGraph: any = {
   type: 'website',
   locale: 'pt_BR',
   siteName: 'ASPPIBRA-DAO (Mundo Digital)',

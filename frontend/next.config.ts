@@ -6,9 +6,7 @@
  * Goal: Subir nota Lighthouse de 36 para 90+
  */
 
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   // 1. ROTEAMENTO E SEGURANÇA
   // Desativado (false) para evitar redirects 308 agressivos em toda a árvore do sitemap e conflitos com Canonical URLs.
   trailingSlash: false,
@@ -48,10 +46,10 @@ const nextConfig: NextConfig = {
   // 🖼️ OTIMIZAÇÃO DE IMAGENS (FOCO EM CONEXÕES RURAIS/MÓVEIS)
   // ----------------------------------------------------------------------
   images: {
-    /** * 🟢 MELHORIA LCP: unoptimized setado como FALSE.
-     * Permite o redimensionamento automático para WebP/AVIF via Vercel/R2.
+    /** * 🟢 LOCK-IN REMOVIDO: unoptimized setado como TRUE.
+     * Desativa o redimensionador de imagens proprietário da Vercel para garantir compatibilidade com Cloudflare Vinext.
      */
-    unoptimized: false,
+    unoptimized: true,
     
     // Prioriza AVIF por ser o formato mais leve do mercado atual.
     formats: ['image/avif', 'image/webp'],
@@ -82,28 +80,7 @@ const nextConfig: NextConfig = {
     '8082-firebase-socialfi-1769577659883.cluster-hkcruqmgzbd2aqcdnktmz6k7ba.cloudworkstations.dev',
   ],
 
-  /**
-   * Suporte nativo para transformar SVGs em componentes React.
-   */
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    });
-    return config;
-  },
-
-  /**
-   * Otimizações para o motor Turbopack.
-   */
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
+  // Webpack e Turbopack destruídos permanentemente para ceder espaço ao VITE (Motor Rolldown) do Vinext.
 };
 
 export default nextConfig;

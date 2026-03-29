@@ -9,40 +9,28 @@ import 'src/global.css';
 
 import type { Metadata, Viewport } from 'next';
 
-import { Public_Sans, Barlow, Orbitron } from 'next/font/google';
-
-const publicSans = Public_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-public-sans',
-  display: 'swap',
-});
-
-const barlow = Barlow({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-barlow',
-  display: 'swap',
-});
-
-const orbitron = Orbitron({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-orbitron',
-  display: 'swap',
-});
+import '@fontsource-variable/public-sans';
+import '@fontsource/barlow/400.css';
+import '@fontsource/barlow/500.css';
+import '@fontsource/barlow/600.css';
+import '@fontsource/barlow/700.css';
+import '@fontsource/barlow/800.css';
+import '@fontsource/orbitron/400.css';
+import '@fontsource/orbitron/500.css';
+import '@fontsource/orbitron/600.css';
+import '@fontsource/orbitron/700.css';
+import '@fontsource/orbitron/800.css';
+import '@fontsource/orbitron/900.css';
 
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 
 import { CONFIG } from 'src/global-config';
 import { LocalizationProvider } from 'src/locales';
 import { detectLanguage } from 'src/locales/server';
 import { I18nProvider } from 'src/locales/i18n-provider';
-import { themeConfig, primary as primaryColor } from 'src/theme';
 
 import { JsonLd } from 'src/components/seo/json-ld';
 import { detectSettings } from 'src/components/settings/server';
@@ -71,7 +59,7 @@ const AuthProvider = JwtAuthProvider;
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: primaryColor.main,
+  themeColor: '#00A76F',
 };
 
 /**
@@ -190,12 +178,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             ]
           }} 
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.process = { env: {} };
+              window.addEventListener('error', function(event) {
+                document.body.innerHTML = '<div style="color:red;padding:50px;font-size:18px;z-index:99999;position:fixed;background:black;top:0;left:0;width:100vw;height:100vh;overflow:auto;"><h2>☠️ SYSTEM CRASH</h2><b>Message:</b> ' + event.message + '<br><br><b>Stack Trace:</b><br><pre style="color:lime;">' + (event.error ? event.error.stack : 'N/A') + '</pre></div>';
+              });
+              window.addEventListener('unhandledrejection', function(event) {
+                document.body.innerHTML = '<div style="color:red;padding:50px;font-size:18px;z-index:99999;position:fixed;background:black;top:0;left:0;width:100vw;height:100vh;overflow:auto;"><h2>☠️ PROMISE CRASH</h2><b>Message:</b> ' + (event.reason ? event.reason.message : 'N/A') + '<br><br><b>Stack Trace:</b><br><pre style="color:lime;">' + (event.reason ? event.reason.stack : 'N/A') + '</pre></div>';
+              });
+            `
+          }}
+        />
       </head>
-      <body className={`${publicSans.variable} ${barlow.variable} ${orbitron.variable}`}>
+      <body suppressHydrationWarning>
         <InitColorSchemeScript
-          modeStorageKey={themeConfig.modeStorageKey}
-          attribute={themeConfig.cssVariables.colorSchemeSelector}
-          defaultMode={themeConfig.defaultMode}
+          modeStorageKey="theme-mode"
+          attribute="data-color-scheme"
+          defaultMode="light"
         />
 
         {/* ✅ I18nProvider tipado corretamente para evitar erros de build */}
@@ -206,9 +207,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               cookieSettings={appConfig.cookieSettings}
             >
               <LocalizationProvider>
-                <AppRouterCacheProvider options={{ key: 'css' }}>
-                  <App>{children}</App>
-                </AppRouterCacheProvider>
+                <App>{children}</App>
               </LocalizationProvider>
             </SettingsProvider>
           </AuthProvider>

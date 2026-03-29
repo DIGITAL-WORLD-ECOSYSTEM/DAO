@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
-      "apexcharts": ["node_modules/apexcharts"]
+      "src/*": ["src/*"]
     },
     "module": "esnext",
     "jsx": "react-jsx",

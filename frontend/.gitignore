@@ -118,3 +118,7 @@ next-env.d.ts
 
 # --- AMBIENTE MONOREPO / POLYREPO ---
 /backend
+
+# --- ANTIGRAVITY AI ARTIFACTS ---
+.agents/
+skills-lock.json

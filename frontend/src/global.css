@@ -13,6 +13,15 @@
 @import './components/chart/styles.css';
 
 /** **************************************
+* Typography Global Variables
+*************************************** */
+:root {
+  --font-public-sans: 'Public Sans Variable', sans-serif;
+  --font-barlow: 'Barlow', sans-serif;
+  --font-orbitron: 'Orbitron', sans-serif;
+}
+
+/** **************************************
 * Baseline
 *************************************** */
 html {
