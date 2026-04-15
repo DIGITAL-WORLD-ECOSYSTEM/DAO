@@ -49,125 +49,123 @@ yarn build
 npm run build
 ```
 
-## Arquitetura do Módulo de Blog (Versão Híbrida)
+## 🗺️ Documentação Completa do Sistema de Blog: Fase Final
 
-A arquitetura do blog foi projetada para alta escalabilidade, combinando a robustez do Next.js com uma clara separação de responsabilidades. **Atualmente, a listagem principal de posts (`/post`) utiliza uma abordagem de renderização no cliente (`'use client'`) para agilidade, enquanto a infraestrutura para um fluxo de dados server-side completo já está implementada e pronta para ser ativada.**
+Este documento será o seu guia completo para finalizar o sistema de blog.
 
-### Fluxo de Dados Atual (Client-Side na Listagem de Posts)
+O sistema de blog foi construído com uma filosofia de **desenvolvimento progressivo**. Ele começa com uma implementação simples e autocontida (usando dados "mockados") que permite o desenvolvimento rápido da interface do usuário (UI), mas já possui toda a estrutura e as abstrações necessárias para escalar para uma solução de produção robusta, com renderização no servidor (SSR) e conectada a uma API real.
 
-1.  **Requisição e Carregamento Inicial**: O usuário acessa a página `/post`. O Next.js exibe imediatamente o componente `src/app/post/loading.tsx` (*Skeleton Screens*), melhorando a percepção de performance.
+Esta documentação descreve o estado atual e detalha as peças faltantes necessárias para completar a transição para a arquitetura final.
 
-2.  **Renderização no Cliente**: A página `src/app/post/page.tsx`, marcada como `'use client'`, é carregada no navegador do usuário.
-
-3.  **Acesso Direto aos Dados Mockados**: O componente importa diretamente a lista de posts do arquivo de mock: `import { _posts } from 'src/_mock/_blog';`.
-
-4.  **Lógica no Cliente**: Toda a lógica de paginação, busca e filtros é executada diretamente no navegador, manipulando o array de posts importado.
-
-5.  **Injeção de Props**: Os dados processados são passados via `props` para o componente de apresentação `<PostListHomeView />`.
-
-6.  **Tratamento de Erros**: Caso ocorra um erro durante a renderização no cliente, o Next.js captura e exibe o componente `src/app/post/error.tsx`.
-
-### Infraestrutura Server-Side (Pronta para Ativação)
-
-Embora a listagem de posts opere no cliente, a arquitetura para um fluxo de dados resiliente e executado no servidor já existe, ideal para quando a aplicação se conectar a uma API real:
-
-*   **Ações de Dados (`actions/blog-ssr.ts`)**: Contém a lógica para buscar dados no servidor (Server Actions), como a função `getPosts()`.
-*   **Validação de Dados (`schemas/blog-zod.ts`)**: Esquemas Zod para validar a integridade dos dados recebidos de uma API.
-*   **Mapeamento de Dados (`actions/mappers/blog-mapper.ts`)**: Transforma os dados da API para o formato esperado pela UI, desacoplando o front-end do back-end.
-
-**Nota para Desenvolvedores:** Para migrar a listagem de posts para server-side, basta refatorar `src/app/post/page.tsx` para remover o `'use client'`, chamar a Server Action `getPosts()` e passar os dados recebidos como props.
-
-### Árvore de Arquivos e Componentes Otimizada
-
-A estrutura de diretórios foi desenhada para máxima organização, modularidade e escalabilidade.
-
-```bash
-src
-├── 📁 _mock/                   # ✅ Confirmado: Fonte de dados Mock
-│   └── 📄 _blog.ts
-│
-├── 📁 actions/                 # ✅ Confirmado: Lógica de negócio e acesso a dados
-│   ├── 📄 blog-ssr.ts          # Ações específicas para Server-Side Rendering
-│   ├── 📄 blog.ts
-│   ├── ... (outras actions)
-│   └── 📁 mappers/
-│       └── 📄 blog-mapper.ts    # Transforma dados da API para o domínio da UI
-│
-├── 📁 app/                     # ✅ Confirmado: Rotas e páginas (Next.js App Router)
-│   └── 📁 post/
-│       ├── 📁 [title]/         # Rota dinâmica para um post específico
-│       │   ├── 📄 error.tsx    # UI de erro para a rota do post
-│       │   ├── 📄 loading.tsx  # UI de carregamento para a rota do post
-│       │   └── 📄 page.tsx      # View do post específico
-│       ├── 📁 category/
-│       │   └── 📁 [slug]/       # Rota para categorias (vazio, mas estrutura existe)
-│       ├── 📄 error.tsx        # UI de erro para a listagem
-│       ├── 📄 layout.tsx       # Layout compartilhado para as páginas de post
-│       ├── 📄 loading.tsx     # UI de carregamento para a listagem
-│       └── 📄 page.tsx          # View da listagem de posts
-│
-├── 📁 layouts/                 # ✅ Confirmado: Componentes de layout globais
-│   └── 📁 blog/
-│       ├── 📄 index.ts
-│       └── 📄 layout.tsx
-│
-├── 📁 routes/                  # ✅ Confirmado: Gestão de rotas
-│   └── 📄 paths.ts             # Gerador de URLs centralizado
-│
-├── 📁 schemas/                 # ✅ Confirmado: Validação de contratos de dados
-│   └── 📄 blog-zod.ts          # Esquemas Zod para validar Mock/API
-│
-├── 📁 sections/                # ✅ Confirmado: Seções da UI por feature
-│   └── 📁 blog/
-│       ├── 📁 components/       # Componentes de UI genéricos do blog (widgets, etc)
-│       │   ├── 📄 authors.tsx
-│       │   ├── 📄 banner.tsx
-│       │   ├── 📄 community.tsx
-│       │   ├── 📄 featured.tsx
-│       │   ├── 📄 index.ts
-│       │   ├── 📄 post-search.tsx
-│       │   ├── 📄 post-sort.tsx
-│       │   └── 📄 video.tsx
-│       │
-│       ├── 📁 details/          # Componentes para a página de detalhes de um post
-│       │   ├── 📄 post-comment-item.tsx
-│       │   ├── 📄 post-comment-list.tsx
-│       │   ├── 📄 post-details-hero.tsx
-│       │   └── 📄 post-details-toolbar.tsx
-│       │
-│       ├── 📁 forms/            # Formulários específicos do blog
-│       │   ├── 📄 newsletter.tsx
-│       │   └── 📄 post-comment-form.tsx
-│       │
-│       ├── 📁 item/             # Componentes de item de post e suas variações
-│       │   ├── 📄 index.ts
-│       │   ├── 📄 item-horizontal.tsx
-│       │   ├── 📄 item.tsx
-│       │   ├── 📄 list-horizontal.tsx
-│       │   ├── 📄 list.tsx
-│       │   ├── 📄 recent.tsx
-│       │   ├── 📄 skeleton.tsx
-│       │   └── 📄 trending.tsx
-│       │
-│       ├── 📁 management/       # Views e formulários para o painel de admin (CRUD)
-│       │   ├── 📄 post-create-edit-form.tsx
-│       │   ├── 📄 post-create-view.tsx
-│       │   ├── 📄 post-details-preview.tsx
-│       │   └── 📄 post-edit-view.tsx
-│       │
-│       ├── 📁 view/             # Views principais que montam as páginas do blog
-│       │   ├── 📄 index.ts
-│       │   ├── 📄 post-details-home-view.tsx
-│       │   ├── 📄 post-details-view.tsx
-│       │   ├── 📄 post-list-home-view.tsx
-│       │   └── 📄 post-list-view.tsx
-│       │
-│       └── 📄 constants.ts      # Constantes do módulo de blog
-│
-└── 📁 types/                   # ✅ Confirmado: Tipos e interfaces
-    └── 📄 blog.ts              # Definições de tipos TypeScript para o blog
+### Árvore de Arquitetura e Peças Faltantes
 
 ```
+/src/
+├── _mock/
+│   └── _blog.ts
+│       ├── ESTADO ATUAL: Fonte de dados temporária (placeholder). Funciona como um "banco de dados" falso
+│       │   para o desenvolvimento da UI.
+│       └── └──> PEÇA FALTANTE FINAL: Este arquivo se tornará obsoleto. Após a conexão com a API, ele
+│                  poderá ser completamente DELETADO ou mantido apenas como referência para testes.
+│
+├── actions/
+│   ├── blog-ssr.ts
+│   │   ├── ESTADO ATUAL: Contém Server Actions (`getPosts()`) que buscam dados do `_mock` file.
+│   │   │   Está no local perfeito para a lógica de back-end do front-end.
+│   │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
+│   │       │   1.  [LÓGICA DE API] Modificar `getPosts()` para fazer uma requisição `fetch` ao
+│   │       │       endpoint `GET /api/posts` da sua API real.
+│   │       │   2.  [LÓGICA DE API] Criar e exportar novas Server Actions:
+│   │       │       - `getPostBySlug(slug: string)` (chamará `GET /api/posts/{slug}`).
+│   │       │       - `getPostsByCategory(category: string)` (chamará `GET /api/posts?category={category}`).
+│   │
+│   └── mappers/
+│       └── blog-mapper.ts
+│           ├── ESTADO ATUAL: Transforma os dados do `_mock` para o formato que a UI precisa.
+│           │   É uma camada de anti-corrupção que protege sua UI de mudanças no back-end.
+│           └── └──> PEÇA FALTANTE PARA FINALIZAÇÃO:
+│               │   1.  [AJUSTE DE DADOS] Atualizar a lógica do mapper para que ele saiba como
+│               │       transformar a resposta JSON da sua API real (que virá do `fetch` nas
+│               │       `actions`) para o formato que os componentes esperam.
+│
+├── app/
+│   ├── (public)/post/
+│   │   ├── page.tsx
+│   │   │   ├── ESTADO ATUAL: Lista de posts (`/post`) renderizada no cliente.
+│   │   │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
+│   │   │       │   1.  [REATORAÇÃO PARA SSR] Remover a diretiva `'''use client'''`.
+│   │   │       │   2.  [REATORAÇÃO PARA SSR] Transformar a função da página em `async`.
+│   │   │       │   3.  [REATORAÇÃO PARA SSR] Chamar `await getPosts()` (a Server Action atualizada).
+│   │   │       │   4.  [REATORAÇÃO PARA SSR] Passar os posts recebidos para o componente de view.
+│   │   │
+│   │   ├── [title]/page.tsx
+│   │   │   ├── ESTADO ATUAL: Página de um post individual (`/post/[slug]`) renderizada no cliente.
+│   │   │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
+│   │   │       │   1.  [REATORAÇÃO PARA SSR] Remover `'''use client'''`, tornar a função `async`.
+│   │   │       │   2.  [REATORAÇÃO PARA SSR] Usar o `slug` dos parâmetros da página para chamar
+│   │   │       │       `await getPostBySlug(slug)`.
+│   │   │       │   3.  [REATORAÇÃO PARA SSR] Passar o post recebido para o componente de detalhes.
+│   │   │
+│   │   └── category/[slug]/page.tsx
+│   │       └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
+│   │           │   1.  [REATORAÇÃO PARA SSR] Seguir os mesmos passos das páginas anteriores,
+│   │           │       usando a Server Action `getPostsByCategory(slug)`.
+│   │
+│   └── dashboard/
+│       └── post/
+│           ├── new/page.tsx e [title]/edit/page.tsx
+│           │   ├── ESTADO ATUAL: Formulários de criação e edição. A UI está pronta.
+│           │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
+│           │       │   1.  [LÓGICA DE API] Implementar a função `onSubmit` do formulário. Ela deve:
+│           │       │       - Chamar uma Server Action (ex: `createPost` ou `updatePost`).
+│           │       │       - Essa Server Action fará um `fetch` para `POST /api/posts` ou `PUT /api/posts/{id}`.
+│           │       │   2.  [VALIDAÇÃO DE FORMULÁRIO] Usar uma biblioteca como `react-hook-form` com
+│           │       │       `zodResolver` para dar feedback instantâneo ao usuário (ex: "O título
+│           │       │       é obrigatório") antes de enviar os dados.
+│           │       │   3.  [FEEDBACK DE UI] Implementar estados de carregamento (ex: desabilitar o
+│           │       │       botão "Salvar" e mostrar um spinner) e notificações/toasts
+│           │       │       (ex: "Post salvo com sucesso!") após a resposta da API.
+│           │
+│           └── page.tsx (Listagem no Dashboard)
+│               └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
+│                   │   1.  [LÓGICA DE API] Implementar a lógica para o botão "Deletar", que chamará
+│                   │       uma Server Action `deletePost(id)` que, por sua vez, fará um `fetch`
+│                   │       para `DELETE /api/posts/{id}`.
+│                   │   2.  [FEEDBACK DE UI] Adicionar um modal de confirmação ("Você tem certeza?")
+│                   │       antes de deletar um post.
+│
+└── __tests__/ (Diretório Inexistente)
+    └── └──> PEÇA FALTANTE PARA FINALIZAÇÃO:
+        │   1.  [GARANTIA DE QUALIDADE] Criar um diretório de testes.
+        │   2.  [TESTES UNITÁRIOS] Escrever testes para o `blog-mapper.ts` para garantir que a
+        │       transformação dos dados da API sempre funcione como esperado.
+        │   3.  [TESTES DE INTEGRAÇÃO] Escrever testes para as `Server Actions` em `blog-ssr.ts`
+        │       para garantir que elas conseguem se comunicar com a API (usando um mock da API).
+```
+
+### Roadmap de Finalização
+
+Para concluir o sistema, siga estas fases em ordem:
+
+1.  **Fase 1: Construir ou Definir a API (O Back-end)**
+    *   **Tarefa:** Decida e configure sua fonte de dados (Headless CMS, API customizada).
+    *   **Resultado Esperado:** Você deve ter uma URL base de API e endpoints funcionais para `GET`, `POST`, `PUT` e `DELETE` de posts.
+
+2.  **Fase 2: Conectar o Front-end ao Back-end (Camada de Dados)**
+    *   **Tarefa:** Implementar todas as `PEÇAS FALTANTES` nos diretórios `actions/` e `mappers/`.
+    *   **Resultado Esperado:** Suas Server Actions agora se comunicam com a API real, e o mapper traduz os dados corretamente. O _mock file pode ser deletado.
+
+3.  **Fase 3: Ativar a Renderização no Servidor (Otimização)**
+    *   **Tarefa:** Implementar as `PEÇAS FALTANTES` nas páginas públicas (`app/(public)/post/`).
+    *   **Resultado Esperado:** O blog público agora é renderizado no servidor, resultando em SEO e performance máximos.
+
+4.  **Fase 4: Finalizar o Dashboard (Funcionalidade de Admin)**
+    *   **Tarefa:** Implementar as `PEÇAS FALTANTES` nas páginas do `dashboard/post/`.
+    *   **Resultado Esperado:** Administradores podem agora criar, editar e deletar posts de verdade, com validação de formulário e feedback claro da interface.
+
+5.  **Fase 5: Adicionar Testes (Garantia de Qualidade)**
+    *   **Tarefa:** Criar o diretório de testes e escrever testes unitários e de integração.
+    *   **Resultado Esperado:** O sistema está robusto, e futuras alterações podem ser feitas com a segurança de que as funcionalidades principais não serão quebradas.
 
 ---
 
@@ -422,4 +420,3 @@ Para garantir que a infraestrutura de SEO, a saúde técnica e a experiência do
 * **[Google Search Console](https://search.google.com/search-console)**: O centro de comando para monitorar a indexação, detectar erros de rastreio e visualizar como a **ASPPIBRA-DAO** aparece nos resultados reais de busca.
 * **[Google Rich Results Test](https://search.google.com/test/rich-results)**: Verifica se os seus geradores dinâmicos de **JSON-LD** estão criando dados estruturados válidos, tornando as páginas elegíveis para **Rich Snippets** (estrelas, preços de tokens, FAQs).
 * **[Schema Markup Validator](https://validator.schema.org/)**: Ferramenta da **Schema.org** para uma validação técnica mais profunda de todas as entidades semânticas injetadas no código, garantindo que a hierarquia de dados esteja impecável.
-
