@@ -1,1 +1,3 @@
-export function Searchbar() { return <div>Search</div>; }
+export function Searchbar() {
+  return <div>Search</div>;
+}

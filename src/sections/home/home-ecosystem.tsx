@@ -87,7 +87,6 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
     >
       <MotionViewport>
         <Container sx={{ position: 'relative', zIndex: 1 }}>
-          
           {/* HEADER: TÍTULO E BOTÃO CRYSTAL */}
           <Stack
             direction={{ xs: 'column', md: 'row' }}
@@ -213,7 +212,7 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                       backdropFilter: 'blur(12px)',
                       WebkitBackdropFilter: 'blur(12px)',
                       transition: theme.transitions.create(['all']),
-                      
+
                       // BORDA REATIVA (Stroke Colorizada por Item)
                       '&::before': {
                         content: '""',
@@ -226,7 +225,8 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                           ${alpha(theme.palette.common.white, 0.05)} 50%, 
                           ${alpha(item.color, 0.8)} 100%
                         )`,
-                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                        WebkitMask:
+                          'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                         WebkitMaskComposite: 'xor',
                         maskComposite: 'exclude',
                         zIndex: 2,
@@ -258,25 +258,25 @@ export function HomeEcosystem({ sx, ...other }: BoxProps) {
                       <Iconify icon={item.icon as any} width={28} />
                     </Box>
 
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        color: 'common.white', 
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: 'common.white',
                         fontFamily: 'var(--font-orbitron), "Orbitron", sans-serif',
                         fontWeight: 800,
-                        zIndex: 3 
+                        zIndex: 3,
                       }}
                     >
                       {item.title}
                     </Typography>
 
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: '#919EAB', 
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: '#919EAB',
                         fontFamily: "'Public Sans', sans-serif",
                         lineHeight: 1.7,
-                        zIndex: 3
+                        zIndex: 3,
                       }}
                     >
                       {item.description}

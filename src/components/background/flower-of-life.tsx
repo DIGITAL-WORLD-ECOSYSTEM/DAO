@@ -82,22 +82,25 @@ export const FlowerOfLife = memo(
       return p;
     }, [r]);
 
-    const covenantColors = useMemo<THREE.Vector3[]>(() => [
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(1, 0.55, 0),
-      new THREE.Vector3(1, 1, 0),
-      new THREE.Vector3(0, 0.7, 0.1),
-      new THREE.Vector3(0, 0.2, 1),
-      new THREE.Vector3(0.4, 0, 0.9),
-      new THREE.Vector3(1, 0.3, 1)
-    ], []);
+    const covenantColors = useMemo<THREE.Vector3[]>(
+      () => [
+        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(1, 0.55, 0),
+        new THREE.Vector3(1, 1, 0),
+        new THREE.Vector3(0, 0.7, 0.1),
+        new THREE.Vector3(0, 0.2, 1),
+        new THREE.Vector3(0.4, 0, 0.9),
+        new THREE.Vector3(1, 0.3, 1),
+      ],
+      []
+    );
 
     const uniformsRef = useRef({
       iTime: { value: 0 },
       scrollProgress: { value: 0 },
       globalOpacity: { value: 1.0 },
       nucleusPos: { value: nucleusPositions },
-      nucleusColor: { value: covenantColors }
+      nucleusColor: { value: covenantColors },
     });
 
     useFrame((state) => {
@@ -129,7 +132,7 @@ export const FlowerOfLife = memo(
           flowerRef.current.rotation.z = t * (0.12 + sp * 8.0);
           flowerRef.current.rotation.y = Math.cos(t * 0.3) * 0.15;
 
-          // CRESCIMENTO E COMPRESSÃO: 
+          // CRESCIMENTO E COMPRESSÃO:
           const growth = THREE.MathUtils.lerp(1.1, 1.8, Math.min(1.0, sp / 0.15));
           flowerRef.current.scale.setScalar(growth);
         }
@@ -152,12 +155,7 @@ export const FlowerOfLife = memo(
         ))}
 
         {intermediatePositions.map((pos, i) => (
-          <mesh
-            key={`glass-${i}`}
-            position={pos}
-            material={glassMat}
-            geometry={sharedGlassGeo}
-          />
+          <mesh key={`glass-${i}`} position={pos} material={glassMat} geometry={sharedGlassGeo} />
         ))}
       </group>
     );

@@ -3,8 +3,8 @@
 import type { BoxProps } from '@mui/material/Box';
 
 import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
 import { alpha } from '@mui/material/styles';
+import Skeleton from '@mui/material/Skeleton';
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,6 @@ export function PostItemSkeleton({
   variant = 'vertical',
   ...other
 }: PostItemSkeletonProps) {
-  
   // Estilo Glassmorphism comum para os skeletons
   const glassStyle = (theme: any) => ({
     display: 'flex',
@@ -42,10 +41,7 @@ export function PostItemSkeleton({
         {Array.from({ length: itemCount }, (_, index) => (
           <Box
             key={`skeleton-horizontal-${index}`}
-            sx={[
-              glassStyle,
-              ...(Array.isArray(sx) ? sx : [sx]),
-            ]}
+            sx={[glassStyle, ...(Array.isArray(sx) ? sx : [sx])]}
             {...other}
           >
             <Box
@@ -68,7 +64,10 @@ export function PostItemSkeleton({
             </Box>
 
             <Box sx={{ p: 1, display: { xs: 'none', sm: 'block' } }}>
-              <Skeleton variant="rectangular" sx={{ width: 170, height: '100%', borderRadius: 1.5 }} />
+              <Skeleton
+                variant="rectangular"
+                sx={{ width: 170, height: '100%', borderRadius: 1.5 }}
+              />
             </Box>
           </Box>
         ))}
@@ -126,16 +125,16 @@ export function PostItemSkeleton({
 
 export function PostDetailsSkeleton({ sx, ...other }: BoxProps) {
   return (
-    <Box 
+    <Box
       sx={[
         {
           bgcolor: 'transparent',
           '& .MuiSkeleton-root': {
             bgcolor: (theme) => alpha(theme.palette.common.white, 0.05),
-          }
+          },
         },
-        ...(Array.isArray(sx) ? sx : [sx])
-      ]} 
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       {...other}
     >
       <Skeleton variant="rectangular" sx={{ height: 480, borderRadius: 0 }} />

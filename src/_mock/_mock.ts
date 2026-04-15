@@ -36,26 +36,40 @@ export const _mock = {
   postTitle: (index: number) => _postTitles[index],
   tourName: (index: number) => _tourNames[index],
   productName: (index: number) => _productNames[index],
-  
+
   // ✅ CORREÇÃO 1: Mantendo a função description
-  description: (index: number) => 
+  description: (index: number) =>
     'The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.',
-  
+
   // ✅ CORREÇÃO 2: Mantendo a função companyNames
-  companyNames: (index: number) => 
-    ['Minimals UI', 'Google', 'Stripe', 'Airbnb', 'Facebook', 'Amazon', 'Netflix', 'Tesla'][index % 8],
+  companyNames: (index: number) =>
+    ['Minimals UI', 'Google', 'Stripe', 'Airbnb', 'Facebook', 'Amazon', 'Netflix', 'Tesla'][
+      index % 8
+    ],
 
   // ✅ CORREÇÃO 3: Mantendo a função sentence
-  sentence: (index: number) => 
+  sentence: (index: number) =>
     'The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.',
 
   // ✅ CORREÇÃO 4: Mantendo a função taskNames
-  taskNames: (index: number) => 
-    ['Prepare Monthly Financial Report', 'Design New Marketing Campaign', 'Analyze Customer Feedback', 'Update Website Content', 'Conduct Market Research'][index % 5],
+  taskNames: (index: number) =>
+    [
+      'Prepare Monthly Financial Report',
+      'Design New Marketing Campaign',
+      'Analyze Customer Feedback',
+      'Update Website Content',
+      'Conduct Market Research',
+    ][index % 5],
 
   // ✅ CORREÇÃO 5 (NOVA): Adicionando a função courseNames que quebrou o último build
-  courseNames: (index: number) => 
-    ['Minimal UI Design', 'Python for Beginners', 'React Masterclass', 'Data Science 101', 'Digital Marketing Strategy'][index % 5],
+  courseNames: (index: number) =>
+    [
+      'Minimal UI Design',
+      'Python for Beginners',
+      'React Masterclass',
+      'Data Science 101',
+      'Digital Marketing Strategy',
+    ][index % 5],
 
   // Contact
   email: (index: number) => _emails[index],

@@ -37,7 +37,7 @@ type Props = {
 
 /**
  * SOLUÇÃO PARA ERRO TS2590:
- * Isolando o AvatarGroup em um Styled Component para reduzir a complexidade 
+ * Isolando o AvatarGroup em um Styled Component para reduzir a complexidade
  * da árvore de tipos durante o build de produção.
  */
 const StyledAvatarGroup = styled(AvatarGroup)(() => ({

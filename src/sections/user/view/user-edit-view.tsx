@@ -28,7 +28,6 @@ type Props = {
 // ----------------------------------------------------------------------
 
 export function UserEditView({ user: currentUser }: Props) {
-  
   /**
    * 🛡️ SANITIZAÇÃO DE DADOS (SERIALIZAÇÃO):
    * O erro "Functions cannot be passed directly to Client Components" ocorre quando
@@ -54,7 +53,6 @@ export function UserEditView({ user: currentUser }: Props) {
    */
   return (
     <DashboardContent>
-      
       {/* 📍 NAVEGAÇÃO (BREADCRUMBS): 
           Facilita o rastreio do administrador e fornece fallbacks visuais para 
           evitar textos vazios durante a carga dos dados. 
@@ -65,8 +63,8 @@ export function UserEditView({ user: currentUser }: Props) {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Usuários', href: paths.dashboard.user.list },
-          { 
-            name: currentUser?.name || 'Carregando Perfil...', 
+          {
+            name: currentUser?.name || 'Carregando Perfil...',
           },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
@@ -77,7 +75,6 @@ export function UserEditView({ user: currentUser }: Props) {
           isolada e segura contra mutações inesperadas.
       */}
       <UserCreateEditForm currentUser={sanitizedUser} />
-      
     </DashboardContent>
   );
 }

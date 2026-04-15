@@ -28,7 +28,6 @@ type Props = {
 // ----------------------------------------------------------------------
 
 export function PostEditView({ post }: Props) {
-  
   /**
    * 🛡️ SANITIZAÇÃO DE DADOS (SERIALIZAÇÃO):
    * O erro "Functions cannot be passed directly to Client Components" ocorre quando
@@ -61,9 +60,9 @@ export function PostEditView({ post }: Props) {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Blog', href: paths.dashboard.post.root },
-          { 
-            name: post?.title || 'Carregando Postagem...', 
-            href: paths.dashboard.post.details(`${post?.title}`) 
+          {
+            name: post?.title || 'Carregando Postagem...',
+            href: paths.dashboard.post.details(`${post?.title}`),
           },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

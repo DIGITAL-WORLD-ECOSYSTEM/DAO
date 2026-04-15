@@ -4,12 +4,8 @@
 
 import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
-import { memo, useRef, useMemo, useEffect, Suspense } from 'react';
-import {
-  Float,
-  PerspectiveCamera,
-  PerformanceMonitor
-} from '@react-three/drei';
+import { memo, useRef, useMemo, Suspense, useEffect } from 'react';
+import { Float, PerspectiveCamera, PerformanceMonitor } from '@react-three/drei';
 
 import { GalacticCore } from './galactic';
 import { EventHorizon } from './event-horizon';
@@ -29,7 +25,7 @@ const InitialPhase = memo(function InitialPhase({
   scrollProgress,
   sharedSphereGeo,
   sharedGlassGeo,
-  glassMat
+  glassMat,
 }: {
   scrollProgress: React.MutableRefObject<number>;
   sharedSphereGeo: THREE.SphereGeometry;
@@ -37,11 +33,7 @@ const InitialPhase = memo(function InitialPhase({
   glassMat: THREE.MeshPhysicalMaterial;
 }) {
   return (
-    <Float
-      speed={1.2}
-      rotationIntensity={0.15}
-      floatIntensity={0.4}
-    >
+    <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4}>
       <group scale={0.42} position={[0.12, -0.08, 0]}>
         <FlowerOfLife
           scrollProgress={scrollProgress}
@@ -57,21 +49,14 @@ const InitialPhase = memo(function InitialPhase({
 // ----------------------------------------------------------------------
 
 export const HomeBackground: React.FC = memo(() => {
-
   const scrollProgress = useRef<number>(0);
 
   /**
    * Geometrias compartilhadas
    */
-  const sharedSphereGeo = useMemo(
-    () => new THREE.SphereGeometry(RADIUS, 32, 32),
-    []
-  );
+  const sharedSphereGeo = useMemo(() => new THREE.SphereGeometry(RADIUS, 32, 32), []);
 
-  const sharedGlassGeo = useMemo(
-    () => new THREE.SphereGeometry(RADIUS, 24, 24),
-    []
-  );
+  const sharedGlassGeo = useMemo(() => new THREE.SphereGeometry(RADIUS, 24, 24), []);
 
   /**
    * Material físico de vidro
@@ -85,7 +70,7 @@ export const HomeBackground: React.FC = memo(() => {
         ior: 1.15,
         transparent: true,
         opacity: 0.25,
-        depthWrite: false
+        depthWrite: false,
       }),
     []
   );
@@ -93,13 +78,14 @@ export const HomeBackground: React.FC = memo(() => {
   /**
    * Cleanup de memória GPU
    */
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       sharedSphereGeo.dispose();
       sharedGlassGeo.dispose();
       glassMat.dispose();
-    };
-  }, [sharedSphereGeo, sharedGlassGeo, glassMat]);
+    },
+    [sharedSphereGeo, sharedGlassGeo, glassMat]
+  );
 
   /**
    * DPR dinâmico
@@ -118,22 +104,16 @@ export const HomeBackground: React.FC = memo(() => {
           alpha: true,
           powerPreference: 'high-performance',
           stencil: false,
-          depth: true
+          depth: true,
         }}
       >
-
         {/* Monitor de performance */}
         <PerformanceMonitor />
 
         {/* Câmera principal */}
-        <PerspectiveCamera
-          makeDefault
-          position={[0, 0, 6]}
-          far={5000}
-        />
+        <PerspectiveCamera makeDefault position={[0, 0, 6]} far={5000} />
 
         <Suspense fallback={null}>
-
           <SpaceAtmosphere />
 
           {/* Controle de scroll da cena */}
@@ -152,9 +132,7 @@ export const HomeBackground: React.FC = memo(() => {
             sharedGlassGeo={sharedGlassGeo}
             glassMat={glassMat}
           />
-
         </Suspense>
-
       </Canvas>
     </Space>
   );

@@ -18,6 +18,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 // Imports — App
 // ----------------------------------------------------------------------
 import { paths } from 'src/routes/paths';
+
 import { varFade, MotionViewport } from 'src/components/animate';
 
 import { PostItem, PostItemLatest } from './item';
@@ -105,7 +106,7 @@ export function Tecnologia() {
     backdropFilter: 'blur(12px)',
     WebkitBackdropFilter: 'blur(12px)',
     transition: theme.transitions.create(['all']),
-    
+
     // Borda Reativa de 1px
     '&::before': {
       content: '""',
@@ -141,7 +142,7 @@ export function Tecnologia() {
         // Injeção de tipografia Public Sans via theme (Seguro contra erros de build)
         '& .MuiTypography-root:not(h2)': {
           fontFamily: theme.typography.fontFamily,
-        }
+        },
       }}
     >
       <Container component={MotionViewport}>
@@ -188,7 +189,7 @@ export function Tecnologia() {
               </m.div>
             </Grid>
           ))}
-          
+
           {/* Mobile/Tablet: Destaques (Posts 1-3) */}
           {viewPosts.slice(0, 3).map((post, index) => (
             <Grid
@@ -206,10 +207,7 @@ export function Tecnologia() {
 
           {/* Lista Restante (Posts 4-7) */}
           {viewPosts.slice(3, 7).map((post, index) => (
-            <Grid
-              key={`tec-list-${post.id}-${index}`}
-              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-            >
+            <Grid key={`tec-list-${post.id}-${index}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardWrapperStyle}>
                   <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />

@@ -66,7 +66,6 @@ export function CenteredVerifyView() {
 
       toast.success('E-mail verificado com sucesso!');
       router.push(paths.auth.signIn);
-      
     } catch (error: any) {
       console.error(error);
       setErrorMessage(error.message || 'Código de verificação inválido ou expirado.');
@@ -91,7 +90,6 @@ export function CenteredVerifyView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      
       {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
       <Field.Text
@@ -103,13 +101,7 @@ export function CenteredVerifyView() {
 
       <Field.Code name="code" />
 
-      <Button
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
+      <Button fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
         Verificar Conta
       </Button>
     </Box>

@@ -23,21 +23,21 @@ export default async function Image({ params }: Props) {
   const post = _posts.find((p) => kebabCase(p.title) === params.title);
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#000',
+        padding: '70px',
+        justifyContent: 'center',
+        fontFamily: '"Inter"',
+      }}
+    >
+      {/* Badge de Categoria Estilo Twitter News */}
       <div
         style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          backgroundColor: '#000',
-          padding: '70px',
-          justifyContent: 'center',
-          fontFamily: '"Inter"',
-        }}
-      >
-        {/* Badge de Categoria Estilo Twitter News */}
-        <div style={{
           display: 'flex',
           backgroundColor: '#65C4A8',
           color: '#000',
@@ -47,37 +47,39 @@ export default async function Image({ params }: Props) {
           fontWeight: 'bold',
           marginBottom: '30px',
           width: 'fit-content',
-        }}>
-          {post?.category || 'ASPPIBRA'}
-        </div>
-
-        {/* Título do Artigo */}
-        <div
-          style={{
-            fontSize: '78px',
-            fontWeight: 'bold',
-            color: 'white',
-            lineHeight: 1.1,
-            letterSpacing: '-2px',
-          }}
-        >
-          {post?.title || 'Conteúdo Oficial'}
-        </div>
-
-        {/* Rodapé com domínio e branding */}
-        <div style={{ 
-          display: 'flex', 
-          marginTop: '60px', 
-          alignItems: 'center', 
-          opacity: 0.6 
-        }}>
-          <div style={{ width: 40, height: 4, background: '#65C4A8', marginRight: 15 }} />
-          <span style={{ color: '#fff', fontSize: '32px' }}>
-            {CONFIG.siteUrl.replace('https://www.', '')}
-          </span>
-        </div>
+        }}
+      >
+        {post?.category || 'ASPPIBRA'}
       </div>
-    ),
+
+      {/* Título do Artigo */}
+      <div
+        style={{
+          fontSize: '78px',
+          fontWeight: 'bold',
+          color: 'white',
+          lineHeight: 1.1,
+          letterSpacing: '-2px',
+        }}
+      >
+        {post?.title || 'Conteúdo Oficial'}
+      </div>
+
+      {/* Rodapé com domínio e branding */}
+      <div
+        style={{
+          display: 'flex',
+          marginTop: '60px',
+          alignItems: 'center',
+          opacity: 0.6,
+        }}
+      >
+        <div style={{ width: 40, height: 4, background: '#65C4A8', marginRight: 15 }} />
+        <span style={{ color: '#fff', fontSize: '32px' }}>
+          {CONFIG.siteUrl.replace('https://www.', '')}
+        </span>
+      </div>
+    </div>,
     {
       ...size,
     }

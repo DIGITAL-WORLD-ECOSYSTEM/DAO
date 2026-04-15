@@ -4,8 +4,6 @@ import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
 import type { IPostItem } from 'src/types/blog';
 
-import { varAlpha } from 'minimal-shared/utils';
-
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
@@ -35,7 +33,7 @@ export function PostItem({ post, detailsHref, sx, ...other }: PostItemProps) {
   const theme = useTheme();
 
   return (
-    <Card 
+    <Card
       sx={[
         {
           // 🟢 ESTILO GLASSMORPHISM
@@ -52,7 +50,7 @@ export function PostItem({ post, detailsHref, sx, ...other }: PostItemProps) {
           },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
-      ]} 
+      ]}
       {...other}
     >
       <Box sx={{ position: 'relative' }}>
@@ -84,7 +82,11 @@ export function PostItem({ post, detailsHref, sx, ...other }: PostItemProps) {
       </Box>
 
       <CardContent sx={{ pt: 6, color: 'common.white' }}>
-        <Typography variant="caption" component="div" sx={{ mb: 1, color: alpha(theme.palette.common.white, 0.5) }}>
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{ mb: 1, color: alpha(theme.palette.common.white, 0.5) }}
+        >
           {fDate(post.createdAt)}
         </Typography>
 
@@ -126,15 +128,15 @@ export function PostItemLatest({ post, index, detailsHref }: PostItemLatestProps
   const postSmall = index === 1 || index === 2;
 
   return (
-    <Card 
-      sx={{ 
+    <Card
+      sx={{
         bgcolor: 'transparent',
         border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
         transition: theme.transitions.create(['transform', 'box-shadow']),
         '&:hover': {
           transform: 'scale(1.02)',
           boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-        }
+        },
       }}
     >
       <Avatar
@@ -156,8 +158,8 @@ export function PostItemLatest({ post, index, detailsHref }: PostItemLatestProps
         sx={{ height: 360 }}
         slotProps={{
           overlay: {
-            sx: (theme) => ({
-              background: `linear-gradient(to bottom, transparent 0%, ${alpha(theme.palette.grey[900], 0.9)} 100%)`,
+            sx: (t) => ({
+              background: `linear-gradient(to bottom, transparent 0%, ${alpha(t.palette.grey[900], 0.9)} 100%)`,
             }),
           },
         }}

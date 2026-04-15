@@ -27,7 +27,7 @@ type Props = BoxProps & {
   backHref: string;
   editHref: string;
   liveHref: string;
-  /** * ✅ TIPAGEM ROBUSTA: 
+  /** * ✅ TIPAGEM ROBUSTA:
    * Definimos como string para aceitar os estados 'published' e 'draft' tratados na View.
    */
   publish: string;

@@ -19,41 +19,42 @@ type GlassCubeProps = {
   opacity?: number;
 };
 
-export const GlassCube = memo(({
-  size = 5,
-  rotationSpeed = 0.05,
-  floatSpeed = 0.15,
-  transmission = 0.85,
-  roughness = 0.12,
-  thickness = 0.6,
-  ior = 1.2,
-  opacity = 0.12,
-}: GlassCubeProps) => {
+export const GlassCube = memo(
+  ({
+    size = 5,
+    rotationSpeed = 0.05,
+    floatSpeed = 0.15,
+    transmission = 0.85,
+    roughness = 0.12,
+    thickness = 0.6,
+    ior = 1.2,
+    opacity = 0.12,
+  }: GlassCubeProps) => {
+    const cubeRef = useRef<THREE.Mesh | null>(null);
 
-  const cubeRef = useRef<THREE.Mesh | null>(null);
+    useFrame((state) => {
+      if (!cubeRef.current) return;
 
-  useFrame((state) => {
-    if (!cubeRef.current) return;
+      const t = state.clock.getElapsedTime();
+      cubeRef.current.rotation.y = t * rotationSpeed;
+      cubeRef.current.rotation.x = Math.sin(t * floatSpeed) * 0.05;
+    });
 
-    const t = state.clock.getElapsedTime();
-    cubeRef.current.rotation.y = t * rotationSpeed;
-    cubeRef.current.rotation.x = Math.sin(t * floatSpeed) * 0.05;
-  });
-
-  return (
-    <mesh ref={cubeRef} castShadow receiveShadow>
-      <boxGeometry args={[size, size, size]} />
-      <meshPhysicalMaterial
-        transmission={transmission}
-        roughness={roughness}
-        thickness={thickness}
-        ior={ior}
-        transparent
-        opacity={opacity}
-        depthWrite={false}
-      />
-    </mesh>
-  );
-});
+    return (
+      <mesh ref={cubeRef} castShadow receiveShadow>
+        <boxGeometry args={[size, size, size]} />
+        <meshPhysicalMaterial
+          transmission={transmission}
+          roughness={roughness}
+          thickness={thickness}
+          ior={ior}
+          transparent
+          opacity={opacity}
+          depthWrite={false}
+        />
+      </mesh>
+    );
+  }
+);
 
 GlassCube.displayName = 'GlassCube';

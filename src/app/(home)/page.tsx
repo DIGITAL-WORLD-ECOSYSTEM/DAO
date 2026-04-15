@@ -26,11 +26,12 @@ export const metadata: Metadata = {
     'Blockchain Agro',
     'Governança Digital',
     'Agroecologia Paraty',
-    'Investimento Sustentável'
+    'Investimento Sustentável',
   ],
   openGraph: {
     title: 'ASPPIBRA - O Futuro do Agronegócio é Digital',
-    description: 'Plataforma de Governança e Tokenização de Ativos Reais para o produtor brasileiro.',
+    description:
+      'Plataforma de Governança e Tokenização de Ativos Reais para o produtor brasileiro.',
   },
 };
 

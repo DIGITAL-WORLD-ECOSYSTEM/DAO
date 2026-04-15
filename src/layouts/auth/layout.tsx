@@ -71,7 +71,7 @@ export function AuthCenteredLayout({
         slots={{ ...headerSlots, ...slotProps?.header?.slots }}
         slotProps={merge(headerSlotProps, slotProps?.header?.slotProps ?? {})}
         sx={[
-          { 
+          {
             position: { [layoutQuery]: 'fixed' },
             bgcolor: 'transparent', // Garante que o header não bloqueie o fundo
           },
@@ -110,10 +110,10 @@ export function AuthCenteredLayout({
       footerSection={renderFooter()}
       cssVars={{ '--layout-auth-content-width': '380px', ...cssVars }}
       sx={[
-        { 
-            position: 'relative',
-            overflow: 'hidden', // Evita scroll causado pelas partículas
-            bgcolor: '#030712' // Cor de base bem escura (Digital World)
+        {
+          position: 'relative',
+          overflow: 'hidden', // Evita scroll causado pelas partículas
+          bgcolor: '#030712', // Cor de base bem escura (Digital World)
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

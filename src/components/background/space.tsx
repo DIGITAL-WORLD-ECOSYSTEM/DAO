@@ -52,10 +52,7 @@ export const SpaceAtmosphere = memo(() => (
   <Suspense fallback={null}>
     <Stars {...STARS_CONFIG} />
     <ambientLight intensity={LIGHT_CONFIG.ambientIntensity} />
-    <pointLight
-      position={LIGHT_CONFIG.pointPosition}
-      intensity={LIGHT_CONFIG.pointIntensity}
-    />
+    <pointLight position={LIGHT_CONFIG.pointPosition} intensity={LIGHT_CONFIG.pointIntensity} />
   </Suspense>
 ));
 
@@ -68,7 +65,7 @@ export const SpaceScene = memo(() => (
       camera={{ position: [0, 0, 10], fov: 75 }}
       gl={{ antialias: true, alpha: true }}
       // Estilo inline para garantir que o canvas não intercepte o mouse
-      style={{ pointerEvents: 'none' }} 
+      style={{ pointerEvents: 'none' }}
     >
       <SpaceAtmosphere />
     </Canvas>

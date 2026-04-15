@@ -2,7 +2,10 @@
 
 export function getErrorMessage(error: unknown): string {
   // Caso o erro já seja uma instância de Error ou o objeto de erro do Axios que tratamos
-  if (error instanceof Error || (typeof error === 'object' && error !== null && 'message' in error)) {
+  if (
+    error instanceof Error ||
+    (typeof error === 'object' && error !== null && 'message' in error)
+  ) {
     return (error as any).message || 'Ocorreu um erro inesperado';
   }
 

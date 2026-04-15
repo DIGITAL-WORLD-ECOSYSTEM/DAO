@@ -19,7 +19,7 @@ import { JWT_STORAGE_KEY } from 'src/auth/context/constant';
  * Sincronizado com NEXT_PUBLIC_HOST_API para suportar múltiplos ambientes (Dev/Prod).
  */
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_HOST_API || 'https://api.asppibra.com', 
+  baseURL: process.env.NEXT_PUBLIC_HOST_API || 'https://api.asppibra.com',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -32,11 +32,11 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = typeof window !== 'undefined' ? localStorage.getItem(JWT_STORAGE_KEY) : null;
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -50,8 +50,9 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
-    const message = error?.response?.data?.message || error?.message || 'Erro inesperado no sistema!';
-    
+    const message =
+      error?.response?.data?.message || error?.message || 'Erro inesperado no sistema!';
+
     /**
      * 🛡️ PROTEÇÃO DE SESSÃO
      * Se o token expirar, o setSession(null) limpa os Cookies para o Middleware
@@ -60,12 +61,12 @@ axiosInstance.interceptors.response.use(
     if (status === 401) {
       console.warn('🚨 Token inválido ou expirado. Executando renovação de segurança...');
       setSession(null);
-      
+
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('onTokenExpired'));
       }
     }
-    
+
     return Promise.reject({ message, ...error });
   }
 );
@@ -94,12 +95,19 @@ export const fetcher = async <T = unknown>(
  */
 export const endpoints = {
   auth: {
-    me: '/api/core/auth/me',
-    signIn: '/api/core/auth/login',
-    signUp: '/api/core/auth/register',
-    resetPassword: '/api/core/auth/reset-password',
-    updatePassword: '/api/core/auth/update-password',
-    verify: '/api/core/auth/verify',
+    me: '/api/core/identity/me',
+    signIn: '/api/core/identity/local/login',
+    signUp: '/api/core/identity/local/register',
+    forgotPassword: '/api/core/identity/local/forgot-password',
+    resetPassword: '/api/core/identity/local/reset-password',
+
+    // Legacy Fallbacks
+    updatePassword: '/api/core/identity/local/update-password',
+    verify: '/api/core/identity/local/verify',
+
+    // Web3
+    web3Nonce: '/api/core/identity/web3/nonce',
+    web3Verify: '/api/core/identity/web3/verify',
   },
   // 🚀 SocialFi & Blog Integration
   post: {
@@ -119,5 +127,5 @@ export const endpoints = {
     list: '/api/products/rwa',
     valuation: (id: string) => `/api/products/rwa/valuation/${id}`,
     tokenize: '/api/products/rwa/tokenize',
-  }
+  },
 } as const;

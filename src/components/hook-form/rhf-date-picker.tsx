@@ -1,4 +1,4 @@
-"use client";
+'use client';
 'use client';
 
 import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';

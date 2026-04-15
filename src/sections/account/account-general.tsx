@@ -65,7 +65,7 @@ export function AccountGeneral() {
     email: '',
     photoURL: null,
     phoneNumber: '',
-    country: '', 
+    country: '',
     address: '',
     state: '',
     city: '',
@@ -76,7 +76,7 @@ export function AccountGeneral() {
 
   const methods = useForm<UpdateUserSchemaType>({
     mode: 'all',
-    // ✅ 4. O segredo para o build passar: fazemos o casting do resolver para 'any' 
+    // ✅ 4. O segredo para o build passar: fazemos o casting do resolver para 'any'
     // Isso evita o erro de mismatch entre o tipo de saída do Zod e o esperado pelo RHF
     resolver: zodResolver(UpdateUserSchema) as any,
     defaultValues,

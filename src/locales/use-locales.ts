@@ -54,10 +54,9 @@ export function useTranslate(namespace?: Namespace) {
         updateDayjsLocale(lang);
 
         // ✅ CORREÇÃO: router.refresh() removido pois não existe no hook customizado.
-        // Utilizamos window.location.reload() para garantir que os Server Components 
+        // Utilizamos window.location.reload() para garantir que os Server Components
         // também atualizem o idioma via cookie/header.
-        window.location.reload(); 
-        
+        window.location.reload();
       } catch (error) {
         console.error(error);
       }

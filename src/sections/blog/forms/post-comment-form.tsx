@@ -62,10 +62,10 @@ export function PostCommentForm() {
     try {
       // Simulação de latência de rede para feedback visual de loading
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+
       reset();
       console.info('Comentário processado com sucesso:', data);
-      
+
       // Nota: Futura integração com Toaster (ex: toast.success('Comentário enviado!'))
     } catch (error) {
       console.error('Falha ao enviar comentário:', error);
@@ -75,7 +75,6 @@ export function PostCommentForm() {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-        
         {/* 📝 CAMPO DE TEXTO: Suporta múltiplas linhas para comentários detalhados */}
         <Field.Text
           name="comment"
@@ -86,7 +85,6 @@ export function PostCommentForm() {
         />
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          
           {/* 📎 BARRA DE FERRAMENTAS: Opções de anexo e mídia */}
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <IconButton aria-label="Adicionar imagem do projeto">
@@ -103,9 +101,9 @@ export function PostCommentForm() {
           </Box>
 
           {/* 📤 BOTÃO DE AÇÃO: Gerencia estados de carregamento e desativação */}
-          <Button 
-            type="submit" 
-            variant="contained" 
+          <Button
+            type="submit"
+            variant="contained"
             color="primary"
             loading={isSubmitting}
             disabled={isSubmitting}

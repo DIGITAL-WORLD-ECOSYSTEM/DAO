@@ -15,17 +15,17 @@ const API_URL = CONFIG.serverUrl;
 export async function getPosts() {
   try {
     const url = `${API_URL}/api/posts`;
-    
+
     // Se estivermos em dev ou banco vazio, podemos forçar o mock aqui
     if (!API_URL || API_URL.includes('localhost')) {
-       return { posts: _posts };
+      return { posts: _posts };
     }
 
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) return { posts: _posts }; // Fallback para Mock se a API falhar
 
     const data = await res.json();
-    const posts = Array.isArray(data) ? data : (data.posts || []);
+    const posts = Array.isArray(data) ? data : data.posts || [];
 
     return { posts: posts.length > 0 ? posts : _posts };
   } catch (error) {
@@ -59,10 +59,8 @@ export async function getPost(paramTitle: string) {
 export async function getLatestPosts(paramTitle: string) {
   try {
     const { posts } = await getPosts();
-    
-    const latestPosts = posts
-      .filter((p: any) => kebabCase(p.title) !== paramTitle)
-      .slice(0, 4);
+
+    const latestPosts = posts.filter((p: any) => kebabCase(p.title) !== paramTitle).slice(0, 4);
 
     return { latestPosts }; // 🟢 Corresponde ao que a Page.tsx desestrutura
   } catch (error) {

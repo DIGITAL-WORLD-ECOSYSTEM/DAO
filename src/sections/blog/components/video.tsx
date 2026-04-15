@@ -21,7 +21,7 @@ const VIDEOS_BR = [
     channel: 'O Primo Rico',
     thumbnail: 'https://img.youtube.com/vi/HPQeQwPahR0/maxresdefault.jpg',
     postedAt: '2 dias atrás',
-    duration: '12:40'
+    duration: '12:40',
   },
   {
     id: 'hLMnCVEDjqE',
@@ -29,7 +29,7 @@ const VIDEOS_BR = [
     channel: 'É TopSaber',
     thumbnail: 'https://img.youtube.com/vi/hLMnCVEDjqE/maxresdefault.jpg',
     postedAt: '5 horas atrás',
-    duration: '08:15'
+    duration: '08:15',
   },
   {
     id: 'Xc6juEgNwog',
@@ -37,7 +37,7 @@ const VIDEOS_BR = [
     channel: 'Investidor 4.20',
     thumbnail: 'https://img.youtube.com/vi/Xc6juEgNwog/maxresdefault.jpg',
     postedAt: '1 dia atrás',
-    duration: '15:20'
+    duration: '15:20',
   },
   {
     id: 'x43e3g-JWWQ',
@@ -45,7 +45,7 @@ const VIDEOS_BR = [
     channel: 'Bruno Perini',
     thumbnail: 'https://img.youtube.com/vi/x43e3g-JWWQ/maxresdefault.jpg',
     postedAt: '3 dias atrás',
-    duration: '22:00'
+    duration: '22:00',
   },
 ];
 
@@ -56,7 +56,7 @@ const VIDEOS_INT = [
     channel: 'Michael Saylor',
     thumbnail: 'https://img.youtube.com/vi/W4mGv_8W-7I/maxresdefault.jpg',
     postedAt: '1 dia atrás',
-    duration: '18:10'
+    duration: '18:10',
   },
   {
     id: 'mS7S5E-WlqU',
@@ -64,7 +64,7 @@ const VIDEOS_INT = [
     channel: 'Vitalik Buterin',
     thumbnail: 'https://img.youtube.com/vi/mS7S5E-WlqU/maxresdefault.jpg',
     postedAt: '4 dias atrás',
-    duration: '25:45'
+    duration: '25:45',
   },
   {
     id: 'N64vL67520Q',
@@ -72,7 +72,7 @@ const VIDEOS_INT = [
     channel: 'Coin Bureau',
     thumbnail: 'https://img.youtube.com/vi/N64vL67520Q/maxresdefault.jpg',
     postedAt: '6 horas atrás',
-    duration: '14:20'
+    duration: '14:20',
   },
   {
     id: 'fB05fV7X_7o',
@@ -80,7 +80,7 @@ const VIDEOS_INT = [
     channel: 'Raoul Pal',
     thumbnail: 'https://img.youtube.com/vi/fB05fV7X_7o/maxresdefault.jpg',
     postedAt: '12 horas atrás',
-    duration: '32:00'
+    duration: '32:00',
   },
 ];
 
@@ -92,10 +92,10 @@ export function PostVideo() {
   const renderSectionHeader = (title: string, subtitle: string) => (
     <Box sx={{ mb: 4 }}>
       <m.div variants={varFade('inDown')}>
-        <Typography 
-          variant="h3" 
-          sx={{ 
-            fontWeight: 900, 
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: 900,
             fontFamily: "'Orbitron', sans-serif",
             textTransform: 'uppercase',
             color: 'common.white',
@@ -117,7 +117,6 @@ export function PostVideo() {
   return (
     <Box component="section" sx={{ py: { xs: 8, md: 12 }, bgcolor: 'transparent' }}>
       <Container component={MotionViewport}>
-        
         {/* SEÇÃO 1: BRASIL */}
         <Box sx={{ mb: 8 }}>
           {renderSectionHeader('Comunidade Brasileira', 'Insights do mercado nacional')}
@@ -163,7 +162,6 @@ export function PostVideo() {
             ))}
           </Box>
         </Box>
-
       </Container>
     </Box>
   );
@@ -171,13 +169,13 @@ export function PostVideo() {
 
 // ----------------------------------------------------------------------
 
-function VideoItem({ video, theme }: { video: any, theme: any }) {
+function VideoItem({ video, theme }: { video: any; theme: any }) {
   return (
-    <Box 
-      sx={{ 
-        position: 'relative', 
-        cursor: 'pointer', 
-        borderRadius: 2, 
+    <Box
+      sx={{
+        position: 'relative',
+        cursor: 'pointer',
+        borderRadius: 2,
         overflow: 'hidden',
         // 🟢 ESTILO GLASSMORPHISM
         bgcolor: alpha(theme.palette.grey[900], 0.4),
@@ -185,31 +183,40 @@ function VideoItem({ video, theme }: { video: any, theme: any }) {
         WebkitBackdropFilter: 'blur(12px)',
         border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
         transition: theme.transitions.create(['box-shadow', 'transform', 'background-color']),
-        '&:hover': { 
+        '&:hover': {
           transform: 'translateY(-6px)',
           bgcolor: alpha(theme.palette.grey[900], 0.6),
           boxShadow: `0 12px 24px 0 ${alpha(theme.palette.primary.main, 0.25)}`,
           borderColor: alpha(theme.palette.primary.main, 0.4),
           '& .play-button': { opacity: 1, transform: 'scale(1.1)' },
-          '& .video-img': { transform: 'scale(1.1)' }
-        } 
+          '& .video-img': { transform: 'scale(1.1)' },
+        },
       }}
     >
       <Box sx={{ position: 'relative', overflow: 'hidden' }}>
-        <Image 
+        <Image
           className="video-img"
-          alt={video.title} 
-          src={video.thumbnail} 
-          ratio="16/9" 
+          alt={video.title}
+          src={video.thumbnail}
+          ratio="16/9"
           sx={{ transition: theme.transitions.create('transform', { duration: 400 }) }}
         />
-        
-        <Typography 
-          variant="caption" 
-          sx={{ 
-            position: 'absolute', bottom: 8, right: 8, px: 0.8, py: 0.2, borderRadius: 0.5, 
-            color: 'common.white', bgcolor: alpha(theme.palette.common.black, 0.8), 
-            fontWeight: 'bold', zIndex: 9, fontFamily: "'Orbitron', sans-serif", fontSize: 10
+
+        <Typography
+          variant="caption"
+          sx={{
+            position: 'absolute',
+            bottom: 8,
+            right: 8,
+            px: 0.8,
+            py: 0.2,
+            borderRadius: 0.5,
+            color: 'common.white',
+            bgcolor: alpha(theme.palette.common.black, 0.8),
+            fontWeight: 'bold',
+            zIndex: 9,
+            fontFamily: "'Orbitron', sans-serif",
+            fontSize: 10,
           }}
         >
           {video.duration}
@@ -218,47 +225,75 @@ function VideoItem({ video, theme }: { video: any, theme: any }) {
         <Stack
           alignItems="center"
           justifyContent="center"
-          sx={{ 
-            top: 0, left: 0, width: 1, height: 1, position: 'absolute', 
-            bgcolor: alpha(theme.palette.common.black, 0.2), zIndex: 8 
+          sx={{
+            top: 0,
+            left: 0,
+            width: 1,
+            height: 1,
+            position: 'absolute',
+            bgcolor: alpha(theme.palette.common.black, 0.2),
+            zIndex: 8,
           }}
         >
-          <Box 
+          <Box
             className="play-button"
-            sx={{ 
-              p: 1.5, display: 'flex', borderRadius: '50%', color: 'common.white',
-              backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
-              bgcolor: alpha(theme.palette.primary.main, 0.8), opacity: 0,
+            sx={{
+              p: 1.5,
+              display: 'flex',
+              borderRadius: '50%',
+              color: 'common.white',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              bgcolor: alpha(theme.palette.primary.main, 0.8),
+              opacity: 0,
               transform: 'scale(0.8)',
               transition: theme.transitions.create(['opacity', 'transform']),
-              boxShadow: `0 0 20px ${theme.palette.primary.main}`
+              boxShadow: `0 0 20px ${theme.palette.primary.main}`,
             }}
           >
-            <Iconify icon={"solar:play-bold" as any} width={24} />
+            <Iconify icon={'solar:play-bold' as any} width={24} />
           </Box>
         </Stack>
       </Box>
 
       <Box sx={{ p: 2, color: 'common.white' }}>
-        <Typography 
-          variant="subtitle2" 
-          sx={{ 
-            mb: 1.5, height: 44, display: '-webkit-box', WebkitLineClamp: 2, 
-            WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.4,
-            fontWeight: 700, '&:hover': { color: 'primary.light' }
+        <Typography
+          variant="subtitle2"
+          sx={{
+            mb: 1.5,
+            height: 44,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            lineHeight: 1.4,
+            fontWeight: 700,
+            '&:hover': { color: 'primary.light' },
           }}
         >
           {video.title}
         </Typography>
-        
+
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography 
-            variant="caption" 
-            sx={{ color: 'primary.light', fontWeight: 800, textTransform: 'uppercase', fontSize: 10 }}
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'primary.light',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              fontSize: 10,
+            }}
           >
             {video.channel}
           </Typography>
-          <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: alpha(theme.palette.primary.main, 0.5) }} />
+          <Box
+            sx={{
+              width: 4,
+              height: 4,
+              borderRadius: '50%',
+              bgcolor: alpha(theme.palette.primary.main, 0.5),
+            }}
+          />
           <Typography variant="caption" sx={{ color: 'grey.500' }}>
             {video.postedAt}
           </Typography>

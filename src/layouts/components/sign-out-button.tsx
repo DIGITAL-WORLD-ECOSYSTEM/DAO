@@ -33,11 +33,10 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
       await checkUserSession?.();
 
       onClose?.();
-      
-      // ✅ CORREÇÃO: Em vez de .refresh() (que não existe no seu hook), 
+
+      // ✅ CORREÇÃO: Em vez de .refresh() (que não existe no seu hook),
       // usamos o .replace() para redirecionar o usuário para a home ou login.
-      router.replace(paths.auth.signIn); 
-      
+      router.replace(paths.auth.signIn);
     } catch (error) {
       console.error(error);
       toast.error('Unable to logout!');

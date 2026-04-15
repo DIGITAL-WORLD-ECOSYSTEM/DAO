@@ -1,6 +1,6 @@
 /**
  * POLYFILL PARA WEB GPU (Three.js R160+)
- * Previne "GPUShaderStage is undefined" em navegadores como Firefox, Safari 
+ * Previne "GPUShaderStage is undefined" em navegadores como Firefox, Safari
  * ou ambientes Node.js SSR que declaram `self` mas não possuem WebGPU ativo.
  */
 

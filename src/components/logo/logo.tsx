@@ -2,6 +2,7 @@
 
 import type { LinkProps } from '@mui/material/Link';
 
+import Image from 'next/image';
 import { mergeClasses } from 'minimal-shared/utils';
 
 // Importações visuais
@@ -9,7 +10,6 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import Image from 'next/image';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -31,9 +31,16 @@ export function Logo({
   isSingle = true,
   ...other
 }: LogoProps) {
-
   const logoIcon = (
-    <Box sx={{ width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Image
         alt="ASPPIBRA-DAO Icon"
         src="/logo/android-chrome-192x192.png"
@@ -47,7 +54,15 @@ export function Logo({
 
   // VERSÃO 1: APENAS ÍCONE
   const singleLogo = (
-    <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       {logoIcon}
     </Box>
   );
@@ -68,7 +83,7 @@ export function Logo({
             fontSize: '1.1rem',
             textTransform: 'uppercase',
             color: 'text.primary', // Preto no Light / Branco no Dark
-            letterSpacing: '-0.5px'
+            letterSpacing: '-0.5px',
           }}
         >
           DEX
@@ -81,7 +96,7 @@ export function Logo({
             lineHeight: 1,
             fontSize: '0.75rem',
             color: 'text.secondary', // Cinza
-            mt: 0.3
+            mt: 0.3,
           }}
         >
           World
@@ -102,12 +117,12 @@ export function Logo({
           // Dimensões base
           width: 40,
           height: 40,
-          
+
           // MUDANÇA 2: Se não for single, expande para caber o texto
-          ...(!isSingle && { 
-            width: 'auto', 
+          ...(!isSingle && {
+            width: 'auto',
             height: 40,
-            minWidth: 140 
+            minWidth: 140,
           }),
           ...(disabled && { pointerEvents: 'none' }),
         },
@@ -133,5 +148,5 @@ const LogoRoot = styled(Link)(({ theme }) => ({
   alignItems: 'center',
   textDecoration: 'none',
   // Importante: permite que as cores definidas no Typography funcionem
-  color: 'inherit', 
+  color: 'inherit',
 }));

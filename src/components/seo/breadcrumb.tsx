@@ -30,7 +30,9 @@ export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
             return (
               <li key={item.href} className="flex items-center">
                 {isLast ? (
-                  <span className="text-white" aria-current="page">{item.label}</span>
+                  <span className="text-white" aria-current="page">
+                    {item.label}
+                  </span>
                 ) : (
                   <>
                     <Link href={item.href} className="hover:text-blue-400 transition-colors">

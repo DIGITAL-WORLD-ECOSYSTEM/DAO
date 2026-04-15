@@ -43,7 +43,7 @@ export function PostCommentList({ comments = [] }: Props) {
               replies.map((reply) => {
                 /**
                  * ✅ BUSCA SEGURA DE USUÁRIO:
-                 * O encadeamento opcional em 'users?.find' evita crashes se a lista 
+                 * O encadeamento opcional em 'users?.find' evita crashes se a lista
                  * de usuários não estiver carregada ou sincronizada.
                  */
                 const userReply = comment?.users?.find((user) => user.id === reply.userId);

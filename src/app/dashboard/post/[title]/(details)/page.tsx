@@ -13,14 +13,14 @@ import { PostDetailsView } from 'src/sections/blog/view';
 
 /**
  * ✅ ESTABILIDADE DE BUILD:
- * Forçamos 'force-dynamic' para evitar que o Next.js tente gerar versões estáticas 
+ * Forçamos 'force-dynamic' para evitar que o Next.js tente gerar versões estáticas
  * de páginas administrativas durante o build, eliminando erros de Prerender.
  */
 export const dynamic = 'force-dynamic';
 
 /**
  * ✅ CONFIGURAÇÃO DE RUNTIME:
- * O uso de 'nodejs' garante suporte a bibliotecas densas e evita os limites 
+ * O uso de 'nodejs' garante suporte a bibliotecas densas e evita os limites
  * restritivos de memória do Edge Runtime na Vercel.
  */
 export const runtime = 'nodejs';
@@ -38,7 +38,7 @@ export default async function PostDetailsPage({ params }: Props) {
 
   /**
    * 🛠️ CONSTRUÇÃO DO OBJETO (SERVER-SIDE):
-   * Simulamos a busca de dados. O uso do 'title' da URL garante consistência 
+   * Simulamos a busca de dados. O uso do 'title' da URL garante consistência
    * visual durante os testes de navegação.
    */
   const post = {

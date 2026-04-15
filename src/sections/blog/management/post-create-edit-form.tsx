@@ -53,7 +53,9 @@ import { PostDetailsPreview } from './post-details-preview';
 export const PostCreateSchema = z.object({
   title: z.string().min(1, { message: 'O título é obrigatório!' }),
   description: z.string().min(1, { message: 'A descrição curta é obrigatória!' }),
-  content: schemaUtils.editor().min(100, { message: 'O conteúdo deve ter pelo menos 100 caracteres.' }),
+  content: schemaUtils
+    .editor()
+    .min(100, { message: 'O conteúdo deve ter pelo menos 100 caracteres.' }),
   coverUrl: schemaUtils.file({ error: 'A imagem de capa é obrigatória!' }),
   tags: z.string().array().min(2, { message: 'Adicione pelo menos 2 tags relevantes.' }),
   metaKeywords: z.string().array().min(1, { message: 'Defina ao menos 1 palavra-chave para SEO.' }),
@@ -82,18 +84,21 @@ export function PostCreateEditForm({ currentPost }: Props) {
    * ⚙️ VALORES PADRÃO:
    * Memoizamos os valores iniciais para garantir estabilidade na hidratação do formulário.
    */
-  const defaultValues = useMemo<PostCreateSchemaType>(() => ({
-    title: currentPost?.title || '',
-    description: currentPost?.description || '',
-    content: currentPost?.content || '',
-    coverUrl: currentPost?.coverUrl || null,
-    tags: currentPost?.tags || [],
-    metaKeywords: currentPost?.metaKeywords || [],
-    metaTitle: currentPost?.metaTitle || '',
-    metaDescription: currentPost?.metaDescription || '',
-    publish: currentPost?.publish || true,
-    comments: true,
-  }), [currentPost]);
+  const defaultValues = useMemo<PostCreateSchemaType>(
+    () => ({
+      title: currentPost?.title || '',
+      description: currentPost?.description || '',
+      content: currentPost?.content || '',
+      coverUrl: currentPost?.coverUrl || null,
+      tags: currentPost?.tags || [],
+      metaKeywords: currentPost?.metaKeywords || [],
+      metaTitle: currentPost?.metaTitle || '',
+      metaDescription: currentPost?.metaDescription || '',
+      publish: currentPost?.publish || true,
+      comments: true,
+    }),
+    [currentPost]
+  );
 
   const methods = useForm<PostCreateSchemaType>({
     mode: 'all',
@@ -145,7 +150,11 @@ export function PostCreateEditForm({ currentPost }: Props) {
         subheader="Título, descrição curta e corpo do texto..."
         action={
           <IconButton onClick={openDetails.onToggle}>
-            <Iconify icon={openDetails.value ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'} />
+            <Iconify
+              icon={
+                openDetails.value ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'
+              }
+            />
           </IconButton>
         }
       />
@@ -178,7 +187,11 @@ export function PostCreateEditForm({ currentPost }: Props) {
         subheader="SEO, Tags e metadados de governança..."
         action={
           <IconButton onClick={openProperties.onToggle}>
-            <Iconify icon={openProperties.value ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'} />
+            <Iconify
+              icon={
+                openProperties.value ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'
+              }
+            />
           </IconButton>
         }
       />
@@ -204,7 +217,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
             options={[]}
             getOptionLabel={(option) => option}
           />
-          
+
           <Controller
             name="comments"
             control={control}

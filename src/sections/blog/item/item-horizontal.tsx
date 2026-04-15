@@ -93,11 +93,17 @@ export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }
             p: theme.spacing(3, 3, 2, 3),
           }}
         >
-          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+          >
             <Label
               variant="soft"
               color={String(post.publish) === 'published' ? 'info' : 'default'}
-              sx={{ textTransform: 'uppercase', fontFamily: "'Orbitron', sans-serif", fontSize: 10 }}
+              sx={{
+                textTransform: 'uppercase',
+                fontFamily: "'Orbitron', sans-serif",
+                fontSize: 10,
+              }}
             >
               {String(post.publish)}
             </Label>

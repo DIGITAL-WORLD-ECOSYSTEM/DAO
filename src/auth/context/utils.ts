@@ -31,12 +31,13 @@ export function jwtDecode(token: string) {
 
     // Converte Base64URL para Base64 padrão
     const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-    
+
     // Decodifica lidando com escape de URI para suporte a Unicode
     const jsonPayload = decodeURIComponent(
-      window.atob(base64)
+      window
+        .atob(base64)
         .split('')
-        .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
+        .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
         .join('')
     );
 
@@ -103,7 +104,7 @@ export function setSession(accessToken: string | null) {
     if (accessToken) {
       // A. Persistência Local (Para o estado do React/Axios)
       localStorage.setItem(JWT_STORAGE_KEY, accessToken);
-      
+
       // B. Configuração de Header Global
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -115,16 +116,15 @@ export function setSession(accessToken: string | null) {
       // D. Inicia contador de expiração
       const decoded = jwtDecode(accessToken);
       if (decoded?.exp) tokenExpired(decoded.exp);
-      
     } else {
       // LIMPEZA TOTAL (Sign Out)
       localStorage.removeItem(JWT_STORAGE_KEY);
-      
+
       // Remove o Cookie forçando a expiração no passado
       document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
-      
+
       delete axios.defaults.headers.common.Authorization;
-      
+
       if (window.tokenTimeout) clearTimeout(window.tokenTimeout);
     }
   } catch (error) {

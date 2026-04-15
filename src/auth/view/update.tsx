@@ -19,15 +19,15 @@ import { SentIcon } from 'src/assets/icons';
 import axios, { endpoints } from 'src/lib/axios';
 
 // CORREÇÃO: Juntamos o 'toast' aqui com os outros componentes para evitar o erro de duplicata
-import { 
+import {
   Form,
-  toast, 
-  Field, 
-  Iconify, 
-  FormHead, 
-  schemaUtils, 
-  FormResendCode, 
-  FormReturnLink 
+  toast,
+  Field,
+  Iconify,
+  FormHead,
+  schemaUtils,
+  FormResendCode,
+  FormReturnLink,
 } from '../components';
 
 // ----------------------------------------------------------------------
@@ -90,7 +90,6 @@ export function CenteredUpdatePasswordView() {
 
       toast.success('Senha atualizada com sucesso!');
       router.push(paths.auth.signIn);
-      
     } catch (error: any) {
       console.error(error);
       setErrorMessage(error.message || 'Erro ao atualizar senha. Verifique o código enviado.');
@@ -99,7 +98,6 @@ export function CenteredUpdatePasswordView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      
       {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
       <Field.Text
@@ -148,13 +146,7 @@ export function CenteredUpdatePasswordView() {
         }}
       />
 
-      <Button
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
+      <Button fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
         Atualizar Senha
       </Button>
     </Box>

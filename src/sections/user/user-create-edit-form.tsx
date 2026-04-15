@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { IUserItem } from 'src/types/user';
 
@@ -26,7 +26,15 @@ import { fData } from 'src/utils/format-number';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
-import { Form, RHFSwitch, schemaUtils, RHFTextField, RHFPhoneInput, RHFUploadAvatar, RHFCountrySelect } from 'src/components/hook-form';
+import {
+  Form,
+  RHFSwitch,
+  schemaUtils,
+  RHFTextField,
+  RHFPhoneInput,
+  RHFUploadAvatar,
+  RHFCountrySelect,
+} from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -109,7 +117,6 @@ export function UserCreateEditForm({ currentUser }: Props) {
     <Form methods={methods} onSubmit={onSubmit}>
       {/* CORREÇÃO GRID: Container padrão */}
       <Grid container spacing={3}>
-        
         {/* CORREÇÃO GRID: Usando prop 'size' (Padrão MUI v6/v7) em vez de 'item xs={...}' */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
@@ -226,11 +233,7 @@ export function UserCreateEditForm({ currentUser }: Props) {
               <RHFTextField name="email" label="Email address" />
               <RHFPhoneInput name="phoneNumber" label="Phone number" defaultCountry="US" />
 
-              <RHFCountrySelect
-                name="country"
-                label="Country"
-                placeholder="Choose a country"
-              />
+              <RHFCountrySelect name="country" label="Country" placeholder="Choose a country" />
 
               <RHFTextField name="state" label="State/region" />
               <RHFTextField name="city" label="City" />

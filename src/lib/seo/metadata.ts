@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import { sharedOpenGraph } from './openGraph';
 
 interface MetadataProps {

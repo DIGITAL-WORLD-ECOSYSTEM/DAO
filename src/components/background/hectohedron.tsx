@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable react/no-unknown-property */
+
 import * as THREE from 'three';
 import { memo, useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -43,7 +45,7 @@ export const Hectohedron = memo(({ scrollProgress }: HectohedronProps) => {
       linesRef.current.rotation.copy(meshRef.current.rotation);
 
       // Escala
-      const targetScale = (1.2 * omegaFactor) + Math.sin(t * 0.5) * 0.02;
+      const targetScale = 1.2 * omegaFactor + Math.sin(t * 0.5) * 0.02;
       meshRef.current.scale.setScalar(targetScale);
       linesRef.current.scale.copy(meshRef.current.scale);
 
@@ -63,7 +65,6 @@ export const Hectohedron = memo(({ scrollProgress }: HectohedronProps) => {
       const pulse = (Math.sin(t * 3) + 1) * 0.5;
 
       lineMaterial.opacity = 0.2 + pulse * 0.6;
-
     } else {
       meshRef.current.visible = false;
       linesRef.current.visible = false;
@@ -72,15 +73,8 @@ export const Hectohedron = memo(({ scrollProgress }: HectohedronProps) => {
 
   return (
     <group>
-
       {/* CRISTAL CENTRAL */}
-      <mesh
-        ref={meshRef}
-        visible={false}
-        castShadow
-        receiveShadow
-        geometry={geometry}
-      >
+      <mesh ref={meshRef} visible={false} castShadow receiveShadow geometry={geometry}>
         <meshPhysicalMaterial
           ref={materialRef}
           color="#ffffff"
@@ -96,11 +90,7 @@ export const Hectohedron = memo(({ scrollProgress }: HectohedronProps) => {
       </mesh>
 
       {/* CONEXÕES WEB3 */}
-      <lineSegments
-        ref={linesRef}
-        geometry={edgesGeometry}
-        visible={false}
-      >
+      <lineSegments ref={linesRef} geometry={edgesGeometry} visible={false}>
         <lineBasicMaterial
           color="#6fa8ff"
           transparent
@@ -108,7 +98,6 @@ export const Hectohedron = memo(({ scrollProgress }: HectohedronProps) => {
           blending={THREE.AdditiveBlending}
         />
       </lineSegments>
-
     </group>
   );
 });

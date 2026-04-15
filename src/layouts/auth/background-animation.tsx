@@ -36,10 +36,13 @@ const fragmentShader = `
 
 function GalacticCube() {
   const meshRef = useRef<THREE.Mesh>(null!);
-  
-  const uniforms = useMemo(() => ({
-    iTime: { value: 0 },
-  }), []);
+
+  const uniforms = useMemo(
+    () => ({
+      iTime: { value: 0 },
+    }),
+    []
+  );
 
   useFrame((state) => {
     uniforms.iTime.value = state.clock.getElapsedTime();
@@ -66,27 +69,37 @@ function GalacticCube() {
 // ----------------------------------------------------------------------
 
 export const AuthBackgroundAnimation = memo(() => (
-    <div style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 0, background: '#030712' }}>
-      <Canvas camera={{ position: [0, 0, 8] }}>
-        <color attach="background" args={['#030712']} />
-        <ambientLight intensity={0.5} />
-        
-        <GalacticCube />
-        
-        <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      </Canvas>
-      
-      {/* Vinheta para focar no Login ASPPIBRA */}
-      <div style={{
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
+  <div
+    style={{
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      zIndex: 0,
+      background: '#030712',
+    }}
+  >
+    <Canvas camera={{ position: [0, 0, 8] }}>
+      <color attach="background" args={['#030712']} />
+      <ambientLight intensity={0.5} />
+
+      <GalacticCube />
+
+      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+    </Canvas>
+
+    {/* Vinheta para focar no Login ASPPIBRA */}
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
         height: '100%',
         background: 'radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.8) 100%)',
-        pointerEvents: 'none'
-      }} />
-    </div>
-  ));
+        pointerEvents: 'none',
+      }}
+    />
+  </div>
+));
 
 AuthBackgroundAnimation.displayName = 'AuthBackgroundAnimation';

@@ -20,13 +20,15 @@ export function generateArticleSchema({
     '@type': 'Article',
     headline: title,
     image: [image],
-    datePublished: datePublished,
-    dateModified: dateModified,
-    author: [{
-      '@type': 'Person',
-      name: authorName,
-      url: `${CONFIG.siteUrl}/authors/${authorName.toLowerCase().replace(/ /g, '-')}`,
-    }],
+    datePublished,
+    dateModified,
+    author: [
+      {
+        '@type': 'Person',
+        name: authorName,
+        url: `${CONFIG.siteUrl}/authors/${authorName.toLowerCase().replace(/ /g, '-')}`,
+      },
+    ],
     publisher: {
       '@type': 'Organization',
       name: 'ASPPIBRA-DAO',

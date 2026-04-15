@@ -16,14 +16,15 @@ export const runtime = 'nodejs';
 
 export const metadata = {
   title: 'Digital World: Monitorização e Notícias Cripto',
-  description: 'Acompanhe as principais comunidades, vídeos e tendências do mercado blockchain em tempo real.',
+  description:
+    'Acompanhe as principais comunidades, vídeos e tendências do mercado blockchain em tempo real.',
 };
 
 export default async function PostListPage() {
   const data = await getPosts();
 
   // 1. Extração segura
-  const rawPosts = Array.isArray(data) ? data : (data?.posts || []);
+  const rawPosts = Array.isArray(data) ? data : data?.posts || [];
 
   // 2. 🛡️ SANITIZAÇÃO
   // Garante que apenas dados puros sejam passados para os Client Components

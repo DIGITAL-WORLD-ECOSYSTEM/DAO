@@ -56,9 +56,7 @@ const gridStyles = {
 export function PostDetailsHomeView({ post, latestPosts }: Props) {
   const [isFavorited, setIsFavorited] = useState<boolean>(true);
 
-  const [favoritesCount, setFavoritesCount] = useState<number>(
-    Number(post?.totalFavorites ?? 0)
-  );
+  const [favoritesCount, setFavoritesCount] = useState<number>(Number(post?.totalFavorites ?? 0));
 
   const title = post?.title ?? '';
   const description = post?.description ?? '';
@@ -104,12 +102,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
     <>
       <JsonLd schema={generateBreadcrumbs(breadcrumbs)} />
 
-      <PostDetailsHero
-        title={title}
-        author={author}
-        coverUrl={coverUrl}
-        createdAt={createdAt}
-      />
+      <PostDetailsHero title={title} author={author} coverUrl={coverUrl} createdAt={createdAt} />
 
       <Container
         maxWidth={false}
@@ -119,10 +112,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
           borderBottom: `solid 1px ${theme.palette.divider}`,
         })}
       >
-        <CustomBreadcrumbs
-          links={breadcrumbs}
-          sx={{ maxWidth: 720, mx: 'auto' }}
-        />
+        <CustomBreadcrumbs links={breadcrumbs} sx={{ maxWidth: 720, mx: 'auto' }} />
       </Container>
 
       <Container maxWidth={false}>

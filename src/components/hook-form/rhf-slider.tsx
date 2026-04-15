@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { BoxProps } from '@mui/material/Box';
 import type { SliderProps } from '@mui/material/Slider';

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { ChipProps } from '@mui/material/Chip';
 import type { SelectProps } from '@mui/material/Select';

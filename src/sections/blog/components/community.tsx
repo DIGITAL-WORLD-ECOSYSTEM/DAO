@@ -16,12 +16,28 @@ import { varFade, MotionViewport } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 const COMMUNITIES = [
-  { name: 'CoinTelegraph', logo: '/assets/icons/communities/cointelegraph.svg', url: 'https://cointelegraph.com' },
-  { name: 'Binance Academy', logo: '/assets/icons/communities/binance.svg', url: 'https://academy.binance.com' },
+  {
+    name: 'CoinTelegraph',
+    logo: '/assets/icons/communities/cointelegraph.svg',
+    url: 'https://cointelegraph.com',
+  },
+  {
+    name: 'Binance Academy',
+    logo: '/assets/icons/communities/binance.svg',
+    url: 'https://academy.binance.com',
+  },
   { name: 'Ethereum Org', logo: '/assets/icons/communities/eth.svg', url: 'https://ethereum.org' },
   { name: 'CoinDesk', logo: '/assets/icons/communities/coindesk.svg', url: 'https://coindesk.com' },
-  { name: 'CryptoPanic', logo: '/assets/icons/communities/cryptopanic.svg', url: 'https://cryptopanic.com' },
-  { name: 'Solana Foundation', logo: '/assets/icons/communities/solana.svg', url: 'https://solana.com' },
+  {
+    name: 'CryptoPanic',
+    logo: '/assets/icons/communities/cryptopanic.svg',
+    url: 'https://cryptopanic.com',
+  },
+  {
+    name: 'Solana Foundation',
+    logo: '/assets/icons/communities/solana.svg',
+    url: 'https://solana.com',
+  },
 ];
 
 export function PostCommunity() {
@@ -35,7 +51,8 @@ export function PostCommunity() {
         position: 'relative',
         // Máscara de gradiente para suavizar bordas laterais
         maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+        WebkitMaskImage:
+          'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
         py: 1.5,
       }}
     >
@@ -74,7 +91,7 @@ export function PostCommunity() {
                 bgcolor: alpha('#020817', 0.7),
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-                
+
                 // 💎 BORDA REATIVA DE 1PX (Assinatura Visual)
                 '&::before': {
                   content: '""',
@@ -104,31 +121,31 @@ export function PostCommunity() {
                       ${alpha(theme.palette.common.white, 0.2)} 50%, 
                       ${theme.palette.info.main} 100%
                     )`,
-                  }
+                  },
                 },
               }}
             >
-              <Image 
-                alt={community.name} 
-                src={community.logo} 
-                sx={{ 
-                  width: 48, 
-                  height: 48, 
+              <Image
+                alt={community.name}
+                src={community.logo}
+                sx={{
+                  width: 48,
+                  height: 48,
                   mb: 2,
                   zIndex: 3,
-                  filter: `drop-shadow(0 0 12px ${alpha(theme.palette.info.main, 0.4)})`
-                }} 
+                  filter: `drop-shadow(0 0 12px ${alpha(theme.palette.info.main, 0.4)})`,
+                }}
               />
-              <Typography 
-                variant="subtitle2" 
-                noWrap 
-                sx={{ 
+              <Typography
+                variant="subtitle2"
+                noWrap
+                sx={{
                   zIndex: 3,
                   color: 'common.white',
                   fontFamily: "'Orbitron', sans-serif",
                   fontSize: 11,
                   letterSpacing: '0.05em',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
                 }}
               >
                 {community.name}
@@ -141,22 +158,22 @@ export function PostCommunity() {
   );
 
   return (
-    <Box 
-      component="section" 
-      sx={{ 
+    <Box
+      component="section"
+      sx={{
         py: { xs: 8, md: 12 },
         bgcolor: 'transparent',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       <Container component={MotionViewport}>
         <Stack spacing={6}>
           <Stack spacing={1} sx={{ textAlign: 'center' }}>
             <m.div variants={varFade('inDown')}>
-              <Typography 
-                variant="h2" 
-                sx={{ 
-                  fontWeight: 900, 
+              <Typography
+                variant="h2"
+                sx={{
+                  fontWeight: 900,
                   fontFamily: "'Orbitron', sans-serif",
                   textTransform: 'uppercase',
                   color: 'common.white',
@@ -167,30 +184,27 @@ export function PostCommunity() {
                 Comunidades Cripto
               </Typography>
             </m.div>
-            
+
             <m.div variants={varFade('inUp')}>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  color: 'grey.400', 
-                  maxWidth: 600, 
+              <Typography
+                variant="body1"
+                sx={{
+                  color: 'grey.400',
+                  maxWidth: 600,
                   mx: 'auto',
-                  fontFamily: "'Public Sans', sans-serif"
+                  fontFamily: "'Public Sans', sans-serif",
                 }}
               >
-                Monitorizamos os principais ecossistemas globais em tempo real para trazer insights exclusivos.
+                Monitorizamos os principais ecossistemas globais em tempo real para trazer insights
+                exclusivos.
               </Typography>
             </m.div>
           </Stack>
 
           <Stack spacing={2}>
-            <m.div variants={varFade('inRight')}>
-              {renderMarqueeRow(false)}
-            </m.div>
-            
-            <m.div variants={varFade('inLeft')}>
-              {renderMarqueeRow(true)}
-            </m.div>
+            <m.div variants={varFade('inRight')}>{renderMarqueeRow(false)}</m.div>
+
+            <m.div variants={varFade('inLeft')}>{renderMarqueeRow(true)}</m.div>
           </Stack>
         </Stack>
       </Container>

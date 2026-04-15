@@ -9,8 +9,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
-import { varFade, MotionViewport } from 'src/components/animate';
 import { Image } from 'src/components/image';
+import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -36,12 +36,12 @@ export function PostAdvertisement({
   const theme = useTheme();
 
   return (
-    <Box 
-      component="section" 
-      sx={{ 
-        py: { xs: 5, md: 10 }, 
+    <Box
+      component="section"
+      sx={{
+        py: { xs: 5, md: 10 },
         bgcolor: 'transparent',
-        position: 'relative' 
+        position: 'relative',
       }}
     >
       <Container component={MotionViewport}>
@@ -59,7 +59,7 @@ export function PostAdvertisement({
             bgcolor: alpha('#020817', 0.8),
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            
+
             // 💎 BORDA REATIVA DO BANNER (CIANO -> ÂMBAR)
             '&::before': {
               content: '""',
@@ -90,9 +90,9 @@ export function PostAdvertisement({
             }}
           >
             <m.div variants={varFade('inLeft')}>
-              <Typography 
-                variant="h2" 
-                sx={{ 
+              <Typography
+                variant="h2"
+                sx={{
                   fontWeight: 900,
                   fontFamily: "'Orbitron', sans-serif",
                   textTransform: 'uppercase',
@@ -106,12 +106,12 @@ export function PostAdvertisement({
             </m.div>
 
             <m.div variants={varFade('inLeft')}>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  color: '#919EAB', 
+              <Typography
+                variant="body1"
+                sx={{
+                  color: '#919EAB',
                   fontFamily: "'Public Sans', sans-serif",
-                  lineHeight: 1.6 
+                  lineHeight: 1.6,
                 }}
               >
                 {description}
@@ -151,10 +151,10 @@ export function PostAdvertisement({
                     maskComposite: 'exclude',
                   },
                   transition: theme.transitions.create(['all']),
-                  '&:hover': { 
+                  '&:hover': {
                     bgcolor: alpha(theme.palette.primary.main, 0.2),
                     boxShadow: `0 0 25px ${alpha(theme.palette.primary.main, 0.5)}`,
-                    transform: 'translateY(-2px)'
+                    transform: 'translateY(-2px)',
                   },
                 }}
               >
@@ -171,7 +171,7 @@ export function PostAdvertisement({
               mt: { xs: 5, md: 0 },
               width: { xs: 240, md: 320 },
               zIndex: 9,
-              filter: `drop-shadow(0 0 25px ${alpha(theme.palette.primary.main, 0.3)})`
+              filter: `drop-shadow(0 0 25px ${alpha(theme.palette.primary.main, 0.3)})`,
             }}
           >
             <Image alt="Publicidade" src={imageUrl} />

@@ -55,7 +55,7 @@ type Props = {
 export function PostListView({ posts: initialPosts }: Props) {
   const theme = useTheme();
   const { posts: fetchedPosts, postsLoading } = useGetPosts();
-  
+
   const posts = useMemo(() => initialPosts || fetchedPosts || [], [initialPosts, fetchedPosts]);
 
   const [sortBy, setSortBy] = useState<SortType>('latest');
@@ -76,9 +76,7 @@ export function PostListView({ posts: initialPosts }: Props) {
 
   const searchResults = useMemo(() => {
     if (!searchQuery) return posts;
-    return posts.filter((post) =>
-      post.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    return posts.filter((post) => post.title.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [posts, searchQuery]);
 
   const dataFiltered = useMemo(
@@ -127,20 +125,20 @@ export function PostListView({ posts: initialPosts }: Props) {
                 boxShadow: `0 0 15px ${alpha(theme.palette.primary.main, 0.4)}`,
                 '&:hover': {
                   background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
-                }
+                },
               }}
             >
               Novo Post
             </Button>
           }
-          sx={{ 
+          sx={{
             mb: { xs: 3, md: 5 },
-            '& .MuiTypography-h4': { 
-              fontFamily: "'Orbitron', sans-serif", 
+            '& .MuiTypography-h4': {
+              fontFamily: "'Orbitron', sans-serif",
               fontWeight: 900,
               color: 'common.white',
               textShadow: `0 0 10px ${alpha(theme.palette.primary.main, 0.5)}`,
-            }
+            },
           }}
         />
 
@@ -164,10 +162,10 @@ export function PostListView({ posts: initialPosts }: Props) {
           <PostSort sort={sortBy} onSort={setSortBy} sortOptions={POST_SORT_OPTIONS} />
         </Box>
 
-        <Tabs 
-          value={state.publish} 
-          onChange={handleFilterPublish} 
-          sx={{ 
+        <Tabs
+          value={state.publish}
+          onChange={handleFilterPublish}
+          sx={{
             mb: { xs: 3, md: 5 },
             '& .MuiTabs-indicator': { bgcolor: 'primary.main' },
             '& .MuiTab-root': { color: alpha(theme.palette.common.white, 0.6) },
@@ -195,10 +193,7 @@ export function PostListView({ posts: initialPosts }: Props) {
         </Tabs>
 
         {/* 📜 LISTAGEM: Agora renderizada sobre o fundo transparente */}
-        <PostListHorizontal 
-          posts={dataFiltered} 
-          loading={postsLoading && posts.length === 0} 
-        />
+        <PostListHorizontal posts={dataFiltered} loading={postsLoading && posts.length === 0} />
       </Box>
     </BlogLayout>
   );

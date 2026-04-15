@@ -3,14 +3,15 @@
 /* eslint-disable react/no-unknown-property */
 
 import './polyfill';
+
+import type { Hotspot, GlobeConfig } from './types';
+
 import * as THREE from 'three';
 import { useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
 import countries from 'src/assets/data/world.json';
-
-import type { Hotspot, GlobeConfig } from './types';
 
 interface WorldProps {
   hotspots?: Hotspot[];
@@ -125,29 +126,27 @@ function GlobeAnimator({ globe }: { globe: any }) {
 // GLOBE LOGIC
 // ======================================================
 
-function useGlobeLogic(
-  globe: any,
-  hotspots: Hotspot[],
-  config: Required<GlobeConfig>
-) {
-  const material = useMemo(() =>
-    new THREE.MeshPhongMaterial({
-      color: new THREE.Color(config.globeColor),
-      emissive: new THREE.Color('#0f172a'),
-      shininess: 40,
-      transparent: true,
-      opacity: 0.96,
-    }),
-  [config.globeColor]);
+function useGlobeLogic(globe: any, hotspots: Hotspot[], config: Required<GlobeConfig>) {
+  const material = useMemo(
+    () =>
+      new THREE.MeshPhongMaterial({
+        color: new THREE.Color(config.globeColor),
+        emissive: new THREE.Color('#0f172a'),
+        shininess: 40,
+        transparent: true,
+        opacity: 0.96,
+      }),
+    [config.globeColor]
+  );
 
   useEffect(() => {
-    if (!globe) return;
+    if (!globe) return undefined;
     globe.globeMaterial(material);
     return () => material.dispose();
   }, [globe, material]);
 
   useEffect(() => {
-    if (!globe) return;
+    if (!globe) return undefined;
 
     const geo = countries as GeoFeatureCollection;
 
@@ -162,9 +161,7 @@ function useGlobeLogic(
       .htmlLat((d: object) => (d as Hotspot).lat)
       .htmlLng((d: object) => (d as Hotspot).lng)
       .htmlAltitude(0.02)
-      .htmlElement((d: object) =>
-        createHexNode((d as Hotspot).color ?? '#60a5fa')
-      );
+      .htmlElement((d: object) => createHexNode((d as Hotspot).color ?? '#60a5fa'));
 
     globe
       .ringsData(hotspots)
@@ -173,15 +170,10 @@ function useGlobeLogic(
       .ringColor(() => (t: number) => `rgba(96,165,250,${1 - t})`)
       .ringMaxRadius(config.maxRings)
       .ringPropagationSpeed(VISUAL_CONFIG.ringSpeed)
-      .ringRepeatPeriod((d: object) =>
-        1200 + seededRandom((d as Hotspot).lat) * 800
-      );
+      .ringRepeatPeriod((d: object) => 1200 + seededRandom((d as Hotspot).lat) * 800);
 
     return () => {
-      globe
-        .ringsData([])
-        .hexPolygonsData([])
-        .htmlElementsData([]);
+      globe.ringsData([]).hexPolygonsData([]).htmlElementsData([]);
     };
   }, [globe, hotspots, config]);
 }
@@ -190,22 +182,21 @@ function useGlobeLogic(
 // MAIN COMPONENT
 // ======================================================
 
-export default function World({
-  hotspots = HUBS,
-  globeConfig = {},
-}: WorldProps) {
-
-  const config = useMemo(() => ({
-    ...DEFAULT_CONFIG,
-    ...globeConfig,
-  }), [globeConfig]);
+export default function World({ hotspots = HUBS, globeConfig = {} }: WorldProps) {
+  const config = useMemo(
+    () => ({
+      ...DEFAULT_CONFIG,
+      ...globeConfig,
+    }),
+    [globeConfig]
+  );
 
   const [globe, setGlobe] = useState<any>(null);
 
   useEffect(() => {
     let instance: any = null;
 
-    // Async import explicitly blocks Node.js Turbopack compilation 
+    // Async import explicitly blocks Node.js Turbopack compilation
     // guaranteeing initialization strictly on browser runtime.
     import('three-globe').then((mod) => {
       const ThreeGlobeClass = mod.default;
@@ -224,11 +215,7 @@ export default function World({
 
   return (
     <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-      <PerspectiveCamera
-        makeDefault
-        position={[0, 0, 380]}
-        fov={50}
-      />
+      <PerspectiveCamera makeDefault position={[0, 0, 380]} fov={50} />
 
       <OrbitControls
         enableZoom={false}
@@ -241,20 +228,12 @@ export default function World({
 
       <ambientLight intensity={1.2} />
 
-      <directionalLight
-        position={[-300, 200, 300]}
-        intensity={1.8}
-      />
+      <directionalLight position={[-300, 200, 300]} intensity={1.8} />
 
-      <pointLight
-        position={[200, 300, 200]}
-        intensity={1.5}
-        color="#60a5fa"
-      />
+      <pointLight position={[200, 300, 200]} intensity={1.5} color="#60a5fa" />
 
       {globe && <primitive object={globe} />}
       {globe && <GlobeAnimator globe={globe} />}
-
     </Canvas>
   );
 }

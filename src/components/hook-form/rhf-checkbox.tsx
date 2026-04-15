@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { FormGroupProps } from '@mui/material/FormGroup'; // ✅ Adicionado para tipagem correta

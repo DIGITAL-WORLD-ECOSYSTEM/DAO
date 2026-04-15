@@ -63,9 +63,7 @@ export function Carousel({
               }),
             }),
           }),
-          ...(Array.isArray(slotProps?.container)
-            ? slotProps.container
-            : [slotProps?.container]),
+          ...(Array.isArray(slotProps?.container) ? slotProps.container : [slotProps?.container]),
         ]}
       >
         {renderChildren()}

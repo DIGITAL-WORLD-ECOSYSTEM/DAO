@@ -17,7 +17,9 @@ import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
@@ -46,7 +48,7 @@ export const SignInSchema = z.object({
 export function CenteredSignInView() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   /** * 🟢 REDIRECIONAMENTO INTELIGENTE
    * Recupera o parâmetro 'returnTo' injetado pelo Middleware se o usuário
    * tentou acessar uma rota protegida sem estar logado.
@@ -80,13 +82,12 @@ export function CenteredSignInView() {
   const onSubmit = handleSubmit(async (data: SignInSchemaType) => {
     try {
       setErrorMessage(null);
-      
+
       // Chamada ao serviço de autenticação (Configura Axios + Cookies)
       await signIn(data.email, data.password);
 
       // Se houver uma rota de retorno, prioriza ela; caso contrário, vai para a raiz do dashboard
       router.push(returnTo || paths.dashboard.root);
-      
     } catch (error: any) {
       console.error('🔥 Login Error:', error);
       // Extrai mensagem de erro vinda do Interceptor do Axios (backend)
@@ -103,11 +104,11 @@ export function CenteredSignInView() {
         </Alert>
       )}
 
-      <Field.Text 
-        name="email" 
-        label="E-mail" 
+      <Field.Text
+        name="email"
+        label="E-mail"
         placeholder="sandro_ceo@asppibra.com.br"
-        slotProps={{ inputLabel: { shrink: true } }} 
+        slotProps={{ inputLabel: { shrink: true } }}
       />
 
       <Field.Text
@@ -146,10 +147,10 @@ export function CenteredSignInView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        sx={{ 
-          bgcolor: 'text.primary', 
+        sx={{
+          bgcolor: 'text.primary',
           color: 'background.paper',
-          '&:hover': { bgcolor: 'text.secondary' } 
+          '&:hover': { bgcolor: 'text.secondary' },
         }}
       >
         Entrar no Portal
@@ -167,7 +168,12 @@ export function CenteredSignInView() {
         description={
           <>
             {`Novo na DAO? `}
-            <Link component={RouterLink} href={paths.auth.signUp} variant="subtitle2" color="primary">
+            <Link
+              component={RouterLink}
+              href={paths.auth.signUp}
+              variant="subtitle2"
+              color="primary"
+            >
               Solicitar Acesso
             </Link>
           </>
@@ -178,6 +184,48 @@ export function CenteredSignInView() {
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm}
       </Form>
+
+      <Divider sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}>
+        <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+          OU ACESSE VIA
+        </Typography>
+      </Divider>
+
+      <Stack direction="row" spacing={2} justifyContent="center">
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          startIcon={<Iconify icon={"logos:google-icon" as any} />}
+          href={`${process.env.NEXT_PUBLIC_HOST_API || 'https://api.asppibra.com'}/api/core/identity/oauth/google/login`}
+        >
+          Google
+        </Button>
+
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          startIcon={<Iconify icon={"mdi:github" as any} />}
+          href={`${process.env.NEXT_PUBLIC_HOST_API || 'https://api.asppibra.com'}/api/core/identity/oauth/github/login`}
+        >
+          GitHub
+        </Button>
+      </Stack>
+
+      <Button
+        fullWidth
+        variant="soft"
+        color="primary"
+        size="large"
+        startIcon={<Iconify icon={"logos:metamask-icon" as any} />}
+        sx={{ mt: 2, fontFamily: "'Orbitron', sans-serif" }}
+        onClick={() =>
+          alert('Integração SIWE (Web3) requer injeção do provedor Ethers/Viem. Em breve!')
+        }
+      >
+        Web3 Wallet (SIWE)
+      </Button>
     </>
   );
 }

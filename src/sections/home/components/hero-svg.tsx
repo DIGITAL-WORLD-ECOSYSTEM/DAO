@@ -129,7 +129,8 @@ export function Texts({ sx, ...other }: BoxProps & MotionProps) {
           display: 'flex',
           userSelect: 'none',
           maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+          WebkitMaskImage:
+            'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
         }}
       >
         <m.div
@@ -147,11 +148,11 @@ export function Texts({ sx, ...other }: BoxProps & MotionProps) {
                 opacity: 0.4,
                 filter: 'grayscale(1)',
                 transition: theme.transitions.create(['all']),
-                '&:hover': { 
-                  filter: 'grayscale(0)', 
-                  opacity: 1, 
+                '&:hover': {
+                  filter: 'grayscale(0)',
+                  opacity: 1,
                   color: 'primary.main',
-                  transform: 'scale(1.1)' 
+                  transform: 'scale(1.1)',
                 },
               }}
             >

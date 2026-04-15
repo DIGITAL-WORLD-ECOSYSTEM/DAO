@@ -56,9 +56,9 @@ const TAB_PARAM = 'tab';
 
 export function UserProfileView() {
   const pathname = usePathname();
-  
+
   const searchParams = useSearchParams();
-  
+
   const selectedTab = searchParams.get(TAB_PARAM) ?? '';
 
   const { user } = useMockedUser();

@@ -1,4 +1,3 @@
-
 import { PostDetailsSkeleton } from 'src/sections/blog/item';
 
 // ----------------------------------------------------------------------

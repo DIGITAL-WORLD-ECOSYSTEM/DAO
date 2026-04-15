@@ -18,13 +18,13 @@ export function JsonLd({ schema }: Props) {
 // 🟢 AUXILIAR: Gera Esquema de Breadcrumbs
 export function generateBreadcrumbs(links: { name: string; href: string }[]) {
   return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": links.map((link, index) => ({
-      "@type": "ListItem",
-      "position": index + 1,
-      "name": link.name,
-      "item": link.href.startsWith('http') ? link.href : `${CONFIG.siteUrl}${link.href}`,
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: links.map((link, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: link.name,
+      item: link.href.startsWith('http') ? link.href : `${CONFIG.siteUrl}${link.href}`,
     })),
   };
 }
@@ -39,21 +39,21 @@ export function generateArticleSchema(data: {
   url: string;
 }) {
   return {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": data.title,
-    "description": data.description,
-    "image": [data.coverUrl],
-    "datePublished": data.createdAt,
-    "author": [{ "@type": "Person", "name": data.authorName }],
-    "publisher": {
-      "@type": "Organization",
-      "name": "ASPPIBRA",
-      "logo": { "@type": "ImageObject", "url": `${CONFIG.siteUrl}/logo/logo_single.png` }
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: data.title,
+    description: data.description,
+    image: [data.coverUrl],
+    datePublished: data.createdAt,
+    author: [{ '@type': 'Person', name: data.authorName }],
+    publisher: {
+      '@type': 'Organization',
+      name: 'ASPPIBRA',
+      logo: { '@type': 'ImageObject', url: `${CONFIG.siteUrl}/logo/logo_single.png` },
     },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `${CONFIG.siteUrl}${data.url}`
-    }
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${CONFIG.siteUrl}${data.url}`,
+    },
   };
 }

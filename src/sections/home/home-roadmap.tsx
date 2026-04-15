@@ -20,6 +20,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 // APP
 // ----------------------------------------------------------------------
 import { useTranslate } from 'src/locales';
+
 import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
@@ -87,7 +88,6 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
     >
       <MotionViewport>
         <Container sx={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
-          
           {/* Badge Padronizada */}
           <m.div variants={varFade('inUp')}>
             <Box
@@ -132,7 +132,14 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
               <Box component="span" sx={{ color: 'common.white' }}>
                 {t('roadmap.title')}
               </Box>
-              <Box component="span" sx={{ color: 'warning.main', ml: { xs: 0, md: 1.5 }, display: { xs: 'block', md: 'inline' } }}>
+              <Box
+                component="span"
+                sx={{
+                  color: 'warning.main',
+                  ml: { xs: 0, md: 1.5 },
+                  display: { xs: 'block', md: 'inline' },
+                }}
+              >
                 {t('roadmap.title_highlight')}
               </Box>
             </Typography>
@@ -188,7 +195,7 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)',
                         transition: theme.transitions.create(['all']),
-                        
+
                         // BORDA REATIVA COLORIDA (BASEADA NA FASE)
                         '&::before': {
                           content: '""',
@@ -201,7 +208,8 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
                             ${alpha(theme.palette.common.white, 0.05)} 50%, 
                             ${alpha(cardColor, 0.8)} 100%
                           )`,
-                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                          WebkitMask:
+                            'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                           WebkitMaskComposite: 'xor',
                           maskComposite: 'exclude',
                           zIndex: 2,
@@ -227,7 +235,7 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
                           textTransform: 'uppercase',
                           color: cardColor,
                           zIndex: 3,
-                          position: 'relative'
+                          position: 'relative',
                         }}
                       >
                         {item.phase} • {item.time}
@@ -245,7 +253,7 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
                           letterSpacing: '0.04em',
                           color: 'common.white',
                           zIndex: 3,
-                          position: 'relative'
+                          position: 'relative',
                         }}
                       >
                         {item.title}
@@ -259,7 +267,7 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
                           lineHeight: 1.75,
                           color: '#919EAB',
                           zIndex: 3,
-                          position: 'relative'
+                          position: 'relative',
                         }}
                       >
                         {item.description}

@@ -35,10 +35,13 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
   const { t } = useTranslate();
 
   // Busca o array de FAQs do common.json
-  const faqs = (t('faqs.items', { returnObjects: true }) as { question: string; answer: string }[]) || [];
+  const faqs =
+    (t('faqs.items', { returnObjects: true }) as { question: string; answer: string }[]) || [];
 
   // Estado para controlar qual acordeão está aberto
-  const [expanded, setExpanded] = useState<string | false>(faqs.length > 0 ? faqs[0].question : false);
+  const [expanded, setExpanded] = useState<string | false>(
+    faqs.length > 0 ? faqs[0].question : false
+  );
 
   const handleChange = (panel: string) => (_: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
@@ -51,23 +54,22 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
       id="faqs"
       component="section"
       sx={[
-        { 
-          position: 'relative', 
-          overflow: 'hidden', 
-          bgcolor: 'transparent', 
+        {
+          position: 'relative',
+          overflow: 'hidden',
+          bgcolor: 'transparent',
           // 3° Padding Vertical Responsivo Padronizado
-          py: { xs: 8, md: 15 } 
+          py: { xs: 8, md: 15 },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
       {...other}
     >
       {/* 1° Container e Viewport (Estrutura Base) */}
-      <Container 
-        component={MotionViewport} 
+      <Container
+        component={MotionViewport}
         sx={{ position: 'relative', zIndex: 9, textAlign: 'center' }}
       >
-        
         {/* BADGE / PÍLULA PADRONIZADA */}
         <m.div variants={varFade('inUp')}>
           <Box
@@ -122,13 +124,17 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
 
         {/* 7. Limitação de Caracteres / MaxWidth Descrição */}
         <m.div variants={varFade('inUp')}>
-           <Typography sx={{ mt: 3, mx: 'auto', maxWidth: 640, color: 'text.secondary' }}>
-            Tudo o que você precisa saber sobre a infraestrutura digital e governança da ASPPIBRA-DAO.
+          <Typography sx={{ mt: 3, mx: 'auto', maxWidth: 640, color: 'text.secondary' }}>
+            Tudo o que você precisa saber sobre a infraestrutura digital e governança da
+            ASPPIBRA-DAO.
           </Typography>
         </m.div>
 
         <m.div variants={varFade('inUp')}>
-          <Stack spacing={2} sx={{ mt: { xs: 6, md: 8 }, mx: 'auto', maxWidth: 720, textAlign: 'left' }}>
+          <Stack
+            spacing={2}
+            sx={{ mt: { xs: 6, md: 8 }, mx: 'auto', maxWidth: 720, textAlign: 'left' }}
+          >
             {faqs.map((item) => {
               const isOpen = expanded === item.question;
 
@@ -148,7 +154,11 @@ export function HomeFAQs({ sx, ...other }: BoxProps) {
                     boxShadow: isOpen
                       ? `0 0 25px ${alpha(theme.palette.info.main, 0.35)}`
                       : `0 0 12px ${alpha(theme.palette.info.main, 0.18)}`,
-                    transition: theme.transitions.create(['border-color', 'box-shadow', 'background-color']),
+                    transition: theme.transitions.create([
+                      'border-color',
+                      'box-shadow',
+                      'background-color',
+                    ]),
                     '&:before': { display: 'none' },
                     '& .MuiAccordionSummary-content': { margin: 0 },
                     '& .MuiAccordionSummary-root': { padding: FAQ_PADDING, minHeight: 'unset' },

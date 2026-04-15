@@ -100,7 +100,11 @@ export function useGetLatestPosts(title: string) {
   // ✅ CORREÇÃO: Usando o endpoint 'list' com parâmetro 'latest' para evitar erro TS2339
   const url = title ? [endpoints.post.list, { params: { title, latest: true } }] : '';
 
-  const { data, isLoading, error, isValidating } = useSWR<LatestPostsData>(url, fetcher, swrOptions);
+  const { data, isLoading, error, isValidating } = useSWR<LatestPostsData>(
+    url,
+    fetcher,
+    swrOptions
+  );
 
   const memoizedValue = useMemo(
     () => ({

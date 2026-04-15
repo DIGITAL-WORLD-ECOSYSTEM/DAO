@@ -18,7 +18,15 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { signUp } from '../context/action';
-import { Form, Field, Iconify, FormHead, SignUpTerms, schemaUtils, AnimateLogoRotate } from '../components';
+import {
+  Form,
+  Field,
+  Iconify,
+  FormHead,
+  SignUpTerms,
+  schemaUtils,
+  AnimateLogoRotate,
+} from '../components';
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +81,6 @@ export function CenteredSignUpView() {
 
       // Redireciona para o dashboard após o sucesso
       router.push(paths.dashboard.root);
-      
     } catch (error: any) {
       console.error(error);
       // Exibe a mensagem de erro vinda da API (ex: "Este email já está em uso")
@@ -83,12 +90,17 @@ export function CenteredSignUpView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      
       {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
-      <Box sx={{ display: 'flex', gap: { xs: 3, sm: 2 }, flexDirection: { xs: 'column', sm: 'row' } }}>
+      <Box
+        sx={{ display: 'flex', gap: { xs: 3, sm: 2 }, flexDirection: { xs: 'column', sm: 'row' } }}
+      >
         <Field.Text name="firstName" label="Nome" slotProps={{ inputLabel: { shrink: true } }} />
-        <Field.Text name="lastName" label="Sobrenome" slotProps={{ inputLabel: { shrink: true } }} />
+        <Field.Text
+          name="lastName"
+          label="Sobrenome"
+          slotProps={{ inputLabel: { shrink: true } }}
+        />
       </Box>
 
       <Field.Text name="email" label="E-mail" slotProps={{ inputLabel: { shrink: true } }} />

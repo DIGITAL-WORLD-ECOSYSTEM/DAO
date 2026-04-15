@@ -6,6 +6,7 @@
  */
 
 import type { NextRequest } from 'next/server';
+
 import { NextResponse } from 'next/server';
 
 // --- CONFIGURAÇÃO DE ROTAS ---
@@ -38,7 +39,7 @@ export function proxy(request: NextRequest) {
     // Redireciona para o login preservando a rota pretendida para UX.
     const loginUrl = new URL('/auth/sign-in', request.url);
     loginUrl.searchParams.set('returnTo', pathname);
-    
+
     return NextResponse.redirect(loginUrl);
   }
 
@@ -61,7 +62,8 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     {
-      source: '/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sitemap.xml|robots.txt).*)',
+      source:
+        '/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sitemap.xml|robots.txt).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

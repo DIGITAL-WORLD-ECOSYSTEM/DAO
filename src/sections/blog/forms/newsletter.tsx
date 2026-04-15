@@ -10,8 +10,8 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
-import { varFade, MotionViewport } from 'src/components/animate';
 import { Iconify } from 'src/components/iconify';
+import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -23,12 +23,12 @@ export function PostNewsletter() {
   const theme = useTheme();
 
   return (
-    <Box 
-      component="section" 
-      sx={{ 
-        py: { xs: 8, md: 12 }, 
+    <Box
+      component="section"
+      sx={{
+        py: { xs: 8, md: 12 },
         bgcolor: 'transparent', // 🟢 Mantém a continuidade do SpaceBackground
-        position: 'relative'
+        position: 'relative',
       }}
     >
       <Container component={MotionViewport}>
@@ -84,27 +84,27 @@ export function PostNewsletter() {
           <Stack spacing={3} sx={{ zIndex: 9, maxWidth: 640 }}>
             <m.div variants={varFade('inUp')}>
               {/* 🟢 CORREÇÃO TS: 'as any' para aceitar o ícone customizado */}
-              <Iconify 
-                icon={"solar:letter-bold-duotone" as any} 
-                width={80} 
-                sx={{ 
-                  color: '#FA541C', 
-                  mx: 'auto', 
+              <Iconify
+                icon={'solar:letter-bold-duotone' as any}
+                width={80}
+                sx={{
+                  color: '#FA541C',
+                  mx: 'auto',
                   mb: 2,
-                  filter: `drop-shadow(0 0 12px ${alpha('#FA541C', 0.5)})` 
-                }} 
+                  filter: `drop-shadow(0 0 12px ${alpha('#FA541C', 0.5)})`,
+                }}
               />
             </m.div>
 
             <m.div variants={varFade('inUp')}>
-              <Typography 
-                variant="h2" 
-                sx={{ 
-                  fontWeight: 900, 
+              <Typography
+                variant="h2"
+                sx={{
+                  fontWeight: 900,
                   fontFamily: "'Orbitron', sans-serif",
                   textTransform: 'uppercase',
                   letterSpacing: '0.02em',
-                  textShadow: `0 0 20px ${alpha(theme.palette.common.white, 0.2)}`
+                  textShadow: `0 0 20px ${alpha(theme.palette.common.white, 0.2)}`,
                 }}
               >
                 Mantenha-se à Frente no Mercado Cripto
@@ -113,7 +113,7 @@ export function PostNewsletter() {
 
             <m.div variants={varFade('inUp')}>
               <Typography variant="body1" sx={{ opacity: 0.8, color: 'grey.300' }}>
-                Receba monitorizações de comunidades, vídeos exclusivos e notícias em alta 
+                Receba monitorizações de comunidades, vídeos exclusivos e notícias em alta
                 diretamente no seu e-mail. Sem spam, apenas inteligência de mercado.
               </Typography>
             </m.div>
@@ -136,7 +136,11 @@ export function PostNewsletter() {
                     '& fieldset': { borderColor: alpha(theme.palette.common.white, 0.12) },
                     '&:hover fieldset': { borderColor: alpha(theme.palette.primary.main, 0.4) },
                     '&.Mui-focused fieldset': { borderColor: theme.palette.primary.main },
-                    '& input': { color: 'common.white', fontFamily: "'Orbitron', sans-serif", fontSize: 14 },
+                    '& input': {
+                      color: 'common.white',
+                      fontFamily: "'Orbitron', sans-serif",
+                      fontSize: 14,
+                    },
                   },
                 }}
               />
@@ -155,10 +159,10 @@ export function PostNewsletter() {
                   bgcolor: '#FA541C',
                   color: 'common.white',
                   boxShadow: `0 0 20px ${alpha('#FA541C', 0.4)}`,
-                  '&:hover': { 
+                  '&:hover': {
                     bgcolor: alpha('#FA541C', 0.9),
                     boxShadow: `0 0 30px ${alpha('#FA541C', 0.6)}`,
-                    transform: 'translateY(-2px)'
+                    transform: 'translateY(-2px)',
                   },
                 }}
               >
@@ -169,7 +173,8 @@ export function PostNewsletter() {
 
           <m.div variants={varFade('inUp')}>
             <Typography variant="caption" sx={{ opacity: 0.5, zIndex: 9, display: 'block' }}>
-              Ao subscrever, aceita a nossa <strong>Política de Privacidade</strong> e <strong>Termos de Serviço</strong>.
+              Ao subscrever, aceita a nossa <strong>Política de Privacidade</strong> e{' '}
+              <strong>Termos de Serviço</strong>.
             </Typography>
           </m.div>
         </Stack>

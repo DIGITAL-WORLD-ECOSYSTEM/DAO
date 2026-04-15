@@ -71,7 +71,11 @@ const shouldForwardProp = (prop: string) => !['open', 'active', 'variant', 'sx']
 /**
  * @slot root
  */
-const ItemRoot = styled(ButtonBase, { shouldForwardProp })<StyledState>(({ active, open, theme }) => {
+const ItemRoot = styled(ButtonBase, { shouldForwardProp })<StyledState>(({
+  active,
+  open,
+  theme,
+}) => {
   const dotTransitions: Record<'in' | 'out', CSSObject> = {
     in: { opacity: 0, scale: 0 },
     out: { opacity: 1, scale: 1 },

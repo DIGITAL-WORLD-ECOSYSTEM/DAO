@@ -36,7 +36,6 @@ export const signInWithPassword = async ({ email, password }: SignInParams): Pro
 
     // Configura o localStorage, os timers de expiração e os headers do Axios
     await setSession(accessToken);
-    
   } catch (error: any) {
     console.error('Erro no Login:', error);
     // Repassa o erro para o componente de UI tratar (ex: senha incorreta)
@@ -73,7 +72,6 @@ export const signUp = async ({
     // ✅ CORREÇÃO: Usamos setSession aqui também para manter a consistência
     // e já deixar o usuário logado após o registro.
     await setSession(accessToken);
-
   } catch (error: any) {
     console.error('Erro no Registro:', error);
     throw error;

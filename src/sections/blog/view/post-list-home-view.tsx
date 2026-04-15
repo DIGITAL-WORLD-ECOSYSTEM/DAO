@@ -26,17 +26,17 @@ type Props = {
   geopoliticaSection: ReactNode;
 };
 
-export function PostListHomeView({ 
-  posts, 
-  economiaSection, 
-  tecnologiaSection, 
-  meioAmbienteSection, 
-  geopoliticaSection 
+export function PostListHomeView({
+  posts,
+  economiaSection,
+  tecnologiaSection,
+  meioAmbienteSection,
+  geopoliticaSection,
 }: Props) {
   return (
-    <Stack 
-      spacing={0} 
-      sx={{ 
+    <Stack
+      spacing={0}
+      sx={{
         pb: 10,
         bgcolor: 'transparent', // Libera a visão para o SpaceScene (zIndex -1)
         position: 'relative',
@@ -54,7 +54,7 @@ export function PostListHomeView({
       </Container>
 
       {/* 3. PROVA SOCIAL */}
-      <Container key="view-community" sx={{ my: 10 }}>        
+      <Container key="view-community" sx={{ my: 10 }}>
         <PostCommunity />
       </Container>
 
@@ -94,7 +94,7 @@ export function PostListHomeView({
       </Box>
 
       {/* 11. HUMANIZAÇÃO: Autores */}
-      <Container key="view-authors" sx={{ my: 10 }}>        
+      <Container key="view-authors" sx={{ my: 10 }}>
         <PostAuthors />
       </Container>
 
@@ -102,7 +102,6 @@ export function PostListHomeView({
       <Box key="view-newsletter">
         <PostNewsletter />
       </Box>
-
     </Stack>
   );
 }

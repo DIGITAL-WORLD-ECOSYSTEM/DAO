@@ -1,4 +1,5 @@
 import { constructMetadata } from 'src/lib/seo/metadata';
+
 import { ComingSoonView } from 'src/sections/coming-soon/view';
 
 export const metadata = constructMetadata({
@@ -16,7 +17,7 @@ export default function ContactPage() {
       '@type': 'ContactPoint',
       email: 'contact@asppibra-dao.org',
       contactType: 'customer service',
-    }
+    },
   };
 
   return (

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // 1. Importa tudo de fields para compor o objeto Field
 // import * as FieldComponents from './fields';

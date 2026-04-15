@@ -1,4 +1,3 @@
-
 import type { NavSectionProps } from 'src/components/nav-section';
 
 import { paths } from 'src/routes/paths';
@@ -37,9 +36,7 @@ export const navData: NavSectionProps['data'] = [
    */
   {
     subheader: 'Overview',
-    items: [
-      { title: 'App', path: paths.dashboard.root, icon: ICONS.dashboard },
-    ],
+    items: [{ title: 'App', path: paths.dashboard.root, icon: ICONS.dashboard }],
   },
   /**
    * Management

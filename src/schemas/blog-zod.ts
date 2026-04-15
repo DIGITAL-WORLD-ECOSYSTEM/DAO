@@ -1,9 +1,12 @@
 import { z as zod } from 'zod';
 
 // Helper para validação de arquivos (comum no kit Minimal para o componente Upload)
-const fileSchema = zod.custom<File | string>((val) => val instanceof File || typeof val === 'string', {
-  message: 'A imagem de capa é obrigatória',
-});
+const fileSchema = zod.custom<File | string>(
+  (val) => val instanceof File || typeof val === 'string',
+  {
+    message: 'A imagem de capa é obrigatória',
+  }
+);
 
 const dateValueSchema = zod.union([zod.string(), zod.number(), zod.date()]);
 

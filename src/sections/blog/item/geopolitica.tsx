@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
+
 import { varFade, MotionViewport } from 'src/components/animate';
 
 import { PostItem, PostItemLatest } from './item';
@@ -99,7 +100,7 @@ export function Geopolitica() {
     backdropFilter: 'blur(12px)',
     WebkitBackdropFilter: 'blur(12px)',
     transition: theme.transitions.create(['all']),
-    
+
     // Borda Reativa de 1px (Assinatura 2026)
     '&::before': {
       content: '""',
@@ -135,7 +136,7 @@ export function Geopolitica() {
         // Injeção da fonte Public Sans para leitura técnica
         '& .MuiTypography-root:not(h2)': {
           fontFamily: "'Public Sans', sans-serif",
-        }
+        },
       }}
     >
       <Container component={MotionViewport}>
@@ -200,10 +201,7 @@ export function Geopolitica() {
 
           {/* Lista Restante (Posts 4 a 7) */}
           {viewPosts.slice(3, 7).map((post, index) => (
-            <Grid
-              key={`geo-list-${post.id}-${index}`}
-              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-            >
+            <Grid key={`geo-list-${post.id}-${index}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardWrapperStyle}>
                   <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />

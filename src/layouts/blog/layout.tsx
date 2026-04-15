@@ -15,7 +15,6 @@ import { usePathname } from 'src/routes/hooks';
 import { allLangs } from 'src/locales/locales-config';
 
 import { Logo } from 'src/components/logo';
-
 // 🟢 Importação do componente de fundo espacial
 import { SpaceScene } from 'src/components/background/space';
 
@@ -121,7 +120,7 @@ export function BlogLayout({
     );
 
   const renderMain = () => (
-    <MainSection 
+    <MainSection
       {...slotProps?.main}
       // ✅ Transparência no container principal do Blog
       sx={{ bgcolor: 'transparent', ...slotProps?.main?.sx }}
@@ -152,7 +151,7 @@ export function BlogLayout({
 
       {/* 2. Camada de Conteúdo (Z-Index 1 relativo) */}
       {renderMain()}
-      
+
       <CoreNav />
     </LayoutSection>
   );

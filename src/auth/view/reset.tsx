@@ -15,8 +15,7 @@ import { useRouter } from 'src/routes/hooks';
 import { PasswordIcon } from 'src/assets/icons';
 import axios, { endpoints } from 'src/lib/axios';
 
-import { Form , toast, Field, FormHead, schemaUtils, FormReturnLink } from 'src/auth/components';
-
+import { Form, toast, Field, FormHead, schemaUtils, FormReturnLink } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -57,19 +56,19 @@ export function CenteredResetPasswordView() {
       });
 
       toast.success('Solicitação enviada! Verifique seu e-mail.');
-      
+
       // Redireciona para a tela de atualização onde o usuário insere o código recebido
       router.push(paths.auth.updatePassword);
-      
     } catch (error: any) {
       console.error(error);
-      setErrorMessage(error.message || 'Erro ao processar solicitação. Verifique se o e-mail está correto.');
+      setErrorMessage(
+        error.message || 'Erro ao processar solicitação. Verifique se o e-mail está correto.'
+      );
     }
   });
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      
       {!!errorMessage && <Alert severity="error">{errorMessage}</Alert>}
 
       <Field.Text
@@ -80,13 +79,7 @@ export function CenteredResetPasswordView() {
         slotProps={{ inputLabel: { shrink: true } }}
       />
 
-      <Button
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
+      <Button fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
         Enviar Solicitação
       </Button>
     </Box>

@@ -149,25 +149,16 @@ export function PostTrending() {
             size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
           >
             <m.div variants={varFade('inUp')}>
-              <PostItem
-                post={post as any}
-                detailsHref={paths.post.details(post.title)}
-              />
+              <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />
             </m.div>
           </Grid>
         ))}
 
         {/* Lista Restante (Posts 4 a 7) */}
         {viewPosts.slice(3, 7).map((post, index) => (
-          <Grid
-            key={`${post.id}-${index}-rest`}
-            size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-          >
+          <Grid key={`${post.id}-${index}-rest`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <m.div variants={varFade('inUp')}>
-              <PostItem
-                post={post as any}
-                detailsHref={paths.post.details(post.title)}
-              />
+              <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />
             </m.div>
           </Grid>
         ))}

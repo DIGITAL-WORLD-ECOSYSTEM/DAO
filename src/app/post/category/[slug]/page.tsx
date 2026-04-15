@@ -19,14 +19,14 @@ import { PostListView } from 'src/sections/blog/view/post-list-view';
 
 /**
  * ✅ ESTABILIDADE DE BUILD (DYNAMISM):
- * Forçamos 'force-dynamic' para evitar que o Next.js tente pré-gerar as categorias 
+ * Forçamos 'force-dynamic' para evitar que o Next.js tente pré-gerar as categorias
  * no build time. Isso previne o erro de serialização de funções em Client Components.
  */
 export const dynamic = 'force-dynamic';
 
 /**
  * ✅ CONFIGURAÇÃO DE RUNTIME:
- * Utilizamos 'nodejs' para garantir compatibilidade total com as bibliotecas 
+ * Utilizamos 'nodejs' para garantir compatibilidade total com as bibliotecas
  * de processamento de dados e manipulação de strings.
  */
 export const runtime = 'nodejs';
@@ -39,12 +39,12 @@ type Props = {
 
 /**
  * 🟢 SEO DINÂMICO PARA CATEGORIAS:
- * Gera metadados personalizados baseados no slug da URL para otimizar 
+ * Gera metadados personalizados baseados no slug da URL para otimizar
  * a indexação nos motores de busca (Google).
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  
+
   // Localiza o nome original da categoria para exibição no título (ex: 'tecnologia' -> 'Tecnologia')
   const categoryName = _posts.find((p) => kebabCase(p.category) === slug)?.category || slug;
 
@@ -79,7 +79,7 @@ export default async function Page({ params }: Props) {
   /**
    * 🛡️ SANITIZAÇÃO DE DADOS (SERIALIZAÇÃO):
    * O Next.js proíbe passar funções para Client Components.
-   * O 'JSON.stringify/parse' limpa o objeto filteredPosts de qualquer método 
+   * O 'JSON.stringify/parse' limpa o objeto filteredPosts de qualquer método
    * ou propriedade não-serializável que venha do arquivo de Mocks.
    */
   const sanitizedPosts = JSON.parse(JSON.stringify(filteredPosts));
@@ -91,7 +91,7 @@ export default async function Page({ params }: Props) {
 
 /**
  * 💡 NOTA DE DESEMPENHO:
- * O bloco 'generateStaticParams' foi removido propositalmente para mitigar 
- * erros de 'Prerender' no ambiente de CI/CD da Vercel, priorizando a 
+ * O bloco 'generateStaticParams' foi removido propositalmente para mitigar
+ * erros de 'Prerender' no ambiente de CI/CD da Vercel, priorizando a
  * estabilidade do deploy do ecossistema SocialFi.
  */

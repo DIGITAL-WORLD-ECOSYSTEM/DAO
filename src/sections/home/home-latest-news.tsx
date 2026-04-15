@@ -79,7 +79,6 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
     >
       <MotionViewport>
         <Container sx={{ position: 'relative', zIndex: 9 }}>
-
           {/* HEADER: TÍTULO À ESQUERDA + BOTÃO À DIREITA */}
           <Stack
             direction={{ xs: 'column', md: 'row' }}
@@ -128,7 +127,10 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
                     {t('news.title')}
                   </Box>
                   <br />
-                  <Box component="span" sx={{ color: alpha(theme.palette.common.white, 0.5), mr: 1.5 }}>
+                  <Box
+                    component="span"
+                    sx={{ color: alpha(theme.palette.common.white, 0.5), mr: 1.5 }}
+                  >
                     {t('news.title_bridge')}
                   </Box>
                   <Box component="span" sx={{ color: 'warning.main' }}>
@@ -177,7 +179,7 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
                     bgcolor: alpha(theme.palette.info.main, 0.08),
                     transform: 'scale(1.05)',
                     boxShadow: `0 0 20px 0 ${alpha(theme.palette.info.main, 0.3)}`,
-                  }
+                  },
                 }}
               >
                 {t('news.button_view_all')}
@@ -198,114 +200,118 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
                 }}
               >
                 <m.div variants={varFade('inUp')} transition={{ delay: index * 0.2 }}>
-                  <Link component={RouterLink} href={paths.post.details(post.title)} underline="none">
+                  <Link
+                    component={RouterLink}
+                    href={paths.post.details(post.title)}
+                    underline="none"
+                  >
                     <Card
                       sx={{
-                      position: 'relative',
-                      height: 420,
-                      borderRadius: 3,
-                      overflow: 'hidden',
-                      cursor: 'pointer',
-                      bgcolor: alpha('#020817', 0.8),
-                      backdropFilter: 'blur(12px)',
-                      WebkitBackdropFilter: 'blur(12px)',
-                      transition: theme.transitions.create(['all'], {
-                        duration: theme.transitions.duration.standard,
-                      }),
-                      
-                      // BORDA REATIVA (CIANO -> ÂMBAR)
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        inset: 0,
-                        borderRadius: 'inherit',
-                        padding: '1px',
-                        background: `linear-gradient(180deg, 
+                        position: 'relative',
+                        height: 420,
+                        borderRadius: 3,
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        bgcolor: alpha('#020817', 0.8),
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        transition: theme.transitions.create(['all'], {
+                          duration: theme.transitions.duration.standard,
+                        }),
+
+                        // BORDA REATIVA (CIANO -> ÂMBAR)
+                        '&::before': {
+                          content: '""',
+                          position: 'absolute',
+                          inset: 0,
+                          borderRadius: 'inherit',
+                          padding: '1px',
+                          background: `linear-gradient(180deg, 
                           ${alpha(theme.palette.info.main, 0.8)} 0%, 
                           ${alpha(theme.palette.common.white, 0.05)} 50%, 
                           ${alpha(theme.palette.warning.main, 0.8)} 100%
                         )`,
-                        WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                        WebkitMaskComposite: 'xor',
-                        maskComposite: 'exclude',
-                        zIndex: 3,
-                        pointerEvents: 'none',
-                      },
+                          WebkitMask:
+                            'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                          WebkitMaskComposite: 'xor',
+                          maskComposite: 'exclude',
+                          zIndex: 3,
+                          pointerEvents: 'none',
+                        },
 
-                      boxShadow: `0 8px 32px 0 ${alpha(theme.palette.common.black, 0.5)}`,
+                        boxShadow: `0 8px 32px 0 ${alpha(theme.palette.common.black, 0.5)}`,
 
-                      '&:hover': {
-                        transform: 'translateY(-8px)',
-                        boxShadow: `0 0 25px 0 ${alpha(theme.palette.info.main, 0.2)}`,
-                        '& img': { transform: 'scale(1.1)' },
-                      },
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={post.coverUrl}
-                      alt={post.title}
-                      sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        width: 1,
-                        height: 1,
-                        objectFit: 'cover',
-                        transition: 'transform 0.6s ease',
-                      }}
-                    />
-
-                    {/* Overlay para profundidade e legibilidade */}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        zIndex: 1,
-                        background: `linear-gradient(180deg, transparent 40%, ${alpha('#020817', 0.95)} 100%)`,
-                      }}
-                    />
-
-                    <Stack
-                      spacing={1.5}
-                      sx={{
-                        position: 'absolute',
-                        bottom: 0,
-                        p: 4,
-                        width: 1,
-                        zIndex: 4,
+                        '&:hover': {
+                          transform: 'translateY(-8px)',
+                          boxShadow: `0 0 25px 0 ${alpha(theme.palette.info.main, 0.2)}`,
+                          '& img': { transform: 'scale(1.1)' },
+                        },
                       }}
                     >
-                      <Typography
-                        variant="caption"
+                      <Box
+                        component="img"
+                        src={post.coverUrl}
+                        alt={post.title}
                         sx={{
-                          color: '#919EAB', // Texto Secundário padronizado
-                          fontFamily: "'Public Sans', sans-serif",
-                          fontWeight: 600,
+                          position: 'absolute',
+                          inset: 0,
+                          width: 1,
+                          height: 1,
+                          objectFit: 'cover',
+                          transition: 'transform 0.6s ease',
                         }}
-                      >
-                        {fDate(post.createdAt)}
-                      </Typography>
+                      />
 
-                      <Typography
+                      {/* Overlay para profundidade e legibilidade */}
+                      <Box
                         sx={{
-                          fontWeight: 800,
-                          fontSize: index === 0 ? 24 : 18,
-                          color: 'common.white',
-                          lineHeight: 1.2,
-                          fontFamily: "'Orbitron', sans-serif",
-                          textTransform: 'uppercase', // Estética Scifi
+                          position: 'absolute',
+                          inset: 0,
+                          zIndex: 1,
+                          background: `linear-gradient(180deg, transparent 40%, ${alpha('#020817', 0.95)} 100%)`,
+                        }}
+                      />
+
+                      <Stack
+                        spacing={1.5}
+                        sx={{
+                          position: 'absolute',
+                          bottom: 0,
+                          p: 4,
+                          width: 1,
+                          zIndex: 4,
                         }}
                       >
-                        {post.title}
-                      </Typography>
-                    </Stack>
-                  </Card>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: '#919EAB', // Texto Secundário padronizado
+                            fontFamily: "'Public Sans', sans-serif",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {fDate(post.createdAt)}
+                        </Typography>
+
+                        <Typography
+                          sx={{
+                            fontWeight: 800,
+                            fontSize: index === 0 ? 24 : 18,
+                            color: 'common.white',
+                            lineHeight: 1.2,
+                            fontFamily: "'Orbitron', sans-serif",
+                            textTransform: 'uppercase', // Estética Scifi
+                          }}
+                        >
+                          {post.title}
+                        </Typography>
+                      </Stack>
+                    </Card>
                   </Link>
                 </m.div>
               </Grid>
             ))}
           </Grid>
-
         </Container>
       </MotionViewport>
     </Box>

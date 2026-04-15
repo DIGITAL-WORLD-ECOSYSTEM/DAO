@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { RadioProps } from '@mui/material/Radio';
 import type { FormLabelProps } from '@mui/material/FormLabel';

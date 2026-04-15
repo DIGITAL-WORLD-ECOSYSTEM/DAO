@@ -108,8 +108,8 @@ export function MainLayout({
   const renderFooter = () => <Footer sx={slotProps?.footer?.sx} layoutQuery={layoutQuery} />;
 
   const renderMain = () => (
-    <MainSection 
-      {...slotProps?.main} 
+    <MainSection
+      {...slotProps?.main}
       // Garante que o container principal não tenha cor de fundo
       sx={{ bgcolor: 'transparent', ...slotProps?.main?.sx }}
     >

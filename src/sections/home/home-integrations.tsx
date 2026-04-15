@@ -20,8 +20,22 @@ import { varFade, MotionViewport } from 'src/components/animate';
 const World = dynamic(() => import('src/components/threeglobe/globe'), {
   ssr: false,
   loading: () => (
-    <Box sx={{ height: { xs: 400, md: 600 }, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Typography variant="h3" sx={{ opacity: 0.1, fontFamily: "'Orbitron', sans-serif", fontSize: { xs: '1rem', md: '2rem' } }}>
+    <Box
+      sx={{
+        height: { xs: 400, md: 600 },
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Typography
+        variant="h3"
+        sx={{
+          opacity: 0.1,
+          fontFamily: "'Orbitron', sans-serif",
+          fontSize: { xs: '1rem', md: '2rem' },
+        }}
+      >
         INITIALIZING HUD...
       </Typography>
     </Box>
@@ -50,22 +64,20 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
     >
       <MotionViewport>
         <Container maxWidth="lg" sx={{ position: 'relative', minHeight: { xs: 'auto', md: 950 } }}>
-          
           <SectionHeader t={t} />
 
           {/* Área de Visualização Técnica - Responsiva */}
-          <Box 
-            sx={{ 
-              position: 'relative', 
-              width: '100%', 
-              height: { xs: 'auto', md: 800 }, 
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              height: { xs: 'auto', md: 800 },
               mt: { xs: 2, md: 5 },
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
-            
             {/* GLOBO: Ajuste de escala e posição para Mobile */}
             <Box
               sx={{
@@ -73,20 +85,22 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
                 top: { md: '50%' },
                 left: { md: '50%' },
                 transform: { md: 'translate(-50%, -50%)' },
-                width: { xs: '140%', sm: '120%', md: 1100 }, 
+                width: { xs: '140%', sm: '120%', md: 1100 },
                 height: { xs: 400, sm: 500, md: 800 },
                 zIndex: 1,
-                pointerEvents: 'none', 
+                pointerEvents: 'none',
                 filter: `drop-shadow(0 0 60px ${alpha(theme.palette.info.main, 0.15)})`,
-                my: { xs: -8, md: 0 } 
+                my: { xs: -8, md: 0 },
               }}
             >
-              <World 
-                globeConfig={{
-                  autoRotate: true,
-                  autoRotateSpeed: 0.8,
-                  globeColor: '#020817'
-                } as any} // FIX: Casting para evitar erro TS2769
+              <World
+                globeConfig={
+                  {
+                    autoRotate: true,
+                    autoRotateSpeed: 0.8,
+                    globeColor: '#020817',
+                  } as any
+                } // FIX: Casting para evitar erro TS2769
               />
             </Box>
 
@@ -105,10 +119,10 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
               }}
             >
               {/* Painéis Superiores */}
-              <Stack 
-                direction={{ xs: 'column', md: 'row' }} 
-                justifyContent="space-between" 
-                alignItems={{ xs: 'center', md: 'flex-start' }} 
+              <Stack
+                direction={{ xs: 'column', md: 'row' }}
+                justifyContent="space-between"
+                alignItems={{ xs: 'center', md: 'flex-start' }}
                 spacing={2}
                 sx={{ width: '100%' }}
               >
@@ -133,10 +147,10 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
               </Stack>
 
               {/* Painéis Inferiores */}
-              <Stack 
-                direction={{ xs: 'column', md: 'row' }} 
-                justifyContent="space-between" 
-                alignItems={{ xs: 'center', md: 'flex-end' }} 
+              <Stack
+                direction={{ xs: 'column', md: 'row' }}
+                justifyContent="space-between"
+                alignItems={{ xs: 'center', md: 'flex-end' }}
                 spacing={2}
                 sx={{ width: '100%', mt: { xs: 0, md: 'auto' } }}
               >
@@ -185,7 +199,7 @@ function SectionHeader({ t }: { t: any }) {
             border: `1px solid ${theme.palette.info.main}`,
             bgcolor: alpha(theme.palette.info.main, 0.1),
             backdropFilter: 'blur(10px)',
-            mb: 1
+            mb: 1,
           }}
         >
           <Typography
@@ -212,7 +226,7 @@ function SectionHeader({ t }: { t: any }) {
             lineHeight: 1.1,
             textTransform: 'uppercase',
             fontSize: { xs: '1.8rem', sm: '2.5rem', md: '3.5rem' },
-            color: 'common.white'
+            color: 'common.white',
           }}
         >
           SISTEMA DE <br />
@@ -240,8 +254,8 @@ function DataPanel({ title, label, metrics, side, sx }: any) {
       variants={varFade(side === 'left' ? 'inLeft' : 'inRight')}
       sx={{
         width: { xs: '90%', sm: 340, md: 380 },
-        minHeight: { xs: 160, md: 200 }, 
-        p: { xs: 2, md: 3 }, 
+        minHeight: { xs: 160, md: 200 },
+        p: { xs: 2, md: 3 },
         display: 'flex',
         flexDirection: 'column',
         borderRadius: 1,
@@ -269,29 +283,38 @@ function DataPanel({ title, label, metrics, side, sx }: any) {
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-        <Typography 
-          variant="caption" 
-          sx={{ color: 'info.main', fontWeight: 800, fontSize: { xs: 9, md: 11 }, letterSpacing: 1.5, fontFamily: "'Orbitron', sans-serif" }}
+        <Typography
+          variant="caption"
+          sx={{
+            color: 'info.main',
+            fontWeight: 800,
+            fontSize: { xs: 9, md: 11 },
+            letterSpacing: 1.5,
+            fontFamily: "'Orbitron', sans-serif",
+          }}
         >
           {label}
         </Typography>
-        <Box 
-          sx={{ 
-            width: 8, height: 8, borderRadius: '50%', bgcolor: 'info.main', 
-            boxShadow: `0 0 10px ${theme.palette.info.main}`
-          }} 
+        <Box
+          sx={{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            bgcolor: 'info.main',
+            boxShadow: `0 0 10px ${theme.palette.info.main}`,
+          }}
         />
       </Stack>
 
-      <Typography 
-        variant="subtitle1" 
-        sx={{ 
-          fontFamily: "'Orbitron', sans-serif", 
-          mb: 2.5, 
-          fontWeight: 800, 
-          color: 'common.white', 
+      <Typography
+        variant="subtitle1"
+        sx={{
+          fontFamily: "'Orbitron', sans-serif",
+          mb: 2.5,
+          fontWeight: 800,
+          color: 'common.white',
           textTransform: 'uppercase',
-          fontSize: { xs: '0.85rem', md: '1rem' }
+          fontSize: { xs: '0.85rem', md: '1rem' },
         }}
       >
         {title}
@@ -305,23 +328,23 @@ function DataPanel({ title, label, metrics, side, sx }: any) {
             justifyContent="space-between"
             sx={{ borderBottom: `1px solid ${alpha(theme.palette.grey[500], 0.1)}`, pb: 0.8 }}
           >
-            <Typography 
-              sx={{ 
-                fontSize: 9, 
-                color: '#919EAB', 
-                fontWeight: 700, 
+            <Typography
+              sx={{
+                fontSize: 9,
+                color: '#919EAB',
+                fontWeight: 700,
                 textTransform: 'uppercase',
-                fontFamily: "'Public Sans', sans-serif"
+                fontFamily: "'Public Sans', sans-serif",
               }}
             >
               {metric.label}
             </Typography>
             <Typography
-              sx={{ 
-                fontSize: 11, 
-                fontWeight: 800, 
-                color: metric.color || 'common.white', 
-                fontFamily: "'Orbitron', sans-serif" 
+              sx={{
+                fontSize: 11,
+                fontWeight: 800,
+                color: metric.color || 'common.white',
+                fontFamily: "'Orbitron', sans-serif",
               }}
             >
               {metric.value}

@@ -7,10 +7,10 @@ import packageJson from '../package.json';
 export type ConfigValue = {
   appName: string;
   appVersion: string;
-  serverUrl: string;    // Backend API (Dados RWA e Governança)
-  siteUrl: string;      // Frontend (Base para SEO 2026)
-  assetsDir: string;    // Diretório base para assets (Local ou Cloud)
-  r2PublicUrl: string;  // URL Pública do Cloudflare R2 para Imagens/Docs
+  serverUrl: string; // Backend API (Dados RWA e Governança)
+  siteUrl: string; // Frontend (Base para SEO 2026)
+  assetsDir: string; // Diretório base para assets (Local ou Cloud)
+  r2PublicUrl: string; // URL Pública do Cloudflare R2 para Imagens/Docs
   isStaticExport: boolean;
   auth: {
     method: 'jwt';
@@ -26,14 +26,14 @@ export const CONFIG: ConfigValue = {
    * NOME DA APLICAÇÃO
    */
   appName: 'ASPPIBRA',
-  
+
   appVersion: packageJson.version,
 
   /**
    * BACKEND API URL
    * Local de onde os dados de produção e usuários são consumidos.
    */
-  serverUrl: (process.env.NEXT_PUBLIC_HOST_API ?? 'https://api.asppibra.com').replace(/\/$/, ''), 
+  serverUrl: (process.env.NEXT_PUBLIC_HOST_API ?? 'https://api.asppibra.com').replace(/\/$/, ''),
 
   /**
    * FRONTEND SITE URL
@@ -48,16 +48,17 @@ export const CONFIG: ConfigValue = {
    * Se você configurou um subdomínio no Cloudflare, use ele aqui.
    */
   r2PublicUrl: (process.env.NEXT_PUBLIC_R2_URL ?? 'https://assets.asppibra.com').replace(/\/$/, ''),
-  
+
   /**
    * ASSETS DIRECTORY
    * Lógica Inteligente: Em produção, o app busca imagens no R2 automaticamente.
    * Em desenvolvimento, ele olha para o seu diretório local ou .env.
    */
-  assetsDir: process.env.NODE_ENV === 'production'
-    ? (process.env.NEXT_PUBLIC_R2_URL ?? '')
-    : (process.env.NEXT_PUBLIC_ASSETS_DIR ?? ''),
-  
+  assetsDir:
+    process.env.NODE_ENV === 'production'
+      ? (process.env.NEXT_PUBLIC_R2_URL ?? '')
+      : (process.env.NEXT_PUBLIC_ASSETS_DIR ?? ''),
+
   isStaticExport: JSON.parse(process.env.BUILD_STATIC_EXPORT ?? 'false'),
 
   /**

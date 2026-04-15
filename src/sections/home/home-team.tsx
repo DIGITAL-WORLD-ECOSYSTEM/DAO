@@ -143,13 +143,13 @@ export function HomeTeam({ sx, ...other }: BoxProps) {
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)',
                 transition: theme.transitions.create(['all']),
-                
+
                 '&::before': {
                   content: '""',
                   position: 'absolute',
                   inset: 0,
                   borderRadius: 'inherit',
-                  padding: '1px', 
+                  padding: '1px',
                   background: `linear-gradient(180deg, 
                     ${alpha(theme.palette.info.main, 1)} 0%, 
                     ${alpha(theme.palette.info.main, 0.1)} 50%, 
@@ -216,7 +216,7 @@ function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) 
         transition: theme.transitions.create(['all'], {
           duration: theme.transitions.duration.standard,
         }),
-        
+
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -244,25 +244,25 @@ function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) 
         },
       }}
     >
-      <Typography 
-        variant="subtitle1" 
-        sx={{ 
-          mt: 3, 
-          mb: 0.5, 
-          fontFamily: "'Orbitron', sans-serif", 
+      <Typography
+        variant="subtitle1"
+        sx={{
+          mt: 3,
+          mb: 0.5,
+          fontFamily: "'Orbitron', sans-serif",
           fontWeight: 700,
           textTransform: 'uppercase',
           color: 'common.white',
-          letterSpacing: '0.05em'
+          letterSpacing: '0.05em',
         }}
       >
         {member.name}
       </Typography>
 
-      <Typography 
-        variant="body2" 
-        sx={{ 
-          mb: 2.5, 
+      <Typography
+        variant="body2"
+        sx={{
+          mb: 2.5,
           fontFamily: "'Public Sans', sans-serif",
           fontWeight: 500,
           color: '#919EAB',
@@ -272,14 +272,14 @@ function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) 
       </Typography>
 
       <Box sx={{ px: 2.5, pb: 1 }}>
-        <Image 
-          alt={member.name} 
-          src={member.avatarUrl} 
-          ratio="1/1" 
-          sx={{ 
+        <Image
+          alt={member.name}
+          src={member.avatarUrl}
+          ratio="1/1"
+          sx={{
             borderRadius: 2,
-            border: `1px solid ${alpha(theme.palette.common.white, 0.05)}`
-          }} 
+            border: `1px solid ${alpha(theme.palette.common.white, 0.05)}`,
+          }}
         />
       </Box>
 
@@ -296,10 +296,12 @@ function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) 
             }}
           >
             {/* Fix: Type casting para ignorar restrição de ícones Solar */}
-            {social.value === 'twitter' && <Iconify icon={"bi:twitter-x" as any} />}
-            {social.value === 'facebook' && <Iconify icon={"eva:facebook-fill" as any} />}
-            {social.value === 'instagram' && <Iconify icon={"ant-design:instagram-filled" as any} />}
-            {social.value === 'linkedin' && <Iconify icon={"eva:linkedin-fill" as any} />}
+            {social.value === 'twitter' && <Iconify icon={'bi:twitter-x' as any} />}
+            {social.value === 'facebook' && <Iconify icon={'eva:facebook-fill' as any} />}
+            {social.value === 'instagram' && (
+              <Iconify icon={'ant-design:instagram-filled' as any} />
+            )}
+            {social.value === 'linkedin' && <Iconify icon={'eva:linkedin-fill' as any} />}
           </IconButton>
         ))}
       </Box>

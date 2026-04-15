@@ -76,7 +76,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           transition: theme.transitions.create(['all']),
-          
+
           '&::before': {
             content: '""',
             position: 'absolute',
@@ -102,25 +102,25 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
         }}
       >
         <Stack spacing={2} textAlign="left" sx={{ zIndex: 3 }}>
-          <Typography 
-            variant="h4" 
-            sx={{ 
-              fontWeight: 800, 
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 800,
               color: 'common.white',
               fontFamily: "'Orbitron', sans-serif",
               textTransform: 'uppercase',
-              fontSize: { xs: '1.25rem', md: '1.5rem' }
+              fontSize: { xs: '1.25rem', md: '1.5rem' },
             }}
           >
             {t('community.hub.title')}
           </Typography>
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: '#919EAB', 
-              lineHeight: 1.7, 
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#919EAB',
+              lineHeight: 1.7,
               textAlign: { xs: 'left', sm: 'justify' },
-              fontFamily: "'Public Sans', sans-serif"
+              fontFamily: "'Public Sans', sans-serif",
             }}
           >
             {t('community.hub.description')}
@@ -133,13 +133,13 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
               <Avatar key={i} src={_mock.image.avatar(i)} />
             ))}
           </StyledAvatarGroup>
-          <Typography 
-            variant="subtitle2" 
-            sx={{ 
-              fontWeight: 700, 
+          <Typography
+            variant="subtitle2"
+            sx={{
+              fontWeight: 700,
               color: 'info.main',
               fontFamily: "'Orbitron', sans-serif",
-              fontSize: 12
+              fontSize: 12,
             }}
           >
             {t('community.metrics.members')}
@@ -187,7 +187,6 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
     >
       <MotionViewport>
         <Container sx={{ position: 'relative', zIndex: 9 }}>
-          
           <m.div variants={varFade('inUp')}>
             <Box
               sx={{
@@ -219,7 +218,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
           <Box
             sx={{
               display: 'grid',
-              alignItems: 'stretch', 
+              alignItems: 'stretch',
               gap: { xs: 6, md: 10 },
               gridTemplateColumns: { xs: '1fr', md: '1.2fr 0.8fr' },
             }}
@@ -227,7 +226,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
             <Stack
               component={m.div}
               variants={varFade('inLeft')}
-              justifyContent="space-between" 
+              justifyContent="space-between"
               sx={{ height: 1 }}
             >
               <Box>
@@ -256,7 +255,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
                     {t('community.title_highlight')}
                   </Box>
                 </Typography>
-                
+
                 <Typography
                   sx={{
                     maxWidth: 560,
@@ -277,7 +276,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
                     display: 'grid',
                     gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(3, 1fr)' },
                     gap: { xs: 3, md: 2 },
-                    maxWidth: 580, 
+                    maxWidth: 580,
                   }}
                 >
                   {METRICS.map((stat) => (
@@ -302,7 +301,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
                             textTransform: 'uppercase',
                             letterSpacing: 1,
                             fontFamily: "'Public Sans', sans-serif",
-                            fontSize: { xs: 10, md: 12 }
+                            fontSize: { xs: 10, md: 12 },
                           }}
                         >
                           {stat.label}
@@ -313,15 +312,15 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
                 </Box>
               </Box>
 
-              <Stack 
-                direction={{ xs: 'column', sm: 'row' }} 
-                alignItems={{ xs: 'stretch', sm: 'center' }} 
-                spacing={3} 
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                alignItems={{ xs: 'stretch', sm: 'center' }}
+                spacing={3}
                 sx={{ mt: { xs: 6, md: 10 } }}
               >
                 <Button
                   component={RouterLink}
-                  href={paths.dashboard.root} 
+                  href={paths.dashboard.root}
                   endIcon={<Iconify icon="solar:double-alt-arrow-right-bold-duotone" />}
                   sx={{
                     height: 56,
@@ -346,7 +345,8 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
                         ${alpha(theme.palette.info.main, 0.1)} 50%, 
                         ${alpha(theme.palette.info.main, 0.6)} 100%
                       )`,
-                      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      WebkitMask:
+                        'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                       WebkitMaskComposite: 'xor',
                       maskComposite: 'exclude',
                     },
@@ -362,7 +362,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
 
                 <Button
                   component={RouterLink}
-                  href="#" 
+                  href="#"
                   color="inherit"
                   endIcon={<Iconify icon="solar:double-alt-arrow-right-bold-duotone" />}
                   sx={{
@@ -383,9 +383,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
               </Stack>
             </Stack>
 
-            <Box sx={{ mt: { xs: 2, md: 0 } }}>
-              {renderSocialHub()}
-            </Box>
+            <Box sx={{ mt: { xs: 2, md: 0 } }}>{renderSocialHub()}</Box>
           </Box>
         </Container>
       </MotionViewport>

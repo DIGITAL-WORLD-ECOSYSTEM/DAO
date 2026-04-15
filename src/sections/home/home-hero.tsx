@@ -8,8 +8,6 @@
 import type { BoxProps } from '@mui/material/Box';
 import type { Breakpoint } from '@mui/material/styles';
 
-import { useRef } from 'react';
-
 // ----------------------------------------------------------------------
 // Imports — MUI e App
 // ----------------------------------------------------------------------
@@ -89,10 +87,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           {t('hero.title')}
         </Box>
         <br />
-        <Box 
-          component="span" 
-          sx={{ color: alpha(theme.palette.common.white, 0.85) }}
-        >
+        <Box component="span" sx={{ color: alpha(theme.palette.common.white, 0.85) }}>
           {t('hero.title_bridge')}
         </Box>
         <br />
@@ -257,9 +252,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
       ]}
       {...other}
     >
-      <Box
-        sx={{ width: 1, position: 'relative', zIndex: 10 }}
-      >
+      <Box sx={{ width: 1, position: 'relative', zIndex: 10 }}>
         <Container>
           <Stack
             direction={{ xs: 'column', md: 'row' }}

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import type { BoxProps } from '@mui/material/Box';
 import type { RatingProps } from '@mui/material/Rating';

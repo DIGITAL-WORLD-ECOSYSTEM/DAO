@@ -11,23 +11,49 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+
 import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
 const AUTHORS = [
   { id: '1', name: 'Creator 1', role: 'Análise de Mercado', avatarUrl: '' },
-  { id: '2', name: 'Jane Doe', role: 'Guia de Airdrops', avatarUrl: '/assets/images/portrait/portrait-1.webp' },
-  { id: '3', name: 'Paulo Camargo', role: 'Estrategista DeFi', avatarUrl: '/assets/images/portrait/portrait-2.webp' },
-  { id: '4', name: 'Tina Horn', role: 'NFT Specialist', avatarUrl: '/assets/images/portrait/portrait-3.webp' },
-  { id: '5', name: 'Milly Lacerda', role: 'Web3 Developer', avatarUrl: '/assets/images/portrait/portrait-4.webp' },
-  { id: '6', name: 'Lucas Silva', role: 'Macro Trader', avatarUrl: '/assets/images/portrait/portrait-5.webp' },
+  {
+    id: '2',
+    name: 'Jane Doe',
+    role: 'Guia de Airdrops',
+    avatarUrl: '/assets/images/portrait/portrait-1.webp',
+  },
+  {
+    id: '3',
+    name: 'Paulo Camargo',
+    role: 'Estrategista DeFi',
+    avatarUrl: '/assets/images/portrait/portrait-2.webp',
+  },
+  {
+    id: '4',
+    name: 'Tina Horn',
+    role: 'NFT Specialist',
+    avatarUrl: '/assets/images/portrait/portrait-3.webp',
+  },
+  {
+    id: '5',
+    name: 'Milly Lacerda',
+    role: 'Web3 Developer',
+    avatarUrl: '/assets/images/portrait/portrait-4.webp',
+  },
+  {
+    id: '6',
+    name: 'Lucas Silva',
+    role: 'Macro Trader',
+    avatarUrl: '/assets/images/portrait/portrait-5.webp',
+  },
 ];
 
 export function PostAuthors() {
   const theme = useTheme();
 
-  const renderAuthorCard = (author: typeof AUTHORS[0], index: number, rowIndex: number) => (
+  const renderAuthorCard = (author: (typeof AUTHORS)[0], index: number, rowIndex: number) => (
     <Stack
       key={`${rowIndex}-${index}-${author.id}`}
       component={RouterLink}
@@ -47,7 +73,7 @@ export function PostAuthors() {
         bgcolor: alpha('#020817', 0.6),
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        
+
         // 💎 BORDA REATIVA DE 1PX (Assinatura Visual)
         '&::before': {
           content: '""',
@@ -77,41 +103,41 @@ export function PostAuthors() {
               ${alpha(theme.palette.common.white, 0.2)} 50%, 
               ${theme.palette.primary.main} 100%
             )`,
-          }
+          },
         },
       }}
     >
       <Avatar
         src={author.avatarUrl}
         alt={author.name}
-        sx={{ 
-          width: 48, 
-          height: 48, 
+        sx={{
+          width: 48,
+          height: 48,
           zIndex: 3,
           border: `2px solid ${alpha(theme.palette.primary.main, 0.5)}`,
-          boxShadow: `0 0 15px ${alpha(theme.palette.primary.main, 0.2)}` 
+          boxShadow: `0 0 15px ${alpha(theme.palette.primary.main, 0.2)}`,
         }}
       />
 
       <Stack spacing={0.5} sx={{ minWidth: 0, zIndex: 3 }}>
-        <Typography 
-          variant="subtitle2" 
-          noWrap 
-          sx={{ 
+        <Typography
+          variant="subtitle2"
+          noWrap
+          sx={{
             color: 'common.white',
             fontFamily: "'Orbitron', sans-serif",
             fontSize: 13,
             letterSpacing: '0.05em',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
           }}
         >
           {author.name}
         </Typography>
-        <Typography 
-          variant="caption" 
-          noWrap 
-          sx={{ 
-            color: 'grey.500', 
+        <Typography
+          variant="caption"
+          noWrap
+          sx={{
+            color: 'grey.500',
             fontWeight: 600,
             fontFamily: "'Public Sans', sans-serif",
           }}
@@ -130,7 +156,8 @@ export function PostAuthors() {
         position: 'relative',
         py: 1.5,
         maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+        WebkitMaskImage:
+          'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
       }}
     >
       {Array.from({ length: 4 }).map((_, i) => (
@@ -154,21 +181,21 @@ export function PostAuthors() {
   );
 
   return (
-    <Box 
-      component="section" 
-      sx={{ 
+    <Box
+      component="section"
+      sx={{
         py: { xs: 8, md: 12 },
         bgcolor: 'transparent',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
       <Container component={MotionViewport}>
         <m.div variants={varFade('inDown')}>
-          <Typography 
-            variant="h2" 
-            sx={{ 
-              mb: 6, 
+          <Typography
+            variant="h2"
+            sx={{
+              mb: 6,
               textAlign: 'center',
               fontWeight: 900,
               fontFamily: "'Orbitron', sans-serif",
@@ -183,9 +210,7 @@ export function PostAuthors() {
         </m.div>
 
         <Stack spacing={2}>
-          <m.div variants={varFade('inRight')}>
-            {renderMarqueeRow(AUTHORS, false, 1)}
-          </m.div>
+          <m.div variants={varFade('inRight')}>{renderMarqueeRow(AUTHORS, false, 1)}</m.div>
 
           <m.div variants={varFade('inLeft')}>
             {renderMarqueeRow([...AUTHORS].reverse(), true, 2)}

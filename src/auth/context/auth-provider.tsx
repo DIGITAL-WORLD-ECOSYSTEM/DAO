@@ -31,8 +31,9 @@ const mapUser = (user: any, accessToken: string): User => ({
   email: user?.email || '',
   firstName: user?.firstName || '',
   lastName: user?.lastName || '',
-  displayName: user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Membro DAO',
-  role: user?.role || 'citizen', 
+  displayName:
+    user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Membro DAO',
+  role: user?.role || 'citizen',
   photoURL: user?.photoURL || '/assets/icons/glass/ic_glass_users.png',
   accessToken,
 });
@@ -40,8 +41,8 @@ const mapUser = (user: any, accessToken: string): User => ({
 export function AuthProvider({ children }: Props) {
   // Estado inicial unificado usando o hook de performance da minimal-shared
   const { state, setState } = useSetState<AuthState>({
-    user: null, 
-    loading: true 
+    user: null,
+    loading: true,
   });
 
   /**
@@ -51,17 +52,18 @@ export function AuthProvider({ children }: Props) {
   const checkUserSession = useCallback(async () => {
     try {
       // Priorizamos o localStorage para velocidade, mas o setSession sincroniza o Cookie
-      const accessToken = typeof window !== 'undefined' ? localStorage.getItem(JWT_STORAGE_KEY) : null;
+      const accessToken =
+        typeof window !== 'undefined' ? localStorage.getItem(JWT_STORAGE_KEY) : null;
 
       if (accessToken && isValidToken(accessToken)) {
         // 🟢 VITAL: Atualiza o header do Axios e garante o Cookie para o Middleware
         setSession(accessToken);
-        
+
         const res = await axios.get(endpoints.auth.me);
-        
+
         // Extração polimórfica (aceita diferentes estruturas de retorno do backend)
         const userData = res.data?.data?.user || res.data?.user || res.data;
-        
+
         const sessionUser = mapUser(userData, accessToken);
         setState({ user: sessionUser, loading: false });
       } else {
@@ -85,36 +87,42 @@ export function AuthProvider({ children }: Props) {
    * [2] SIGN IN - Autenticação por credenciais
    * Inclui sanitização de string para evitar falhas comuns de digitação.
    */
-  const signIn = useCallback(async (email: string, password: string) => {
-    const res = await axios.post(endpoints.auth.signIn, { 
-      email: email.trim().toLowerCase(), // Sanitização idêntica ao Backend
-      password 
-    });
-    
-    const { accessToken, user } = res.data.data || res.data;
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      const res = await axios.post(endpoints.auth.signIn, {
+        email: email.trim().toLowerCase(), // Sanitização idêntica ao Backend
+        password,
+      });
 
-    if (!accessToken) throw new Error('Credencial corrompida: Token não recebido.');
+      const { accessToken, user } = res.data.data || res.data;
 
-    const sessionUser = mapUser(user, accessToken);
-    
-    // 🟢 Persiste no Cookie e localStorage
-    setSession(accessToken); 
-    setState({ user: sessionUser, loading: false });
-  }, [setState]);
+      if (!accessToken) throw new Error('Credencial corrompida: Token não recebido.');
+
+      const sessionUser = mapUser(user, accessToken);
+
+      // 🟢 Persiste no Cookie e localStorage
+      setSession(accessToken);
+      setState({ user: sessionUser, loading: false });
+    },
+    [setState]
+  );
 
   /**
    * [3] SIGN UP - Registro de novo Cidadão DAO
    */
-  const signUp = useCallback(async (data: any) => {
-    const res = await axios.post(endpoints.auth.signUp, data);
-    
-    const { accessToken, user } = res.data.data || res.data;
+  const signUp = useCallback(
+    async (data: any) => {
+      const res = await axios.post(endpoints.auth.signUp, data);
 
-    if (!accessToken) throw new Error('Erro ao gerar sessão pós-registro.');
+      const { accessToken, user } = res.data.data || res.data;
 
-    setSession(accessToken);
-    setState({ user: mapUser(user, accessToken), loading: false });
-  }, [setState]);
+      if (!accessToken) throw new Error('Erro ao gerar sessão pós-registro.');
+
+      setSession(accessToken);
+      setState({ user: mapUser(user, accessToken), loading: false });
+    },
+    [setState]
+  );
 
   /**
    * [4] SIGN OUT - Destruição de sessão

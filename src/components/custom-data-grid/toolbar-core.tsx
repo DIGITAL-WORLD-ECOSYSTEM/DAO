@@ -142,14 +142,9 @@ export type CustomToolbarQuickFilterProps = GridToolbarQuickFilterProps & {
   sx?: SxProps<Theme>;
 };
 
-export function CustomToolbarQuickFilter({
-  sx,
-  ...other
-}: CustomToolbarQuickFilterProps) {
+export function CustomToolbarQuickFilter({ sx, ...other }: CustomToolbarQuickFilterProps) {
   return (
-    <Box
-      sx={[{ width: 1, maxWidth: { md: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}
-    >
+    <Box sx={[{ width: 1, maxWidth: { md: 260 } }, ...(Array.isArray(sx) ? sx : [sx])]}>
       <GridToolbarQuickFilter {...other} />
     </Box>
   );

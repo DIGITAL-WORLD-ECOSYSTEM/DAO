@@ -9,7 +9,7 @@ import 'src/global.css';
 
 import type { Metadata, Viewport } from 'next';
 
-import { Public_Sans, Barlow, Orbitron } from 'next/font/google';
+import { Barlow, Orbitron, Public_Sans } from 'next/font/google';
 
 const publicSans = Public_Sans({
   subsets: ['latin'],
@@ -48,7 +48,7 @@ import { JsonLd } from 'src/components/seo/json-ld';
 import { detectSettings } from 'src/components/settings/server';
 import { defaultSettings, SettingsProvider } from 'src/components/settings';
 
-import { AuthProvider as JwtAuthProvider } from 'src/auth/context'; 
+import { AuthProvider as JwtAuthProvider } from 'src/auth/context';
 
 import App from './app';
 
@@ -64,7 +64,7 @@ type LanguageCode = 'en' | 'pt' | 'es' | 'ar' | 'cn' | 'fr' | 'ru';
  * ✅ ESTABILIDADE DE DEPLOY:
  * Node.js runtime obrigatório para suportar a árvore densa de Providers e i18n.
  */
-export const runtime = 'nodejs'; 
+export const runtime = 'nodejs';
 
 const AuthProvider = JwtAuthProvider;
 
@@ -78,15 +78,23 @@ export const viewport: Viewport = {
  * 🌐 ESTRATÉGIA DE METADADOS (SEO FORENSICS):
  */
 export const metadata: Metadata = {
-  metadataBase: new URL(CONFIG.siteUrl), 
+  metadataBase: new URL(CONFIG.siteUrl),
   title: {
     default: 'ASPPIBRA - Governança Digital e Infraestrutura RWA',
-    template: `%s | ASPPIBRA`, 
+    template: `%s | ASPPIBRA`,
   },
-  description: 'Portal de Governança Digital ASPPIBRA: Infraestrutura para ativos reais (RWA), integração nativa DeFi e inteligência de dados aplicada ao agronegócio sustentável.',
+  description:
+    'Portal de Governança Digital ASPPIBRA: Infraestrutura para ativos reais (RWA), integração nativa DeFi e inteligência de dados aplicada ao agronegócio sustentável.',
   keywords: [
-    'ASPPIBRA', 'RWA', 'Real World Assets', 'DeFi', 'Blockchain Agro', 
-    'Governança Digital', 'DAO', 'IPFS Storage', 'Smart Contracts'
+    'ASPPIBRA',
+    'RWA',
+    'Real World Assets',
+    'DeFi',
+    'Blockchain Agro',
+    'Governança Digital',
+    'DAO',
+    'IPFS Storage',
+    'Smart Contracts',
   ],
   authors: [{ name: 'Sandro', url: CONFIG.siteUrl }],
   icons: [
@@ -107,16 +115,16 @@ export const metadata: Metadata = {
       },
     ],
   },
-    twitter: {
-      card: 'summary_large_image',
-      title: 'ASPPIBRA - Infraestrutura RWA & DeFi',
-      description: 'Conectando o agronegócio brasileiro à economia digital descentralizada.',
-      images: ['/opengraph-image.png'],
-    },
-    alternates: {
-      canonical: '/',
-    },
-  };
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ASPPIBRA - Infraestrutura RWA & DeFi',
+    description: 'Conectando o agronegócio brasileiro à economia digital descentralizada.',
+    images: ['/opengraph-image.png'],
+  },
+  alternates: {
+    canonical: '/',
+  },
+};
 
 // ----------------------------------------------------------------------
 
@@ -135,7 +143,7 @@ async function getAppConfig() {
     return {
       lang,
       dir: lang === 'ar' ? 'rtl' : 'ltr',
-      i18nLang: lang, 
+      i18nLang: lang,
       cookieSettings: settings || defaultSettings,
     };
   } catch (_error) {
@@ -160,35 +168,33 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={appConfig.lang} dir={appConfig.dir} suppressHydrationWarning>
       <head>
-        <JsonLd 
+        <JsonLd
           schema={{
-            "@context": "https://schema.org",
-            "@graph": [
+            '@context': 'https://schema.org',
+            '@graph': [
               {
-                "@type": "WebSite",
-                "name": "ASPPIBRA Governance Portal",
-                "alternateName": "ASPPIBRA DAO",
-                "url": CONFIG.siteUrl,
-                "description": "Plataforma de governança digital e tokenização de ativos reais (RWA)."
+                '@type': 'WebSite',
+                name: 'ASPPIBRA Governance Portal',
+                alternateName: 'ASPPIBRA DAO',
+                url: CONFIG.siteUrl,
+                description:
+                  'Plataforma de governança digital e tokenização de ativos reais (RWA).',
               },
               {
-                "@type": "Organization",
-                "name": "ASPPIBRA",
-                "url": CONFIG.siteUrl,
-                "logo": `${CONFIG.siteUrl}/logo/logo-512x512.png`,
-                "sameAs": [
-                  "https://t.me/asppibra_official",
-                  "https://discord.gg/asppibra"
+                '@type': 'Organization',
+                name: 'ASPPIBRA',
+                url: CONFIG.siteUrl,
+                logo: `${CONFIG.siteUrl}/logo/logo-512x512.png`,
+                sameAs: ['https://t.me/asppibra_official', 'https://discord.gg/asppibra'],
+                knowsAbout: [
+                  'Blockchain',
+                  'Agribusiness Tokenization',
+                  'Real World Assets (RWA)',
+                  'DeFi',
                 ],
-                "knowsAbout": [
-                  "Blockchain", 
-                  "Agribusiness Tokenization", 
-                  "Real World Assets (RWA)", 
-                  "DeFi"
-                ]
-              }
-            ]
-          }} 
+              },
+            ],
+          }}
         />
       </head>
       <body className={`${publicSans.variable} ${barlow.variable} ${orbitron.variable}`}>

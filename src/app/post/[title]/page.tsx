@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 import { kebabCase } from 'es-toolkit';
 import { notFound } from 'next/navigation';
 
-import { _posts } from 'src/_mock/_blog'; 
+import { _posts } from 'src/_mock/_blog';
 import { CONFIG } from 'src/global-config';
 import { getPost, getLatestPosts } from 'src/actions/blog-ssr';
 
@@ -20,12 +20,12 @@ import { PostDetailsHomeView } from 'src/sections/blog/view/home/post-details-ho
 
 /**
  * ✅ ESTABILIDADE DE BUILD (SOLUÇÃO DEFINITIVA):
- * Forçamos a renderização dinâmica para evitar que o Next.js tente serializar 
+ * Forçamos a renderização dinâmica para evitar que o Next.js tente serializar
  * funções de Server Actions durante o build estático. Isso resolve o erro:
  * "Functions cannot be passed directly to Client Components".
  */
 export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs'; 
+export const runtime = 'nodejs';
 
 type Props = {
   params: Promise<{ title: string }>;
@@ -38,7 +38,7 @@ type Props = {
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { title } = await params;
-  
+
   // Busca no mock para manter SEO consistente mesmo em modo dinâmico
   const post = _posts.find((p) => kebabCase(p.title) === title);
 
@@ -96,10 +96,5 @@ export default async function Page({ params }: Props) {
   const sanitizedPost = JSON.parse(JSON.stringify(post));
   const sanitizedLatest = JSON.parse(JSON.stringify(latestPosts));
 
-  return (
-    <PostDetailsHomeView 
-      post={sanitizedPost} 
-      latestPosts={sanitizedLatest} 
-    />
-  );
+  return <PostDetailsHomeView post={sanitizedPost} latestPosts={sanitizedLatest} />;
 }

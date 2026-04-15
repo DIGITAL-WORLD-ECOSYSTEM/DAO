@@ -10,18 +10,19 @@ import { CONFIG } from 'src/global-config';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `Digital World - ${CONFIG.appName} Governance`, 
+    name: `Digital World - ${CONFIG.appName} Governance`,
     short_name: 'ASPPIBRA-DAO',
-    description: 'Infraestrutura de Governança Digital e RWA: Integração nativa com DeFi, storage IPFS descentralizado e IA aplicada à gestão de ativos tokenizados em Blockchain.',
+    description:
+      'Infraestrutura de Governança Digital e RWA: Integração nativa com DeFi, storage IPFS descentralizado e IA aplicada à gestão de ativos tokenizados em Blockchain.',
     start_url: '/',
     display: 'standalone',
     background_color: '#0A192F', // Azul Profundo: Transmite segurança e tecnologia avançada
-    theme_color: '#00A15D',      // Verde Sustentabilidade: O equilíbrio entre Agro e Web3
+    theme_color: '#00A15D', // Verde Sustentabilidade: O equilíbrio entre Agro e Web3
     orientation: 'portrait' as const,
-    
+
     // Categorias estratégicas para ranqueamento em diretórios de investidores e tech
-    categories: ['finance', 'business', 'productivity', 'utilities'], 
-    
+    categories: ['finance', 'business', 'productivity', 'utilities'],
+
     icons: [
       {
         src: '/favicon.ico',

@@ -1,5 +1,7 @@
 'use client';
 
+/* eslint-disable react/no-unknown-property */
+
 import * as THREE from 'three';
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -10,7 +12,11 @@ const PARAMS = {
   thickness: 0.05,
 };
 
-export function EventHorizon({ scrollProgress }: { scrollProgress: React.MutableRefObject<number> }) {
+export function EventHorizon({
+  scrollProgress,
+}: {
+  scrollProgress: React.MutableRefObject<number>;
+}) {
   const groupRef = useRef<THREE.Group>(null!);
   const ringRef = useRef<THREE.Points>(null!);
   const holeRef = useRef<THREE.Mesh>(null!);
@@ -34,7 +40,9 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
 
       const t = (r - PARAMS.radius) / 6;
       color.setHSL(0.05 + t * 0.5, 0.9, 0.6);
-      cols[i3] = color.r; cols[i3 + 1] = color.g; cols[i3 + 2] = color.b;
+      cols[i3] = color.r;
+      cols[i3 + 1] = color.g;
+      cols[i3 + 2] = color.b;
     }
     return [pos, cols];
   }, []);
@@ -45,7 +53,7 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
 
     if (groupRef.current) {
       // Ativação baseada no scroll (Fade In)
-      const fadeIn = THREE.MathUtils.clamp((sp - 0.60) / 0.08, 0.0, 1.0);
+      const fadeIn = THREE.MathUtils.clamp((sp - 0.6) / 0.08, 0.0, 1.0);
       groupRef.current.visible = fadeIn > 0.0;
 
       const ringMat = ringRef.current?.material as THREE.PointsMaterial;

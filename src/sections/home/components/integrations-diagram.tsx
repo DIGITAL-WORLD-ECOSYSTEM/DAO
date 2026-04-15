@@ -1,4 +1,3 @@
-
 import { m } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -45,7 +44,9 @@ const TechBubble = ({ cx, cy, children }: any) => {
       <circle r={30} fill={theme.palette.background.paper} filter="url(#glow)" opacity={0.5} />
       <circle r={25} fill={theme.palette.background.paper} />
       <foreignObject x={-15} y={-15} width={30} height={30}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}
+        >
           {children}
         </Box>
       </foreignObject>
@@ -159,7 +160,10 @@ export function IntegrationsDiagram() {
           </foreignObject>
         </g>
 
-        <m.g animate={{ rotate: 360 }} transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}>
+        <m.g
+          animate={{ rotate: 360 }}
+          transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
+        >
           {ORBIT_1_ICONS.map((item) => (
             <m.g
               key={item.id}
@@ -167,7 +171,11 @@ export function IntegrationsDiagram() {
               transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
             >
               <TechBubble cx={item.cx} cy={item.cy}>
-                <Iconify icon={item.icon as any} width={item.size} sx={{ ...(item.color && { color: item.color }) }} />
+                <Iconify
+                  icon={item.icon as any}
+                  width={item.size}
+                  sx={{ ...(item.color && { color: item.color }) }}
+                />
               </TechBubble>
             </m.g>
           ))}
@@ -184,7 +192,11 @@ export function IntegrationsDiagram() {
               transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
             >
               <TechBubble cx={item.cx} cy={item.cy}>
-                 <Iconify icon={item.icon as any} width={item.size} sx={{ ...(item.color && { color: item.color }) }} />
+                <Iconify
+                  icon={item.icon as any}
+                  width={item.size}
+                  sx={{ ...(item.color && { color: item.color }) }}
+                />
               </TechBubble>
             </m.g>
           ))}

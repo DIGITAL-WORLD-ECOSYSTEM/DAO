@@ -14,5 +14,5 @@ export const _authors = [
     role: 'Agentic Editor',
     avatarUrl: '/logo/ai-avatar.png',
     bio: 'Motor base de inteligência responsável pela auditoria técnica e revisão impecável do portal.',
-  }
+  },
 ];

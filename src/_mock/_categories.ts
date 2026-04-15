@@ -15,6 +15,7 @@ export const _categories = [
     id: 'c3',
     name: 'Inteligência Artificial',
     slug: 'ia',
-    description: 'Auditoria de redes descentralizadas e relatórios de Smart Contracts através da visão sistêmica AGI.',
-  }
+    description:
+      'Auditoria de redes descentralizadas e relatórios de Smart Contracts através da visão sistêmica AGI.',
+  },
 ];

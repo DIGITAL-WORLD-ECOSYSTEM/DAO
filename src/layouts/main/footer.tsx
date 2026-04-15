@@ -1,4 +1,3 @@
-/* eslint-disable perfectionist/sort-imports */
 'use client';
 
 import type { Breakpoint } from '@mui/material/styles';
@@ -37,11 +36,19 @@ const pulse = keyframes`
 const CUSTOM_SOCIALS = [
   { name: 'Twitter', href: 'https://x.com/ASPPIBRA_ORG', icon: 'ri:twitter-x-fill' },
   { name: 'Instagram', href: 'https://www.instagram.com/asppibra/', icon: 'ri:instagram-fill' },
-  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/asppibra-dao/', icon: 'ri:linkedin-fill' },
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/asppibra-dao/',
+    icon: 'ri:linkedin-fill',
+  },
   { name: 'GitHub', href: 'https://github.com/DIGITAL-WORLD-ECOSYSTEM', icon: 'ri:github-fill' },
   { name: 'Telegram (BR)', href: 'https://t.me/Mundo_Digital_BR', icon: 'ic:baseline-telegram' },
   { name: 'Telegram (EUA)', href: 'https://t.me/Mundo_Digital_EUA', icon: 'ic:baseline-telegram' },
-  { name: 'Crunchbase', href: 'https://www.crunchbase.com/organization/sandro', icon: 'simple-icons:crunchbase' },
+  {
+    name: 'Crunchbase',
+    href: 'https://www.crunchbase.com/organization/sandro',
+    icon: 'simple-icons:crunchbase',
+  },
 ];
 
 const FooterRoot = styled('footer')(({ theme }) => ({
@@ -61,8 +68,7 @@ export function Footer({
   layoutQuery = 'md',
   ...other
 }: FooterProps & { layoutQuery?: Breakpoint }) {
-
-  const contractAddress = "0x0697AB2B003FD2Cbaea2dF1ef9b404E45bE59d4C";
+  const contractAddress = '0x0697AB2B003FD2Cbaea2dF1ef9b404E45bE59d4C';
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(contractAddress);
@@ -75,7 +81,6 @@ export function Footer({
     <FooterRoot sx={sx} {...other}>
       <Container>
         <Grid container spacing={5} sx={{ mb: 8, alignItems: 'flex-start' }}>
-
           {/* Coluna 1: Logo & Bio */}
           <Grid size={{ xs: 12, md: 5 }}>
             <Box sx={{ mb: 3, height: 40, display: 'flex', alignItems: 'center' }}>
@@ -100,7 +105,7 @@ export function Footer({
                   letterSpacing: 2,
                   fontSize: '0.75rem',
                   fontFamily: '"Orbitron", sans-serif',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
                 }}
               >
                 DIGITAL WORLD ECOSYSTEM
@@ -115,7 +120,7 @@ export function Footer({
                 mb: 5,
                 lineHeight: 1.8,
                 textAlign: 'justify', // Bio Justificada
-                fontFamily: '"Public Sans", sans-serif'
+                fontFamily: '"Public Sans", sans-serif',
               }}
             >
               A <strong>ASPPIBRA</strong> é a associação desenvolvedora deste ecossistema,
@@ -144,7 +149,7 @@ export function Footer({
                         bgcolor: '#00ff7f',
                         boxShadow: '0 0 15px rgba(0, 255, 127, 0.5)',
                         borderColor: '#00ff7f',
-                        transform: 'translateY(-4px) scale(1.15)'
+                        transform: 'translateY(-4px) scale(1.15)',
                       },
                     }}
                   >
@@ -160,7 +165,6 @@ export function Footer({
             <Box sx={{ height: 40, mb: 3 }} />
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-
               {/* 1° Suporte */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
                 <Typography
@@ -177,7 +181,7 @@ export function Footer({
                     background: 'linear-gradient(90deg, #00ff7f 0%, #00d2ff 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    textShadow: '0 0 20px rgba(0, 255, 127, 0.2)'
+                    textShadow: '0 0 20px rgba(0, 255, 127, 0.2)',
                   }}
                 >
                   SUPORTE
@@ -197,7 +201,7 @@ export function Footer({
                       fontWeight: 500,
                       '&:hover': {
                         color: '#00ff7f',
-                        pl: 0.5
+                        pl: 0.5,
                       },
                     }}
                   >
@@ -219,7 +223,7 @@ export function Footer({
                     background: 'linear-gradient(90deg, #00ff7f 0%, #00d2ff 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    textShadow: '0 0 20px rgba(0, 255, 127, 0.2)'
+                    textShadow: '0 0 20px rgba(0, 255, 127, 0.2)',
                   }}
                 >
                   TOKEN CONTRACT (BEP-20)
@@ -253,9 +257,15 @@ export function Footer({
                       fontSize: '0.95rem',
                       fontWeight: 500,
                       transition: 'all 0.3s ease',
-                      '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)', transition: 'border-color 0.3s' },
+                      '& fieldset': {
+                        borderColor: 'rgba(255, 255, 255, 0.08)',
+                        transition: 'border-color 0.3s',
+                      },
                       '&:hover fieldset': { borderColor: 'rgba(0, 255, 127, 0.5) !important' },
-                      '&.Mui-focused fieldset': { borderColor: '#00ff7f !important', boxShadow: '0 0 15px rgba(0, 255, 127, 0.25)' },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#00ff7f !important',
+                        boxShadow: '0 0 15px rgba(0, 255, 127, 0.25)',
+                      },
                     },
                   }}
                 />
@@ -281,13 +291,31 @@ export function Footer({
           </Typography>
 
           <Box sx={{ display: 'flex', gap: 4 }}>
-            <Link component={RouterLink} href={paths.terms} variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
+            <Link
+              component={RouterLink}
+              href={paths.terms}
+              variant="caption"
+              underline="none"
+              sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}
+            >
               Termos de Uso
             </Link>
-            <Link component={RouterLink} href={paths.privacy} variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
+            <Link
+              component={RouterLink}
+              href={paths.privacy}
+              variant="caption"
+              underline="none"
+              sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}
+            >
               Privacidade
             </Link>
-            <Link component={RouterLink} href={paths.cookies} variant="caption" underline="none" sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}>
+            <Link
+              component={RouterLink}
+              href={paths.cookies}
+              variant="caption"
+              underline="none"
+              sx={{ color: 'grey.600', '&:hover': { color: 'grey.400' } }}
+            >
               Cookies
             </Link>
           </Box>

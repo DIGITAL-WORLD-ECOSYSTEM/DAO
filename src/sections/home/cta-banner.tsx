@@ -6,7 +6,6 @@
 import type { BoxProps } from '@mui/material/Box';
 
 import { m } from 'framer-motion';
-import { varAlpha } from 'minimal-shared/utils';
 
 // ----------------------------------------------------------------------
 // Imports — MUI
@@ -14,9 +13,9 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { alpha, useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
+import { alpha, useTheme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 // Imports — app
@@ -27,6 +26,7 @@ import { RouterLink } from 'src/routes/components';
 import { useTranslate } from 'src/locales';
 import { CONFIG } from 'src/global-config';
 
+import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
@@ -36,11 +36,11 @@ export function CtaBanner({ sx, ...other }: BoxProps) {
   const { t } = useTranslate();
 
   const renderDescription = () => (
-    <Stack 
-      spacing={5} 
-      sx={{ 
+    <Stack
+      spacing={5}
+      sx={{
         zIndex: 9,
-        alignItems: { xs: 'center', md: 'flex-start' }
+        alignItems: { xs: 'center', md: 'flex-start' },
       }}
     >
       <Stack spacing={2}>
@@ -76,7 +76,7 @@ export function CtaBanner({ sx, ...other }: BoxProps) {
           component={RouterLink}
           href={paths.dashboard.root}
           endIcon={<Iconify icon="solar:double-alt-arrow-right-bold-duotone" />}
-          sx={{ 
+          sx={{
             height: 56,
             px: 4,
             fontFamily: "'Orbitron', sans-serif",
@@ -106,10 +106,10 @@ export function CtaBanner({ sx, ...other }: BoxProps) {
               maskComposite: 'exclude',
             },
             '&:hover': {
-               bgcolor: alpha(theme.palette.info.main, 0.08),
-               transform: 'scale(1.05)',
-               boxShadow: `0 0 20px 0 ${alpha(theme.palette.info.main, 0.3)}`,
-            }
+              bgcolor: alpha(theme.palette.info.main, 0.08),
+              transform: 'scale(1.05)',
+              boxShadow: `0 0 20px 0 ${alpha(theme.palette.info.main, 0.3)}`,
+            },
           }}
         >
           {t('cta.button') || 'Explorar Agora'}
@@ -158,13 +158,13 @@ export function CtaBanner({ sx, ...other }: BoxProps) {
     <Box
       component="section"
       sx={[
-        { 
-          position: 'relative', 
-          py: { xs: 8, md: 15 }, 
+        {
+          position: 'relative',
+          py: { xs: 8, md: 15 },
           overflow: 'hidden',
-          bgcolor: 'transparent' 
+          bgcolor: 'transparent',
         },
-        ...(Array.isArray(sx) ? sx : [sx])
+        ...(Array.isArray(sx) ? sx : [sx]),
       ]}
       {...other}
     >
@@ -222,10 +222,4 @@ export function CtaBanner({ sx, ...other }: BoxProps) {
       </MotionViewport>
     </Box>
   );
-}
-
-// Helper para manter compatibilidade com o Iconify se não estiver importado globalmente
-function Iconify({ icon, sx }: { icon: string; sx?: any }) {
-  const { Iconify: Icon } = require('src/components/iconify');
-  return <Icon icon={icon} sx={sx} />;
 }

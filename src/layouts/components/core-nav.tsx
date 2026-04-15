@@ -68,8 +68,8 @@ export function CoreNav() {
         }}
         ariaLabel="Core Nav"
         // ✅ CORREÇÃO: Usamos 'as any' para ignorar a validação estrita do Union Type de ícones
-        icon={<Iconify icon={"solar:menu-dots-linear" as any} />}
-        openIcon={<Iconify icon={"solar:close-circle-bold" as any} />}
+        icon={<Iconify icon={'solar:menu-dots-linear' as any} />}
+        openIcon={<Iconify icon={'solar:close-circle-bold' as any} />}
         direction="up"
         onClose={open.onFalse}
         onOpen={open.onTrue}

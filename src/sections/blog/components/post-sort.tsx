@@ -17,7 +17,7 @@ type Props = BoxProps & {
   sort: string;
   // CORREÇÃO: Alterado de 'string' para 'any' para aceitar o setState do pai
   // sem conflito de tipagem estrita (Union Type vs String).
-  onSort: (newValue: any) => void; 
+  onSort: (newValue: any) => void;
   sortOptions: { value: string; label: string }[];
 };
 

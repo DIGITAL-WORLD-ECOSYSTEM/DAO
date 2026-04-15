@@ -14,8 +14,8 @@ import { OverviewAppView } from 'src/sections/overview/app/view';
 // ----------------------------------------------------------------------
 
 /** * 🛠️ CONFIGURAÇÃO DE RUNTIME (ESTABILIDADE):
- * Mudança de 'edge' para 'nodejs' para garantir compatibilidade total com 
- * bibliotecas de gráficos (Chart.js/ApexCharts) e aumentar o limite de memória 
+ * Mudança de 'edge' para 'nodejs' para garantir compatibilidade total com
+ * bibliotecas de gráficos (Chart.js/ApexCharts) e aumentar o limite de memória
  * para 50MB, evitando quebras em relatórios densos da DAO.
  */
 export const runtime = 'nodejs';
@@ -32,9 +32,9 @@ export const dynamic = 'force-dynamic';
  * 📈 METADADOS DE SEO:
  * Define o título dinâmico da página utilizando as configurações globais do app.
  */
-export const metadata: Metadata = { 
+export const metadata: Metadata = {
   title: `Dashboard - ${CONFIG.appName}`,
-  description: `Visão geral do ecossistema ASPPIBRA DAO - Gestão de Ativos e Governança.`
+  description: `Visão geral do ecossistema ASPPIBRA DAO - Gestão de Ativos e Governança.`,
 };
 
 // ----------------------------------------------------------------------
@@ -45,7 +45,5 @@ export const metadata: Metadata = {
  * Por ser um Server Component, reduz o bundle de JavaScript enviado ao cliente.
  */
 export default function Page() {
-  return (
-    <OverviewAppView />
-  );
+  return <OverviewAppView />;
 }

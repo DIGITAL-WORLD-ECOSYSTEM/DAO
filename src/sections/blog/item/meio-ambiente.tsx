@@ -18,6 +18,7 @@ import { alpha, useTheme } from '@mui/material/styles';
 // Imports — App
 // ----------------------------------------------------------------------
 import { paths } from 'src/routes/paths';
+
 import { varFade, MotionViewport } from 'src/components/animate';
 
 import { PostItem, PostItemLatest } from './item';
@@ -105,7 +106,7 @@ export function MeioAmbiente() {
     backdropFilter: 'blur(12px)',
     WebkitBackdropFilter: 'blur(12px)',
     transition: theme.transitions.create(['all']),
-    
+
     // Borda Reativa Scifi de 1px
     '&::before': {
       content: '""',
@@ -141,7 +142,7 @@ export function MeioAmbiente() {
         // Injeção de tipografia via Theme (Seguro contra erros de build)
         '& .MuiTypography-root:not(h2)': {
           fontFamily: theme.typography.fontFamily,
-        }
+        },
       }}
     >
       <Container component={MotionViewport}>
@@ -206,10 +207,7 @@ export function MeioAmbiente() {
 
           {/* Lista Restante (Posts 4-7) */}
           {viewPosts.slice(3, 7).map((post, index) => (
-            <Grid
-              key={`env-list-${post.id}-${index}`}
-              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-            >
+            <Grid key={`env-list-${post.id}-${index}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardWrapperStyle}>
                   <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />

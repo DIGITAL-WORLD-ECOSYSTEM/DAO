@@ -1,4 +1,5 @@
 import { constructMetadata } from 'src/lib/seo/metadata';
+
 import { ComingSoonView } from 'src/sections/coming-soon/view';
 
 export const metadata = constructMetadata({

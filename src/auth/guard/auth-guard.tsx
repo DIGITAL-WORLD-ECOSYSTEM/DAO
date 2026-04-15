@@ -30,7 +30,7 @@ type AuthGuardProps = {
 export function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // Extração do estado reativo do AuthProvider v1.1.0
   const { authenticated, loading } = useAuthContext();
 
@@ -50,10 +50,10 @@ export function AuthGuard({ children }: AuthGuardProps) {
     // 2. Interceptação de acesso: Usuário não autenticado
     if (!authenticated) {
       // Criamos um parâmetro de retorno para melhorar a UX (Redirect Back)
-      const searchParams = new URLSearchParams({ 
-        returnTo: pathname 
+      const searchParams = new URLSearchParams({
+        returnTo: pathname,
       }).toString();
-      
+
       const href = `${paths.auth.signIn}?${searchParams}`;
 
       // .replace() é usado para remover a página protegida do histórico de navegação

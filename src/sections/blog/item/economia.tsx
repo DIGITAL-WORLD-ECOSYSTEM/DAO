@@ -191,10 +191,7 @@ export function Economia() {
 
           {/* Lista Restante (Posts 4 a 7) */}
           {viewPosts.slice(3, 7).map((post: any, index: number) => (
-            <Grid
-              key={`eco-list-${post.id}-${index}`}
-              size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-            >
+            <Grid key={`eco-list-${post.id}-${index}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardStyle}>
                   <PostItem post={post} detailsHref={paths.post.details(post.title)} />

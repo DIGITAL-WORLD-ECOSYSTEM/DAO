@@ -3,8 +3,8 @@
 import type { IPostItem } from 'src/types/blog';
 
 import Box from '@mui/material/Box';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { alpha, useTheme } from '@mui/material/styles';
+import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { paths } from 'src/routes/paths';
 

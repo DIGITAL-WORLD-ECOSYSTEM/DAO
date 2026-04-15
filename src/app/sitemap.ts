@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { paths } from 'src/routes/paths'; 
+import { paths } from 'src/routes/paths';
 
 // Importação da fonte única de verdade (Mock)
 import { _posts } from 'src/_mock/_blog';
@@ -42,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 3. Rotas de Categorias (SEO de Siloing)
   // Extrai categorias únicas do seu mock de blog
   const categories = [...new Set(_posts.map((post) => post.category))];
-  
+
   const categoryRoutes: MetadataRoute.Sitemap = categories.map((category) => ({
     url: `${URL}${paths.post.category(category.toLowerCase())}`,
     lastModified: new Date().toISOString(),
