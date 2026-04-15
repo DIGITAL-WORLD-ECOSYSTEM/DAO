@@ -156,7 +156,7 @@ export function Footer({
           </Grid>
 
           {/* Coluna 2: Suporte & Contrato */}
-          <Grid size={{ xs: 12, md: 6 }} sx={{ ml: { md: 'auto' } }}>
+          <Grid size={{ xs: 12, md: 4 }} sx={{ ml: { md: 'auto' } }}>
             <Box sx={{ height: 40, mb: 3 }} />
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
