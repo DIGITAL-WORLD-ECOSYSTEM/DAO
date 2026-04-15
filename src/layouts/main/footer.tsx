@@ -32,27 +32,7 @@ const pulse = keyframes`
   100% { box-shadow: 0 0 8px #00ff7f; opacity: 0.8; }
 `;
 
-const LINKS = [
-  {
-    headline: 'A ASSOCIAÇÃO',
-    children: [
-      { name: 'Core Team', href: paths.team },
-    ],
-  },
-  {
-    headline: 'ECOSSISTEMA',
-    children: [
-      { name: 'Visão Geral do Ecossistema', href: paths.ecosystem },
-      { name: 'Swap & Pools', href: '#' },
-    ],
-  },
-  {
-    headline: 'DOCUMENTAÇÃO',
-    children: [
-      { name: 'Whitepaper (Docs)', href: paths.whitepaper },
-    ],
-  },
-];
+// MIDDLE LINKS REMOVIDOS A PEDIDO DO USUÁRIO (Ecossistema, Associação, Documentação)
 
 const CUSTOM_SOCIALS = [
   { name: 'Twitter', href: 'https://x.com/ASPPIBRA_ORG', icon: 'ri:twitter-x-fill' },
@@ -97,7 +77,7 @@ export function Footer({
         <Grid container spacing={5} sx={{ mb: 8, alignItems: 'flex-start' }}>
 
           {/* Coluna 1: Logo & Bio */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid size={{ xs: 12, md: 5 }}>
             <Box sx={{ mb: 3, height: 40, display: 'flex', alignItems: 'center' }}>
               <Logo sx={{ color: '#FFF' }} />
             </Box>
@@ -152,13 +132,19 @@ export function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{
-                      p: 1,
-                      color: 'grey.600',
-                      transition: 'all 0.3s',
+                      p: 1.2,
+                      color: 'grey.400',
+                      bgcolor: 'rgba(255,255,255,0.03)',
+                      borderRadius: '12px',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255,255,255,0.05)',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                       '&:hover': {
-                        color: 'common.white',
-                        bgcolor: 'rgba(255,255,255,0.08)',
-                        transform: 'translateY(-2px)'
+                        color: '#000',
+                        bgcolor: '#00ff7f',
+                        boxShadow: '0 0 15px rgba(0, 255, 127, 0.5)',
+                        borderColor: '#00ff7f',
+                        transform: 'translateY(-4px) scale(1.15)'
                       },
                     }}
                   >
@@ -169,64 +155,8 @@ export function Footer({
             </Box>
           </Grid>
 
-          {/* Coluna 2: Links Rápidos */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Box sx={{ height: 40, mb: 3 }} />
-
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: 4,
-              }}
-            >
-              {LINKS.map((list) => (
-                <Box key={list.headline} sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      color: 'common.white',
-                      fontWeight: 'bold',
-                      letterSpacing: 1.5,
-                      fontSize: '0.8rem',
-                      fontFamily: '"Orbitron", sans-serif',
-                      height: 24,
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}
-                  >
-                    {list.headline}
-                  </Typography>
-
-                  {list.children.map((link) => (
-                    <Link
-                      key={link.name}
-                      component={RouterLink}
-                      href={link.href}
-                      color="inherit"
-                      variant="body2"
-                      underline="none"
-                      sx={{
-                        color: 'grey.500',
-                        textAlign: 'justify', // Texto Justificado
-                        transition: 'all 0.2s',
-                        fontFamily: '"Public Sans", sans-serif',
-                        '&:hover': {
-                          color: '#00ff7f',
-                          pl: 0.5
-                        },
-                      }}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </Box>
-              ))}
-            </Box>
-          </Grid>
-
-          {/* Coluna 3: Suporte & Contrato */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          {/* Coluna 2: Suporte & Contrato */}
+          <Grid size={{ xs: 12, md: 6 }} sx={{ ml: { md: 'auto' } }}>
             <Box sx={{ height: 40, mb: 3 }} />
 
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -236,15 +166,18 @@ export function Footer({
                 <Typography
                   variant="subtitle2"
                   sx={{
-                    color: 'common.white',
-                    fontWeight: 'bold',
-                    letterSpacing: 1.5,
-                    fontSize: '0.8rem',
+                    fontWeight: 800,
+                    letterSpacing: 2,
+                    fontSize: '0.85rem',
                     fontFamily: '"Orbitron", sans-serif',
                     textTransform: 'uppercase',
                     height: 24,
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    background: 'linear-gradient(90deg, #00ff7f 0%, #00d2ff 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    textShadow: '0 0 20px rgba(0, 255, 127, 0.2)'
                   }}
                 >
                   SUPORTE
@@ -278,12 +211,15 @@ export function Footer({
                 <Typography
                   variant="subtitle2"
                   sx={{
-                    color: 'common.white',
-                    fontWeight: 'bold',
+                    fontWeight: 800,
                     mb: 2.5,
-                    letterSpacing: 1.5,
-                    fontSize: '0.8rem',
-                    fontFamily: '"Orbitron", sans-serif'
+                    letterSpacing: 2,
+                    fontSize: '0.85rem',
+                    fontFamily: '"Orbitron", sans-serif',
+                    background: 'linear-gradient(90deg, #00ff7f 0%, #00d2ff 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    textShadow: '0 0 20px rgba(0, 255, 127, 0.2)'
                   }}
                 >
                   TOKEN CONTRACT (BEP-20)
@@ -308,15 +244,18 @@ export function Footer({
                       </InputAdornment>
                     ),
                     sx: {
-                      height: 52,
-                      color: 'grey.300',
-                      bgcolor: 'rgba(255, 255, 255, 0.03)',
-                      borderRadius: 1.5,
+                      height: 56,
+                      color: 'common.white',
+                      bgcolor: 'rgba(255, 255, 255, 0.04)',
+                      backdropFilter: 'blur(12px)',
+                      borderRadius: 2,
                       fontFamily: '"Public Sans", sans-serif',
-                      fontSize: '0.9rem',
-                      '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.1)' },
-                      '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.2) !important' },
-                      '&.Mui-focused fieldset': { borderColor: '#00ff7f !important' },
+                      fontSize: '0.95rem',
+                      fontWeight: 500,
+                      transition: 'all 0.3s ease',
+                      '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.08)', transition: 'border-color 0.3s' },
+                      '&:hover fieldset': { borderColor: 'rgba(0, 255, 127, 0.5) !important' },
+                      '&.Mui-focused fieldset': { borderColor: '#00ff7f !important', boxShadow: '0 0 15px rgba(0, 255, 127, 0.25)' },
                     },
                   }}
                 />

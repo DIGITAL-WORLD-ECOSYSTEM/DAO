@@ -25,9 +25,9 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
     for (let i = 0; i < PARAMS.ringParticles; i++) {
       const i3 = i * 3;
       const angle = Math.random() * Math.PI * 2;
-      
+
       const r = PARAMS.radius + Math.pow(Math.random(), 2) * 6;
-      
+
       pos[i3] = Math.cos(angle) * r;
       pos[i3 + 1] = (Math.random() - 0.5) * PARAMS.thickness * (r * 0.5);
       pos[i3 + 2] = Math.sin(angle) * r;
@@ -47,7 +47,7 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
       // Ativação baseada no scroll (Fade In)
       const fadeIn = THREE.MathUtils.clamp((sp - 0.60) / 0.08, 0.0, 1.0);
       groupRef.current.visible = fadeIn > 0.0;
-      
+
       const ringMat = ringRef.current?.material as THREE.PointsMaterial;
       if (ringMat) ringMat.opacity = 0.8 * fadeIn;
 
@@ -56,7 +56,7 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
 
       // Rotação do disco
       ringRef.current.rotation.y = t * (0.5 + sp);
-      
+
       // Pulsação e Escala da Singularidade
       const pulse = Math.max(0.01, fadeIn * (1 + Math.sin(t * 2) * 0.05));
       holeRef.current.scale.set(pulse, pulse, pulse);
@@ -77,13 +77,13 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
           <bufferAttribute attach="attributes-position" args={[ringPos, 3]} />
           <bufferAttribute attach="attributes-color" args={[ringCols, 3]} />
         </bufferGeometry>
-        <pointsMaterial 
-          size={0.02} 
-          vertexColors 
-          transparent 
-          opacity={0.8} 
-          blending={THREE.AdditiveBlending} 
-          depthWrite={false} 
+        <pointsMaterial
+          size={0.02}
+          vertexColors
+          transparent
+          opacity={0.8}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </points>
 
@@ -96,12 +96,12 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
       {/* Brilho de Doppler */}
       <mesh ref={dopplerRef}>
         <sphereGeometry args={[PARAMS.radius, 64, 64]} />
-        <meshBasicMaterial 
-          color="#ffaa00" 
-          transparent 
-          opacity={0.2} 
-          blending={THREE.AdditiveBlending} 
-          side={THREE.BackSide} 
+        <meshBasicMaterial
+          color="#ffaa00"
+          transparent
+          opacity={0.2}
+          blending={THREE.AdditiveBlending}
+          side={THREE.BackSide}
         />
       </mesh>
     </group>
