@@ -29,6 +29,7 @@ dist/
 *.env.bak
 .vault
 .secrets
+.dev.vars
 secrets.json
 
 # --- CHAVES E CERTIFICADOS (WEB3/RWA SAFETY) ---
