@@ -32,6 +32,7 @@ precision highp float;
 #define NUCLEI 7
 
 uniform float iTime;
+uniform float globalOpacity;
 uniform vec3 nucleusPos[NUCLEI];
 uniform vec3 nucleusColor[NUCLEI];
 
@@ -43,7 +44,7 @@ void main(){
     float d = distance(vPos, nucleusPos[i]);
     col += nucleusColor[i] * exp(-d * 3.2) * abs(sin(d * 6.0 - iTime * 1.5));
   }
-  float alpha = smoothstep(0.05, 0.5, length(col));
+  float alpha = smoothstep(0.05, 0.5, length(col)) * globalOpacity;
   gl_FragColor = vec4(col, alpha);
 }
 `;
@@ -94,6 +95,7 @@ export const FlowerOfLife = memo(
     const uniformsRef = useRef({
       iTime: { value: 0 },
       scrollProgress: { value: 0 },
+      globalOpacity: { value: 1.0 },
       nucleusPos: { value: nucleusPositions },
       nucleusColor: { value: covenantColors }
     });
@@ -108,22 +110,28 @@ export const FlowerOfLife = memo(
 
       if (flowerRef.current) {
         // LÓGICA DE FASE: ALFA (0.00 a 0.33)
-        if (sp <= 0.12) {
-          flowerRef.current.visible = true;
+        // Fade out interpolado suavemente entre 0.11 e 0.16
+        const fadeOut = THREE.MathUtils.clamp(1.0 - (sp - 0.11) / 0.05, 0.0, 1.0);
 
-          // GIRO DO COLAPSO: Aceleração angular conforme o scroll avança para a Fase 2
-          // O multiplicador (sp * 8.0) cria o efeito de "vórtice" antes da explosão
+        if (fadeOut <= 0.0) {
+          // Desativa renderização após a explosão (Integrations)
+          flowerRef.current.visible = false;
+        } else {
+          flowerRef.current.visible = true;
+          u.globalOpacity.value = fadeOut;
+
+          // Aplica cross-fade nas esferas de vidro
+          if ('opacity' in glassMat) {
+            (glassMat as any).opacity = 0.25 * fadeOut;
+          }
+
+          // GIRO DO COLAPSO: Aceleração angular conforme o scroll avança
           flowerRef.current.rotation.z = t * (0.12 + sp * 8.0);
           flowerRef.current.rotation.y = Math.cos(t * 0.3) * 0.15;
 
           // CRESCIMENTO E COMPRESSÃO: 
-          // Cresce até o Ecosystem e começa a "vibrar" para a Supernova
-          const growth = THREE.MathUtils.lerp(1.1, 1.8, sp / 0.12);
+          const growth = THREE.MathUtils.lerp(1.1, 1.8, Math.min(1.0, sp / 0.15));
           flowerRef.current.scale.setScalar(growth);
-
-        } else {
-          // Desativa renderização após a explosão (Integrations)
-          flowerRef.current.visible = false;
         }
       }
     });

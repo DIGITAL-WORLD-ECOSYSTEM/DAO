@@ -16,7 +16,6 @@ import { EventHorizon } from './event-horizon';
 import { FlowerOfLife } from './flower-of-life';
 import { Space, SpaceAtmosphere } from './space';
 import { SceneController } from './scene-controller';
-import { StellarEvolution } from './stellar-evolution';
 
 // ----------------------------------------------------------------------
 
@@ -140,10 +139,7 @@ export const HomeBackground: React.FC = memo(() => {
           {/* Controle de scroll da cena */}
           <SceneController scrollProgress={scrollProgress} />
 
-          {/* Evolução estelar */}
-          <StellarEvolution scrollProgress={scrollProgress} />
-
-          {/* Núcleo galáctico */}
+          {/* Núcleo galáctico (e Evolução Estelar nativa) */}
           <GalacticCore scrollProgress={scrollProgress} />
 
           {/* Horizonte de eventos */}

@@ -14,6 +14,7 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
   const groupRef = useRef<THREE.Group>(null!);
   const ringRef = useRef<THREE.Points>(null!);
   const holeRef = useRef<THREE.Mesh>(null!);
+  const dopplerRef = useRef<THREE.Mesh>(null!);
 
   // 1. Gerador do Disco de Acreção
   const [ringPos, ringCols] = useMemo(() => {
@@ -43,14 +44,21 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
     const sp = scrollProgress.current;
 
     if (groupRef.current) {
-      // Ativação baseada no scroll
-      groupRef.current.visible = sp > 0.64;
+      // Ativação baseada no scroll (Fade In)
+      const fadeIn = THREE.MathUtils.clamp((sp - 0.60) / 0.08, 0.0, 1.0);
+      groupRef.current.visible = fadeIn > 0.0;
       
+      const ringMat = ringRef.current?.material as THREE.PointsMaterial;
+      if (ringMat) ringMat.opacity = 0.8 * fadeIn;
+
+      const dopplerMat = dopplerRef.current?.material as THREE.MeshBasicMaterial;
+      if (dopplerMat) dopplerMat.opacity = 0.2 * fadeIn;
+
       // Rotação do disco
       ringRef.current.rotation.y = t * (0.5 + sp);
       
-      // Pulsação da Singularidade
-      const pulse = 1 + Math.sin(t * 2) * 0.05;
+      // Pulsação e Escala da Singularidade
+      const pulse = Math.max(0.01, fadeIn * (1 + Math.sin(t * 2) * 0.05));
       holeRef.current.scale.set(pulse, pulse, pulse);
 
       // ✅ AJUSTE DE POSIÇÃO: Movido para o lado DIREITO
@@ -86,7 +94,7 @@ export function EventHorizon({ scrollProgress }: { scrollProgress: React.Mutable
       </mesh>
 
       {/* Brilho de Doppler */}
-      <mesh>
+      <mesh ref={dopplerRef}>
         <sphereGeometry args={[PARAMS.radius, 64, 64]} />
         <meshBasicMaterial 
           color="#ffaa00" 
