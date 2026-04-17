@@ -53,8 +53,9 @@ export const paths = {
     signUp: `${ROOTS.AUTH}/sign-up`,
     reset: `${ROOTS.AUTH}/reset`,
     update: `${ROOTS.AUTH}/update`,
-    updatePassword: `${ROOTS.AUTH}/update`, // ✅ Correção mantida para evitar erro de propriedade
+    updatePassword: `${ROOTS.AUTH}/update`,
     verify: `${ROOTS.AUTH}/verify`,
+    oauthCallback: `${ROOTS.AUTH}/oauth/callback`,
   },
 
   // DASHBOARD
