@@ -24,22 +24,19 @@ export type SignUpParams = {
 export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
   try {
     const params = { email, password };
-
-    // Chama o seu Worker na Cloudflare: /api/core/auth/login
     const res = await axios.post(endpoints.auth.signIn, params);
-
     const { accessToken } = res.data;
 
     if (!accessToken) {
       throw new Error('Falha na autenticação: Token não recebido.');
     }
 
-    // Configura o localStorage, os timers de expiração e os headers do Axios
     await setSession(accessToken);
   } catch (error: any) {
     console.error('Erro no Login:', error);
-    // Repassa o erro para o componente de UI tratar (ex: senha incorreta)
-    throw error;
+    // Extract the API-level message from the response body (e.g., 409 Conflict, 401 Unauthorized)
+    const apiMessage = error?.response?.data?.message;
+    throw new Error(apiMessage || error.message || 'Erro ao entrar. Tente novamente.');
   }
 };
 
@@ -52,29 +49,22 @@ export const signUp = async ({
   firstName,
   lastName,
 }: SignUpParams): Promise<void> => {
-  const params = {
-    email,
-    password,
-    firstName,
-    lastName,
-  };
+  const params = { email, password, firstName, lastName };
 
   try {
-    // Chama o seu Worker na Cloudflare: /api/core/auth/register
     const res = await axios.post(endpoints.auth.signUp, params);
-
     const { accessToken } = res.data;
 
     if (!accessToken) {
       throw new Error('Erro ao registrar: Token não gerado.');
     }
 
-    // ✅ CORREÇÃO: Usamos setSession aqui também para manter a consistência
-    // e já deixar o usuário logado após o registro.
     await setSession(accessToken);
   } catch (error: any) {
     console.error('Erro no Registro:', error);
-    throw error;
+    // Extract the API-level message from the response body (e.g., 409 email already exists)
+    const apiMessage = error?.response?.data?.message;
+    throw new Error(apiMessage || error.message || 'Erro ao criar conta. Tente novamente.');
   }
 };
 

@@ -108,7 +108,7 @@ export function CenteredSignUpView() {
       <Field.Text
         name="password"
         label="Senha"
-        placeholder="Mínimo 6 caracteres"
+        placeholder="Mínimo 8 caracteres"
         type={showPassword.value ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
