@@ -158,8 +158,8 @@ export function PostItemLatest({ post, index, detailsHref }: PostItemLatestProps
         sx={{ height: 360 }}
         slotProps={{
           overlay: {
-            sx: (t) => ({
-              background: `linear-gradient(to bottom, transparent 0%, ${alpha(t.palette.grey[900], 0.9)} 100%)`,
+            sx: (overlayTheme) => ({
+              background: `linear-gradient(to bottom, transparent 0%, ${alpha(overlayTheme.palette.grey[900], 0.9)} 100%)`,
             }),
           },
         }}

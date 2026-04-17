@@ -39,7 +39,7 @@ export const SignUpSchema = z.object({
   password: z
     .string()
     .min(1, { message: 'Senha é obrigatória!' })
-    .min(6, { message: 'A senha deve ter pelo menos 6 caracteres!' }),
+    .min(8, { message: 'A senha deve ter pelo menos 8 caracteres!' }),
 });
 
 // ----------------------------------------------------------------------

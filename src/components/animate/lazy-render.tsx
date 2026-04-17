@@ -23,7 +23,7 @@ export function LazyRender({ children, minHeight = 800, margin = '300px 0px' }: 
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    if (!ref.current) return undefined;
+    if (!ref.current) return () => {};
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

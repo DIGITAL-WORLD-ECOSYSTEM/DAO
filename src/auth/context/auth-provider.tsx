@@ -94,7 +94,7 @@ export function AuthProvider({ children }: Props) {
         password,
       });
 
-      const { accessToken, user } = res.data.data || res.data;
+      const { accessToken, user } = res.data;
 
       if (!accessToken) throw new Error('Credencial corrompida: Token não recebido.');
 
@@ -114,7 +114,7 @@ export function AuthProvider({ children }: Props) {
     async (data: any) => {
       const res = await axios.post(endpoints.auth.signUp, data);
 
-      const { accessToken, user } = res.data.data || res.data;
+      const { accessToken, user } = res.data;
 
       if (!accessToken) throw new Error('Erro ao gerar sessão pós-registro.');
 

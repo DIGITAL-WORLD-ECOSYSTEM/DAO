@@ -140,13 +140,13 @@ function useGlobeLogic(globe: any, hotspots: Hotspot[], config: Required<GlobeCo
   );
 
   useEffect(() => {
-    if (!globe) return undefined;
+    if (!globe) return () => {};
     globe.globeMaterial(material);
     return () => material.dispose();
   }, [globe, material]);
 
   useEffect(() => {
-    if (!globe) return undefined;
+    if (!globe) return () => {};
 
     const geo = countries as GeoFeatureCollection;
 

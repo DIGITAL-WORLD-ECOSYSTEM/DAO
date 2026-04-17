@@ -125,7 +125,7 @@ function useCountdown(targetDate: Date, isActive: boolean) {
   }, [targetDate]);
 
   useEffect(() => {
-    if (!isActive) return undefined;
+    if (!isActive) return () => {};
 
     updateTime();
     const interval = setInterval(updateTime, 1000);
@@ -232,7 +232,7 @@ export default function HomeCountdownDialog({
           border: `1px solid ${alpha(theme.palette.common.white, 0.08)}`,
           color: 'common.white',
           position: 'relative',
-          zIndex: (t) => t.zIndex.modal + 1,
+          zIndex: (muiTheme) => muiTheme.zIndex.modal + 1,
         },
       }}
     >
