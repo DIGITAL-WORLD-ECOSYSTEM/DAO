@@ -28,6 +28,7 @@ import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { useAuthContext } from '../hooks';
 import { Form, Field, Iconify, FormHead, schemaUtils, AnimateLogoRotate } from '../components';
+import { SignInWeb3Button } from './sign-in-web3-button';
 
 // ----------------------------------------------------------------------
 
@@ -213,19 +214,7 @@ export function CenteredSignInView() {
         </Button>
       </Stack>
 
-      <Button
-        fullWidth
-        variant="soft"
-        color="primary"
-        size="large"
-        startIcon={<Iconify icon={"logos:metamask-icon" as any} />}
-        sx={{ mt: 2, fontFamily: "'Orbitron', sans-serif" }}
-        onClick={() =>
-          alert('Integração SIWE (Web3) requer injeção do provedor Ethers/Viem. Em breve!')
-        }
-      >
-        Web3 Wallet (SIWE)
-      </Button>
+      <SignInWeb3Button />
     </>
   );
 }
