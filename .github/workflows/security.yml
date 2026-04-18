@@ -1,0 +1,50 @@
+name: 🛡️ Frontend Security Scan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  security-audit:
+    name: 🔍 Security Audit (Snyk & Gitleaks)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necessário para o Gitleaks verificar o histórico
+
+      - name: 📦 Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: ⚙️ Install Dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: ./
+
+      - name: 🛡️ PNPM Audit
+        run: pnpm audit --audit-level=high
+
+      - name: 🔑 Secret Scanning (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true # Não quebra o build se achar algo antigo, mas reporta
+
+      - name: 🧬 Snyk Vulnerability Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+        continue-on-error: true # Permite visualização sem bloquear o dev imediato

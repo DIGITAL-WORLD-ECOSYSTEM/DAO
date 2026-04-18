@@ -1,0 +1,43 @@
+name: ✨ Frontend Quality Assurance
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-lint:
+    name: 🏗️ Build, Lint & Type Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: ⚙️ Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔍 TypeScript Check (noEmit)
+        run: pnpm tsc --noEmit
+
+      - name: 🎨 Lint Code
+        run: pnpm lint
+
+      - name: 🚀 Production Build
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_HOST_API: 'https://api.asppibra.com'
+          NEXT_PUBLIC_SITE_URL: 'https://www.asppibra.com'
+          # Adicione outras envs necessárias para o build, se houver

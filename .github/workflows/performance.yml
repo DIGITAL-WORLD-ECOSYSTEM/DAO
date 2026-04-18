@@ -1,0 +1,50 @@
+name: 🚀 Frontend Performance Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  performance:
+    name: ⚡ Lighthouse & Bundle Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: ⚙️ Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🏗️ Production Build
+        run: pnpm build
+
+      - name: ⚡ Lighthouse Audit
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: './.lighthouserc.js'
+          temporaryPublicStorage: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: 📦 Analyze Bundle Size
+        run: |
+          if [ -d ".next/analyze" ]; then
+            echo "Bundle analysis found. Reporting size..."
+            du -sh .next/static/chunks
+          else
+            echo "No analyze directory found. Ensure @next/bundle-analyzer is configured."
+          fi
