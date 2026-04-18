@@ -206,8 +206,8 @@ Clica "Google" ou "GitHub"
 
 | Provedor | Status | Observação |
 |---|---|---|
-| **GitHub** | ✅ Em produção | OAuth App ID: 3539539 (`ASPPIBRA DAO`) |
-| **Google** | ⏳ Pendente | Falta configurar callback URI no Google Cloud Console |
+| **GitHub** | ✅ Em produção | OAuth App ID: `ASPPIBRA DAO` |
+| **Google** | ✅ Em produção | OAuth App Name: `Cliente Web 1` |
 
 > **Nota técnica:** `src/app/auth/oauth/callback/page.tsx` usa `window.location.href` (full reload) em vez de `router.replace()` para evitar race condition com o `AuthProvider`. Envolto em `<Suspense>` (obrigatório no App Router).
 
@@ -235,21 +235,19 @@ Clica "Web3 Wallet (SIWE)"
 
 ---
 
-### ⏳ Pendente
+### ⏳ Próximas Fases (Roadmap)
 
 | Item | Prioridade | Descrição |
 |---|---|---|
-| Google OAuth | Alta | Configurar callback URI no Google Cloud Console + publicar app |
-| RBAC `RoleBasedGuard` | Média | Guard que verifica `role` do usuário para rotas de admin |
+| RBAC `RoleBasedGuard` | Alta | Guard que verifica `role` do usuário para rotas de admin |
 | Dashboard `user/account` | Média | Conectar perfil, senha e sociais a endpoints `/me` |
-| Dashboard `user/list` (admin) | Baixa | Listar/editar usuários via `GET/PUT /api/users` |
+| Dashboard `user/list` (admin) | Média | Listar/editar usuários via `GET/PUT /api/users` |
 
-### Roadmap
+---
 
-1. **Fase 1 — Google OAuth** *(próximo)*: Configurar Google Cloud Console e publicar app para acesso público.
-2. **Fase 2 — RBAC**: Implementar `RoleBasedGuard` e proteger rotas de administrador.
-3. **Fase 3 — Dashboard de conta**: Conectar perfil pessoal, troca de senha e configurações sociais.
-4. **Fase 4 — Dashboard de admin**: Listar, criar e editar usuários com proteção de role.
+1. **Fase 2 — RBAC**: Implementar `RoleBasedGuard` e proteger rotas de administrador com base no JWT.
+2. **Fase 3 — Dashboard de conta**: Conectar perfil pessoal, troca de senha e configurações sociais.
+3. **Fase 4 — Dashboard de admin**: Listar, criar e editar usuários com proteção de role.
 
 ---
 
