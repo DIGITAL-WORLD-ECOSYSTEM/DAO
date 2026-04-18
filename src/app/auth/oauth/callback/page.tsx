@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
@@ -11,18 +11,13 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { setSession } from 'src/auth/context/utils';
 
+// ----------------------------------------------------------------------
+
 /**
- * /auth/oauth/callback
- *
- * After Google / GitHub OAuth the backend redirects here with:
- *   ?token=<JWT>          → success
- *   ?error=<description>  → failure
- *
- * This page reads the token, calls setSession() to persist it in
- * localStorage + Axios headers, then sends the user to the dashboard.
+ * Inner component isolado para uso de useSearchParams() com Suspense.
+ * Em Next.js App Router, useSearchParams() exige Suspense boundary.
  */
-export default function OAuthCallbackPage() {
-  const router = useRouter();
+function OAuthCallbackInner() {
   const searchParams = useSearchParams();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -40,10 +35,14 @@ export default function OAuthCallbackPage() {
       return;
     }
 
-    // Persist session and redirect to dashboard
+    // 1. Salva token: localStorage + cookie + Axios headers
     setSession(token);
-    router.replace(paths.dashboard.root);
-  }, [router, searchParams]);
+
+    // 2. Força reload completo — o AuthProvider reinicia do zero e lê o
+    //    token do localStorage, transitando para 'authenticated' corretamente.
+    //    (router.replace() causa race condition com o AuthProvider)
+    window.location.href = paths.dashboard.root;
+  }, [searchParams]);
 
   if (errorMsg) {
     return (
@@ -93,5 +92,35 @@ export default function OAuthCallbackPage() {
         Autenticando… aguarde.
       </Typography>
     </Box>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * /auth/oauth/callback
+ *
+ * Recebe o JWT do Worker após autenticação Google/GitHub:
+ *   ?token=<JWT>          → salva sessão e recarrega para o dashboard
+ *   ?error=<description>  → exibe mensagem de erro
+ */
+export default function OAuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <Box
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <CircularProgress size={48} />
+        </Box>
+      }
+    >
+      <OAuthCallbackInner />
+    </Suspense>
   );
 }
