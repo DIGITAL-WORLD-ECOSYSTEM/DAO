@@ -11,12 +11,13 @@
 
 'use client';
 
+import { getAddress } from 'viem';
 import { useState, useCallback } from 'react';
-import { createPublicClient, http, getAddress } from 'viem';
-import { mainnet } from 'viem/chains';
+
+import { paths } from 'src/routes/paths';
 
 import axios, { endpoints } from 'src/lib/axios';
-import { paths } from 'src/routes/paths';
+
 import { setSession } from 'src/auth/context/utils';
 
 // ---------------------------------------------------------------------------

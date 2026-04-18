@@ -1,0 +1,106 @@
+
+> @minimal-kit/next-ts@7.5.0 lint /home/sandro/DAO/frontend
+> eslint "src/**/*.{js,jsx,ts,tsx}"
+
+
+/home/sandro/DAO/frontend/src/actions/blog-ssr.ts
+  31:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  49:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  68:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/app/(main)/search/page.tsx
+  22:83  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  22:91  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+/home/sandro/DAO/frontend/src/app/dashboard/post/[title]/edit/page.tsx
+  24:11  warning  'title' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/app/layout.tsx
+  141:12  warning  '_error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/auth/view/verify.tsx
+  19:23  warning  '/home/sandro/DAO/frontend/src/auth/components/index.ts' imported multiple times  import/no-duplicates
+  21:84  warning  '/home/sandro/DAO/frontend/src/auth/components/index.ts' imported multiple times  import/no-duplicates
+
+/home/sandro/DAO/frontend/src/components/animate/lazy-render.tsx
+  38:5  error  Arrow function expected no return value  consistent-return
+
+/home/sandro/DAO/frontend/src/components/background/event-horizon.tsx
+   77:28  error  Unknown property 'attach' found        react/no-unknown-property
+   77:57  error  Unknown property 'args' found          react/no-unknown-property
+   78:28  error  Unknown property 'attach' found        react/no-unknown-property
+   78:54  error  Unknown property 'args' found          react/no-unknown-property
+   82:11  error  Unknown property 'vertexColors' found  react/no-unknown-property
+   83:11  error  Unknown property 'transparent' found   react/no-unknown-property
+   85:11  error  Unknown property 'blending' found      react/no-unknown-property
+   86:11  error  Unknown property 'depthWrite' found    react/no-unknown-property
+   92:25  error  Unknown property 'args' found          react/no-unknown-property
+   98:25  error  Unknown property 'args' found          react/no-unknown-property
+  101:11  error  Unknown property 'transparent' found   react/no-unknown-property
+  103:11  error  Unknown property 'blending' found      react/no-unknown-property
+  104:11  error  Unknown property 'side' found          react/no-unknown-property
+
+/home/sandro/DAO/frontend/src/components/background/hectohedron.tsx
+   79:9   error  Unknown property 'visible' found        react/no-unknown-property
+   80:9   error  Unknown property 'castShadow' found     react/no-unknown-property
+   81:9   error  Unknown property 'receiveShadow' found  react/no-unknown-property
+   82:9   error  Unknown property 'geometry' found       react/no-unknown-property
+   87:11  error  Unknown property 'metalness' found      react/no-unknown-property
+   88:11  error  Unknown property 'roughness' found      react/no-unknown-property
+   89:11  error  Unknown property 'transmission' found   react/no-unknown-property
+   90:11  error  Unknown property 'ior' found            react/no-unknown-property
+   91:11  error  Unknown property 'transparent' found    react/no-unknown-property
+   93:11  error  Unknown property 'depthWrite' found     react/no-unknown-property
+   94:11  error  Unknown property 'side' found           react/no-unknown-property
+  101:9   error  Unknown property 'geometry' found       react/no-unknown-property
+  102:9   error  Unknown property 'visible' found        react/no-unknown-property
+  106:11  error  Unknown property 'transparent' found    react/no-unknown-property
+  108:11  error  Unknown property 'blending' found       react/no-unknown-property
+
+/home/sandro/DAO/frontend/src/components/background/stellar-evolution.tsx
+  111:29  error  Unknown property 'frustumCulled' found    react/no-unknown-property
+  111:51  error  Unknown property 'visible' found          react/no-unknown-property
+  113:26  error  Unknown property 'attach' found           react/no-unknown-property
+  113:55  error  Unknown property 'args' found             react/no-unknown-property
+  114:26  error  Unknown property 'attach' found           react/no-unknown-property
+  114:52  error  Unknown property 'args' found             react/no-unknown-property
+  118:9   error  Unknown property 'map' found              react/no-unknown-property
+  120:9   error  Unknown property 'vertexColors' found     react/no-unknown-property
+  121:9   error  Unknown property 'transparent' found      react/no-unknown-property
+  122:9   error  Unknown property 'blending' found         react/no-unknown-property
+  123:9   error  Unknown property 'depthWrite' found       react/no-unknown-property
+  124:9   error  Unknown property 'sizeAttenuation' found  react/no-unknown-property
+
+/home/sandro/DAO/frontend/src/components/chart/types.ts
+  8:1  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+/home/sandro/DAO/frontend/src/components/seo/analytics.tsx
+  7:7  warning  'GTM_ID' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/components/threeglobe/globe.tsx
+  147:5  error  Arrow function expected no return value  consistent-return
+  181:5  error  Arrow function expected no return value  consistent-return
+
+/home/sandro/DAO/frontend/src/layouts/auth/layout.tsx
+  133:7  warning  'backgroundStyles' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/locales/use-locales.ts
+  20:9  warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/sections/blog/components/featured.tsx
+  80:11  warning  'dotCount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/sandro/DAO/frontend/src/sections/blog/item/item.tsx
+  157:18  error  'theme' is already declared in the upper scope on line 123 column 9  @typescript-eslint/no-shadow
+
+/home/sandro/DAO/frontend/src/sections/home/components/home-countdown-dialog.tsx
+   91:5   error  Arrow function expected no return value                              consistent-return
+  130:16  error  Expected to return a value at the end of arrow function              consistent-return
+  193:20  error  'theme' is already declared in the upper scope on line 110 column 9  @typescript-eslint/no-shadow
+
+/home/sandro/DAO/frontend/src/sections/home/cta-banner.tsx
+  228:29  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 62 problems (51 errors, 11 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

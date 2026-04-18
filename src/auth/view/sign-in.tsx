@@ -27,8 +27,8 @@ import { RouterLink } from 'src/routes/components';
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { useAuthContext } from '../hooks';
-import { Form, Field, Iconify, FormHead, schemaUtils, AnimateLogoRotate } from '../components';
 import { SignInWeb3Button } from './sign-in-web3-button';
+import { Form, Field, Iconify, FormHead, schemaUtils, AnimateLogoRotate } from '../components';
 
 // ----------------------------------------------------------------------
 

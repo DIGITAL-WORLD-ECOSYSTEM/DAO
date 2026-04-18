@@ -15,10 +15,15 @@ import { useRouter } from 'src/routes/hooks';
 import axios, { endpoints } from 'src/lib/axios';
 import { EmailInboxIcon } from 'src/assets/icons';
 
-// CORREÇÃO 1: Importação ajustada
-import { toast } from 'src/auth/components';
-
-import { Form, Field, FormHead, schemaUtils, FormResendCode, FormReturnLink } from '../components';
+import {
+  Form,
+  Field,
+  toast,
+  FormHead,
+  schemaUtils,
+  FormResendCode,
+  FormReturnLink,
+} from '../components';
 
 // ----------------------------------------------------------------------
 

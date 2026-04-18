@@ -89,8 +89,8 @@ export function PostFeatured({ sx }: { sx?: SxProps<Theme> }) {
     [Autoplay({ delay: 6000, stopOnInteraction: false })]
   );
 
-  // 🛠 SOLUÇÃO PARA O ERRO: Extraímos dotCount para não vazar para o DOM
-  const { dotCount, ...dotsProps } = carousel.dots;
+  // 🛠 SOLUÇÃO PARA O ERRO: Extraímos _dotCount para não vazar para o DOM
+  const { dotCount: _dotCount, ...dotsProps } = carousel.dots;
 
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', bgcolor: 'transparent', ...sx }}>

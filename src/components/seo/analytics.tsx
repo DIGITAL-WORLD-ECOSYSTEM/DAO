@@ -2,8 +2,8 @@
 
 import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
 
-// Substitua com seu ID do Google Tag Manager
-const GTM_ID = 'GTM-XXXXXXX';
+// Substitua com seu ID do Google Tag Manager (descomente quando tiver o ID)
+// const GTM_ID = 'GTM-XXXXXXX';
 
 // ----------------------------------------------------------------------
 

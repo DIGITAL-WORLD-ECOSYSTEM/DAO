@@ -1,6 +1,6 @@
 'use client';
 
-import type { Theme, CSSObject, Breakpoint } from '@mui/material/styles';
+import type { Breakpoint } from '@mui/material/styles';
 import type { AuthCenteredContentProps } from './content';
 import type { MainSectionProps, HeaderSectionProps, LayoutSectionProps } from '../core';
 
@@ -129,12 +129,3 @@ export function AuthCenteredLayout({
 
 // ----------------------------------------------------------------------
 
-// Ajustamos o backgroundStyles para ser apenas uma camada de suporte transparente
-const backgroundStyles = (theme: Theme): CSSObject => ({
-  zIndex: -1, // Empurra para trás do Canvas de animação
-  width: '100%',
-  height: '100%',
-  content: "''",
-  position: 'absolute',
-  backgroundColor: 'transparent',
-});

@@ -14,6 +14,7 @@
 ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-7.71.1-EC5990?style=for-the-badge&logo=react-hook-form&logoColor=white)
 ![SWR](https://img.shields.io/badge/SWR-2.3.8-000000?style=for-the-badge&logo=swr&logoColor=white)
 ![i18next](https://img.shields.io/badge/i18next-25.8.0-26A69A?style=for-the-badge&logo=i18next&logoColor=white)
+![viem](https://img.shields.io/badge/viem-2.48.1-7C3AED?style=for-the-badge&logo=ethereum&logoColor=white)
 
 > Esta seção demonstra o uso de tecnologias **Bleeding Edge** (vanguarda), garantindo que o ecossistema Mundo Digital utilize as versões mais estáveis e modernas disponíveis no `node_modules`.
 
@@ -169,123 +170,89 @@ Para concluir o sistema, siga estas fases em ordem:
 
 ---
 
-## 🔐 Documentação Auditada: Sistema de Autenticação, Dashboard & RBAC
+## 🔐 Sistema de Autenticação — Estado Atual & Roadmap
 
-### Filosofia de Arquitetura (Revisada)
+### Filosofia de Arquitetura
 
-O sistema utiliza **Context API** para gerenciamento de estado e **JWT** para sessão. A arquitetura está preparada para um sistema de **Controle de Acesso Baseado em Função (RBAC)**, onde as funcionalidades do dashboard são segregadas entre usuários padrão e administradores. A proteção de rotas deve ser granular, permitindo acesso com base na função (`role`) do usuário, que deve ser parte do seu objeto de dados no `AuthContext`.
-
-### Árvore de Arquitetura, Estado Real e Peças Faltantes Detalhadas
-
-```
-/src/
-├── auth/
-│   ├── context/jwt/
-│   │   ├── auth-context.ts
-│   │   │   └── └──> PEÇA FALTANTE: A interface `AuthContextType` precisa ser enriquecida. O objeto
-│   │   │              `user` deve obrigatoriamente conter uma propriedade `role: 'admin' | 'user'`.
-│   │   │
-│   │   └── auth-provider.tsx
-│   │       └── └──> PEÇAS FALTANTES CRÍTICAS:
-│   │           │   1.  [LÓGICA DE API] Implementar `login`, `register`, `logout` com chamadas `fetch`.
-│   │           │   2.  [VALIDAÇÃO DE SESSÃO] No `useEffect` inicial, validar o token JWT
-│   │           │       com o endpoint `GET /api/auth/me`. A resposta deste endpoint DEVE incluir
-│   │           │       os dados do usuário, incluindo sua `role`.
-│   │           │   3.  [ATUALIZAÇÃO DE ESTADO] Adicionar um novo método ao contexto,
-│   │           │       `revalidateUser()`, que refaça a chamada `GET /api/auth/me` para
-│   │           │       atualizar os dados do usuário na UI após uma edição de perfil, sem
-│   │           │       exigir um novo login.
-│   │
-│   └── guard/
-│       └── auth-guard.tsx
-│           └── └──> PEÇA FALTANTE CRÍTICA: O `AuthGuard` atual é insuficiente. Ele precisa
-│                      ser refatorado ou complementado por um `RoleBasedGuard` que:
-│                      1. Receba as `roles` permitidas como prop (ex: `<RoleBasedGuard roles={['admin']}>`).
-│                      2. Verifique se a `role` do usuário no `AuthContext` corresponde à permitida.
-│                      3. Redirecione para uma página de "Acesso Negado" (403 Forbidden) caso contrário.
-│
-├── app/
-│   ├── auth/  (Login e Registro - Sem mudanças na análise)
-│   │
-│   └── dashboard/
-│       ├── layout.tsx
-│       │   └── └──> PEÇA FALTANTE: Envolver este layout com o `<AuthGuard>` básico para garantir que
-│       │              *qualquer* acesso a `/dashboard` exija login.
-│       │
-│       ├── page.tsx
-│       │   ├── ESTADO ATUAL: Página principal de overview do Dashboard.
-│       │   └── └──> PEÇA FALTANTE: Conectar os cards e estatísticas a endpoints da API
-│       │              (ex: `GET /api/stats/dashboard`).
-│       │
-│       ├── user/
-│       │   ├── list/page.tsx
-│       │   │   ├── ESTADO ATUAL: Tabela para listar todos os usuários. **(Função de Admin)**
-│       │   │   └── └──> PEÇA FALTANTE:
-│       │   │       │   1. Proteger esta rota com `<RoleBasedGuard roles={['admin']}>`.
-│       │   │       │   2. Conectar à API com `GET /api/users` para popular a lista.
-│       │   │
-│       │   ├── new/page.tsx
-│       │   │   ├── ESTADO ATUAL: Formulário para criar um novo usuário. **(Função de Admin)**
-│       │   │   └── └──> PEÇA FALTANTE:
-│       │   │       │   1. Proteger com `<RoleBasedGuard roles={['admin']}>`.
-│       │   │       │   2. Conectar o `onSubmit` a `POST /api/users`.
-│       │   │
-│       │   ├── [id]/edit/page.tsx
-│       │   │   ├── ESTADO ATUAL: Formulário para editar um usuário existente. **(Função de Admin)**
-│       │   │   └── └──> PEÇA FALTANTE:
-│       │   │       │   1. Proteger com `<RoleBasedGuard roles={['admin']}>`.
-│       │   │       │   2. Conectar a `GET /api/users/{id}` para preencher os dados e a `PUT /api/users/{id}` para salvar.
-│       │   │
-│       │   └── account/
-│       │       ├── layout.tsx
-│       │       │   └── ESTADO ATUAL: Layout para a seção de conta do usuário. **(Função de Usuário Logado)**
-│       │       │
-│       │       ├── page.tsx (Perfil Geral)
-│       │       │   └── └──> PEÇA FALTANTE: Conectar o formulário a `PUT /api/users/me` para que o usuário
-│       │       │              edite seus próprios dados (nome, email, etc.).
-│       │       │
-│       │       ├── change-password/page.tsx
-│       │       │   └── └──> PEÇA FALTANTE: Conectar a `POST /api/users/me/change-password`.
-│       │       │
-│       │       ├── notifications/page.tsx
-│       │       │   └── └──> PEÇA FALTANTE: Conectar a um endpoint `PUT /api/users/me/settings/notifications`.
-│       │       │
-│       │       └── socials/page.tsx
-│       │           └── └──> PEÇA FALTANTE: Conectar a `PUT /api/users/me/settings/socials`.
-```
-
-### Roadmap de Finalização Detalhado (Auditado)
-
-1.  **Fase 1: Expandir a API de Identidade**
-    *   **Tarefas:** Além do login/registro, criar os endpoints para:
-        *   **(Admin)** `GET /api/users`, `POST /api/users`, `GET /api/users/{id}`, `PUT /api/users/{id}`.
-        *   **(Usuário)** `PUT /api/users/me` e endpoints específicos para senha, notificações, etc.
-    *   **Resultado:** Uma API completa que suporta tanto o gerenciamento de conta pessoal quanto a administração de usuários.
-
-2.  **Fase 2: Implementar o Controle de Acesso (RBAC)**
-    *   **Tarefas:**
-        *   Adicionar a propriedade `role` ao objeto `user` no `AuthContext`.
-        *   Garantir que a API retorne a `role` do usuário nos endpoints `/login` e `/me`.
-        *   Implementar o `RoleBasedGuard` que verifica a `role` do usuário.
-    *   **Resultado:** A aplicação agora tem a capacidade de diferenciar `admin` de `user`.
-
-3.  **Fase 3: Conectar e Proteger o Dashboard de ADMIN**
-    *   **Tarefas:**
-        *   Proteger as rotas em `dashboard/user/list/`, `new/`, e `[id]/edit/` com o `RoleBasedGuard`.
-        *   Conectar as páginas aos seus respectivos endpoints da API de administração de usuários.
-    *   **Resultado:** Apenas administradores podem visualizar, criar e editar outros usuários.
-
-4.  **Fase 4: Conectar o Dashboard de CONTA PESSOAL**
-    *   **Tarefas:**
-        *   Conectar as páginas em `dashboard/user/account/` (perfil, senha, sociais) aos endpoints `.../me/...`.
-        *   Após uma atualização de perfil, chamar o método `revalidateUser()` do contexto para atualizar a UI.
-    *   **Resultado:** Usuários logados podem gerenciar com segurança suas próprias informações.
-
-5.  **Fase 5: Conectar a UI de Autenticação (Login/Registro)**
-    *   **Tarefa:** Implementar os formulários de `login` e `register` para chamar os métodos do `AuthContext`, com feedback de UI (erros, loading).
-    *   **Resultado:** O fluxo de entrada na aplicação está completo e funcional.
+O sistema utiliza **Context API** + **JWT (HS256, 24h)** para sessão persistente. O `AuthProvider` suporta três métodos de login integrados ao backend `api.asppibra.com` (Cloudflare Workers + D1 + KV).
 
 ---
+
+### ✅ Implementado & Em Produção
+
+#### 1. AuthProvider (`src/auth/context/auth-provider.tsx`)
+| Método | Endpoint | Status |
+|---|---|---|
+| `signIn(email, password)` | `POST /api/core/identity/local/login` | ✅ |
+| `signUp(data)` | `POST /api/core/identity/local/register` | ✅ |
+| `signOut()` | Limpa localStorage + cookie | ✅ |
+| `checkUserSession()` | `GET /api/core/identity/me` | ✅ |
+
+O JWT é persistido em `localStorage` + cookie via `setSession()`. Em cada refresh, o `AuthProvider` valida o token em `/me` e restaura a sessão automaticamente sem novo login.
+
+---
+
+#### 2. OAuth Social Login
+Fluxo completo via `api.asppibra.com`:
+```
+Clica "Google" ou "GitHub"
+  → GET api.asppibra.com/api/core/identity/oauth/{provider}/login
+  → Redireciona para o provedor OAuth
+  → Callback: api.asppibra.com/api/core/identity/oauth/{provider}/callback
+  → Backend: upsert usuário D1 → gera JWT
+  → Redirect: www.asppibra.com/auth/oauth/callback?token=JWT
+  → Frontend: setSession(token) + window.location.href → Dashboard ✅
+```
+
+| Provedor | Status | Observação |
+|---|---|---|
+| **GitHub** | ✅ Em produção | OAuth App ID: 3539539 (`ASPPIBRA DAO`) |
+| **Google** | ⏳ Pendente | Falta configurar callback URI no Google Cloud Console |
+
+> **Nota técnica:** `src/app/auth/oauth/callback/page.tsx` usa `window.location.href` (full reload) em vez de `router.replace()` para evitar race condition com o `AuthProvider`. Envolto em `<Suspense>` (obrigatório no App Router).
+
+---
+
+#### 3. Web3 SIWE — Sign-In With Ethereum
+Fluxo completo sem dependências pesadas (`viem` + `window.ethereum`):
+```
+Clica "Web3 Wallet (SIWE)"
+  → Detecta window.ethereum (MetaMask / Brave Wallet)
+  → eth_requestAccounts → endereço com checksum EIP-55
+  → GET /api/core/identity/web3/nonce?address=0x...
+  → personal_sign da mensagem na carteira
+  → POST /api/core/identity/web3/verify {message, signature, address}
+  → Backend: viem.verifyMessage → upsert shadow user → JWT
+  → setSession(token) + window.location.href → Dashboard ✅
+```
+
+| Arquivo | Função |
+|---|---|
+| `src/auth/hooks/use-siwe.ts` | Hook com máquina de estados (idle/connecting/signing/verifying/error) |
+| `src/auth/view/sign-in-web3-button.tsx` | Botão com spinner e Alert de erro inline |
+
+**Carteiras suportadas:** MetaMask, Brave Wallet, qualquer `window.ethereum` injetado.
+
+---
+
+### ⏳ Pendente
+
+| Item | Prioridade | Descrição |
+|---|---|---|
+| Google OAuth | Alta | Configurar callback URI no Google Cloud Console + publicar app |
+| RBAC `RoleBasedGuard` | Média | Guard que verifica `role` do usuário para rotas de admin |
+| Dashboard `user/account` | Média | Conectar perfil, senha e sociais a endpoints `/me` |
+| Dashboard `user/list` (admin) | Baixa | Listar/editar usuários via `GET/PUT /api/users` |
+
+### Roadmap
+
+1. **Fase 1 — Google OAuth** *(próximo)*: Configurar Google Cloud Console e publicar app para acesso público.
+2. **Fase 2 — RBAC**: Implementar `RoleBasedGuard` e proteger rotas de administrador.
+3. **Fase 3 — Dashboard de conta**: Conectar perfil pessoal, troca de senha e configurações sociais.
+4. **Fase 4 — Dashboard de admin**: Listar, criar e editar usuários com proteção de role.
+
+---
+
 
 ## 🛠 Arquitetura de SEO & Performance (Padrão 2026)
 

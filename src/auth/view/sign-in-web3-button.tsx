@@ -11,8 +11,8 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { useSiwe } from '../hooks/use-siwe';
 import { Iconify } from '../components';
+import { useSiwe } from '../hooks/use-siwe';
 
 // ---------------------------------------------------------------------------
 

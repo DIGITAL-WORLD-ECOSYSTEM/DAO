@@ -7,8 +7,6 @@ import dayjs from 'dayjs';
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useRouter } from 'src/routes/hooks';
-
 import { toast } from 'src/components/snackbar';
 import { useSettingsContext } from 'src/components/settings';
 
@@ -17,7 +15,7 @@ import { fallbackLng, getCurrentLang } from './locales-config';
 // ----------------------------------------------------------------------
 
 export function useTranslate(namespace?: Namespace) {
-  const router = useRouter();
+  // const router = useRouter(); (UNUSED)
   const settings = useSettingsContext();
 
   const { t, i18n } = useTranslation(namespace);
