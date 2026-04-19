@@ -8,14 +8,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import { alpha } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
 
 import { PasswordIcon } from 'src/assets/icons';
 import axios, { endpoints } from 'src/lib/axios';
 
-import { Form, toast, Field, FormHead, schemaUtils, FormReturnLink } from 'src/auth/components';
+import { Form, toast, Field, Iconify, FormHead, schemaUtils, FormReturnLink } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -73,31 +75,111 @@ export function CenteredResetPasswordView() {
 
       <Field.Text
         name="email"
-        label="Endereço de e-mail"
+        label="E-mail"
         placeholder="exemplo@asppibra.com.br"
         autoFocus
-        slotProps={{ inputLabel: { shrink: true } }}
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+            sx: {
+              fontFamily: 'var(--font-orbitron), sans-serif',
+              fontWeight: 600,
+              color: 'primary.main',
+              transform: 'translate(14px, -10px) scale(0.75)',
+            },
+          },
+          input: {
+            sx: {
+              '& input': {
+                fontFamily: 'var(--font-orbitron), sans-serif',
+                color: '#00B8D9',
+                '&:-webkit-autofill': {
+                  WebkitBoxShadow: '0 0 0 100px #020817 inset !important',
+                  WebkitTextFillColor: '#00B8D9 !important',
+                  transition: 'background-color 5000s ease-in-out 0s',
+                },
+              },
+            },
+          },
+        }}
       />
 
-      <Button fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Enviar Solicitação
+      <Button
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        loading={isSubmitting}
+        sx={{
+          height: 60,
+          fontSize: 18,
+          fontFamily: 'var(--font-orbitron), sans-serif',
+          fontWeight: 900,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          bgcolor: alpha('#020817', 0.9),
+          color: 'common.white',
+          position: 'relative',
+          border: 'none',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 'inherit',
+            padding: '1.5px',
+            background: `linear-gradient(180deg, 
+              #00B8D9 0%, 
+              rgba(0, 184, 217, 0.1) 50%, 
+              rgba(0, 184, 217, 0.8) 100%
+            )`,
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+          },
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            bgcolor: '#00B8D919',
+            transform: 'scale(1.03)',
+            boxShadow: '0 0 25px rgba(0, 184, 217, 0.4)',
+          },
+        }}
+      >
+        ENVIAR SOLICITAÇÃO
       </Button>
     </Box>
   );
 
   return (
     <>
-      <FormHead
-        icon={<PasswordIcon />}
-        title="Esqueceu sua senha?"
-        description="Insira o endereço de e-mail associado à sua conta institucional e enviaremos um código para redefinição."
-      />
+      <FormHead title="" sx={{ display: 'none' }} />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <FormReturnLink href={paths.auth.signIn} />
+      <Button
+        component={RouterLink}
+        href={paths.auth.signIn}
+        color="primary"
+        variant="text"
+        startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
+        sx={{
+          mt: 3,
+          mx: 'auto',
+          display: 'flex',
+          fontFamily: 'var(--font-orbitron), sans-serif',
+          fontWeight: 700,
+          color: 'primary.main',
+          fontSize: 14,
+          '&:hover': {
+            bgcolor: 'transparent',
+            textDecoration: 'underline',
+            color: 'primary.light',
+          },
+        }}
+      >
+        VOLTAR PARA LOGIN
+      </Button>
     </>
   );
 }

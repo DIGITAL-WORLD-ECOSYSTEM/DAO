@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import { alpha } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -95,15 +96,92 @@ export function CenteredSignUpView() {
       <Box
         sx={{ display: 'flex', gap: { xs: 3, sm: 2 }, flexDirection: { xs: 'column', sm: 'row' } }}
       >
-        <Field.Text name="firstName" label="Nome" slotProps={{ inputLabel: { shrink: true } }} />
+        <Field.Text
+          name="firstName"
+          label="Nome"
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+              sx: {
+                fontFamily: 'var(--font-orbitron), sans-serif',
+                fontWeight: 600,
+                color: 'primary.main',
+                transform: 'translate(14px, -10px) scale(0.75)',
+              },
+            },
+            input: {
+              sx: {
+                '& input': {
+                  fontFamily: 'var(--font-orbitron), sans-serif',
+                  color: '#00B8D9',
+                  '&:-webkit-autofill': {
+                    WebkitBoxShadow: '0 0 0 100px #020817 inset !important',
+                    WebkitTextFillColor: '#00B8D9 !important',
+                    transition: 'background-color 5000s ease-in-out 0s',
+                  },
+                },
+              },
+            },
+          }}
+        />
         <Field.Text
           name="lastName"
           label="Sobrenome"
-          slotProps={{ inputLabel: { shrink: true } }}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+              sx: {
+                fontFamily: 'var(--font-orbitron), sans-serif',
+                fontWeight: 600,
+                color: 'primary.main',
+                transform: 'translate(14px, -10px) scale(0.75)',
+              },
+            },
+            input: {
+              sx: {
+                '& input': {
+                  fontFamily: 'var(--font-orbitron), sans-serif',
+                  color: '#00B8D9',
+                  '&:-webkit-autofill': {
+                    WebkitBoxShadow: '0 0 0 100px #020817 inset !important',
+                    WebkitTextFillColor: '#00B8D9 !important',
+                    transition: 'background-color 5000s ease-in-out 0s',
+                  },
+                },
+              },
+            },
+          }}
         />
       </Box>
 
-      <Field.Text name="email" label="E-mail" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text
+        name="email"
+        label="E-mail"
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+            sx: {
+              fontFamily: 'var(--font-orbitron), sans-serif',
+              fontWeight: 600,
+              color: 'primary.main',
+              transform: 'translate(14px, -10px) scale(0.75)',
+            },
+          },
+          input: {
+            sx: {
+              '& input': {
+                fontFamily: 'var(--font-orbitron), sans-serif',
+                color: '#00B8D9',
+                '&:-webkit-autofill': {
+                  WebkitBoxShadow: '0 0 0 100px #020817 inset !important',
+                  WebkitTextFillColor: '#00B8D9 !important',
+                  transition: 'background-color 5000s ease-in-out 0s',
+                },
+              },
+            },
+          },
+        }}
+      />
 
       <Field.Text
         name="password"
@@ -111,8 +189,27 @@ export function CenteredSignUpView() {
         placeholder="Mínimo 8 caracteres"
         type={showPassword.value ? 'text' : 'password'}
         slotProps={{
-          inputLabel: { shrink: true },
+          inputLabel: {
+            shrink: true,
+            sx: {
+              fontFamily: 'var(--font-orbitron), sans-serif',
+              fontWeight: 600,
+              color: 'primary.main',
+              transform: 'translate(14px, -10px) scale(0.75)',
+            },
+          },
           input: {
+            sx: {
+              '& input': {
+                fontFamily: 'var(--font-orbitron), sans-serif',
+                color: '#00B8D9',
+                '&:-webkit-autofill': {
+                  WebkitBoxShadow: '0 0 0 100px #020817 inset !important',
+                  WebkitTextFillColor: '#00B8D9 !important',
+                  transition: 'background-color 5000s ease-in-out 0s',
+                },
+              },
+            },
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={showPassword.onToggle} edge="end">
@@ -126,38 +223,84 @@ export function CenteredSignUpView() {
 
       <Button
         fullWidth
-        color="inherit"
         size="large"
         type="submit"
         variant="contained"
         loading={isSubmitting}
+        sx={{
+          height: 60,
+          fontSize: 18,
+          fontFamily: 'var(--font-orbitron), sans-serif',
+          fontWeight: 900,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          bgcolor: alpha('#020817', 0.9),
+          color: 'common.white',
+          position: 'relative',
+          border: 'none',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 'inherit',
+            padding: '1.5px',
+            background: `linear-gradient(180deg, 
+              #00B8D9 0%, 
+              rgba(0, 184, 217, 0.1) 50%, 
+              rgba(0, 184, 217, 0.8) 100%
+            )`,
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+          },
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            bgcolor: '#00B8D919',
+            transform: 'scale(1.03)',
+            boxShadow: '0 0 25px rgba(0, 184, 217, 0.4)',
+          },
+        }}
       >
-        Criar conta institucional
+        CRIAR LOGIN
       </Button>
     </Box>
   );
 
   return (
     <>
-      <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
-
-      <FormHead
-        title="Comece agora gratuitamente"
-        description={
-          <>
-            {`Já possui uma conta? `}
-            <Link component={RouterLink} href={paths.auth.signIn} variant="subtitle2">
-              Entrar
-            </Link>
-          </>
-        }
-      />
+      <FormHead title="" sx={{ display: 'none' }} />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <SignUpTerms />
+      <Box sx={{ mt: 3, textAlign: 'center', typography: 'body2', color: 'text.secondary' }}>
+        {`Já possui uma conta? `}
+        <Button
+          component={RouterLink}
+          href={paths.auth.signIn}
+          variant="text"
+          color="primary"
+          sx={{
+            p: 0,
+            ml: 0.5,
+            minWidth: 'auto',
+            fontFamily: 'var(--font-orbitron), sans-serif',
+            fontWeight: 700,
+            fontSize: 14,
+            textDecoration: 'none',
+            '&:hover': {
+              bgcolor: 'transparent',
+              textDecoration: 'underline',
+              color: 'primary.light',
+            },
+          }}
+        >
+          ENTRAR
+        </Button>
+      </Box>
+
+      <SignUpTerms sx={{ mt: 3, opacity: 0.6 }} />
     </>
   );
 }

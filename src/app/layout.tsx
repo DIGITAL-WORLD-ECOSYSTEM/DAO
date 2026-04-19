@@ -32,8 +32,7 @@ const orbitron = Orbitron({
   display: 'swap',
 });
 
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+
 
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
@@ -220,8 +219,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </AuthProvider>
         </I18nProvider>
 
-        <Analytics />
-        <SpeedInsights />
+
       </body>
     </html>
   );
