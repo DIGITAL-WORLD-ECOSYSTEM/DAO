@@ -54,8 +54,8 @@ import { PostDetailsPreview } from './post-details-preview';
  * 'schemaUtils' é utilizado para validar inputs complexos como Editor e Upload.
  */
 export const PostCreateSchema = z.object({
-  title: z.string().min(1, { message: 'O título é obrigatório!' }),
-  description: z.string().min(1, { message: 'A descrição curta é obrigatória!' }),
+  title: z.string().min(3, { message: 'O título deve ter pelo menos 3 caracteres!' }),
+  description: z.string().min(1, { message: 'A descrição curta é obrigatória!' }).max(160, { message: 'A descrição não pode exceder 160 caracteres.' }),
   content: z
     .string()
     .min(100, { message: 'O conteúdo deve ter pelo menos 100 caracteres.' })
@@ -141,8 +141,9 @@ export function PostCreateEditForm({ currentPost }: Props) {
       .toLowerCase()
       .trim()
       .replace(/\s+/g, '-')
-      .replace(/[^\w-]+/g, '')
-      .replace(/--+/g, '-');
+      .replace(/_/g, '-') // Converte underscores em hífens
+      .replace(/[^\w-]+/g, '') // Remove caracteres especiais restantes
+      .replace(/-+/g, '-'); // Remove hífens duplicados
 
   /**
    * 🚀 SUBMISSÃO:
