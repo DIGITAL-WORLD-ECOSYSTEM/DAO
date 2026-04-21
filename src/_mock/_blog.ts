@@ -26,28 +26,8 @@ export const POST_CATEGORIES = [
 
 const POST_TITLES = [
   'Bitcoin rompe barreira histórica: O que esperar para o próximo trimestre?',
-  'Inflação Global e Bitcoin: A reserva de valor definitiva?',
-  'O impacto das taxas de juros do FED no mercado cripto',
   'Tokenização de Ativos Reais (RWA): O futuro da economia global',
-  'Dólar Digital vs. Euro Digital: A corrida das CBDCs',
-  'Análise Macro: Como a recessão técnica afeta o DeFi',
-  'Análise: Por que a Layer 2 da Ethereum está dominando o mercado?',
-  'Solana vs. Aptos: A batalha pela escalabilidade em tempo real',
-  'Entenda o algoritmo de consenso da nova rede modular Celestia',
-  'Tutorial: Criando seu primeiro bot de trading na rede Arbitrum',
-  'Inteligência Artificial e Blockchain: A convergência de 2026',
-  'Segurança em Smart Contracts: Novas ferramentas de auditoria',
-  'Mineração Sustentável: O uso de energia vulcânica em El Salvador',
-  'Créditos de Carbono na Blockchain: Transparência real?',
   'O impacto ambiental dos NFTs: Mitos e verdades em 2026',
-  'Protocolos Verdes: Redes Proof-of-Stake com pegada negativa',
-  'Agrofloresta e Web3: Financiando o campo com tokens',
-  'ESG e Criptoativos: Como grandes fundos estão se posicionando',
-  'O impacto das novas regulamentações de stablecoins na Europa (MiCA)',
-  'China e o retorno silencioso ao mercado de criptoativos',
-  'Adoção em massa na América Latina: O caso do Brasil e Argentina',
-  'Sanções Econômicas e o uso de Cripto na Rússia e Irã',
-  'Eleições nos EUA: O que cada candidato propõe para o Bitcoin',
   'O papel das criptomoedas em zonas de conflito geopolítico',
 ];
 

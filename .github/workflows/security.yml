@@ -39,7 +39,7 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true # Não quebra o build se achar algo antigo, mas reporta
+        # continue-on-error removido para garantir que novos secrets não vazem em produção
 
       - name: 🧬 Snyk Vulnerability Scan
         uses: snyk/actions/node@master
@@ -47,4 +47,4 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
-        continue-on-error: true # Permite visualização sem bloquear o dev imediato
+        # continue-on-error removido para impedir deploys com vulnerabilidades críticas

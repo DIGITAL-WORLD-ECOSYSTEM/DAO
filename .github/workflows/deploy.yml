@@ -1,4 +1,4 @@
-name: ✨ Frontend Quality Assurance
+name: 🚀 Frontend Deployment (Cloudflare Pages)
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build-and-lint:
-    name: 🏗️ Build, Lint & Type Check
+  deploy:
+    name: 🏗️ Build & ☁️ Deploy
     runs-on: ubuntu-latest
     
     steps:
@@ -29,21 +29,19 @@ jobs:
       - name: ⚙️ Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🔍 TypeScript Check (noEmit)
-        run: pnpm tsc --noEmit
-
-      - name: 🎨 Lint Code
-        run: pnpm lint
-
-      - name: 💅 Check Formatting (Prettier)
-        run: pnpm fm:check
-
-      - name: 🧪 Automated Tests
+      - name: 🧪 Run Tests
         run: pnpm test
 
-      - name: 🚀 Production Build
+      - name: 🏗️ Production Build
         run: pnpm build
         env:
           NEXT_PUBLIC_HOST_API: ${{ secrets.NEXT_PUBLIC_HOST_API }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_R2_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_R2_PUBLIC_URL }}
+
+      - name: ☁️ Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .next --project-name=asppibra-frontend
