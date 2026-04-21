@@ -15,10 +15,6 @@ import { useBoolean } from 'minimal-shared/hooks';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import axios from 'src/lib/axios';
-
-import { createPost, updatePost } from 'src/actions/blog';
-
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -33,6 +29,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import axios from 'src/lib/axios';
+import { createPost, updatePost } from 'src/actions/blog';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -124,6 +123,21 @@ export function PostCreateEditForm({ currentPost }: Props) {
   const values = watch();
 
   /**
+   * 🛠️ SLUGIFY ROBUSTO
+   * Remove acentos e caracteres especiais para compatibilidade com o Backend.
+   */
+  const slugify = (text: string) =>
+    text
+      .toString()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-');
+
+  /**
    * 🚀 SUBMISSÃO:
    * Integração com SnackBar e roteamento após sucesso.
    */
@@ -149,8 +163,10 @@ export function PostCreateEditForm({ currentPost }: Props) {
           ...data,
           coverUrl: finalCoverUrl,
           authorId: '00000000-0000-0000-0000-000000000000', // Backend pegará do AuthMiddleware, mas enviamos fallback
-          slug: data.title.toLowerCase().replace(/ /g, '-'),
+          slug: slugify(data.title),
       };
+
+      console.info('📝 Tentando salvar postagem:', payload);
 
       // 3. Salvar na API
       if (currentPost) {
@@ -164,8 +180,9 @@ export function PostCreateEditForm({ currentPost }: Props) {
       toast.success(currentPost ? 'Atualizado com sucesso!' : 'Post criado com sucesso!');
       router.push(paths.dashboard.post.root);
     } catch (error) {
-      console.error('Erro ao salvar post:', error);
-      toast.error('Ocorreu um erro ao salvar a postagem.');
+      const errorMessage = error?.response?.data?.message || error?.message || 'Ocorreu um erro ao salvar a postagem.';
+      console.error('❌ Erro detectado ao salvar post:', error);
+      toast.error(`Falha no salvamento: ${errorMessage}`);
     }
   });
 

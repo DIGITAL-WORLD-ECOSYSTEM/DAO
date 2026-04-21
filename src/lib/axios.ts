@@ -53,6 +53,30 @@ axiosInstance.interceptors.response.use(
     const message =
       error?.response?.data?.message || error?.message || 'Erro inesperado no sistema!';
 
+    // 🕵️ MONITORAMENTO DE DEBUG (PARA TESTES EM PRODUÇÃO)
+    if (typeof window !== 'undefined') {
+      const debugLog = {
+        timestamp: new Date().toISOString(),
+        url: error?.config?.url,
+        method: error?.config?.method,
+        status,
+        requestData: error?.config?.data ? JSON.parse(error.config.data) : null,
+        responseData: error?.response?.data || null,
+        error: error?.message,
+      };
+
+      console.group('🚨 DAO API Error Debug');
+      console.error('URL:', debugLog.url);
+      console.error('Status:', debugLog.status);
+      console.error('Payload:', debugLog.requestData);
+      console.error('Response:', debugLog.responseData);
+      console.groupEnd();
+
+      // Armazenar para extração rápida via console
+      (window as any).__DAO_DEBUG_LOGS__ = (window as any).__DAO_DEBUG_LOGS__ || [];
+      (window as any).__DAO_DEBUG_LOGS__.push(debugLog);
+    }
+
     /**
      * 🛡️ PROTEÇÃO DE SESSÃO
      * Se o token expirar, o setSession(null) limpa os Cookies para o Middleware

@@ -11,13 +11,12 @@ import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { PasswordIcon } from 'src/assets/icons';
 import axios, { endpoints } from 'src/lib/axios';
 
-import { Form, toast, Field, Iconify, FormHead, schemaUtils, FormReturnLink } from 'src/auth/components';
+import { Form, toast, Field, Iconify, FormHead, schemaUtils } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 

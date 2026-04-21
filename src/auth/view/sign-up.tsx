@@ -7,7 +7,6 @@ import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
@@ -26,7 +25,6 @@ import {
   FormHead,
   SignUpTerms,
   schemaUtils,
-  AnimateLogoRotate,
 } from '../components';
 
 // ----------------------------------------------------------------------

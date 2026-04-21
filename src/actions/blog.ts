@@ -2,13 +2,12 @@
 
 import type { SWRConfiguration } from 'swr';
 
-import useSWR, { mutate } from 'swr';
 import { useMemo } from 'react';
+import useSWR, { mutate } from 'swr';
 
 import axios, { fetcher, endpoints } from 'src/lib/axios';
 
 import { mapToPostItem, mapToPostList, mapToCommentList } from './mappers/blog-mapper';
-import { IPostItem, IPostComment } from '../types/blog';
 
 // ----------------------------------------------------------------------
 

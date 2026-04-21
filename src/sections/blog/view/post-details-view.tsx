@@ -26,12 +26,12 @@ import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
-import { toast } from 'src/components/snackbar';
 
 import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { favoritePost, useGetPostComments } from 'src/actions/blog';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 

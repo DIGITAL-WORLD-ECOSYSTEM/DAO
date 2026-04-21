@@ -10,7 +10,6 @@ import type { Metadata } from 'next';
 import { kebabCase } from 'es-toolkit';
 import { notFound } from 'next/navigation';
 
-import { _posts } from 'src/_mock/_blog';
 import { CONFIG } from 'src/global-config';
 import { getPost, getLatestPosts } from 'src/actions/blog-ssr';
 

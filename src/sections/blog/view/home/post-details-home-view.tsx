@@ -1,6 +1,6 @@
 'use client';
 
-import type { IPostItem, IPostComment } from 'src/types/blog';
+import type { IPostItem } from 'src/types/blog';
 
 import { useMemo, useState, useCallback } from 'react';
 
@@ -20,13 +20,14 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
+// CORREÇÃO DOS CAMINHOS: Subindo dois níveis (../../) para achar os componentes
+import { favoritePost, useGetPostComments } from 'src/actions/blog';
+
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { JsonLd, generateBreadcrumbs } from 'src/components/seo/json-ld';
 
-// CORREÇÃO DOS CAMINHOS: Subindo dois níveis (../../) para achar os componentes
-import { favoritePost, useGetPostComments } from 'src/actions/blog';
 import { PostItem } from '../../item/item';
 import { PostCommentForm } from '../../forms/post-comment-form';
 import { PostCommentList } from '../../details/post-comment-list';

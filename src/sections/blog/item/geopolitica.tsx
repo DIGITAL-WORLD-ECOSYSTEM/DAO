@@ -1,5 +1,7 @@
 'use client';
 
+import type { IPostItem } from 'src/types/blog';
+
 // ----------------------------------------------------------------------
 // Imports — Tipos e Motion
 // ----------------------------------------------------------------------
@@ -14,8 +16,6 @@ import { alpha, useTheme } from '@mui/material/styles';
 import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
-
-import type { IPostItem } from 'src/types/blog';
 
 import { PostItem, PostItemLatest } from './item';
 

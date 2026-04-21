@@ -2,9 +2,7 @@ import type { Metadata } from 'next';
 
 import { notFound } from 'next/navigation';
 
-import { _mock } from 'src/_mock';
 import { CONFIG } from 'src/global-config';
-
 import { getPost } from 'src/actions/blog-ssr';
 
 import { PostEditView } from 'src/sections/blog/management/post-edit-view';

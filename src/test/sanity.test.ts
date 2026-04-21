@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { it, expect, describe } from 'vitest';
 
 describe('Sanity Check', () => {
   it('should correctly assert true', () => {

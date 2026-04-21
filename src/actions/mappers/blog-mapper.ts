@@ -1,5 +1,6 @@
-import { kebabCase } from 'es-toolkit';
 import type { IPostItem } from 'src/types/blog';
+
+import { kebabCase } from 'es-toolkit';
 
 // ----------------------------------------------------------------------
 

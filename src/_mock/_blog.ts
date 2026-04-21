@@ -1,4 +1,4 @@
-import type { IPostComment, IPostItem } from 'src/types/blog';
+import type { IPostItem, IPostComment } from 'src/types/blog';
 
 import { _mock } from './_mock';
 

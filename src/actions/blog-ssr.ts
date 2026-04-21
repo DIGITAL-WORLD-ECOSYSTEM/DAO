@@ -1,6 +1,7 @@
 // src/actions/blog-ssr.ts
 import { _posts } from 'src/_mock/_blog'; 
 import { CONFIG } from 'src/global-config';
+
 import { mapToPostItem, mapToPostList } from './mappers/blog-mapper';
 
 const API_URL = CONFIG.serverUrl;

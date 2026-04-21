@@ -33,8 +33,9 @@ export type CommentSchemaType = z.infer<typeof CommentSchema>;
 
 // ----------------------------------------------------------------------
 
-import { toast } from 'src/components/snackbar';
 import { addComment } from 'src/actions/blog';
+
+import { toast } from 'src/components/snackbar';
 
 // ----------------------------------------------------------------------
 
