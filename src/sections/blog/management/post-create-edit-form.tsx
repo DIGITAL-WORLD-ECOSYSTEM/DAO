@@ -56,10 +56,17 @@ import { PostDetailsPreview } from './post-details-preview';
 export const PostCreateSchema = z.object({
   title: z.string().min(1, { message: 'O título é obrigatório!' }),
   description: z.string().min(1, { message: 'A descrição curta é obrigatória!' }),
-  content: schemaUtils
-    .editor()
-    .min(100, { message: 'O conteúdo deve ter pelo menos 100 caracteres.' }),
-  coverUrl: schemaUtils.file({ error: 'A imagem de capa é obrigatória!' }),
+  content: z
+    .string()
+    .min(100, { message: 'O conteúdo deve ter pelo menos 100 caracteres.' })
+    .refine(
+      (val) => {
+        const cleanedValue = val.trim();
+        return cleanedValue !== '' && cleanedValue !== '<p></p>';
+      },
+      { message: 'O conteúdo é obrigatório!' }
+    ),
+  coverUrl: schemaUtils.file({ message: 'A imagem de capa é obrigatória!' }),
   category: z.string().min(1, { message: 'A categoria é obrigatória!' }),
   tags: z.string().array().min(2, { message: 'Adicione pelo menos 2 tags relevantes.' }),
   metaKeywords: z.string().array().min(1, { message: 'Defina ao menos 1 palavra-chave para SEO.' }),
@@ -163,7 +170,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
           ...data,
           coverUrl: finalCoverUrl,
           authorId: '00000000-0000-0000-0000-000000000000', // Backend pegará do AuthMiddleware, mas enviamos fallback
-          slug: slugify(data.title),
+          slug: slugify(String(data.title)),
       };
 
       console.info('📝 Tentando salvar postagem:', payload);
@@ -335,13 +342,13 @@ export function PostCreateEditForm({ currentPost }: Props) {
       <PostDetailsPreview
         isValid={isValid}
         onSubmit={onSubmit}
-        title={values.title}
+        title={String(values.title)}
         open={showPreview.value}
-        content={values.content}
+        content={String(values.content)}
         onClose={showPreview.onFalse}
         coverUrl={typeof values.coverUrl === 'string' ? values.coverUrl : ''}
         isSubmitting={isSubmitting}
-        description={values.description}
+        description={String(values.description)}
       />
     </Form>
   );

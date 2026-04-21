@@ -41,7 +41,7 @@ import {
 export type UserCreateSchemaType = z.infer<typeof UserCreateSchema>;
 
 export const UserCreateSchema = z.object({
-  avatarUrl: schemaUtils.file({ error: 'Avatar is required!' }),
+  avatarUrl: schemaUtils.file({ message: 'Avatar is required!' }),
   name: z.string().min(1, { message: 'Name is required!' }),
   email: schemaUtils.email(),
   phoneNumber: schemaUtils.phoneNumber({ isValid: isValidPhoneNumber }),
@@ -85,7 +85,7 @@ export function UserCreateEditForm({ currentUser }: Props) {
     [currentUser]
   );
 
-  const methods = useForm({
+  const methods = useForm<UserCreateSchemaType>({
     mode: 'onSubmit',
     resolver: zodResolver(UserCreateSchema),
     defaultValues,
@@ -129,7 +129,7 @@ export function UserCreateEditForm({ currentUser }: Props) {
                 }
                 sx={{ position: 'absolute', top: 24, right: 24 }}
               >
-                {values.status}
+                {String(values.status)}
               </Label>
             )}
 

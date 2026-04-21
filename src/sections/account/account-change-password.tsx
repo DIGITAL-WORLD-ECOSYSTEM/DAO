@@ -21,17 +21,17 @@ export const ChangePassWordSchema = z
   .object({
     oldPassword: z
       .string()
-      .min(1, { error: 'Password is required!' })
-      .min(6, { error: 'Password must be at least 6 characters!' }),
-    newPassword: z.string().min(1, { error: 'New password is required!' }),
-    confirmNewPassword: z.string().min(1, { error: 'Confirm password is required!' }),
+      .min(1, { message: 'Password is required!' })
+      .min(6, { message: 'Password must be at least 6 characters!' }),
+    newPassword: z.string().min(1, { message: 'New password is required!' }),
+    confirmNewPassword: z.string().min(1, { message: 'Confirm password is required!' }),
   })
   .refine((val) => val.oldPassword !== val.newPassword, {
-    error: 'New password must be different than old password',
+    message: 'New password must be different than old password',
     path: ['newPassword'],
   })
   .refine((val) => val.newPassword === val.confirmNewPassword, {
-    error: 'Passwords do not match!',
+    message: 'Passwords do not match!',
     path: ['confirmNewPassword'],
   });
 

@@ -23,17 +23,17 @@ import { useMockedUser } from 'src/auth/hooks';
 
 // ✅ 1. Definimos o esquema primeiro para garantir que a inferência seja limpa
 export const UpdateUserSchema = z.object({
-  displayName: z.string().min(1, { error: 'Name is required!' }),
+  displayName: z.string().min(1, { message: 'Name is required!' }),
   email: schemaUtils.email(),
-  photoURL: schemaUtils.file({ error: 'Avatar is required!' }),
+  photoURL: schemaUtils.file({ message: 'Avatar is required!' }),
   phoneNumber: schemaUtils.phoneNumber({ isValid: isValidPhoneNumber }),
   // ✅ Ajustado para aceitar string e validar obrigatoriedade sem conflito de null
-  country: z.string().min(1, { error: 'Country is required!' }).nullable(),
-  address: z.string().min(1, { error: 'Address is required!' }),
-  state: z.string().min(1, { error: 'State is required!' }),
-  city: z.string().min(1, { error: 'City is required!' }),
-  zipCode: z.string().min(1, { error: 'Zip code is required!' }),
-  about: z.string().min(1, { error: 'About is required!' }),
+  country: z.string().min(1, { message: 'Country is required!' }).nullable(),
+  address: z.string().min(1, { message: 'Address is required!' }),
+  state: z.string().min(1, { message: 'State is required!' }),
+  city: z.string().min(1, { message: 'City is required!' }),
+  zipCode: z.string().min(1, { message: 'Zip code is required!' }),
+  about: z.string().min(1, { message: 'About is required!' }),
   isPublic: z.boolean(),
 });
 

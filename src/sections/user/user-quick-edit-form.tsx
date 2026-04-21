@@ -24,18 +24,18 @@ import { Form, Field, schemaUtils } from 'src/components/hook-form';
 export type UserQuickEditSchemaType = z.infer<typeof UserQuickEditSchema>;
 
 export const UserQuickEditSchema = z.object({
-  name: z.string().min(1, { error: 'Name is required!' }),
+  name: z.string().min(1, { message: 'Name is required!' }),
   email: schemaUtils.email(),
   phoneNumber: schemaUtils.phoneNumber({ isValid: isValidPhoneNumber }),
-  country: schemaUtils.nullableInput(z.string().min(1, { error: 'Country is required!' }), {
-    error: 'Country is required!',
+  country: schemaUtils.nullableInput(z.string().min(1, { message: 'Country is required!' }), {
+    message: 'Country is required!',
   }),
-  state: z.string().min(1, { error: 'State is required!' }),
-  city: z.string().min(1, { error: 'City is required!' }),
-  address: z.string().min(1, { error: 'Address is required!' }),
-  zipCode: z.string().min(1, { error: 'Zip code is required!' }),
-  company: z.string().min(1, { error: 'Company is required!' }),
-  role: z.string().min(1, { error: 'Role is required!' }),
+  state: z.string().min(1, { message: 'State is required!' }),
+  city: z.string().min(1, { message: 'City is required!' }),
+  address: z.string().min(1, { message: 'Address is required!' }),
+  zipCode: z.string().min(1, { message: 'Zip code is required!' }),
+  company: z.string().min(1, { message: 'Company is required!' }),
+  role: z.string().min(1, { message: 'Role is required!' }),
   // Not required
   status: z.string(),
 });
