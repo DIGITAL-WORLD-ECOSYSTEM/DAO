@@ -12,81 +12,22 @@ import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
+import type { IPostItem } from 'src/types/blog';
+
 import { PostItem, PostItemLatest } from './item';
 
 // ----------------------------------------------------------------------
 
-const staticEconomiaPosts = [
-  {
-    id: 'e1',
-    title: 'Bitcoin rompe barreira histórica: O que esperar para o próximo trimestre?',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-1.webp',
-    createdAt: new Date(),
-    duration: '8 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-1.webp' },
-  },
-  {
-    id: 'e2',
-    title: 'Inflação Global e Bitcoin: A reserva de valor definitiva?',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-2.webp',
-    createdAt: new Date(),
-    duration: '5 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-2.webp' },
-  },
-  {
-    id: 'e3',
-    title: 'O impacto das taxas de juros do FED no mercado cripto',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-3.webp',
-    createdAt: new Date(),
-    duration: '12 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-3.webp' },
-  },
-  {
-    id: 'e4',
-    title: 'Tokenização de Ativos Reais (RWA): O futuro da economia global',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-4.webp',
-    createdAt: new Date(),
-    duration: '7 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-4.webp' },
-  },
-  {
-    id: 'e5',
-    title: 'Dólar Digital vs. Euro Digital: A corrida das CBDCs',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-5.webp',
-    createdAt: new Date(),
-    duration: '9 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-5.webp' },
-  },
-  {
-    id: 'e6',
-    title: 'Análise Macro: Como a recessão técnica afeta o DeFi',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-6.webp',
-    createdAt: new Date(),
-    duration: '6 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-6.webp' },
-  },
-  {
-    id: 'e7',
-    title: 'A Web3 pode resolver a crise da cadeia de suprimentos global?',
-    category: 'Economia',
-    coverUrl: '/assets/images/mock/cover/cover-7.webp',
-    createdAt: new Date(),
-    duration: '10 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-7.webp' },
-  },
-];
+type Props = {
+  posts: IPostItem[];
+};
 
-// ----------------------------------------------------------------------
-
-export function Economia() {
+export function Economia({ posts }: Props) {
   const theme = useTheme();
-  const viewPosts = staticEconomiaPosts;
+  
+  const viewPosts = posts.filter(post => post.category === 'Economia');
+
+  if (viewPosts.length === 0) return null;
 
   const cardStyle = {
     position: 'relative',

@@ -39,6 +39,7 @@ export type IPostComment = {
 export type IPostItem = {
   id: string;
   title: string;
+  slug: string;
   tags: string[];
   publish: boolean;
   content: string;

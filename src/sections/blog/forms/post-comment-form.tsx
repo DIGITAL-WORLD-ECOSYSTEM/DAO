@@ -33,7 +33,12 @@ export type CommentSchemaType = z.infer<typeof CommentSchema>;
 
 // ----------------------------------------------------------------------
 
-export function PostCommentForm() {
+import { toast } from 'src/components/snackbar';
+import { addComment } from 'src/actions/blog';
+
+// ----------------------------------------------------------------------
+
+export function PostCommentForm({ postId }: { postId: string }) {
   /**
    * ⚙️ CONFIGURAÇÃO DO FORMULÁRIO:
    * Inicialização com React Hook Form e integração com Zod.
@@ -55,20 +60,16 @@ export function PostCommentForm() {
 
   /**
    * 🚀 LÓGICA DE SUBMISSÃO:
-   * Processa os dados do comentário. Em produção, este bloco será
-   * conectado à API do ecossistema ASPPIBRA.
+   * Processa os dados do comentário. Conectado à API SocialFi.
    */
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // Simulação de latência de rede para feedback visual de loading
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      await addComment(postId, { content: data.comment });
       reset();
-      console.info('Comentário processado com sucesso:', data);
-
-      // Nota: Futura integração com Toaster (ex: toast.success('Comentário enviado!'))
+      toast.success('Comentário enviado com sucesso!');
     } catch (error) {
       console.error('Falha ao enviar comentário:', error);
+      toast.error('Erro ao enviar comentário. Tente novamente.');
     }
   });
 

@@ -33,10 +33,10 @@ export default async function PostListPage() {
   return (
     <PostListHomeView
       posts={posts}
-      economiaSection={<Economia />}
-      tecnologiaSection={<Tecnologia />}
-      meioAmbienteSection={<MeioAmbiente />}
-      geopoliticaSection={<Geopolitica />}
+      economiaSection={<Economia posts={posts} />}
+      tecnologiaSection={<Tecnologia posts={posts} />}
+      meioAmbienteSection={<MeioAmbiente posts={posts} />}
+      geopoliticaSection={<Geopolitica posts={posts} />}
     />
   );
 }

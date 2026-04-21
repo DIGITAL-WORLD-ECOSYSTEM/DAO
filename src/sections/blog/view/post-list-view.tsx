@@ -24,7 +24,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { POST_SORT_OPTIONS } from 'src/_mock';
 import { BlogLayout } from 'src/layouts/blog';
-import { useGetPosts } from 'src/actions/blog';
+import { useGetPosts, useSearchPosts, useGetBlogStats } from 'src/actions/blog';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -54,39 +54,40 @@ type Props = {
 
 export function PostListView({ posts: initialPosts }: Props) {
   const theme = useTheme();
-  const { posts: fetchedPosts, postsLoading } = useGetPosts();
-
-  const posts = useMemo(() => initialPosts || fetchedPosts || [], [initialPosts, fetchedPosts]);
-
-  const [sortBy, setSortBy] = useState<SortType>('latest');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const { state, setState } = useSetState<ViewFilters>({
     publish: 'all',
   });
 
+  const [sortBy, setSortBy] = useState<SortType>('latest');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const { posts: fetchedPosts, postsLoading } = useGetPosts({
+    publish: state.publish,
+    sortBy,
+  });
+
+  const posts = useMemo(() => initialPosts || fetchedPosts || [], [initialPosts, fetchedPosts]);
+
+  const { searchResults, searchLoading } = useSearchPosts(searchQuery);
+
+  const { stats } = useGetBlogStats();
+
   const publishCounts = useMemo(
     () => ({
-      all: posts.length,
-      published: posts.filter((post) => post.publish).length,
-      draft: posts.filter((post) => !post.publish).length,
+      all: stats.all,
+      published: stats.published,
+      draft: stats.draft,
     }),
-    [posts]
+    [stats]
   );
 
-  const searchResults = useMemo(() => {
-    if (!searchQuery) return posts;
-    return posts.filter((post) => post.title.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [posts, searchQuery]);
-
   const dataFiltered = useMemo(
-    () =>
-      applyFilter({
-        inputData: searchResults,
-        filters: state,
-        sortBy,
-      }),
-    [searchResults, state, sortBy]
+    () => {
+        if (searchQuery) return searchResults;
+        return posts;
+    },
+    [posts, searchResults, searchQuery]
   );
 
   const handleFilterPublish = useCallback(

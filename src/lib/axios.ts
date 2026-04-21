@@ -111,6 +111,7 @@ export const endpoints = {
   },
   // 🚀 SocialFi & Blog Integration
   post: {
+    root: '/api/posts',
     list: '/api/posts',
     details: (title: string) => `/api/posts/${title}`,
     latest: '/api/posts/latest',

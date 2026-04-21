@@ -39,12 +39,14 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { title } = await params;
 
-  // Busca no mock para manter SEO consistente mesmo em modo dinâmico
-  const post = _posts.find((p) => kebabCase(p.title) === title);
+  // Busca real na API para manter SEO consistente (com fallback interno no getPost)
+  const { post } = await getPost(title);
 
   if (!post) {
     return { title: `Post não encontrado | ${CONFIG.appName}` };
   }
+
+  const slug = post.slug || kebabCase(post.title);
 
   return {
     title: `${post.title} | ${CONFIG.appName}`,
@@ -53,10 +55,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.description,
       type: 'article',
-      url: `${CONFIG.siteUrl}/post/${kebabCase(post.title)}`,
+      url: `${CONFIG.siteUrl}/post/${slug}`,
       images: [
         {
-          url: `/post/${kebabCase(post.title)}/opengraph-image`,
+          url: `/post/${slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: post.title,

@@ -21,81 +21,22 @@ import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
+import type { IPostItem } from 'src/types/blog';
+
 import { PostItem, PostItemLatest } from './item';
 
 // ----------------------------------------------------------------------
 
-const staticTecnologiaPosts = [
-  {
-    id: 't1',
-    title: 'Análise: Por que a Layer 2 da Ethereum está dominando o mercado?',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-8.webp',
-    createdAt: new Date(),
-    duration: '10 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-8.webp' },
-  },
-  {
-    id: 't2',
-    title: 'Solana vs. Aptos: A batalha pela escalabilidade em tempo real',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-9.webp',
-    createdAt: new Date(),
-    duration: '7 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-9.webp' },
-  },
-  {
-    id: 't3',
-    title: 'Entenda o algoritmo de consenso da nova rede modular Celestia',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-10.webp',
-    createdAt: new Date(),
-    duration: '15 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-10.webp' },
-  },
-  {
-    id: 't4',
-    title: 'Tutorial: Criando seu primeiro bot de trading na rede Arbitrum',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-11.webp',
-    createdAt: new Date(),
-    duration: '9 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-11.webp' },
-  },
-  {
-    id: 't5',
-    title: 'Inteligência Artificial e Blockchain: A convergência de 2026',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-12.webp',
-    createdAt: new Date(),
-    duration: '11 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-12.webp' },
-  },
-  {
-    id: 't6',
-    title: 'Segurança em Smart Contracts: Novas ferramentas de auditoria',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-13.webp',
-    createdAt: new Date(),
-    duration: '8 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-13.webp' },
-  },
-  {
-    id: 't7',
-    title: 'WebAssembly (WASM) e o Futuro dos Contratos Inteligentes',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/mock/cover/cover-14.webp',
-    createdAt: new Date(),
-    duration: '6 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-14.webp' },
-  },
-];
+type Props = {
+  posts: IPostItem[];
+};
 
-// ----------------------------------------------------------------------
-
-export function Tecnologia() {
+export function Tecnologia({ posts }: Props) {
   const theme = useTheme();
-  const viewPosts = staticTecnologiaPosts;
+  
+  const viewPosts = posts.filter(post => post.category === 'Tecnologia');
+
+  if (viewPosts.length === 0) return null;
 
   // Estilo Crystal Padronizado (Mesmo padrão das outras categorias)
   const cardWrapperStyle = {

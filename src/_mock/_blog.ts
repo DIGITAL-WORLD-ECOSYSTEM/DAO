@@ -1,4 +1,4 @@
-import type { IPostComment } from 'src/types/blog';
+import type { IPostComment, IPostItem } from 'src/types/blog';
 
 import { _mock } from './_mock';
 
@@ -69,7 +69,7 @@ const _comments: IPostComment[] = [...Array(3)].map((_, i) => ({
   replyComment: [],
 }));
 
-export const _posts = POST_TITLES.map((title, index) => {
+export const _posts: IPostItem[] = POST_TITLES.map((title, index) => {
   const categoryIndex = index % 4;
   const categoriesMap = ['Economia', 'Tecnologia', 'Meio Ambiente', 'Geopolítica'];
   const category = categoriesMap[categoryIndex];
@@ -77,6 +77,7 @@ export const _posts = POST_TITLES.map((title, index) => {
   return {
     id: _mock.id(index),
     title,
+    slug: title.toLowerCase().replace(/ /g, '-'),
     category,
     description: 'This is a mock description.',
     content: 'This is mock content.',

@@ -1,3 +1,4 @@
+import { kebabCase } from 'es-toolkit';
 import type { IPostItem } from 'src/types/blog';
 
 // ----------------------------------------------------------------------
@@ -10,6 +11,7 @@ export function mapToPostItem(apiData: any): IPostItem {
   return {
     id: String(apiData.id || ''),
     title: apiData.title || 'Sem título',
+    slug: apiData.slug || kebabCase(apiData.title || ''),
     description: apiData.description || apiData.excerpt || '',
     content: apiData.content || '',
     coverUrl: apiData.coverUrl || apiData.cover_image || apiData.thumbnail || '',
@@ -42,11 +44,11 @@ export function mapToPostItem(apiData: any): IPostItem {
     // Comentários (Mapeamento recursivo simples)
     comments: Array.isArray(apiData.comments)
       ? apiData.comments.map((comment: any) => ({
-          id: comment.id,
-          name: comment.name || comment.user?.name,
-          message: comment.message || comment.content,
-          avatarUrl: comment.avatarUrl || comment.user?.profile_image,
-          postedAt: new Date(comment.postedAt || comment.created_at).toISOString(), // Correção aqui também
+          id: String(comment.id),
+          name: comment.name || comment.user?.name || 'Anônimo',
+          message: comment.message || comment.content || '',
+          avatarUrl: comment.avatarUrl || comment.user?.profile_image || '',
+          postedAt: new Date(comment.postedAt || comment.created_at || comment.createdAt).toISOString(),
           users: comment.users || [],
           replyComment: comment.replyComment || [],
         }))
@@ -62,4 +64,21 @@ export function mapToPostItem(apiData: any): IPostItem {
 export function mapToPostList(apiList: any[]): IPostItem[] {
   if (!Array.isArray(apiList)) return [];
   return apiList.map(mapToPostItem);
+}
+
+export function mapToCommentItem(comment: any): any {
+  return {
+    id: String(comment.id),
+    name: comment.user?.name || comment.name || 'Anônimo',
+    message: comment.content || comment.message || '',
+    avatarUrl: comment.user?.avatarUrl || comment.avatarUrl || '',
+    postedAt: new Date(comment.createdAt || comment.postedAt).toISOString(),
+    users: comment.users || [],
+    replyComment: comment.replyComment || [],
+  };
+}
+
+export function mapToCommentList(apiList: any[]): any[] {
+  if (!Array.isArray(apiList)) return [];
+  return apiList.map(mapToCommentItem);
 }

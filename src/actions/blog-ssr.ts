@@ -1,8 +1,7 @@
 // src/actions/blog-ssr.ts
-import { kebabCase } from 'es-toolkit';
-
-import { _posts } from 'src/_mock/_blog'; // Fonte estática de verdade
+import { _posts } from 'src/_mock/_blog'; 
 import { CONFIG } from 'src/global-config';
+import { mapToPostItem, mapToPostList } from './mappers/blog-mapper';
 
 const API_URL = CONFIG.serverUrl;
 
@@ -10,25 +9,27 @@ const API_URL = CONFIG.serverUrl;
 
 /**
  * BUSCA PRINCIPAL: Retorna todos os posts.
- * Prioriza a API, mas usa o MOCK como fallback durante o desenvolvimento.
  */
 export async function getPosts() {
   try {
     const url = `${API_URL}/api/posts`;
 
-    // Se estivermos em dev ou banco vazio, podemos forçar o mock aqui
-    if (!API_URL || API_URL.includes('localhost')) {
+    if (!API_URL) {
       return { posts: _posts };
     }
 
     const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return { posts: _posts }; // Fallback para Mock se a API falhar
+    if (!res.ok) {
+       console.warn('API de Blog Offline. Usando Mocks.');
+       return { posts: _posts }; 
+    }
 
-    const data = await res.json();
-    const posts = Array.isArray(data) ? data : data.posts || [];
+    const json = await res.json();
+    const rawData = Array.isArray(json.data) ? json.data : [];
 
-    return { posts: posts.length > 0 ? posts : _posts };
+    return { posts: rawData.length > 0 ? mapToPostList(rawData) : _posts };
   } catch (error) {
+    console.error('Erro ao buscar posts:', error);
     return { posts: _posts };
   }
 }
@@ -36,17 +37,25 @@ export async function getPosts() {
 // ----------------------------------------------------------------------
 
 /**
- * BUSCA INDIVIDUAL: Pega um post específico pelo Título (Slug).
+ * BUSCA INDIVIDUAL: Pega um post específico pelo Slug.
  */
-export async function getPost(paramTitle: string) {
-  if (!paramTitle) return { post: null };
+export async function getPost(paramSlug: string) {
+  if (!paramSlug) return { post: null };
 
   try {
-    // 🟢 Lógica de busca no Mock (Padrão 2026 com Slug)
-    const post = _posts.find((p) => kebabCase(p.title) === paramTitle);
+    const url = `${API_URL}/api/posts/${paramSlug}`;
 
-    return { post: post || null };
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) {
+        // Fallback para mock se não encontrar na API (para facilitar testes)
+        const mockPost = _posts.find((p: any) => p.slug === paramSlug || p.title.toLowerCase().replace(/ /g, '-') === paramSlug);
+        return { post: mockPost || null };
+    }
+
+    const json = await res.json();
+    return { post: json.success ? mapToPostItem(json.data) : null };
   } catch (error) {
+    console.error('Erro ao buscar post individual:', error);
     return { post: null };
   }
 }
@@ -56,13 +65,13 @@ export async function getPost(paramTitle: string) {
 /**
  * BUSCA RELACIONADOS: Retorna os últimos posts.
  */
-export async function getLatestPosts(paramTitle: string) {
+export async function getLatestPosts(paramSlug: string) {
   try {
     const { posts } = await getPosts();
 
-    const latestPosts = posts.filter((p: any) => kebabCase(p.title) !== paramTitle).slice(0, 4);
+    const latestPosts = posts.filter((p: any) => p.slug !== paramSlug).slice(0, 4);
 
-    return { latestPosts }; // 🟢 Corresponde ao que a Page.tsx desestrutura
+    return { latestPosts };
   } catch (error) {
     return { latestPosts: [] };
   }

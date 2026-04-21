@@ -50,13 +50,9 @@ yarn build
 npm run build
 ```
 
-## 🗺️ Documentação Completa do Sistema de Blog: Fase Final
+## 🗺️ Documentação do Sistema de Blog: Arquitetura de Produção
 
-Este documento será o seu guia completo para finalizar o sistema de blog.
-
-O sistema de blog foi construído com uma filosofia de **desenvolvimento progressivo**. Ele começa com uma implementação simples e autocontida (usando dados "mockados") que permite o desenvolvimento rápido da interface do usuário (UI), mas já possui toda a estrutura e as abstrações necessárias para escalar para uma solução de produção robusta, com renderização no servidor (SSR) e conectada a uma API real.
-
-Esta documentação descreve o estado atual e detalha as peças faltantes necessárias para completar a transição para a arquitetura final.
+O sistema de blog da ASPPIBRA DAO opera em uma arquitetura de alta performance e escalabilidade, totalmente integrada ao ecossistema Cloudflare (Workers, D1, R2). Esta documentação descreve o estado final de produção e o fluxo de dados entre o frontend e a infraestrutura descentralizada.
 
 ### Árvore de Arquitetura e Peças Faltantes
 
@@ -64,109 +60,47 @@ Esta documentação descreve o estado atual e detalha as peças faltantes necess
 /src/
 ├── _mock/
 │   └── _blog.ts
-│       ├── ESTADO ATUAL: Fonte de dados temporária (placeholder). Funciona como um "banco de dados" falso
-│       │   para o desenvolvimento da UI.
-│       └── └──> PEÇA FALTANTE FINAL: Este arquivo se tornará obsoleto. Após a conexão com a API, ele
-│                  poderá ser completamente DELETADO ou mantido apenas como referência para testes.
+│       └── ESTADO ATUAL: LEGACY / FALLBACK. Serve como fonte de dados de segurança caso a
+│           API esteja offline ou para prototipagem rápida de UI local.
 │
 ├── actions/
 │   ├── blog-ssr.ts
-│   │   ├── ESTADO ATUAL: Contém Server Actions (`getPosts()`) que buscam dados do `_mock` file.
-│   │   │   Está no local perfeito para a lógica de back-end do front-end.
-│   │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
-│   │       │   1.  [LÓGICA DE API] Modificar `getPosts()` para fazer uma requisição `fetch` ao
-│   │       │       endpoint `GET /api/posts` da sua API real.
-│   │       │   2.  [LÓGICA DE API] Criar e exportar novas Server Actions:
-│   │       │       - `getPostBySlug(slug: string)` (chamará `GET /api/posts/{slug}`).
-│   │       │       - `getPostsByCategory(category: string)` (chamará `GET /api/posts?category={category}`).
+│   │   └── ESTADO ATUAL: ✅ CONCLUÍDO. Server Actions integradas que consomem a API de Produção
+│   │       (api.asppibra.com) com suporte a paginação e filtragem por categoria.
 │   │
 │   └── mappers/
 │       └── blog-mapper.ts
-│           ├── ESTADO ATUAL: Transforma os dados do `_mock` para o formato que a UI precisa.
-│           │   É uma camada de anti-corrupção que protege sua UI de mudanças no back-end.
-│           └── └──> PEÇA FALTANTE PARA FINALIZAÇÃO:
-│               │   1.  [AJUSTE DE DADOS] Atualizar a lógica do mapper para que ele saiba como
-│               │       transformar a resposta JSON da sua API real (que virá do `fetch` nas
-│               │       `actions`) para o formato que os componentes esperam.
+│           └── ESTADO ATUAL: ✅ CONCLUÍDO. Camada de Anti-Corrupção que traduz os modelos do D1/Backend
+│               para os tipos TypeScript da UI, garantindo estabilidade e tipagem forte.
 │
 ├── app/
-│   ├── (public)/post/
-│   │   ├── page.tsx
-│   │   │   ├── ESTADO ATUAL: Lista de posts (`/post`) renderizada no cliente.
-│   │   │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
-│   │   │       │   1.  [REATORAÇÃO PARA SSR] Remover a diretiva `'''use client'''`.
-│   │   │       │   2.  [REATORAÇÃO PARA SSR] Transformar a função da página em `async`.
-│   │   │       │   3.  [REATORAÇÃO PARA SSR] Chamar `await getPosts()` (a Server Action atualizada).
-│   │   │       │   4.  [REATORAÇÃO PARA SSR] Passar os posts recebidos para o componente de view.
+│   ├── post/
+│   │   ├── page.tsx (Home do Blog)
+│   │   │   └── ESTADO ATUAL: ✅ CONCLUÍDO. Renderização Híbrida (SSR) com force-dynamic para SEO instantâneo.
 │   │   │
-│   │   ├── [title]/page.tsx
-│   │   │   ├── ESTADO ATUAL: Página de um post individual (`/post/[slug]`) renderizada no cliente.
-│   │   │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
-│   │   │       │   1.  [REATORAÇÃO PARA SSR] Remover `'''use client'''`, tornar a função `async`.
-│   │   │       │   2.  [REATORAÇÃO PARA SSR] Usar o `slug` dos parâmetros da página para chamar
-│   │   │       │       `await getPostBySlug(slug)`.
-│   │   │       │   3.  [REATORAÇÃO PARA SSR] Passar o post recebido para o componente de detalhes.
-│   │   │
-│   │   └── category/[slug]/page.tsx
-│   │       └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
-│   │           │   1.  [REATORAÇÃO PARA SSR] Seguir os mesmos passos das páginas anteriores,
-│   │           │       usando a Server Action `getPostsByCategory(slug)`.
+│   │   └── [title]/page.tsx (Detalhes)
+│   │       └── ESTADO ATUAL: ✅ CONCLUÍDO. SSR com geração dinâmica de Metadados e JSON-LD.
 │   │
 │   └── dashboard/
 │       └── post/
-│           ├── new/page.tsx e [title]/edit/page.tsx
-│           │   ├── ESTADO ATUAL: Formulários de criação e edição. A UI está pronta.
-│           │   └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
-│           │       │   1.  [LÓGICA DE API] Implementar a função `onSubmit` do formulário. Ela deve:
-│           │       │       - Chamar uma Server Action (ex: `createPost` ou `updatePost`).
-│           │       │       - Essa Server Action fará um `fetch` para `POST /api/posts` ou `PUT /api/posts/{id}`.
-│           │       │   2.  [VALIDAÇÃO DE FORMULÁRIO] Usar uma biblioteca como `react-hook-form` com
-│           │       │       `zodResolver` para dar feedback instantâneo ao usuário (ex: "O título
-│           │       │       é obrigatório") antes de enviar os dados.
-│           │       │   3.  [FEEDBACK DE UI] Implementar estados de carregamento (ex: desabilitar o
-│           │       │       botão "Salvar" e mostrar um spinner) e notificações/toasts
-│           │       │       (ex: "Post salvo com sucesso!") após a resposta da API.
-│           │
-│           └── page.tsx (Listagem no Dashboard)
-│               └── └──> PEÇAS FALTANTES PARA FINALIZAÇÃO:
-│                   │   1.  [LÓGICA DE API] Implementar a lógica para o botão "Deletar", que chamará
-│                   │       uma Server Action `deletePost(id)` que, por sua vez, fará um `fetch`
-│                   │       para `DELETE /api/posts/{id}`.
-│                   │   2.  [FEEDBACK DE UI] Adicionar um modal de confirmação ("Você tem certeza?")
-│                   │       antes de deletar um post.
+│           └── edit/new/list
+│               └── ESTADO ATUAL: ✅ CONCLUÍDO. Gestão completa (CRUD) integrada ao D1 (DB) e R2 (Storage),
+│                   incluindo Auditoria Forense para todas as ações.
 │
-└── __tests__/ (Diretório Inexistente)
-    └── └──> PEÇA FALTANTE PARA FINALIZAÇÃO:
-        │   1.  [GARANTIA DE QUALIDADE] Criar um diretório de testes.
-        │   2.  [TESTES UNITÁRIOS] Escrever testes para o `blog-mapper.ts` para garantir que a
-        │       transformação dos dados da API sempre funcione como esperado.
-        │   3.  [TESTES DE INTEGRAÇÃO] Escrever testes para as `Server Actions` em `blog-ssr.ts`
-        │       para garantir que elas conseguem se comunicar com a API (usando um mock da API).
+└── Infraestrutura (Cloudflare)
+    ├── Banco de Dados: D1 (SQLite Distribuído)
+    ├── Media Storage: R2 (S3-Compatible) para covers e assets.
+    └── Security: JWT-Signed Workers com limpeza automática de assets órfãos.
+```
 ```
 
-### Roadmap de Finalização
+## 🛠️ Guia de Operação e Manutenção
 
-Para concluir o sistema, siga estas fases em ordem:
+O sistema está em estado de Produção. Siga estas diretrizes para manutenção:
 
-1.  **Fase 1: Construir ou Definir a API (O Back-end)**
-    *   **Tarefa:** Decida e configure sua fonte de dados (Headless CMS, API customizada).
-    *   **Resultado Esperado:** Você deve ter uma URL base de API e endpoints funcionais para `GET`, `POST`, `PUT` e `DELETE` de posts.
-
-2.  **Fase 2: Conectar o Front-end ao Back-end (Camada de Dados)**
-    *   **Tarefa:** Implementar todas as `PEÇAS FALTANTES` nos diretórios `actions/` e `mappers/`.
-    *   **Resultado Esperado:** Suas Server Actions agora se comunicam com a API real, e o mapper traduz os dados corretamente. O _mock file pode ser deletado.
-
-3.  **Fase 3: Ativar a Renderização no Servidor (Otimização)**
-    *   **Tarefa:** Implementar as `PEÇAS FALTANTES` nas páginas públicas (`app/(public)/post/`).
-    *   **Resultado Esperado:** O blog público agora é renderizado no servidor, resultando em SEO e performance máximos.
-
-4.  **Fase 4: Finalizar o Dashboard (Funcionalidade de Admin)**
-    *   **Tarefa:** Implementar as `PEÇAS FALTANTES` nas páginas do `dashboard/post/`.
-    *   **Resultado Esperado:** Administradores podem agora criar, editar e deletar posts de verdade, com validação de formulário e feedback claro da interface.
-
-5.  **Fase 5: Adicionar Testes (Garantia de Qualidade)**
-    *   **Tarefa:** Criar o diretório de testes e escrever testes unitários e de integração.
-    *   **Resultado Esperado:** O sistema está robusto, e futuras alterações podem ser feitas com a segurança de que as funcionalidades principais não serão quebradas.
+1.  **Gestão de Conteúdo**: Utilize exclusivamente o Dashboard administrativo para Criar/Editar posts. Isso garante que as auditorias sejam geradas e o armazenamento R2 seja otimizado (limpeza de imagens antigas).
+2.  **Escalabilidade**: A paginação é controlada pelo backend. Para ajustar o limite de itens por página, modifique os parâmetros na `useGetPosts` (Frontend) e o router no Backend.
+3.  **Logs e Auditoria**: Em caso de inconsistência de dados, consulte a tabela `auditLogs` no D1 para rastrear quem realizou cada alteração.
 
 ---
 
@@ -383,7 +317,7 @@ SocialFi/
 
 Diferente de métodos legados que exigem manutenção manual, os arquivos `robots.ts` e `sitemap.ts` dentro de `src/app/` funcionam como **geradores dinâmicos**.
 
-Ao atualizar o arquivo de dados `_blog.ts`, o Google descobre as novas URLs e as permissões de rastreio automaticamente, garantindo **indexação em tempo real** sem intervenção humana.
+O `sitemap.ts` agora consome diretamente a API de posts do Backend, garantindo que novos conteúdos publicados via Dashboard apareçam instantaneamente para os crawlers (Google/Bing) sem necessidade de re-build do frontend.
 
 ---
 
@@ -484,16 +418,14 @@ Todas as imagens e ícones seguem um pipeline de otimização via componente cen
 
 > Arquitetura preparada para SEO técnico avançado, indexação em tempo real e compatibilidade com a nova geração de mecanismos de busca baseados em IA. 
 
-### Como Adicionar um Novo Post
-Graças à arquitetura de SEO dinâmico, adicionar um novo post é um processo simples e centralizado. Basta atualizar o arquivo `src/_mock/_blog.ts`.
+### 🖋️ Como Publicar Conteúdo
+O fluxo de publicação é 100% automatizado através do Dashboard:
 
-1.  **Abra `src/_mock/_blog.ts`**: Este arquivo atua como a "fonte única da verdade" (Single Source of Truth) para todo o conteúdo do blog.
-2.  **Adicione um novo objeto** ao array `_posts`.
-
-O sistema fará o resto automaticamente:
-- O **Sitemap Dinâmico** (`sitemap.ts`) incluirá a nova URL.
-- A **Página do Post** será gerada dinamicamente.
-- Os **Metadados e Imagens Sociais** (`opengraph-image.tsx`) serão criados com o título e a descrição do novo post.
+1.  **Acesse o Dashboard**: Vá para `Dashboard > Blog > Novo Post`.
+2.  **Crie seu Post**: O upload da imagem de capa vai direto para o Cloudflare R2 e os dados para o D1.
+3.  **Deploy Automático de SEO**: O sistema fará o resto automaticamente:
+    - O **Sitemap Dinâmico** (`sitemap.ts`) incluirá a nova URL na próxima varredura.
+    - A **Página do Post** estará disponível imediatamente com SEO otimizado.
 
 ### 🔍 Ferramentas de Validação e Diagnóstico (Padrão 2026)
 

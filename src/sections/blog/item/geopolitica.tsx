@@ -15,81 +15,22 @@ import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
+import type { IPostItem } from 'src/types/blog';
+
 import { PostItem, PostItemLatest } from './item';
 
 // ----------------------------------------------------------------------
 
-const staticGeopoliticaPosts = [
-  {
-    id: 'g1',
-    title: 'Guerra Fria 2.0: A disputa pela supremacia em semicondutores',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-22.webp',
-    createdAt: new Date(),
-    duration: '15 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-22.webp' },
-  },
-  {
-    id: 'g2',
-    title: 'A ascensão do Sul Global e o novo equilíbrio de poder',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-23.webp',
-    createdAt: new Date(),
-    duration: '12 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-23.webp' },
-  },
-  {
-    id: 'g3',
-    title: 'CBDCs: A nova fronteira da soberania monetária digital',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-24.webp',
-    createdAt: new Date(),
-    duration: '10 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-24.webp' },
-  },
-  {
-    id: 'g4',
-    title: 'Regulação de Criptoativos: O embate entre EUA, Europa e Ásia',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-1.webp',
-    createdAt: new Date(),
-    duration: '8 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-1.webp' },
-  },
-  {
-    id: 'g5',
-    title: 'A influência da China na infraestrutura digital da África',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-2.webp',
-    createdAt: new Date(),
-    duration: '9 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-2.webp' },
-  },
-  {
-    id: 'g6',
-    title: 'A corrida espacial do século 21 e a mineração de asteroides',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-3.webp',
-    createdAt: new Date(),
-    duration: '11 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-3.webp' },
-  },
-  {
-    id: 'g7',
-    title: 'Sanções econômicas e o papel do Bitcoin como ativo de refúgio',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/mock/cover/cover-4.webp',
-    createdAt: new Date(),
-    duration: '10 min de leitura',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/mock/avatar/avatar-4.webp' },
-  },
-];
+type Props = {
+  posts: IPostItem[];
+};
 
-// ----------------------------------------------------------------------
-
-export function Geopolitica() {
+export function Geopolitica({ posts }: Props) {
   const theme = useTheme();
-  const viewPosts = staticGeopoliticaPosts;
+  
+  const viewPosts = posts.filter(post => post.category === 'Geopolítica');
+
+  if (viewPosts.length === 0) return null;
 
   // Estilização Crystal Padronizada para os Cards
   const cardWrapperStyle = {

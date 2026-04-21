@@ -26,6 +26,7 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { JsonLd, generateBreadcrumbs } from 'src/components/seo/json-ld';
 
 // CORREÇÃO DOS CAMINHOS: Subindo dois níveis (../../) para achar os componentes
+import { favoritePost, useGetPostComments } from 'src/actions/blog';
 import { PostItem } from '../../item/item';
 import { PostCommentForm } from '../../forms/post-comment-form';
 import { PostCommentList } from '../../details/post-comment-list';
@@ -67,20 +68,25 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
 
   const tags = post?.tags ?? [];
   const favoritePeople = post?.favoritePerson ?? [];
-  const comments: IPostComment[] = post?.comments ?? [];
+  const { comments, commentsEmpty } = useGetPostComments(post?.id || '');
+
+  const handleToggleFavorite = useCallback(async () => {
+    try {
+      await favoritePost(post?.id || '');
+      setIsFavorited((prev) => {
+        const next = !prev;
+        setFavoritesCount((count) => (next ? count + 1 : Math.max(0, count - 1)));
+        return next;
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, [post?.id]);
 
   const recentPosts = useMemo(() => {
     const latest = latestPosts ?? [];
     return latest.slice(-4);
   }, [latestPosts]);
-
-  const handleToggleFavorite = useCallback(() => {
-    setIsFavorited((prev) => {
-      const next = !prev;
-      setFavoritesCount((count) => (next ? count + 1 : Math.max(0, count - 1)));
-      return next;
-    });
-  }, []);
 
   const breadcrumbs = useMemo(() => {
     const base = [
@@ -172,14 +178,14 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
             </Box>
           </Stack>
 
-          <Box sx={{ mb: 3, mt: 5, display: 'flex', gap: 1 }}>
+          <Box sx={{ mb: 3, mt: 5, display: 'flex', gap: 1.5, alignItems: 'center' }}>
             <Typography variant="h4">Comments</Typography>
             <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
               ({comments.length})
             </Typography>
           </Box>
 
-          <PostCommentForm />
+          <PostCommentForm postId={post?.id || ''} />
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 
@@ -194,7 +200,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
           </Typography>
 
           <Box sx={gridStyles}>
-            {recentPosts.map((latestPost) => (
+            {recentPosts.map((latestPost: IPostItem) => (
               <PostItem
                 key={latestPost.id}
                 post={latestPost}

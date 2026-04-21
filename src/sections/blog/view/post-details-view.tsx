@@ -2,7 +2,7 @@
  * Copyright 2026 ASPPIBRA – Associação dos Proprietários e Possuidores de Imóveis no Brasil.
  * Project: Governance System (ASPPIBRA DAO)
  * Role: Post Details View (Client Side)
- * Version: 1.4.6 - Fix: Type safety for publish status (TS2322) & UX Refinement
+ * Version: 1.5.0 - Refactored: Social Interaction & Fixed Syntax
  */
 
 'use client';
@@ -26,9 +26,11 @@ import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
+import { toast } from 'src/components/snackbar';
 
 import { POST_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { favoritePost, useGetPostComments } from 'src/actions/blog';
 
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
@@ -52,24 +54,34 @@ type Props = {
 };
 
 export function PostDetailsView({ post }: Props) {
-  /**
-   * ✅ FIX TS2322 (v1.4.6):
-   * O componente PostDetailsToolbar exige que 'publish' seja estritamente uma string.
-   * Abaixo, garantimos a conversão de tipos caso o dado venha como booleano ou nulo.
-   */
   const [publish, setPublish] = useState<string>(() => {
     if (typeof post?.publish === 'string') return post.publish;
     if (post?.publish === true) return 'published';
     return 'draft';
   });
 
+  const [favorite, setFavorite] = useState(false);
+
   const handleChangePublish = useCallback((newValue: string) => {
     setPublish(newValue);
   }, []);
 
+  const handleChangeFavorite = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      await favoritePost(post?.id || '');
+      setFavorite(event.target.checked);
+      toast.success(event.target.checked ? 'Favoritado!' : 'Removido dos favoritos');
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao processar ação');
+    }
+  }, [post?.id]);
+
   const avatars = (post?.favoritePerson || []).map((person) => (
     <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
   ));
+
+  const { comments, commentsEmpty } = useGetPostComments(post?.id || '');
 
   return (
     <DashboardContent maxWidth={false} disablePadding>
@@ -121,7 +133,8 @@ export function PostDetailsView({ post }: Props) {
               label={fShortenNumber(post?.totalFavorites)}
               control={
                 <Checkbox
-                  defaultChecked
+                  checked={favorite}
+                  onChange={handleChangeFavorite}
                   size="small"
                   color="error"
                   icon={<Iconify icon="solar:heart-bold" />}
@@ -144,15 +157,15 @@ export function PostDetailsView({ post }: Props) {
         <Box sx={{ mb: 3, mt: 5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <Typography variant="h4">Comments</Typography>
           <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-            ({post?.comments?.length || 0})
+            ({comments.length})
           </Typography>
         </Box>
 
-        <PostCommentForm />
+        <PostCommentForm postId={post?.id || ''} />
 
         <Divider sx={{ mt: 5, mb: 2 }} />
 
-        <PostCommentList comments={post?.comments ?? []} />
+        <PostCommentList comments={comments} />
       </Box>
     </DashboardContent>
   );

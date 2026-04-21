@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
@@ -24,6 +25,10 @@ import { fShortenNumber } from 'src/utils/format-number';
 import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
+import { useBoolean } from 'src/hooks/use-boolean'; // Added useBoolean
+import { toast } from 'src/components/snackbar'; // Added toast
+import { deletePost } from 'src/actions/blog'; // Added deletePost
+import { ConfirmDialog } from 'src/components/custom-dialog'; // Added ConfirmDialog
 import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
@@ -37,6 +42,18 @@ type Props = CardProps & {
 export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }: Props) {
   const theme = useTheme();
   const menuActions = usePopover();
+  const confirmDelete = useBoolean();
+
+  const handleDelete = async () => {
+    try {
+      await deletePost(post.id);
+      toast.success('Deletado com sucesso!');
+      confirmDelete.onFalse();
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao deletar postagem.');
+    }
+  };
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -56,7 +73,13 @@ export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }
           Editar
         </MenuItem>
 
-        <MenuItem onClick={() => menuActions.onClose()} sx={{ color: 'error.main' }}>
+        <MenuItem
+            onClick={() => {
+                confirmDelete.onTrue();
+                menuActions.onClose();
+            }}
+            sx={{ color: 'error.main' }}
+        >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Excluir
         </MenuItem>
@@ -209,6 +232,18 @@ export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }
       </Card>
 
       {renderMenuActions()}
+
+      <ConfirmDialog
+        open={confirmDelete.value}
+        onClose={confirmDelete.onFalse}
+        title="Excluir Postagem"
+        content="Tem certeza que deseja excluir esta postagem? Esta ação não pode ser desfeita."
+        action={
+          <Button variant="contained" color="error" onClick={handleDelete}>
+            Excluir permanentemente
+          </Button>
+        }
+      />
     </>
   );
 }

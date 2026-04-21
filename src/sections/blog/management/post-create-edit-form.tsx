@@ -15,6 +15,10 @@ import { useBoolean } from 'minimal-shared/hooks';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import axios from 'src/lib/axios';
+
+import { createPost, updatePost } from 'src/actions/blog';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -57,6 +61,7 @@ export const PostCreateSchema = z.object({
     .editor()
     .min(100, { message: 'O conteúdo deve ter pelo menos 100 caracteres.' }),
   coverUrl: schemaUtils.file({ error: 'A imagem de capa é obrigatória!' }),
+  category: z.string().min(1, { message: 'A categoria é obrigatória!' }),
   tags: z.string().array().min(2, { message: 'Adicione pelo menos 2 tags relevantes.' }),
   metaKeywords: z.string().array().min(1, { message: 'Defina ao menos 1 palavra-chave para SEO.' }),
   metaTitle: z.string().optional(),
@@ -90,6 +95,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
       description: currentPost?.description || '',
       content: currentPost?.content || '',
       coverUrl: currentPost?.coverUrl || null,
+      category: currentPost?.category || '',
       tags: currentPost?.tags || [],
       metaKeywords: currentPost?.metaKeywords || [],
       metaTitle: currentPost?.metaTitle || '',
@@ -123,12 +129,40 @@ export function PostCreateEditForm({ currentPost }: Props) {
    */
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      let finalCoverUrl = data.coverUrl;
+
+      // 1. Upload de Imagem para o R2 (se houver novo arquivo)
+      if (data.coverUrl instanceof File) {
+        const formData = new FormData();
+        formData.append('file', data.coverUrl);
+        formData.append('entity_type', 'media');
+        
+        const uploadRes = await axios.post('/api/platform/storage/upload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
+        finalCoverUrl = uploadRes.data.data.url;
+      }
+
+      // 2. Preparar payload final
+      const payload = {
+          ...data,
+          coverUrl: finalCoverUrl,
+          authorId: '00000000-0000-0000-0000-000000000000', // Backend pegará do AuthMiddleware, mas enviamos fallback
+          slug: data.title.toLowerCase().replace(/ /g, '-'),
+      };
+
+      // 3. Salvar na API
+      if (currentPost) {
+        await updatePost(currentPost.id, payload);
+      } else {
+        await createPost(payload);
+      }
+
       reset();
       showPreview.onFalse();
       toast.success(currentPost ? 'Atualizado com sucesso!' : 'Post criado com sucesso!');
       router.push(paths.dashboard.post.root);
-      console.info('ASPPIBRA_POST_DATA:', data);
     } catch (error) {
       console.error('Erro ao salvar post:', error);
       toast.error('Ocorreu um erro ao salvar a postagem.');
@@ -198,6 +232,12 @@ export function PostCreateEditForm({ currentPost }: Props) {
       <Collapse in={openProperties.value}>
         <Divider />
         <Stack spacing={3} sx={{ p: 3 }}>
+          <RHFAutocomplete
+            name="category"
+            label="Categoria"
+            options={['Economia', 'Tecnologia', 'Meio Ambiente', 'Geopolítica']}
+            getOptionLabel={(option) => option}
+          />
           <RHFAutocomplete
             name="tags"
             label="Tags"
