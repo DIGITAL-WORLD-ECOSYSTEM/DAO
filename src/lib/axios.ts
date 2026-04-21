@@ -55,15 +55,27 @@ axiosInstance.interceptors.response.use(
 
     // 🕵️ MONITORAMENTO DE DEBUG (PARA TESTES EM PRODUÇÃO)
     if (typeof window !== 'undefined') {
-      const debugLog = {
-        timestamp: new Date().toISOString(),
-        url: error?.config?.url,
-        method: error?.config?.method,
-        status,
-        requestData: error?.config?.data ? JSON.parse(error.config.data) : null,
-        responseData: error?.response?.data || null,
-        error: error?.message,
-      };
+        // Tenta fazer o parse do JSON apenas se for uma string válida
+        let requestData = error?.config?.data;
+        if (typeof requestData === 'string') {
+          try {
+            requestData = JSON.parse(requestData);
+          } catch (e) {
+            // Mantém como string se não for JSON
+          }
+        } else if (requestData instanceof FormData) {
+          requestData = '[FormData]';
+        }
+
+        const debugLog = {
+          timestamp: new Date().toISOString(),
+          url: error?.config?.url,
+          method: error?.config?.method,
+          status,
+          requestData,
+          responseData: error?.response?.data || null,
+          error: error?.message,
+        };
 
       console.group('🚨 DAO API Error Debug');
       console.error('URL:', debugLog.url);
