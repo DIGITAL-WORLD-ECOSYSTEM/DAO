@@ -80,8 +80,13 @@ axiosInstance.interceptors.response.use(
       console.group('🚨 DAO API Error Debug');
       console.error('URL:', debugLog.url);
       console.error('Status:', debugLog.status);
-      console.error('Payload:', debugLog.requestData);
-      console.error('Response:', debugLog.responseData);
+      console.error('Payload:', JSON.stringify(debugLog.requestData, null, 2));
+      console.error('Response:', JSON.stringify(debugLog.responseData, null, 2));
+      
+      if (debugLog.responseData && (debugLog.responseData as any).errors) {
+        console.error('❌ VALIDATION ERRORS:', (debugLog.responseData as any).errors);
+      }
+      
       console.groupEnd();
 
       // Armazenar para extração rápida via console

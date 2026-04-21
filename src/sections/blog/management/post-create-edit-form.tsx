@@ -166,12 +166,17 @@ export function PostCreateEditForm({ currentPost }: Props) {
         finalCoverUrl = uploadRes.data.data.url;
       }
 
-      // 2. Preparar payload final
+      // 2. Preparar payload final (Apenas campos aceitos pelo Backend)
       const payload = {
-          ...data,
+          title: data.title,
+          description: data.description,
+          content: data.content,
+          category: data.category,
+          tags: data.tags,
+          publish: data.publish,
           coverUrl: finalCoverUrl,
-          authorId: '00000000-0000-0000-0000-000000000000', // Backend pegará do AuthMiddleware, mas enviamos fallback
           slug: slugify(String(data.title)),
+          authorId: '00000000-0000-0000-0000-000000000000', // Backend usará o do AuthMiddleware
       };
 
       console.info('📝 Tentando salvar postagem:', payload);
