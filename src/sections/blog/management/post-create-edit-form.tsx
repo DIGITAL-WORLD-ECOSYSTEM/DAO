@@ -166,18 +166,21 @@ export function PostCreateEditForm({ currentPost }: Props) {
         finalCoverUrl = uploadRes.data.data.url;
       }
 
-      // 2. Preparar payload final (Apenas campos aceitos pelo Backend)
-      const payload = {
+      // 2. Preparar payload final (Apenas campos aceitos pelo Backend, tratando nulos)
+      const payload: any = {
           title: data.title,
-          description: data.description,
           content: data.content,
-          category: data.category,
-          tags: data.tags,
-          publish: data.publish,
-          coverUrl: finalCoverUrl,
+          description: data.description || undefined,
+          category: data.category || 'Geral',
+          tags: Array.isArray(data.tags) ? data.tags : [],
+          publish: !!data.publish,
           slug: slugify(String(data.title)),
-          authorId: '00000000-0000-0000-0000-000000000000', // Backend usará o do AuthMiddleware
+          authorId: '00000000-0000-0000-0000-000000000000',
       };
+
+      if (finalCoverUrl) {
+        payload.coverUrl = finalCoverUrl;
+      }
 
       console.info('📝 Tentando salvar postagem:', payload);
 
