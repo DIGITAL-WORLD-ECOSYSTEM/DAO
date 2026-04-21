@@ -179,7 +179,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
       showPreview.onFalse();
       toast.success(currentPost ? 'Atualizado com sucesso!' : 'Post criado com sucesso!');
       router.push(paths.dashboard.post.root);
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error?.response?.data?.message || error?.message || 'Ocorreu um erro ao salvar a postagem.';
       console.error('❌ Erro detectado ao salvar post:', error);
       toast.error(`Falha no salvamento: ${errorMessage}`);
