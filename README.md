@@ -78,8 +78,9 @@ O sistema de blog da ASPPIBRA DAO opera em uma arquitetura de alta performance e
 │   │   ├── page.tsx (Home do Blog)
 │   │   │   └── ESTADO ATUAL: ✅ CONCLUÍDO. Renderização Híbrida (SSR) com force-dynamic para SEO instantâneo.
 │   │   │
-│   │   └── [title]/page.tsx (Detalhes)
-│   │       └── ESTADO ATUAL: ✅ CONCLUÍDO. SSR com geração dinâmica de Metadados e JSON-LD.
+│   │   └── /post/[title]/page.tsx (Página de Detalhes)
+│   │       └── ESTADO ATUAL: ✅ CONCLUÍDO. Utiliza o `slug` real do banco de dados (via parametro `title`) 
+│   │           para realizar o fetch puro no servidor. Gera Metadados Dinâmicos e JSON-LD.
 │   │
 │   └── dashboard/
 │       └── post/
