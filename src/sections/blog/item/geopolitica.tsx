@@ -118,7 +118,7 @@ export function Geopolitica({ posts }: Props) {
                   <PostItemLatest
                     post={post as any}
                     index={index}
-                    detailsHref={paths.post.details(post.title)}
+                    detailsHref={paths.post.details(post.slug)}
                   />
                 </Box>
               </m.div>
@@ -134,7 +134,7 @@ export function Geopolitica({ posts }: Props) {
             >
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardWrapperStyle}>
-                  <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />
+                  <PostItem post={post as any} detailsHref={paths.post.details(post.slug)} />
                 </Box>
               </m.div>
             </Grid>
@@ -145,7 +145,7 @@ export function Geopolitica({ posts }: Props) {
             <Grid key={`geo-list-${post.id}-${index}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardWrapperStyle}>
-                  <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />
+                  <PostItem post={post as any} detailsHref={paths.post.details(post.slug)} />
                 </Box>
               </m.div>
             </Grid>

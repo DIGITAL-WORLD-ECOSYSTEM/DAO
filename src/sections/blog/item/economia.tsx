@@ -108,7 +108,7 @@ export function Economia({ posts }: Props) {
                   <PostItemLatest
                     post={post}
                     index={index}
-                    detailsHref={paths.post.details(post.title)}
+                    detailsHref={paths.post.details(post.slug)}
                   />
                 </Box>
               </m.div>

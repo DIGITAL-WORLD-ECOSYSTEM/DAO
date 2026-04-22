@@ -98,7 +98,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
     if (title) {
       base.push({
         name: title,
-        href: paths.post.details(title),
+        href: paths.post.details(post?.slug || title),
       });
     }
 
@@ -205,7 +205,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
               <PostItem
                 key={latestPost.id}
                 post={latestPost}
-                detailsHref={paths.post.details(latestPost.title)}
+                detailsHref={paths.post.details(latestPost.slug)}
               />
             ))}
           </Box>

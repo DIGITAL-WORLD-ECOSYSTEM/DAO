@@ -89,7 +89,7 @@ export function PostDetailsView({ post }: Props) {
         <PostDetailsToolbar
           backHref={paths.dashboard.post.root}
           editHref={paths.dashboard.post.edit(`${post?.title}`)}
-          liveHref={paths.post.details(`${post?.title}`)}
+          liveHref={paths.post.details(`${post?.slug}`)}
           publish={publish}
           onChangePublish={handleChangePublish}
           publishOptions={POST_PUBLISH_OPTIONS}

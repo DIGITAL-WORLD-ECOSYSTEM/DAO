@@ -157,7 +157,8 @@ export function PostCreateEditForm({ currentPost }: Props) {
       if (data.coverUrl instanceof File) {
         const formData = new FormData();
         formData.append('file', data.coverUrl);
-        formData.append('entity_type', 'media');
+        formData.append('entity_type', 'post');
+        formData.append('entity_id', currentPost?.slug || slugify(data.title));
         
         const uploadRes = await axios.post('/api/platform/storage/upload', formData, {
             headers: { 'Content-Type': 'multipart/form-data' }

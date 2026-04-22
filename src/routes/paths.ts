@@ -42,8 +42,8 @@ export const paths = {
   // POSTS PÚBLICOS (Essencial para SEO e Sitemap)
   post: {
     root: `/post`,
-    details: (title: string) => `/post/${kebabCase(title)}`,
-    category: (slug: string) => `/post/category/${kebabCase(slug)}`, // ✅ Adicionado para resolver Erro 2339 no sitemap
+    details: (slug: string) => `/post/${slug}`,
+    category: (slug: string) => `/post/category/${slug}`, // ✅ Adicionado para resolver Erro 2339 no sitemap
     demo: { details: `/post/${kebabCase(MOCK_TITLE)}` },
   },
 

@@ -39,7 +39,7 @@ export function PostList({ posts }: Props) {
               <PostItem
                 post={post}
                 // 🟢 Uso do helper de caminhos para manter a consistência das rotas
-                detailsHref={paths.post.details(post.title)}
+                detailsHref={paths.post.details(post.slug)}
               />
             </m.div>
           </Grid>
