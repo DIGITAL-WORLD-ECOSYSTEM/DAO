@@ -2,6 +2,8 @@
 
 import Button from '@mui/material/Button';
 
+import LinearProgress from '@mui/material/LinearProgress';
+
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
@@ -11,11 +13,26 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { useGetCitizens } from 'src/actions/citizen';
+
 import { UserCardList } from '../user-card-list';
 
 // ----------------------------------------------------------------------
 
 export function UserCardsView() {
+  const { citizens, citizensLoading } = useGetCitizens();
+
+  const userCards = citizens.map((c) => ({
+    id: c.id,
+    name: `${c.firstName} ${c.lastName}`,
+    role: c.cargoOsc || 'Membro',
+    avatarUrl: c.avatarUrl,
+    coverUrl: `/assets/images/cover/cover-${Math.floor(Math.random() * 4) + 1}.jpg`, // Placeholder dinâmico
+    totalPosts: 0,
+    totalFollowers: 0,
+    totalFollowing: 0,
+  }));
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
@@ -38,7 +55,11 @@ export function UserCardsView() {
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <UserCardList users={_userCards} />
+      {citizensLoading && (
+        <LinearProgress sx={{ position: 'absolute', top: 0, left: 0, width: 1, zIndex: 10 }} />
+      )}
+
+      <UserCardList users={userCards} />
     </DashboardContent>
   );
 }
