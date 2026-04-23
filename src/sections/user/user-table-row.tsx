@@ -18,6 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import { RouterLink } from 'src/routes/components';
 
 import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
@@ -126,13 +127,38 @@ export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow
           </Box>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap', typography: 'caption', color: 'text.secondary' }}>
-          {row.address}
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Box component="span" sx={{ typography: 'caption', color: 'text.secondary' }}>
+              {row.address.length > 20 ? `${row.address.slice(0, 12)}...${row.address.slice(-4)}` : row.address}
+            </Box>
+            <Tooltip title="Copiar DID">
+              <IconButton size="small" onClick={() => {
+                navigator.clipboard.writeText(row.address);
+                toast.success('DID copiado!');
+              }}>
+                <Iconify icon="solar:copy-bold" width={16} />
+              </IconButton>
+            </Tooltip>
+          </Stack>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.company}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap', typography: 'body2', fontWeight: 'bold' }}>
+          {row.company}
+        </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.role}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          <Label
+            variant="soft"
+            color={
+              (row.role === 'admin' && 'info') ||
+              (row.role === 'partner' && 'secondary') ||
+              'default'
+            }
+          >
+            {row.role}
+          </Label>
+        </TableCell>
 
         <TableCell>
           <Label

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import useSWR, { SWRConfiguration } from 'swr';
 
-import { fetcher, endpoints } from 'src/lib/axios';
+import axiosInstance, { fetcher, endpoints } from 'src/lib/axios';
 
 import type { ICitizenItem, IMembershipCard } from 'src/types/citizen';
 
@@ -92,4 +92,26 @@ export function useGetCitizens() {
   );
 
   return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+export async function createCitizen(data: any) {
+  const res = await axiosInstance.post(endpoints.identity.list, data);
+  return res.data;
+}
+
+export async function updateCitizen(id: string, data: any) {
+  const res = await axiosInstance.patch(`${endpoints.identity.list}/${id}`, data);
+  return res.data;
+}
+
+export async function deleteCitizen(id: string) {
+  const res = await axiosInstance.delete(`${endpoints.identity.list}/${id}`);
+  return res.data;
+}
+
+export async function bulkDeleteCitizens(ids: string[]) {
+  const res = await axiosInstance.post(`${endpoints.identity.list}/bulk-delete`, { ids });
+  return res.data;
 }

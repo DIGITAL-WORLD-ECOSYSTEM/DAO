@@ -15,6 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 import { USER_STATUS_OPTIONS } from 'src/_mock';
+import { updateCitizen } from 'src/actions/citizen';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
@@ -77,23 +78,29 @@ export function UserQuickEditForm({ currentUser, open, onClose }: Props) {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    const promise = new Promise((resolve) => setTimeout(resolve, 1000));
-
     try {
+      if (!currentUser) return;
+
+      const nameParts = data.name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ');
+
+      const payload = {
+        ...data,
+        firstName,
+        lastName,
+        cargoOsc: data.role,
+      };
+
+      await updateCitizen(currentUser.id, payload);
+
       reset();
       onClose();
-
-      toast.promise(promise, {
-        loading: 'Loading...',
-        success: 'Update success!',
-        error: 'Update error!',
-      });
-
-      await promise;
-
-      console.info('DATA', data);
+      toast.success('Update success!');
+      console.info('DATA', payload);
     } catch (error) {
       console.error(error);
+      toast.error('Update failed!');
     }
   });
 

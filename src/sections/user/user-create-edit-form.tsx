@@ -36,6 +36,8 @@ import {
   RHFCountrySelect,
 } from 'src/components/hook-form';
 
+import { createCitizen, updateCitizen } from 'src/actions/citizen';
+
 // ----------------------------------------------------------------------
 
 export type UserCreateSchemaType = z.infer<typeof UserCreateSchema>;
@@ -103,13 +105,32 @@ export function UserCreateEditForm({ currentUser }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const nameParts = data.name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ');
+
+      const payload = {
+        ...data,
+        firstName,
+        lastName,
+        // Adaptar campos se necessário
+        cargoOsc: data.role, // Exemplo de mapeamento
+      };
+
+      if (currentUser) {
+        await updateCitizen(currentUser.id, payload);
+        toast.success('Update success!');
+      } else {
+        await createCitizen(payload);
+        toast.success('Create success!');
+      }
+
       reset();
-      toast.success(currentUser ? 'Update success!' : 'Create success!');
       router.push(paths.dashboard.user.list);
-      console.info('DATA', data);
+      console.info('DATA', payload);
     } catch (error) {
       console.error(error);
+      toast.error('Operation failed!');
     }
   });
 
