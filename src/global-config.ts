@@ -9,9 +9,15 @@ export type ConfigValue = {
   appVersion: string;
   serverUrl: string; // Backend API (Dados RWA e Governança)
   siteUrl: string; // Frontend (Base para SEO 2026)
-  assetsDir: string; // Diretório base para assets (Local ou Cloud)
-  r2PublicUrl: string; // URL Pública do Cloudflare R2 para Imagens/Docs
+  assetsDir: string;
+  r2PublicUrl: string;
   isStaticExport: boolean;
+  assets: {
+    fallback: {
+      avatar: string;
+      banner: string;
+    };
+  };
   auth: {
     method: 'jwt';
     skip: boolean;
@@ -60,6 +66,16 @@ export const CONFIG: ConfigValue = {
       : (process.env.NEXT_PUBLIC_ASSETS_DIR ?? ''),
 
   isStaticExport: JSON.parse(process.env.BUILD_STATIC_EXPORT ?? 'false'),
+
+  /**
+   * ASSETS FALLBACKS
+   */
+  assets: {
+    fallback: {
+      avatar: 'https://api.asppibra.com/api/platform/storage/public/avatars/fallback.jpg',
+      banner: 'https://api.asppibra.com/api/platform/storage/public/covers/banner-fallback.png',
+    },
+  },
 
   /**
    * CONFIGURAÇÕES DE AUTENTICAÇÃO

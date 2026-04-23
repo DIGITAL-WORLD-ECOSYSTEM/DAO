@@ -14,6 +14,8 @@ import { usePathname, useSearchParams } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } from 'src/_mock';
 
+import { CONFIG } from 'src/global-config';
+
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
@@ -91,9 +93,9 @@ export function UserProfileView() {
         <ProfileCover
           role={_userAbout.role}
           // CORREÇÃO: Fallback garante que nunca seja undefined
-          name={user?.displayName ?? ''}
-          avatarUrl={user?.photoURL ?? ''}
-          coverUrl={_userAbout.coverUrl}
+        name={user?.displayName ?? ''}
+        avatarUrl={user?.photoURL || CONFIG.assets.fallback.avatar}
+        coverUrl={CONFIG.assets.fallback.banner}
         />
 
         <Box

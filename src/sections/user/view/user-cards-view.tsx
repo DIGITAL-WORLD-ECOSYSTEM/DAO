@@ -13,6 +13,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { CONFIG } from 'src/global-config';
 import { useGetCitizens } from 'src/actions/citizen';
 
 import { UserCardList } from '../user-card-list';
@@ -27,7 +28,7 @@ export function UserCardsView() {
     name: `${c.firstName} ${c.lastName}`,
     role: c.cargoOsc || 'Membro',
     avatarUrl: c.avatarUrl,
-    coverUrl: `/assets/images/cover/cover-${Math.floor(Math.random() * 4) + 1}.jpg`, // Placeholder dinâmico
+    coverUrl: CONFIG.assets.fallback.banner,
     totalPosts: 0,
     totalFollowers: 0,
     totalFollowing: 0,

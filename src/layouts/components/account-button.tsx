@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 
 import { varTap, varHover, AnimateBorder, transitionTap } from 'src/components/animate';
 
+import { CONFIG } from 'src/global-config';
+
 // ----------------------------------------------------------------------
 
 export type AccountButtonProps = IconButtonProps & {
@@ -32,7 +34,11 @@ export function AccountButton({ photoURL, displayName, sx, ...other }: AccountBu
           secondaryBorder: { sx: { color: 'warning.main' } },
         }}
       >
-        <Avatar src={photoURL} alt={displayName} sx={{ width: 1, height: 1 }}>
+        <Avatar 
+          src={photoURL || CONFIG.assets.fallback.avatar} 
+          alt={displayName} 
+          sx={{ width: 1, height: 1 }}
+        >
           {displayName?.charAt(0).toUpperCase()}
         </Avatar>
       </AnimateBorder>
