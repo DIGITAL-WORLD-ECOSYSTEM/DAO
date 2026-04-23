@@ -14,6 +14,8 @@ import { useMemo, useEffect, useCallback } from 'react';
 
 import axios, { endpoints } from 'src/lib/axios';
 
+import { CONFIG } from 'src/global-config';
+
 import { AuthContext } from './auth-context';
 import { JWT_STORAGE_KEY } from './constant';
 import { setSession, isValidToken } from './utils';
@@ -34,7 +36,7 @@ const mapUser = (user: any, accessToken: string): User => ({
   displayName:
     user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'Membro DAO',
   role: user?.role || 'citizen',
-  photoURL: user?.photoURL || '/assets/icons/glass/ic_glass_users.png',
+  photoURL: user?.photoURL || CONFIG.assets.fallback.avatar,
   accessToken,
 });
 
