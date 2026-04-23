@@ -170,4 +170,10 @@ export const endpoints = {
     valuation: (id: string) => `/api/products/rwa/valuation/${id}`,
     tokenize: '/api/products/rwa/tokenize',
   },
+  // 🆔 Sovereign Identity & Membership
+  identity: {
+    profile: (username: string) => `/api/platform/identity/profile/${username}`,
+    card: '/api/platform/identity/me/card',
+    list: '/api/platform/identity/list',
+  },
 } as const;

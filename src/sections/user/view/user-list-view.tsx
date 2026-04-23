@@ -3,9 +3,9 @@
 import type { TableHeadCellProps } from 'src/components/table';
 import type { IUserItem, IUserTableFilters } from 'src/types/user';
 
-import { useState, useCallback } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -16,6 +16,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -45,16 +46,18 @@ import { UserTableRow } from '../user-table-row';
 import { UserTableToolbar } from '../user-table-toolbar';
 import { UserTableFiltersResult } from '../user-table-filters-result';
 
+import { useGetCitizens } from 'src/actions/citizen';
+
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'phoneNumber', label: 'Phone number', width: 180 },
-  { id: 'company', label: 'Company', width: 220 },
-  { id: 'role', label: 'Role', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
+  { id: 'name', label: 'Nome' },
+  { id: 'did', label: 'DID (Identidade)', width: 220 },
+  { id: 'company', label: 'Cargo / Departamento', width: 220 },
+  { id: 'role', label: 'Papel', width: 140 },
+  { id: 'status', label: 'KYC Status', width: 120 },
   { id: '', width: 88 },
 ];
 
@@ -65,7 +68,32 @@ export function UserListView() {
 
   const confirmDialog = useBoolean();
 
-  const [tableData, setTableData] = useState<IUserItem[]>(_userList);
+  const { citizens, citizensLoading } = useGetCitizens();
+
+  const [tableData, setTableData] = useState<IUserItem[]>([]);
+
+  // Sincronizar dados do D1 com o estado da tabela
+  useEffect(() => {
+    if (citizens.length > 0) {
+      const mappedUsers: IUserItem[] = citizens.map((c) => ({
+        id: c.id,
+        name: `${c.firstName} ${c.lastName}`,
+        role: c.role,
+        email: c.username, // Using username as fallback if email not in citizen
+        status: c.kycStatus === 'approved' ? 'active' : 'pending',
+        avatarUrl: c.avatarUrl,
+        phoneNumber: c.phoneNumber || '',
+        company: c.cargoOsc || 'Membro',
+        city: '',
+        state: '',
+        address: c.did, // Mapeando DID para campo de endereço para exibição se necessário
+        country: c.nacionalidade || '',
+        zipCode: '',
+        isVerified: c.kycStatus === 'approved',
+      }));
+      setTableData(mappedUsers);
+    }
+  }, [citizens]);
 
   const filters = useSetState<IUserTableFilters>({ name: '', role: [], status: 'all' });
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -214,6 +242,10 @@ export function UserListView() {
               onResetPage={table.onResetPage}
               sx={{ p: 2.5, pt: 0 }}
             />
+          )}
+
+          {citizensLoading && (
+            <LinearProgress sx={{ position: 'absolute', top: 0, left: 0, width: 1, zIndex: 10 }} />
           )}
 
           <Box sx={{ position: 'relative' }}>
