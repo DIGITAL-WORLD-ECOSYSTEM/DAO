@@ -130,13 +130,22 @@ export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <Stack direction="row" alignItems="center" spacing={1}>
             <Box component="span" sx={{ typography: 'caption', color: 'text.secondary' }}>
-              {row.address.length > 20 ? `${row.address.slice(0, 12)}...${row.address.slice(-4)}` : row.address}
+              {(row.address || '').length > 20
+                ? `${row.address.slice(0, 12)}...${row.address.slice(-4)}`
+                : row.address || '—'}
             </Box>
             <Tooltip title="Copiar DID">
-              <IconButton size="small" onClick={() => {
-                navigator.clipboard.writeText(row.address);
-                toast.success('DID copiado!');
-              }}>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  if (row.address) {
+                    navigator.clipboard.writeText(row.address);
+                    toast.success('DID copiado!');
+                  } else {
+                    toast.error('Nenhum endereço disponível');
+                  }
+                }}
+              >
                 <Iconify icon="solar:copy-bold" width={16} />
               </IconButton>
             </Tooltip>
