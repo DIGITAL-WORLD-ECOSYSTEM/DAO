@@ -27,7 +27,8 @@ export type AuthContextValue = {
   loading: boolean;
   authenticated: boolean;
   unauthenticated: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<User>;
+  signUp: (data: any) => Promise<User>;
   signOut: () => Promise<void>;
   checkUserSession: () => Promise<void>;
 };

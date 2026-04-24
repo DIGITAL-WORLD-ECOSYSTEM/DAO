@@ -47,6 +47,7 @@ import { JsonLd } from 'src/components/seo/json-ld';
 import { detectSettings } from 'src/components/settings/server';
 import { defaultSettings, SettingsProvider } from 'src/components/settings';
 
+import { Web3Provider } from 'src/auth/context/web3-provider';
 import { AuthProvider as JwtAuthProvider } from 'src/auth/context';
 
 import App from './app';
@@ -205,18 +206,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {/* ✅ I18nProvider tipado corretamente para evitar erros de build */}
         <I18nProvider lang={appConfig.i18nLang}>
-          <AuthProvider>
-            <SettingsProvider
-              defaultSettings={defaultSettings}
-              cookieSettings={appConfig.cookieSettings}
-            >
-              <LocalizationProvider>
-                <AppRouterCacheProvider options={{ key: 'css' }}>
-                  <App>{children}</App>
-                </AppRouterCacheProvider>
-              </LocalizationProvider>
-            </SettingsProvider>
-          </AuthProvider>
+          <Web3Provider>
+            <AuthProvider>
+              <SettingsProvider
+                defaultSettings={defaultSettings}
+                cookieSettings={appConfig.cookieSettings}
+              >
+                <LocalizationProvider>
+                  <AppRouterCacheProvider options={{ key: 'css' }}>
+                    <App>{children}</App>
+                  </AppRouterCacheProvider>
+                </LocalizationProvider>
+              </SettingsProvider>
+            </AuthProvider>
+          </Web3Provider>
         </I18nProvider>
 
 

@@ -22,6 +22,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { CONFIG } from 'src/global-config';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useRouter, useSearchParams } from 'src/routes/hooks';
@@ -85,10 +86,15 @@ export function CenteredSignInView() {
       setErrorMessage(null);
 
       // Chamada ao serviço de autenticação (Configura Axios + Cookies)
-      await signIn(data.email, data.password);
+      const user = await signIn(data.email, data.password);
 
-      // Se houver uma rota de retorno, prioriza ela; caso contrário, vai para a raiz do dashboard
-      router.push(returnTo || paths.dashboard.root);
+      // 🟢 REDIRECIONAMENTO INTELIGENTE (RBAC)
+      // Se houver uma rota de retorno, prioriza ela; caso contrário, usa o padrão do cargo
+      const defaultPath =
+        CONFIG.auth.defaultPathByRole[user.role as keyof typeof CONFIG.auth.defaultPathByRole] ||
+        paths.dashboard.root;
+
+      router.push(returnTo || defaultPath);
     } catch (error: any) {
       console.error('🔥 Login Error:', error);
       // Extrai mensagem de erro vinda do Interceptor do Axios (backend)

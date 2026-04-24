@@ -105,6 +105,8 @@ export function AuthProvider({ children }: Props) {
       // 🟢 Persiste no Cookie e localStorage
       setSession(accessToken);
       setState({ user: sessionUser, loading: false });
+
+      return sessionUser;
     },
     [setState]
   );
@@ -120,8 +122,12 @@ export function AuthProvider({ children }: Props) {
 
       if (!accessToken) throw new Error('Erro ao gerar sessão pós-registro.');
 
+      const sessionUser = mapUser(user, accessToken);
+
       setSession(accessToken);
-      setState({ user: mapUser(user, accessToken), loading: false });
+      setState({ user: sessionUser, loading: false });
+
+      return sessionUser;
     },
     [setState]
   );

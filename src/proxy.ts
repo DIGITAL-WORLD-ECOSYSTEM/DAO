@@ -8,6 +8,7 @@
 import type { NextRequest } from 'next/server';
 
 import { NextResponse } from 'next/server';
+import { decodeJwt } from 'jose';
 
 // --- CONFIGURAÇÃO DE ROTAS ---
 
@@ -20,6 +21,10 @@ const PROTECTED_PATHS = ['/dashboard', '/user/account'];
  * Se o usuário já estiver logado, ele será impedido de acessar estas páginas.
  */
 const AUTH_PATHS = ['/auth/sign-in', '/auth/sign-up'];
+
+/** * Rotas restritas exclusivamente para administradores da DAO.
+ */
+const ADMIN_PATHS = ['/dashboard/post', '/dashboard/user/list', '/dashboard/user/new'];
 
 /**
  * Lógica Principal do Proxy (Antigo Middleware)
@@ -49,6 +54,26 @@ export function proxy(request: NextRequest) {
   if (isAccessingAuth && token) {
     // Cidadão já autenticado: Redireciona para o core do sistema.
     return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  // 4. VALIDAÇÃO DE CARGO (RBAC DE BORDA)
+  const isAccessingAdmin = ADMIN_PATHS.some((path) => pathname.startsWith(path));
+
+  if (isAccessingAdmin && token) {
+    try {
+      const payload = decodeJwt(token);
+      const role = payload.role as string;
+
+      if (role !== 'admin') {
+        // Redireciona Cidadãos que tentam burlar o menu lateral para a home do dashboard
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+    } catch (error) {
+      // Token malformatado: força re-login
+      const response = NextResponse.redirect(new URL('/auth/sign-in', request.url));
+      response.cookies.delete('accessToken');
+      return response;
+    }
   }
 
   // 4. FLUXO PADRÃO

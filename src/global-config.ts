@@ -22,6 +22,11 @@ export type ConfigValue = {
     method: 'jwt';
     skip: boolean;
     redirectPath: string;
+    defaultPathByRole: {
+      admin: string;
+      partner: string;
+      citizen: string;
+    };
   };
 };
 
@@ -84,5 +89,10 @@ export const CONFIG: ConfigValue = {
     method: 'jwt',
     skip: false,
     redirectPath: paths.dashboard.root,
+    defaultPathByRole: {
+      admin: paths.dashboard.root,
+      partner: paths.dashboard.root,
+      citizen: paths.dashboard.user.profile,
+    },
   },
 };

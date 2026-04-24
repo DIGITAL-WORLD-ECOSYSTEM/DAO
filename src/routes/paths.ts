@@ -98,5 +98,9 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/post/${kebabCase(MOCK_TITLE)}/edit`,
       },
     },
+    // DAO SECTIONS
+    governance: `${ROOTS.DASHBOARD}/governance`,
+    treasury: `${ROOTS.DASHBOARD}/treasury`,
+    bounties: `${ROOTS.DASHBOARD}/bounties`,
   },
 };

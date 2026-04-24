@@ -13,11 +13,12 @@
 
 import { getAddress } from 'viem';
 import { useState, useCallback } from 'react';
+import { useAccount, useSignMessage } from 'wagmi';
 
 import { paths } from 'src/routes/paths';
-
 import axios, { endpoints } from 'src/lib/axios';
 
+import { CONFIG } from 'src/global-config';
 import { setSession } from 'src/auth/context/utils';
 
 // ---------------------------------------------------------------------------
@@ -33,6 +34,9 @@ export interface UseSiweReturn {
 // ---------------------------------------------------------------------------
 
 export function useSiwe(): UseSiweReturn {
+  const { address: wagmiAddress, isConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+
   const [status, setStatus] = useState<SiweStatus>('idle');
   const [error, setError] = useState<string | null>(null);
 
@@ -41,56 +45,52 @@ export function useSiwe(): UseSiweReturn {
     setStatus('connecting');
 
     try {
-      // 1. Detectar provedor Ethereum
-      const eth = (window as any).ethereum;
-      if (!eth) {
-        throw new Error(
-          'Nenhuma carteira Web3 detectada. Instale o MetaMask ou use o Brave Wallet.'
-        );
+      // 1. Verificar conexão da carteira via Wagmi
+      if (!isConnected || !wagmiAddress) {
+        throw new Error('Por favor, conecte sua carteira primeiro.');
       }
 
-      // 2. Solicitar contas ao usuário
-      const accounts: string[] = await eth.request({ method: 'eth_requestAccounts' });
-      if (!accounts || accounts.length === 0) {
-        throw new Error('Nenhuma conta selecionada na carteira.');
-      }
-
-      const rawAddress = accounts[0];
-      const address = getAddress(rawAddress); // Checksum EIP-55
+      const address = getAddress(wagmiAddress); // Checksum EIP-55
 
       setStatus('signing');
 
-      // 3. Obter nonce do backend
+      // 2. Obter nonce do backend
       const nonceRes = await axios.get(`${endpoints.auth.web3Nonce}?address=${address}`);
       const { nonce, message } = nonceRes.data;
 
       if (!nonce) throw new Error('Falha ao obter nonce do servidor.');
 
-      // 4. Solicitar assinatura da mensagem
-      const signature: string = await eth.request({
-        method: 'personal_sign',
-        params: [message, address],
-      });
+      // 3. Solicitar assinatura da mensagem via hooks do Wagmi
+      const signature = await signMessageAsync({ message });
 
       setStatus('verifying');
 
-      // 5. Verificar assinatura no backend
+      // 4. Verificar assinatura no backend
       const verifyRes = await axios.post(endpoints.auth.web3Verify, {
         message,
         signature,
         address,
       });
 
-      const { accessToken } = verifyRes.data;
+      const { accessToken, user } = verifyRes.data;
       if (!accessToken) throw new Error('Token não recebido do servidor.');
+
+      // 5. Redirecionamento Inteligente (RBAC)
+      const role = user?.role || 'citizen';
+      const defaultPath =
+        CONFIG.auth.defaultPathByRole[role as keyof typeof CONFIG.auth.defaultPathByRole] ||
+        paths.dashboard.root;
 
       // 6. Salvar sessão e redirecionar (full reload para reinicializar AuthProvider)
       setSession(accessToken);
-      window.location.href = paths.dashboard.root;
+      window.location.href = defaultPath;
     } catch (err: any) {
       // Erros do usuário (rejeição de assinatura)
       const isUserRejected =
-        err?.code === 4001 || err?.message?.includes('rejected') || err?.message?.includes('denied');
+        err?.code === 4001 ||
+        err?.message?.includes('rejected') ||
+        err?.message?.includes('denied') ||
+        err?.name === 'UserRejectedRequestError';
 
       setError(
         isUserRejected
@@ -99,7 +99,7 @@ export function useSiwe(): UseSiweReturn {
       );
       setStatus('error');
     }
-  }, []);
+  }, [isConnected, wagmiAddress, signMessageAsync]);
 
   return { status, error, signInWithWallet };
 }
