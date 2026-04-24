@@ -103,28 +103,15 @@ export function Image({
       showPlaceholder && (
         <ImagePlaceholder className={imageClasses.placeholder} {...slotProps?.placeholder} />
       ),
-    image: () => {
-      let finalSrc = src;
-      
-      // 🟢 ACELERAÇÃO EDGE: Cloudflare Image Resizing (cdn-cgi)
-      // Converte Imagens pesadas em AVIF/WebP On-The-Fly.
-      if (typeof src === 'string' && src.startsWith('http') && !src.includes('/cdn-cgi/image/')) {
-        // Skip em localhost para manter DX local intacta
-        if (!src.includes('localhost') && !src.includes('127.0.0.1')) {
-           finalSrc = `/cdn-cgi/image/width=1200,format=auto,quality=85/${src}`;
-        }
-      }
-
-      return (
-        <ImageImg
-          src={finalSrc}
-          alt={alt}
-          onLoad={handleImageLoad}
-          className={imageClasses.img}
-          {...slotProps?.img}
-        />
-      );
-    },
+    image: () => (
+      <ImageImg
+        src={src}
+        alt={alt}
+        onLoad={handleImageLoad}
+        className={imageClasses.img}
+        {...slotProps?.img}
+      />
+    ),
   };
 
   return (
