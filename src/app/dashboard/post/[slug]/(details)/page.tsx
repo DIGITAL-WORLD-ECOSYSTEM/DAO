@@ -7,7 +7,7 @@
 
 import { _mock } from 'src/_mock';
 
-import { PostDetailsView } from 'src/sections/blog/view';
+import { PostDetailsView } from 'src/sections/blog/view/dashboard/post-details-view';
 
 // ----------------------------------------------------------------------
 
@@ -27,14 +27,14 @@ export const runtime = 'nodejs';
 
 type Props = {
   params: Promise<{
-    title: string;
+    slug: string;
   }>;
 };
 
 // ----------------------------------------------------------------------
 
 export default async function PostDetailsPage({ params }: Props) {
-  const { title } = await params;
+  const { slug } = await params;
 
   /**
    * 🛠️ CONSTRUÇÃO DO OBJETO (SERVER-SIDE):
@@ -43,7 +43,7 @@ export default async function PostDetailsPage({ params }: Props) {
    */
   const post = {
     id: _mock.id(1),
-    title: title.replace(/-/g, ' ') || _mock.postTitle(1),
+    title: slug.replace(/-/g, ' ') || _mock.postTitle(1),
     description: _mock.description(1),
     content: _mock.description(1),
     coverUrl: _mock.image.cover(1),

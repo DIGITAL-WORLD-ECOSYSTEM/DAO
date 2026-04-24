@@ -13,7 +13,7 @@ import { notFound } from 'next/navigation';
 import { CONFIG } from 'src/global-config';
 import { getPost, getLatestPosts } from 'src/actions/blog-ssr';
 
-import { PostDetailsHomeView } from 'src/sections/blog/view/home/post-details-home-view';
+import { PostDetailsHomeView } from 'src/sections/blog/view/public/post-details-home-view';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 type Props = {
-  params: Promise<{ title: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 // ----------------------------------------------------------------------
@@ -36,16 +36,16 @@ type Props = {
  * 🌐 GERADOR DE METADADOS (SEO):
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { title } = await params;
+  const { slug } = await params;
 
   // Busca real na API para manter SEO consistente (com fallback interno no getPost)
-  const { post } = await getPost(title);
+  const { post } = await getPost(slug);
 
   if (!post) {
     return { title: `Post não encontrado | ${CONFIG.appName}` };
   }
 
-  const slug = post.slug || kebabCase(post.title);
+  const postSlug = post.slug || kebabCase(post.title);
 
   return {
     title: `${post.title} | ${CONFIG.appName}`,
@@ -54,10 +54,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.description,
       type: 'article',
-      url: `${CONFIG.siteUrl}/post/${slug}`,
+      url: `${CONFIG.siteUrl}/post/${postSlug}`,
       images: [
         {
-          url: `/post/${slug}/opengraph-image`,
+          url: `/post/${postSlug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -78,11 +78,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * 🏛️ COMPONENTE DE PÁGINA (SERVER COMPONENT):
  */
 export default async function Page({ params }: Props) {
-  const { title } = await params;
+  const { slug } = await params;
 
   // Busca dos dados no servidor via SSR Action
-  const { post } = await getPost(title);
-  const { latestPosts } = await getLatestPosts(title);
+  const { post } = await getPost(slug);
+  const { latestPosts } = await getLatestPosts(slug);
 
   if (!post) {
     notFound();

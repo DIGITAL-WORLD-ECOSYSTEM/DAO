@@ -30,19 +30,19 @@ type Props = BoxProps & {
   /** * ✅ TIPAGEM ROBUSTA:
    * Definimos como string para aceitar os estados 'published' e 'draft' tratados na View.
    */
-  publish: string;
-  onChangePublish: (newValue: string) => void;
-  publishOptions: { value: string; label: string }[];
+  status: string;
+  onChangeStatus: (newValue: string) => void;
+  statusOptions: { value: string; label: string }[];
 };
 
 export function PostDetailsToolbar({
   sx,
-  publish,
+  status,
   backHref,
   editHref,
   liveHref,
-  publishOptions,
-  onChangePublish,
+  statusOptions,
+  onChangeStatus,
   ...other
 }: Props) {
   const menuActions = usePopover();
@@ -55,13 +55,13 @@ export function PostDetailsToolbar({
       slotProps={{ arrow: { placement: 'top-right' } }}
     >
       <MenuList>
-        {publishOptions.map((option) => (
+        {statusOptions.map((option) => (
           <MenuItem
             key={option.value}
-            selected={option.value === publish}
+            selected={option.value === status}
             onClick={() => {
               menuActions.onClose();
-              onChangePublish(option.value);
+              onChangeStatus(option.value);
             }}
             sx={{ gap: 1 }}
           >
@@ -94,7 +94,7 @@ export function PostDetailsToolbar({
         <Box sx={{ flexGrow: 1 }} />
 
         {/* ✅ LÓGICA DE VISIBILIDADE: Só exibe o link 'Live' se estiver publicado */}
-        {publish === 'published' && (
+        {status === 'published' && (
           <Tooltip title="Ver no site público">
             <IconButton component={RouterLink} href={liveHref} color="primary">
               <Iconify icon="eva:external-link-fill" />
@@ -112,13 +112,13 @@ export function PostDetailsToolbar({
           color="inherit"
           variant="contained"
           /** ✅ ESTABILIDADE: loadingIndicator evita saltos de layout durante trocas de estado */
-          loading={!publish}
+          loading={!status}
           loadingIndicator="Carregando..."
           endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
           onClick={menuActions.onOpen}
           sx={{ textTransform: 'capitalize' }}
         >
-          {publish || 'Status'}
+          {statusOptions.find((opt) => opt.value === status)?.label || 'Status'}
         </Button>
       </Box>
 

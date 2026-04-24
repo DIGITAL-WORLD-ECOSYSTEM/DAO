@@ -3,7 +3,7 @@ import type { IDateValue } from './common';
 // ----------------------------------------------------------------------
 
 export type IPostFilters = {
-  publish: boolean;
+  status: 'draft' | 'review' | 'published' | 'archived' | 'all';
 };
 
 export type IPostHero = {
@@ -41,7 +41,7 @@ export type IPostItem = {
   title: string;
   slug: string;
   tags: string[];
-  publish: boolean;
+  status: 'draft' | 'review' | 'published' | 'archived';
   content: string;
   coverUrl: string;
   category: string; // 👈 ESSENCIAL: Para os badges (Análise, DEX, Preço, etc)

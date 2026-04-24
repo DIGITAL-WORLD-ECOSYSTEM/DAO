@@ -14,13 +14,11 @@ export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  params: { title: string };
-};
+export default async function Image({ params }: { params: { slug: string } }) {
+  const { slug } = await params;
 
-export default async function Image({ params }: Props) {
   // 🟢 CORREÇÃO: Busca resiliente por slug
-  const post = _posts.find((p) => kebabCase(p.title) === params.title);
+  const post = _posts.find((p) => kebabCase(p.title) === slug);
 
   return new ImageResponse(
     <div

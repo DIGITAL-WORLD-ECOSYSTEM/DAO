@@ -123,14 +123,14 @@ export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }
           >
             <Label
               variant="soft"
-              color={String(post.publish) === 'published' ? 'info' : 'default'}
+              color={post.status === 'published' ? 'info' : post.status === 'review' ? 'warning' : 'default'}
               sx={{
                 textTransform: 'uppercase',
                 fontFamily: "'Orbitron', sans-serif",
                 fontSize: 10,
               }}
             >
-              {String(post.publish)}
+              {post.status}
             </Label>
 
             <Box component="span" sx={{ typography: 'caption', color: 'text.disabled' }}>

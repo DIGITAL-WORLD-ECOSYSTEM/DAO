@@ -7,32 +7,23 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 
-import { PostRecent } from '../item/recent';
-import { PostVideo } from '../components/video';
-import { PostTrending } from '../item/trending';
-import { PostAuthors } from '../components/authors';
-import { PostNewsletter } from '../forms/newsletter';
-import { PostFeatured } from '../components/featured';
-import { PostCommunity } from '../components/community';
-import { PostAdvertisement } from '../components/advertisement';
+import { PostRecent } from '../../item/recent';
+import { PostVideo } from '../../components/video';
+import { PostTrending } from '../../item/trending';
+import { PostAuthors } from '../../components/authors';
+import { CategoryItem } from '../../item/category-item';
+import { PostNewsletter } from '../../forms/newsletter';
+import { PostFeatured } from '../../components/featured';
+import { PostCommunity } from '../../components/community';
+import { PostAdvertisement } from '../../components/advertisement';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   posts: IPostItem[];
-  economiaSection: ReactNode;
-  tecnologiaSection: ReactNode;
-  meioAmbienteSection: ReactNode;
-  geopoliticaSection: ReactNode;
 };
 
-export function PostListHomeView({
-  posts,
-  economiaSection,
-  tecnologiaSection,
-  meioAmbienteSection,
-  geopoliticaSection,
-}: Props) {
+export function PostListHomeView({ posts }: Props) {
   return (
     <Stack
       spacing={0}
@@ -63,9 +54,9 @@ export function PostListHomeView({
         <PostRecent posts={posts} />
       </Box>
 
-      {/* 5. ECONOMIA - Slot dinâmico com Key única */}
+      {/* 5. ECONOMIA - Slot dinâmico */}
       <Box key="view-section-economia" sx={{ bgcolor: 'transparent' }}>
-        {economiaSection}
+        <CategoryItem category="Economia" posts={posts} />
       </Box>
 
       {/* 6. QUEBRA VISUAL: Vídeos */}
@@ -73,9 +64,9 @@ export function PostListHomeView({
         <PostVideo />
       </Container>
 
-      {/* 7. TECNOLOGIA - Foco da transparência */}
+      {/* 7. TECNOLOGIA */}
       <Box key="view-section-tecnologia" sx={{ bgcolor: 'transparent' }}>
-        {tecnologiaSection}
+        <CategoryItem category="Tecnologia" posts={posts} />
       </Box>
 
       {/* 8. CONVERSÃO: Banner de Anúncio */}
@@ -83,14 +74,14 @@ export function PostListHomeView({
         <PostAdvertisement />
       </Container>
 
-      {/* 9. GEOPOLÍTICA - Slot dinâmico com Key única */}
+      {/* 9. GEOPOLÍTICA */}
       <Box key="view-section-geopolitica" sx={{ bgcolor: 'transparent' }}>
-        {geopoliticaSection}
+        <CategoryItem category="Geopolítica" posts={posts} />
       </Box>
 
-      {/* 10. MEIO AMBIENTE - Slot dinâmico com Key única */}
+      {/* 10. MEIO AMBIENTE */}
       <Box key="view-section-meio-ambiente" sx={{ bgcolor: 'transparent' }}>
-        {meioAmbienteSection}
+        <CategoryItem category="Meio Ambiente" posts={posts} />
       </Box>
 
       {/* 11. HUMANIZAÇÃO: Autores */}

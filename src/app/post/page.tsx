@@ -1,12 +1,6 @@
-// src/app/post/page.tsx
-
 import { getPosts } from 'src/actions/blog-ssr';
 
-import { Economia } from 'src/sections/blog/item/economia';
-import { Tecnologia } from 'src/sections/blog/item/tecnologia';
-import { Geopolitica } from 'src/sections/blog/item/geopolitica';
-import { MeioAmbiente } from 'src/sections/blog/item/meio-ambiente';
-import { PostListHomeView } from 'src/sections/blog/view/post-list-home-view';
+import { PostListHomeView } from 'src/sections/blog/view/public/post-list-home-view';
 
 // ✅ CORREÇÃO DO ERRO DA VERCEL: Força a renderização dinâmica no servidor (SSR)
 // Isso resolve o erro "Route /post couldn't be rendered statically"
@@ -31,12 +25,6 @@ export default async function PostListPage() {
   const posts = JSON.parse(JSON.stringify(rawPosts));
 
   return (
-    <PostListHomeView
-      posts={posts}
-      economiaSection={<Economia posts={posts} />}
-      tecnologiaSection={<Tecnologia posts={posts} />}
-      meioAmbienteSection={<MeioAmbiente posts={posts} />}
-      geopoliticaSection={<Geopolitica posts={posts} />}
-    />
+    <PostListHomeView posts={posts} />
   );
 }

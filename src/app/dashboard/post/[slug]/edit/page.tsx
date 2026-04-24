@@ -17,13 +17,13 @@ export const runtime = 'nodejs';
 export const metadata: Metadata = { title: `Edit post | Dashboard - ${CONFIG.appName}` };
 
 type Props = {
-  params: Promise<{ title: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export default async function Page({ params }: Props) {
-  const { title } = await params;
+  const { slug } = await params;
 
-  const { post } = await getPost(title);
+  const { post } = await getPost(slug);
 
   if (!post) {
     return notFound();

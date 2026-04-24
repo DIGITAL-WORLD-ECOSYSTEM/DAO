@@ -4,9 +4,11 @@ import { _mock } from './_mock';
 
 // ----------------------------------------------------------------------
 
-export const POST_PUBLISH_OPTIONS = [
+export const POST_STATUS_OPTIONS = [
   { value: 'published', label: 'Publicado' },
   { value: 'draft', label: 'Rascunho' },
+  { value: 'review', label: 'Em Revisão' },
+  { value: 'archived', label: 'Arquivado' },
 ];
 
 export const POST_SORT_OPTIONS = [
@@ -62,7 +64,7 @@ export const _posts: IPostItem[] = POST_TITLES.map((title, index) => {
     description: 'This is a mock description.',
     content: 'This is mock content.',
     coverUrl: _mock.image.cover(index),
-    publish: index % 10 !== 0,
+    status: index % 10 !== 0 ? 'published' : 'draft',
     createdAt: _mock.time(index),
     totalViews: _mock.number.nativeL(index),
     totalShares: _mock.number.nativeL(index + 1),

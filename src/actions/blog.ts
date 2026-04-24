@@ -30,10 +30,10 @@ type PostsData = {
   };
 };
 
-export function useGetPosts(params?: { category?: string; publish?: string; sortBy?: string; page?: number; limit?: number }) {
+export function useGetPosts(params?: { category?: string; status?: string; sortBy?: string; page?: number; limit?: number }) {
   const query = new URLSearchParams();
   if (params?.category) query.append('category', params.category);
-  if (params?.publish) query.append('publish', params.publish);
+  if (params?.status) query.append('status', params.status);
   if (params?.sortBy) query.append('sortBy', params.sortBy);
   if (params?.page) query.append('page', String(params.page));
   if (params?.limit) query.append('limit', String(params.limit));
@@ -236,6 +236,8 @@ type BlogStatsData = {
     all: number;
     published: number;
     draft: number;
+    review: number;
+    archived: number;
   };
 };
 
@@ -244,7 +246,7 @@ export function useGetBlogStats() {
   const { data, isLoading, error, isValidating } = useSWR<BlogStatsData>(url, fetcher, swrOptions);
 
   return {
-    stats: data?.data || { all: 0, published: 0, draft: 0 },
+    stats: data?.data || { all: 0, published: 0, draft: 0, review: 0, archived: 0 },
     statsLoading: isLoading,
     statsError: error,
     statsValidating: isValidating,

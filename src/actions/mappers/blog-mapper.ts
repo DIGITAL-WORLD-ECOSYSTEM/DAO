@@ -20,7 +20,7 @@ export function mapToPostItem(apiData: any): IPostItem {
     // Lógica de Categoria com fallback
     category: apiData.category || 'Notícias',
 
-    publish: apiData.publish || 'published',
+    status: (apiData.status || (typeof apiData.publish === 'boolean' ? (apiData.publish ? 'published' : 'draft') : apiData.publish)) || 'draft',
     createdAt: new Date(apiData.createdAt || apiData.published_at).toISOString(),
 
     // Estatísticas (Garante que sempre sejam números)

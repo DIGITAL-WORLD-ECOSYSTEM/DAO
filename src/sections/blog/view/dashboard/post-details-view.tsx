@@ -1,15 +1,8 @@
-/**
- * Copyright 2026 ASPPIBRA – Associação dos Proprietários e Possuidores de Imóveis no Brasil.
- * Project: Governance System (ASPPIBRA DAO)
- * Role: Post Details View (Client Side)
- * Version: 1.5.0 - Refactored: Social Interaction & Fixed Syntax
- */
-
 'use client';
 
 import type { IPostItem } from 'src/types/blog';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
@@ -27,18 +20,19 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
-import { POST_PUBLISH_OPTIONS } from 'src/_mock';
+import { POST_STATUS_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { favoritePost, useGetPostComments } from 'src/actions/blog';
+import { favoritePost, useGetPostComments, useGetLatestPosts } from 'src/actions/blog';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 
-import { PostCommentForm } from '../forms/post-comment-form';
-import { PostDetailsHero } from '../details/post-details-hero';
-import { PostCommentList } from '../details/post-comment-list';
-import { PostDetailsToolbar } from '../details/post-details-toolbar';
+import { PostDetailsHero } from '../../details/post-details-hero';
+import { PostCommentList } from '../../details/post-comment-list';
+import { PostCommentForm } from '../../forms/post-comment-form';
+import { PostListHorizontal } from '../../item/list-horizontal';
+import { PostDetailsToolbar } from '../../details/post-details-toolbar';
 
 // ----------------------------------------------------------------------
 
@@ -54,16 +48,14 @@ type Props = {
 };
 
 export function PostDetailsView({ post }: Props) {
-  const [publish, setPublish] = useState<string>(() => {
-    if (typeof post?.publish === 'string') return post.publish;
-    if (post?.publish === true) return 'published';
-    return 'draft';
-  });
-
+  const [status, setStatus] = useState<string>('');
   const [favorite, setFavorite] = useState(false);
 
-  const handleChangePublish = useCallback((newValue: string) => {
-    setPublish(newValue);
+  const { comments } = useGetPostComments(post?.id || '');
+  const { latestPosts, latestPostsLoading } = useGetLatestPosts(post?.slug || '');
+
+  const handleChangeStatus = useCallback((newValue: string) => {
+    setStatus(newValue);
   }, []);
 
   const handleChangeFavorite = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,11 +69,15 @@ export function PostDetailsView({ post }: Props) {
     }
   }, [post?.id]);
 
+  useEffect(() => {
+    if (post) {
+      setStatus(post.status || 'draft');
+    }
+  }, [post]);
+
   const avatars = (post?.favoritePerson || []).map((person) => (
     <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
   ));
-
-  const { comments, commentsEmpty } = useGetPostComments(post?.id || '');
 
   return (
     <DashboardContent maxWidth={false} disablePadding>
@@ -90,13 +86,13 @@ export function PostDetailsView({ post }: Props) {
           backHref={paths.dashboard.post.root}
           editHref={paths.dashboard.post.edit(`${post?.title}`)}
           liveHref={paths.post.details(`${post?.slug}`)}
-          publish={publish}
-          onChangePublish={handleChangePublish}
-          publishOptions={POST_PUBLISH_OPTIONS}
+          status={`${status}`}
+          onChangeStatus={handleChangeStatus}
+          statusOptions={POST_STATUS_OPTIONS}
         />
       </Container>
 
-      <PostDetailsHero title={post?.title || ''} coverUrl={post?.coverUrl || ''} />
+      <PostDetailsHero title={`${post?.title}`} coverUrl={`${post?.coverUrl}`} />
 
       <Box
         sx={{
@@ -107,23 +103,23 @@ export function PostDetailsView({ post }: Props) {
           px: { xs: 2, sm: 3 },
         }}
       >
-        <Typography variant="subtitle1" sx={{ mb: 2 }}>
-          {post?.description}
-        </Typography>
+        <Typography variant="subtitle1" sx={{ mb: 2 }}>{post?.description}</Typography>
 
         <Markdown>{post?.content || ''}</Markdown>
 
         <Stack
           spacing={3}
-          sx={(theme) => ({
-            py: 3,
-            my: 5,
-            borderTop: `dashed 1px ${theme.vars.palette.divider}`,
-            borderBottom: `dashed 1px ${theme.vars.palette.divider}`,
-          })}
+          sx={[
+            (theme) => ({
+              py: 3,
+              my: 5,
+              borderTop: `dashed 1px ${theme.vars.palette.divider}`,
+              borderBottom: `dashed 1px ${theme.vars.palette.divider}`,
+            }),
+          ]}
         >
           <Box sx={{ gap: 1, display: 'flex', flexWrap: 'wrap' }}>
-            {post?.tags?.map((tag) => (
+            {post?.tags.map((tag) => (
               <Chip key={tag} label={tag} variant="soft" />
             ))}
           </Box>
@@ -166,6 +162,12 @@ export function PostDetailsView({ post }: Props) {
         <Divider sx={{ mt: 5, mb: 2 }} />
 
         <PostCommentList comments={comments} />
+      </Box>
+
+      {/* Seção de Posts Recentes conforme solicitado na descrição */}
+      <Box sx={{ px: { xs: 2, sm: 5 }, pb: 10 }}>
+        <Typography variant="h4" sx={{ mb: 5 }}>Recent Posts</Typography>
+        <PostListHorizontal posts={latestPosts} loading={latestPostsLoading} />
       </Box>
     </DashboardContent>
   );

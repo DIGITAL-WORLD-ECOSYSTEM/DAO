@@ -13,7 +13,7 @@ import { notFound } from 'next/navigation';
 import { _posts } from 'src/_mock/_blog';
 import { CONFIG } from 'src/global-config';
 
-import { PostListView } from 'src/sections/blog/view/post-list-view';
+import { PostListHomeView } from 'src/sections/blog/view/public/post-list-home-view';
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ export default async function Page({ params }: Props) {
    */
   const sanitizedPosts = JSON.parse(JSON.stringify(filteredPosts));
 
-  return <PostListView posts={sanitizedPosts} />;
+  return <PostListHomeView posts={sanitizedPosts} />;
 }
 
 // ----------------------------------------------------------------------

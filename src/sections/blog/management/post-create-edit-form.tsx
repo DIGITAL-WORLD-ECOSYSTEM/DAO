@@ -16,6 +16,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -42,6 +43,7 @@ import {
   schemaUtils,
   RHFTextField,
   RHFAutocomplete,
+  RHFSelect,
 } from 'src/components/hook-form';
 
 import { PostDetailsPreview } from './post-details-preview';
@@ -72,7 +74,7 @@ export const PostCreateSchema = z.object({
   metaKeywords: z.string().array().min(1, { message: 'Defina ao menos 1 palavra-chave para SEO.' }),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
-  publish: z.boolean(),
+  status: z.enum(['draft', 'review', 'published', 'archived']),
   comments: z.boolean(),
 });
 
@@ -106,7 +108,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
       metaKeywords: currentPost?.metaKeywords || [],
       metaTitle: currentPost?.metaTitle || '',
       metaDescription: currentPost?.metaDescription || '',
-      publish: currentPost?.publish || true,
+      status: (currentPost?.status ?? 'draft') as 'draft' | 'review' | 'published' | 'archived',
       comments: true,
     }),
     [currentPost]
@@ -153,18 +155,23 @@ export function PostCreateEditForm({ currentPost }: Props) {
     try {
       let finalCoverUrl = data.coverUrl;
 
-      // 1. Upload de Imagem para o R2 (se houver novo arquivo)
+      // 1. Upload de Imagem para o R2 via Presigned URL (Aceleração Client-To-Bucket P2P)
       if (data.coverUrl instanceof File) {
-        const formData = new FormData();
-        formData.append('file', data.coverUrl);
-        formData.append('entity_type', 'post');
-        formData.append('entity_id', currentPost?.slug || slugify(data.title));
-        
-        const uploadRes = await axios.post('/api/platform/storage/upload', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+        // Solicitando o passe temporário (Assinatura AWS S3 API)
+        const presignedRes = await axios.post('/api/platform/storage/presigned', {
+            filename: data.coverUrl.name,
+            contentType: data.coverUrl.type,
+            entity_type: 'post'
         });
         
-        finalCoverUrl = uploadRes.data.data.url;
+        const { uploadUrl, publicUrl } = presignedRes.data.data;
+        
+        // Disparando o PUT direto na Edge Network R2 passando a tag CORS correta
+        await axios.put(uploadUrl, data.coverUrl, {
+            headers: { 'Content-Type': data.coverUrl.type }
+        });
+        
+        finalCoverUrl = publicUrl;
       }
 
       // 2. Preparar payload final (Apenas campos aceitos pelo Backend, tratando nulos)
@@ -174,7 +181,7 @@ export function PostCreateEditForm({ currentPost }: Props) {
           description: data.description || undefined,
           category: data.category || 'Geral',
           tags: Array.isArray(data.tags) ? data.tags : [],
-          publish: !!data.publish,
+          status: data.status,
           slug: slugify(String(data.title)),
           authorId: '00000000-0000-0000-0000-000000000000',
       };
@@ -313,17 +320,20 @@ export function PostCreateEditForm({ currentPost }: Props) {
    */
   const renderActions = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 2 }}>
-      <Controller
-        name="publish"
-        control={control}
-        render={({ field }) => (
-          <FormControlLabel
-            label="Publicar Post"
-            control={<Switch {...field} checked={field.value} color="success" />}
-            sx={{ flexGrow: 1, pl: 3 }}
-          />
-        )}
-      />
+      <Box sx={{ width: 200, mr: 2 }}>
+        <RHFSelect name="status" label="Status Editorial">
+          {[
+            { value: 'draft', label: 'Rascunho' },
+            { value: 'review', label: 'Em Revisão' },
+            { value: 'published', label: 'Publicado' },
+            { value: 'archived', label: 'Arquivado' },
+          ].map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </RHFSelect>
+      </Box>
 
       <Button color="inherit" variant="outlined" size="large" onClick={showPreview.onTrue}>
         Pré-visualizar
