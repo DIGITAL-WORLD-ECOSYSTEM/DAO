@@ -106,111 +106,214 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
   }, [title]);
 
   return (
-    <>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
       <JsonLd schema={generateBreadcrumbs(breadcrumbs)} />
 
+      {/* ZONA 1: HERO — Mantém efeito full-bleed premium */}
       <PostDetailsHero title={title} author={author} coverUrl={coverUrl} createdAt={createdAt} />
 
-      <Container
-        maxWidth={false}
+      {/* ZONA 2: ÁREA DE LEITURA — Fundo sólido para legibilidade */}
+      <Box
         sx={(theme) => ({
-          py: 3,
-          mb: 5,
-          borderBottom: `solid 1px ${theme.palette.divider}`,
+          bgcolor: 'background.default',
+          borderTop: `1px solid ${theme.palette.divider}`,
+          pt: 5,
+          pb: 8,
         })}
       >
-        <CustomBreadcrumbs links={breadcrumbs} sx={{ maxWidth: 720, mx: 'auto' }} />
-      </Container>
+        <Container maxWidth="md">
+          <CustomBreadcrumbs
+            links={breadcrumbs}
+            sx={{ mb: 5, maxWidth: 720, mx: 'auto' }}
+          />
 
-      <Container maxWidth={false}>
-        <Stack sx={{ maxWidth: 720, mx: 'auto' }}>
-          {!!description && (
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
-              {description}
-            </Typography>
-          )}
+          <Stack sx={{ maxWidth: 720, mx: 'auto' }}>
+            {/* Descrição / Resumo */}
+            {!!description && (
+              <Typography
+                variant="h6"
+                sx={(theme) => ({
+                  mb: 4,
+                  color: 'text.secondary',
+                  fontStyle: 'italic',
+                  lineHeight: 1.8,
+                  borderLeft: `4px solid ${theme.palette.primary.main}`,
+                  pl: 2.5,
+                  fontFamily: "'Public Sans', sans-serif",
+                })}
+              >
+                {description}
+              </Typography>
+            )}
 
-          {!!content && <Markdown>{content}</Markdown>}
-
-          <Stack
-            spacing={3}
-            sx={(theme) => ({
-              py: 3,
-              my: 5,
-              borderTop: `dashed 1px ${theme.palette.divider}`,
-              borderBottom: `dashed 1px ${theme.palette.divider}`,
-            })}
-          >
-            {!!tags.length && (
-              <Box sx={{ gap: 1, display: 'flex', flexWrap: 'wrap' }}>
-                {tags.map((tag) => (
-                  <Chip key={tag} label={tag} variant="soft" />
-                ))}
+            {/* Corpo do artigo em Markdown */}
+            {!!content && (
+              <Box
+                sx={(theme) => ({
+                  // Tipografia do corpo do artigo
+                  '& p': {
+                    fontSize: 17,
+                    lineHeight: 1.9,
+                    color: 'text.primary',
+                    mb: 2.5,
+                    fontFamily: "'Public Sans', sans-serif",
+                  },
+                  '& h2': {
+                    fontSize: { xs: 22, md: 26 },
+                    fontWeight: 800,
+                    mt: 5,
+                    mb: 2,
+                    color: 'text.primary',
+                    fontFamily: "'Orbitron', sans-serif",
+                  },
+                  '& h3': {
+                    fontSize: { xs: 18, md: 21 },
+                    fontWeight: 700,
+                    mt: 4,
+                    mb: 1.5,
+                    color: 'text.primary',
+                    fontFamily: "'Orbitron', sans-serif",
+                  },
+                  '& ul, & ol': {
+                    pl: 3,
+                    mb: 2.5,
+                    '& li': {
+                      fontSize: 16,
+                      lineHeight: 1.8,
+                      mb: 1,
+                      color: 'text.primary',
+                    },
+                  },
+                  '& strong': { color: 'text.primary', fontWeight: 700 },
+                  '& blockquote': {
+                    borderLeft: `4px solid ${theme.palette.primary.main}`,
+                    pl: 2.5,
+                    py: 0.5,
+                    my: 3,
+                    color: 'text.secondary',
+                    fontStyle: 'italic',
+                    bgcolor: 'action.hover',
+                    borderRadius: '0 8px 8px 0',
+                  },
+                  '& hr': {
+                    border: 'none',
+                    borderTop: `1px dashed ${theme.palette.divider}`,
+                    my: 4,
+                  },
+                  '& img': {
+                    maxWidth: '100%',
+                    borderRadius: 2,
+                    my: 3,
+                  },
+                  '& code': {
+                    px: 0.75,
+                    py: 0.25,
+                    borderRadius: 0.75,
+                    fontSize: 14,
+                    bgcolor: 'action.selected',
+                    color: 'primary.main',
+                    fontFamily: 'monospace',
+                  },
+                  '& pre': {
+                    bgcolor: 'grey.900',
+                    color: 'common.white',
+                    p: 3,
+                    borderRadius: 2,
+                    overflowX: 'auto',
+                    my: 3,
+                    '& code': { bgcolor: 'transparent', color: 'inherit', p: 0 },
+                  },
+                })}
+              >
+                <Markdown>{content}</Markdown>
               </Box>
             )}
 
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <FormControlLabel
-                label={fShortenNumber(favoritesCount)}
-                control={
-                  <Checkbox
-                    checked={isFavorited}
-                    onChange={handleToggleFavorite}
-                    size="small"
-                    color="error"
-                    icon={<Iconify icon="solar:heart-bold" />}
-                    checkedIcon={<Iconify icon="solar:heart-bold" />}
-                  />
-                }
-                sx={{ mr: 1 }}
-              />
-
-              {!!favoritePeople.length && (
-                <StyledAvatarGroup>
-                  {favoritePeople.map((person, index) => (
-                    <Avatar
-                      key={`${person.name ?? 'user'}-${index}`}
-                      alt={person.name ?? ''}
-                      src={person.avatarUrl}
-                    />
+            {/* Tags e Favoritos */}
+            <Stack
+              spacing={3}
+              sx={(theme) => ({
+                py: 3,
+                my: 5,
+                borderTop: `dashed 1px ${theme.palette.divider}`,
+                borderBottom: `dashed 1px ${theme.palette.divider}`,
+              })}
+            >
+              {!!tags.length && (
+                <Box sx={{ gap: 1, display: 'flex', flexWrap: 'wrap' }}>
+                  {tags.map((tag) => (
+                    <Chip key={tag} label={tag} variant="soft" />
                   ))}
-                </StyledAvatarGroup>
+                </Box>
               )}
+
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <FormControlLabel
+                  label={fShortenNumber(favoritesCount)}
+                  control={
+                    <Checkbox
+                      checked={isFavorited}
+                      onChange={handleToggleFavorite}
+                      size="small"
+                      color="error"
+                      icon={<Iconify icon="solar:heart-bold" />}
+                      checkedIcon={<Iconify icon="solar:heart-bold" />}
+                    />
+                  }
+                  sx={{ mr: 1 }}
+                />
+
+                {!!favoritePeople.length && (
+                  <StyledAvatarGroup>
+                    {favoritePeople.map((person, index) => (
+                      <Avatar
+                        key={`${person.name ?? 'user'}-${index}`}
+                        alt={person.name ?? ''}
+                        src={person.avatarUrl}
+                      />
+                    ))}
+                  </StyledAvatarGroup>
+                )}
+              </Box>
+            </Stack>
+
+            {/* Comentários */}
+            <Box sx={{ mb: 3, mt: 5, display: 'flex', gap: 1.5, alignItems: 'center' }}>
+              <Typography variant="h4">Comments</Typography>
+              <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
+                ({comments.length})
+              </Typography>
             </Box>
+
+            <PostCommentForm postId={post?.id || ''} />
+
+            <Divider sx={{ mt: 5, mb: 2 }} />
+
+            <PostCommentList comments={comments} />
           </Stack>
-
-          <Box sx={{ mb: 3, mt: 5, display: 'flex', gap: 1.5, alignItems: 'center' }}>
-            <Typography variant="h4">Comments</Typography>
-            <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-              ({comments.length})
-            </Typography>
-          </Box>
-
-          <PostCommentForm postId={post?.id || ''} />
-
-          <Divider sx={{ mt: 5, mb: 2 }} />
-
-          <PostCommentList comments={comments} />
-        </Stack>
-      </Container>
-
-      {!!recentPosts.length && (
-        <Container sx={{ pb: 15 }}>
-          <Typography variant="h4" sx={{ mb: 5 }}>
-            Recent Posts
-          </Typography>
-
-          <Box sx={gridStyles}>
-            {recentPosts.map((latestPost: IPostItem) => (
-              <PostItem
-                key={latestPost.id}
-                post={latestPost}
-                detailsHref={paths.post.details(latestPost.slug)}
-              />
-            ))}
-          </Box>
         </Container>
+      </Box>
+
+      {/* ZONA 3: POSTS RECENTES */}
+      {!!recentPosts.length && (
+        <Box sx={(theme) => ({ bgcolor: 'background.paper', borderTop: `1px solid ${theme.palette.divider}`, py: 10 })}>
+          <Container>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              Recent Posts
+            </Typography>
+
+            <Box sx={gridStyles}>
+              {recentPosts.map((latestPost: IPostItem) => (
+                <PostItem
+                  key={latestPost.id}
+                  post={latestPost}
+                  detailsHref={paths.post.details(latestPost.slug)}
+                />
+              ))}
+            </Box>
+          </Container>
+        </Box>
       )}
-    </>
+    </Box>
   );
 }
