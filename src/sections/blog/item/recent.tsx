@@ -73,7 +73,7 @@ export function PostRecent({ posts: postsFromProps }: Props) {
           {posts.slice(0, viewLimit).map((post) => (
             <Grid key={post.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
-                <PostItem post={post as any} detailsHref={paths.post.details(post.title)} />
+                <PostItem post={post as any} detailsHref={paths.post.details((post as any).slug || post.title)} />
               </m.div>
             </Grid>
           ))}

@@ -135,7 +135,7 @@ export function PostTrending() {
               <PostItemLatest
                 post={post as any}
                 index={index}
-                detailsHref={paths.post.details(post.title)}
+                detailsHref={paths.post.details((post as any).slug || post.title)}
               />
             </m.div>
           </Grid>

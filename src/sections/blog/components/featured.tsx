@@ -157,7 +157,7 @@ export function PostFeatured({ sx }: { sx?: SxProps<Theme> }) {
 
 function PostItem({ post }: { post: any }) {
   const theme = useTheme();
-  const { coverUrl, title, author, createdAt, description, duration } = post;
+  const { coverUrl, title, slug, author, createdAt, description, duration } = post;
 
   return (
     <Box
@@ -249,7 +249,7 @@ function PostItem({ post }: { post: any }) {
 
           <Typography
             component={RouterLink}
-            href={paths.post.details(title)}
+            href={paths.post.details(slug || title)}
             variant="h3"
             sx={{
               mb: 3,

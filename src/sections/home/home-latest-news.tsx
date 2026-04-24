@@ -202,7 +202,7 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
                 <m.div variants={varFade('inUp')} transition={{ delay: index * 0.2 }}>
                   <Link
                     component={RouterLink}
-                    href={paths.post.details(post.title)}
+                    href={paths.post.details((post as any).slug || post.title)}
                     underline="none"
                   >
                     <Card
