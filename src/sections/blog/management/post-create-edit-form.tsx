@@ -155,23 +155,18 @@ export function PostCreateEditForm({ currentPost }: Props) {
     try {
       let finalCoverUrl = data.coverUrl;
 
-      // 1. Upload de Imagem para o R2 via Presigned URL (Aceleração Client-To-Bucket P2P)
+      // 1. Upload de Imagem para o R2 via Worker API (Bypass de CORS)
+      // O arquivo passa pelo nosso Worker em api.asppibra.com, que faz o upload para o R2.
       if (data.coverUrl instanceof File) {
-        // Solicitando o passe temporário (Assinatura AWS S3 API)
-        const presignedRes = await axios.post('/api/platform/storage/presigned', {
-            filename: data.coverUrl.name,
-            contentType: data.coverUrl.type,
-            entity_type: 'post'
+        const formData = new FormData();
+        formData.append('file', data.coverUrl);
+        formData.append('entity_type', 'post');
+
+        const uploadRes = await axios.post('/api/platform/storage/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
-        
-        const { uploadUrl, publicUrl } = presignedRes.data.data;
-        
-        // Disparando o PUT direto na Edge Network R2 passando a tag CORS correta
-        await axios.put(uploadUrl, data.coverUrl, {
-            headers: { 'Content-Type': data.coverUrl.type }
-        });
-        
-        finalCoverUrl = publicUrl;
+
+        finalCoverUrl = uploadRes.data.data.url;
       }
 
       // 2. Preparar payload final (Apenas campos aceitos pelo Backend, tratando nulos)
