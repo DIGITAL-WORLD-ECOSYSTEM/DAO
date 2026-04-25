@@ -7,6 +7,9 @@ import { getPosts } from 'src/actions/blog-ssr';
 
 // ----------------------------------------------------------------------
 
+// ✅ Força renderização dinâmica (a API é consultada em cada request do Google Bot)
+export const dynamic = 'force-dynamic';
+
 /**
  * SITEMAP DINÂMICO - PRODUÇÃO 2026
  */
