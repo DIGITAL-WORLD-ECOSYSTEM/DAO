@@ -1,9 +1,10 @@
 /**
  * OpenGraph Image Generator — ASPPIBRA Portal
  *
- * Optimization: Uses Vercel Image Optimizer (/_next/image) to compress
- * large cover images before embedding them into the OG image.
- * This prevents timeouts and 500 errors caused by multi-megabyte source images.
+ * This version is designed for maximum robustness.
+ * 1. Uses 'nodejs' runtime to allow Satori to handle remote images directly.
+ * 2. Implements a global try/catch to prevent 500 errors.
+ * 3. Uses a simple, clean layout with the cover image as a background.
  */
 
 import { ImageResponse } from 'next/og';
@@ -21,187 +22,164 @@ export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-/**
- * Fetches an image and converts it to a base64 data URL.
- * Uses a race to implement a timeout.
- */
-async function fetchImageAsDataUrl(url: string, timeoutMs: number = 8000): Promise<string | null> {
-  const fetchPromise = (async () => {
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) return null;
-      const buffer = await res.arrayBuffer();
-      const base64 = Buffer.from(buffer).toString('base64');
-      const contentType = res.headers.get('content-type') || 'image/png';
-      return `data:${contentType};base64,${base64}`;
-    } catch (error) {
-      console.error('[OG] Fetch error:', error);
-      return null;
-    }
-  })();
+export default async function Image({ params }: Props) {
+  try {
+    const resolvedParams = await params;
+    const { slug } = resolvedParams;
 
-  const timeoutPromise = new Promise<null>((resolve) => {
-    setTimeout(() => resolve(null), timeoutMs);
-  });
+    if (!slug) throw new Error('No slug provided');
 
-  return Promise.race([fetchPromise, timeoutPromise]);
+    const { post } = await getPost(slug);
+
+    const title = post?.title || 'ASPPIBRA - Notícias e Governança';
+    const category = post?.category || 'Geral';
+    const coverUrl = post?.coverUrl || CONFIG.assets.fallback.banner;
+    const primaryColor = '#65C4A8';
+    const darkBg = '#010409'; // Coerente com o tema dark da DAO
+
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: darkBg,
+            position: 'relative',
+            fontFamily: 'sans-serif',
+          }}
+        >
+          {/* Background Image Layer */}
+          <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={coverUrl}
+              alt=""
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                opacity: 0.5,
+              }}
+            />
+            {/* Gradient Overlay */}
+            <div
+              style={{
+                display: 'flex',
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(to right, ${darkBg} 40%, transparent 100%)`,
+              }}
+            />
+          </div>
+
+          {/* Content Layer */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              padding: '60px',
+              justifyContent: 'center',
+              position: 'relative',
+              zIndex: 10,
+            }}
+          >
+            {/* Tag */}
+            <div
+              style={{
+                display: 'flex',
+                backgroundColor: primaryColor,
+                color: '#000',
+                padding: '8px 20px',
+                borderRadius: '6px',
+                fontSize: '20px',
+                fontWeight: 800,
+                width: 'fit-content',
+                marginBottom: '40px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+              }}
+            >
+              {category}
+            </div>
+
+            {/* Title */}
+            <div
+              style={{
+                display: 'flex',
+                fontSize: title.length > 50 ? '54px' : '72px',
+                fontWeight: 900,
+                color: '#fff',
+                lineHeight: 1.1,
+                maxWidth: '80%',
+                marginBottom: '20px',
+              }}
+            >
+              {title}
+            </div>
+
+            {/* Brand/URL */}
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '40px' }}>
+              <div
+                style={{
+                  width: '4px',
+                  height: '24px',
+                  backgroundColor: primaryColor,
+                  marginRight: '12px',
+                }}
+              />
+              <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '24px', fontWeight: 500 }}>
+                asppibra.com
+              </div>
+            </div>
+          </div>
+
+          {/* Decorative Edge */}
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: '8px',
+              backgroundColor: primaryColor,
+            }}
+          />
+        </div>
+      ),
+      { ...size }
+    );
+  } catch (error) {
+    console.error('[OG_IMAGE_ERROR]', error);
+    // Fallback safe Image
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#010409',
+            color: '#fff',
+            fontSize: '64px',
+            fontWeight: 900,
+          }}
+        >
+          ASPPIBRA DAO
+        </div>
+      ),
+      { ...size }
+    );
+  }
 }
-
-/**
- * Strategy:
- * 1. Try fetching via Vercel Image Optimizer (optimized to 1200px width).
- * 2. Fallback to original URL if optimized fetch fails or hangs.
- */
-async function getOptimizedCover(originalUrl: string): Promise<string | null> {
-  const optimizedUrl = `${CONFIG.siteUrl}/_next/image?url=${encodeURIComponent(originalUrl)}&w=1200&q=80`;
-
-  // Attempt 1: Optimized
-  const optimized = await fetchImageAsDataUrl(optimizedUrl, 6000);
-  if (optimized) return optimized;
-
-  // Attempt 2: Original (fallback)
-  return fetchImageAsDataUrl(originalUrl, 8000);
-}
-
-// ----------------------------------------------------------------------
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
-
-export default async function Image({ params }: Props) {
-  const { slug } = await params;
-  const { post } = await getPost(slug);
-
-  const title = post?.title || 'ASPPIBRA DAO';
-  const category = post?.category || 'Portal';
-  const description = post?.description || 'Governança, Tokenização e Web3 no Brasil.';
-  const coverUrl = post?.coverUrl || null;
-  const siteDomain = CONFIG.siteUrl.replace('https://www.', '').replace('https://', '');
-  const primaryColor = '#65C4A8';
-  const darkBg = '#040D1A';
-
-  const coverDataUrl = coverUrl ? await getOptimizedCover(coverUrl) : null;
-
-  return new ImageResponse(
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        position: 'relative',
-        fontFamily: 'sans-serif',
-        backgroundColor: darkBg,
-        overflow: 'hidden',
-      }}
-    >
-      {/* Background Cover Image with Overlay */}
-      {coverDataUrl ? (
-        <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={coverDataUrl}
-            alt=""
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              opacity: 0.45,
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: `linear-gradient(135deg, ${darkBg} 35%, rgba(4,13,26,0.5) 100%)`,
-              display: 'flex',
-            }}
-          />
-        </div>
-      ) : null}
-
-      {/* Main Content Layout */}
-      <div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '64px',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        {/* Top Branding Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <div style={{ width: 10, height: 48, backgroundColor: primaryColor, borderRadius: 4, display: 'flex' }} />
-          <span style={{ color: primaryColor, fontSize: 28, fontWeight: 800, letterSpacing: 3 }}>
-            {CONFIG.appName}
-          </span>
-          <div
-            style={{
-              display: 'flex',
-              backgroundColor: 'rgba(101,196,168,0.15)',
-              border: `1px solid ${primaryColor}`,
-              borderRadius: 8,
-              padding: '6px 18px',
-              color: primaryColor,
-              fontSize: 18,
-              fontWeight: 700,
-              letterSpacing: 2,
-              marginLeft: 16,
-            }}
-          >
-            {category.toUpperCase()}
-          </div>
-        </div>
-
-        {/* Center Text Section */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: '75%' }}>
-          <div
-            style={{
-              fontSize: title.length > 50 ? 52 : 66,
-              fontWeight: 900,
-              color: '#FFFFFF',
-              lineHeight: 1.1,
-              letterSpacing: -1,
-              display: 'flex',
-              flexWrap: 'wrap',
-            }}
-          >
-            {title}
-          </div>
-          {description && (
-            <div style={{ fontSize: 22, color: 'rgba(255,255,255,0.65)', lineHeight: 1.4, display: 'flex' }}>
-              {description.length > 140 ? `${description.slice(0, 140)}...` : description}
-            </div>
-          )}
-        </div>
-
-        {/* Bottom Footer Section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 48, height: 3, backgroundColor: primaryColor, borderRadius: 2, display: 'flex' }} />
-          <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 24, letterSpacing: 1 }}>
-            {siteDomain}
-          </span>
-        </div>
-      </div>
-
-      {/* Decorative Accent Border */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: 6,
-          background: `linear-gradient(180deg, ${primaryColor} 0%, rgba(101,196,168,0) 50%, ${primaryColor} 100%)`,
-          display: 'flex',
-        }}
-      />
-    </div>,
-    { ...size }
-  );
-}
