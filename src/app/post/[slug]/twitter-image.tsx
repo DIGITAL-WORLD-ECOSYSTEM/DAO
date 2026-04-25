@@ -1,6 +1,9 @@
 /**
- * Twitter/X Card Image Generator — ASPPIBRA Portal
- * Usa pré-fetch de ArrayBuffer para compatibilidade com Satori.
+ * OpenGraph Image Generator — ASPPIBRA Portal
+ *
+ * Optimization: Uses Vercel Image Optimizer (/_next/image) to compress
+ * large cover images before embedding them into the OG image.
+ * This prevents timeouts and 500 errors caused by multi-megabyte source images.
  */
 
 import { ImageResponse } from 'next/og';
@@ -18,17 +21,46 @@ export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-async function fetchImageAsDataUrl(url: string): Promise<string | null> {
-  try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    if (!res.ok) return null;
-    const buffer = await res.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString('base64');
-    const ct = res.headers.get('content-type') || 'image/png';
-    return `data:${ct};base64,${base64}`;
-  } catch {
-    return null;
-  }
+/**
+ * Fetches an image and converts it to a base64 data URL.
+ * Uses a race to implement a timeout.
+ */
+async function fetchImageAsDataUrl(url: string, timeoutMs: number = 8000): Promise<string | null> {
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) return null;
+      const buffer = await res.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      const contentType = res.headers.get('content-type') || 'image/png';
+      return `data:${contentType};base64,${base64}`;
+    } catch (error) {
+      console.error('[OG] Fetch error:', error);
+      return null;
+    }
+  })();
+
+  const timeoutPromise = new Promise<null>((resolve) => {
+    setTimeout(() => resolve(null), timeoutMs);
+  });
+
+  return Promise.race([fetchPromise, timeoutPromise]);
+}
+
+/**
+ * Strategy:
+ * 1. Try fetching via Vercel Image Optimizer (optimized to 1200px width).
+ * 2. Fallback to original URL if optimized fetch fails or hangs.
+ */
+async function getOptimizedCover(originalUrl: string): Promise<string | null> {
+  const optimizedUrl = `${CONFIG.siteUrl}/_next/image?url=${encodeURIComponent(originalUrl)}&w=1200&q=80`;
+
+  // Attempt 1: Optimized
+  const optimized = await fetchImageAsDataUrl(optimizedUrl, 6000);
+  if (optimized) return optimized;
+
+  // Attempt 2: Original (fallback)
+  return fetchImageAsDataUrl(originalUrl, 8000);
 }
 
 // ----------------------------------------------------------------------
@@ -39,16 +71,17 @@ type Props = {
 
 export default async function Image({ params }: Props) {
   const { slug } = await params;
-
   const { post } = await getPost(slug);
 
   const title = post?.title || 'ASPPIBRA DAO';
   const category = post?.category || 'Portal';
+  const description = post?.description || 'Governança, Tokenização e Web3 no Brasil.';
   const coverUrl = post?.coverUrl || null;
+  const siteDomain = CONFIG.siteUrl.replace('https://www.', '').replace('https://', '');
   const primaryColor = '#65C4A8';
   const darkBg = '#040D1A';
 
-  const coverDataUrl = coverUrl ? await fetchImageAsDataUrl(coverUrl) : null;
+  const coverDataUrl = coverUrl ? await getOptimizedCover(coverUrl) : null;
 
   return new ImageResponse(
     <div
@@ -62,8 +95,8 @@ export default async function Image({ params }: Props) {
         overflow: 'hidden',
       }}
     >
-      {/* Imagem de capa com overlay */}
-      {coverDataUrl && (
+      {/* Background Cover Image with Overlay */}
+      {coverDataUrl ? (
         <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -75,75 +108,88 @@ export default async function Image({ params }: Props) {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              opacity: 0.3,
+              opacity: 0.45,
             }}
           />
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: `linear-gradient(to right, ${darkBg} 50%, rgba(4,13,26,0) 100%)`,
+              background: `linear-gradient(135deg, ${darkBg} 35%, rgba(4,13,26,0.5) 100%)`,
               display: 'flex',
             }}
           />
         </div>
-      )}
+      ) : null}
 
-      {/* Conteúdo */}
+      {/* Main Content Layout */}
       <div
         style={{
           position: 'relative',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '70px',
-          gap: 24,
-          width: '65%',
+          justifyContent: 'space-between',
+          padding: '64px',
+          width: '100%',
           height: '100%',
         }}
       >
-        {/* Badge de categoria */}
-        <div
-          style={{
-            display: 'flex',
-            width: 'fit-content',
-            backgroundColor: primaryColor,
-            color: '#000',
-            padding: '8px 22px',
-            borderRadius: 8,
-            fontSize: 22,
-            fontWeight: 800,
-            letterSpacing: 2,
-          }}
-        >
-          {category.toUpperCase()}
+        {/* Top Branding Section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+          <div style={{ width: 10, height: 48, backgroundColor: primaryColor, borderRadius: 4, display: 'flex' }} />
+          <span style={{ color: primaryColor, fontSize: 28, fontWeight: 800, letterSpacing: 3 }}>
+            {CONFIG.appName}
+          </span>
+          <div
+            style={{
+              display: 'flex',
+              backgroundColor: 'rgba(101,196,168,0.15)',
+              border: `1px solid ${primaryColor}`,
+              borderRadius: 8,
+              padding: '6px 18px',
+              color: primaryColor,
+              fontSize: 18,
+              fontWeight: 700,
+              letterSpacing: 2,
+              marginLeft: 16,
+            }}
+          >
+            {category.toUpperCase()}
+          </div>
         </div>
 
-        {/* Título */}
-        <div
-          style={{
-            display: 'flex',
-            fontSize: title.length > 60 ? 52 : 64,
-            fontWeight: 900,
-            color: '#FFFFFF',
-            lineHeight: 1.1,
-            letterSpacing: -1,
-            flexWrap: 'wrap',
-          }}
-        >
-          {title}
+        {/* Center Text Section */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: '75%' }}>
+          <div
+            style={{
+              fontSize: title.length > 50 ? 52 : 66,
+              fontWeight: 900,
+              color: '#FFFFFF',
+              lineHeight: 1.1,
+              letterSpacing: -1,
+              display: 'flex',
+              flexWrap: 'wrap',
+            }}
+          >
+            {title}
+          </div>
+          {description && (
+            <div style={{ fontSize: 22, color: 'rgba(255,255,255,0.65)', lineHeight: 1.4, display: 'flex' }}>
+              {description.length > 140 ? `${description.slice(0, 140)}...` : description}
+            </div>
+          )}
         </div>
 
-        {/* Rodapé */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 16 }}>
-          <div style={{ width: 40, height: 4, background: primaryColor, borderRadius: 2, display: 'flex' }} />
-          <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 26 }}>
-            {CONFIG.siteUrl.replace('https://www.', '').replace('https://', '')}
+        {/* Bottom Footer Section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: 48, height: 3, backgroundColor: primaryColor, borderRadius: 2, display: 'flex' }} />
+          <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 24, letterSpacing: 1 }}>
+            {siteDomain}
           </span>
         </div>
       </div>
 
-      {/* Borda esquerda */}
+      {/* Decorative Accent Border */}
       <div
         style={{
           position: 'absolute',
@@ -151,7 +197,7 @@ export default async function Image({ params }: Props) {
           top: 0,
           bottom: 0,
           width: 6,
-          background: primaryColor,
+          background: `linear-gradient(180deg, ${primaryColor} 0%, rgba(101,196,168,0) 50%, ${primaryColor} 100%)`,
           display: 'flex',
         }}
       />

@@ -1,9 +1,9 @@
 /**
  * OpenGraph Image Generator — ASPPIBRA Portal
- * Gera a imagem social (1200x630) para cada post.
  *
- * NOTA: Usa Promise.race() para timeout compatível com todas as versões Node.js no Vercel.
- * O coverUrl é pré-buscado como base64 para compatibilidade com Satori.
+ * Optimization: Uses Vercel Image Optimizer (/_next/image) to compress
+ * large cover images before embedding them into the OG image.
+ * This prevents timeouts and 500 errors caused by multi-megabyte source images.
  */
 
 import { ImageResponse } from 'next/og';
@@ -21,32 +21,46 @@ export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-/** Timeout compatível com todas as versões do Node.js */
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
-  return Promise.race([
-    promise,
-    new Promise<null>((resolve) => setTimeout(() => resolve(null), ms)),
-  ]);
+/**
+ * Fetches an image and converts it to a base64 data URL.
+ * Uses a race to implement a timeout.
+ */
+async function fetchImageAsDataUrl(url: string, timeoutMs: number = 8000): Promise<string | null> {
+  const fetchPromise = (async () => {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) return null;
+      const buffer = await res.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      const contentType = res.headers.get('content-type') || 'image/png';
+      return `data:${contentType};base64,${base64}`;
+    } catch (error) {
+      console.error('[OG] Fetch error:', error);
+      return null;
+    }
+  })();
+
+  const timeoutPromise = new Promise<null>((resolve) => {
+    setTimeout(() => resolve(null), timeoutMs);
+  });
+
+  return Promise.race([fetchPromise, timeoutPromise]);
 }
 
-/** Busca imagem remota como base64 data URL para uso no Satori */
-async function fetchCoverAsDataUrl(url: string): Promise<string | null> {
-  try {
-    const result = await withTimeout(
-      fetch(url, { cache: 'no-store' }).then(async (res) => {
-        if (!res.ok) return null;
-        const buffer = await res.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString('base64');
-        const ct = res.headers.get('content-type') || 'image/png';
-        return `data:${ct};base64,${base64}`;
-      }),
-      8000 // 8 segundos de timeout
-    );
-    return result;
-  } catch (err) {
-    console.error('[OG] Cover fetch failed:', err);
-    return null;
-  }
+/**
+ * Strategy:
+ * 1. Try fetching via Vercel Image Optimizer (optimized to 1200px width).
+ * 2. Fallback to original URL if optimized fetch fails or hangs.
+ */
+async function getOptimizedCover(originalUrl: string): Promise<string | null> {
+  const optimizedUrl = `${CONFIG.siteUrl}/_next/image?url=${encodeURIComponent(originalUrl)}&w=1200&q=80`;
+
+  // Attempt 1: Optimized
+  const optimized = await fetchImageAsDataUrl(optimizedUrl, 6000);
+  if (optimized) return optimized;
+
+  // Attempt 2: Original (fallback)
+  return fetchImageAsDataUrl(originalUrl, 8000);
 }
 
 // ----------------------------------------------------------------------
@@ -57,7 +71,6 @@ type Props = {
 
 export default async function Image({ params }: Props) {
   const { slug } = await params;
-
   const { post } = await getPost(slug);
 
   const title = post?.title || 'ASPPIBRA DAO';
@@ -68,10 +81,7 @@ export default async function Image({ params }: Props) {
   const primaryColor = '#65C4A8';
   const darkBg = '#040D1A';
 
-  // ✅ Pré-busca como base64 com timeout robusto
-  const coverDataUrl = coverUrl ? await fetchCoverAsDataUrl(coverUrl) : null;
-
-  console.log('[OG] slug:', slug, '| coverUrl:', coverUrl, '| hasData:', !!coverDataUrl);
+  const coverDataUrl = coverUrl ? await getOptimizedCover(coverUrl) : null;
 
   return new ImageResponse(
     <div
@@ -85,7 +95,7 @@ export default async function Image({ params }: Props) {
         overflow: 'hidden',
       }}
     >
-      {/* LAYER: Imagem de Capa + Overlay */}
+      {/* Background Cover Image with Overlay */}
       {coverDataUrl ? (
         <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -112,7 +122,7 @@ export default async function Image({ params }: Props) {
         </div>
       ) : null}
 
-      {/* LAYER: Conteúdo */}
+      {/* Main Content Layout */}
       <div
         style={{
           position: 'relative',
@@ -124,7 +134,7 @@ export default async function Image({ params }: Props) {
           height: '100%',
         }}
       >
-        {/* Header */}
+        {/* Top Branding Section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
           <div style={{ width: 10, height: 48, backgroundColor: primaryColor, borderRadius: 4, display: 'flex' }} />
           <span style={{ color: primaryColor, fontSize: 28, fontWeight: 800, letterSpacing: 3 }}>
@@ -148,11 +158,11 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* Título + Descrição */}
+        {/* Center Text Section */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: '75%' }}>
           <div
             style={{
-              fontSize: title.length > 60 ? 52 : 66,
+              fontSize: title.length > 50 ? 52 : 66,
               fontWeight: 900,
               color: '#FFFFFF',
               lineHeight: 1.1,
@@ -165,12 +175,12 @@ export default async function Image({ params }: Props) {
           </div>
           {description && (
             <div style={{ fontSize: 22, color: 'rgba(255,255,255,0.65)', lineHeight: 1.4, display: 'flex' }}>
-              {description.length > 120 ? `${description.slice(0, 120)}...` : description}
+              {description.length > 140 ? `${description.slice(0, 140)}...` : description}
             </div>
           )}
         </div>
 
-        {/* Footer */}
+        {/* Bottom Footer Section */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 48, height: 3, backgroundColor: primaryColor, borderRadius: 2, display: 'flex' }} />
           <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 24, letterSpacing: 1 }}>
@@ -179,7 +189,7 @@ export default async function Image({ params }: Props) {
         </div>
       </div>
 
-      {/* Borda esquerda premium */}
+      {/* Decorative Accent Border */}
       <div
         style={{
           position: 'absolute',
