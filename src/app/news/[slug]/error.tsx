@@ -1,0 +1,10 @@
+'use client';
+
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+  return (
+    <div>
+      <h2>Algo deu errado ao carregar o post!</h2>
+      <button onClick={() => reset()}>Tentar novamente</button>
+    </div>
+  );
+}

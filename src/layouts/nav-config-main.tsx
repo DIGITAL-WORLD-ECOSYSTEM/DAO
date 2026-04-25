@@ -11,5 +11,5 @@ export const navData: NavMainProps['data'] = [
   { title: 'Team', path: '/#team' },
   { title: 'Roadmap', path: '/#roadmap' },
   { title: 'FAQ', path: '/#faqs' },
-  { title: 'Blog', path: paths.post.root },
+  { title: 'News', path: paths.news.root },
 ];

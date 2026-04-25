@@ -105,6 +105,22 @@ const nextConfig: NextConfig = {
     },
   },
   
+  // ✅ REDIRECIONAMENTOS 301 — SEO Preservado: /post → /news
+  async redirects() {
+    return [
+      {
+        source: '/post',
+        destination: '/news',
+        permanent: true, // 301 — transfere a autoridade SEO
+      },
+      {
+        source: '/post/:slug*',
+        destination: '/news/:slug*',
+        permanent: true,
+      },
+    ];
+  },
+
   // 🔒 SEGURANÇA: Headers de Produção
   async headers() {
     return [

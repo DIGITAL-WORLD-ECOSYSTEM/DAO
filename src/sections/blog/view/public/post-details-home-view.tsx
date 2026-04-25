@@ -92,7 +92,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
   const breadcrumbs = useMemo(() => {
     const base = [
       { name: 'Home', href: '/' },
-      { name: 'Blog', href: paths.post.root },
+      { name: 'News', href: paths.news.root },
     ];
 
     if (title) {

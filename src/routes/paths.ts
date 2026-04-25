@@ -39,12 +39,20 @@ export const paths = {
   freeUI: 'https://mui.com/store/items/minimal-dashboard-free/',
   figmaUrl: 'https://www.figma.com/design/WadcoP3CSejUDj7YZc87xj/%5BPreview%5D-Minimal-Web.v7.3.0',
 
-  // POSTS PÚBLICOS (Essencial para SEO e Sitemap)
+  // PORTAL DE NOTÍCIAS — NEWS (Public, SEO-friendly, Internationalizado)
+  news: {
+    root: `/news`,
+    details: (slug: string) => `/news/${slug}`,
+    category: (slug: string) => `/news/category/${slug}`,
+    demo: { details: `/news/${kebabCase(MOCK_TITLE)}` },
+  },
+
+  // RETROCOMPATIBILIDADE: Alias post → news (usado internamente)
   post: {
-    root: `/post`,
-    details: (slug: string) => `/post/${slug}`,
-    category: (slug: string) => `/post/category/${slug}`, // ✅ Adicionado para resolver Erro 2339 no sitemap
-    demo: { details: `/post/${kebabCase(MOCK_TITLE)}` },
+    root: `/news`,
+    details: (slug: string) => `/news/${slug}`,
+    category: (slug: string) => `/news/category/${slug}`,
+    demo: { details: `/news/${kebabCase(MOCK_TITLE)}` },
   },
 
   // AUTH
