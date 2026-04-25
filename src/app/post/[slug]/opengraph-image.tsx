@@ -2,8 +2,8 @@
  * OpenGraph Image Generator — ASPPIBRA Portal
  * Gera a imagem social (1200x630) para cada post.
  *
- * NOTA TÉCNICA: O next/og (Satori) não suporta <img> com URL remota diretamente.
- * É necessário pré-buscar a imagem como ArrayBuffer e passá-la como base64 data URL.
+ * NOTA: Usa Promise.race() para timeout compatível com todas as versões Node.js no Vercel.
+ * O coverUrl é pré-buscado como base64 para compatibilidade com Satori.
  */
 
 import { ImageResponse } from 'next/og';
@@ -14,23 +14,37 @@ import { getPost } from 'src/actions/blog-ssr';
 // ----------------------------------------------------------------------
 
 export const runtime = 'nodejs';
-export const revalidate = 3600; // Cache de 1 hora
+export const revalidate = 3600;
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-/** Busca uma imagem remota e converte para data URL base64 */
-async function fetchImageAsDataUrl(url: string): Promise<string | null> {
+/** Timeout compatível com todas as versões do Node.js */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
+  return Promise.race([
+    promise,
+    new Promise<null>((resolve) => setTimeout(() => resolve(null), ms)),
+  ]);
+}
+
+/** Busca imagem remota como base64 data URL para uso no Satori */
+async function fetchCoverAsDataUrl(url: string): Promise<string | null> {
   try {
-    const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    if (!res.ok) return null;
-    const buffer = await res.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString('base64');
-    const contentType = res.headers.get('content-type') || 'image/png';
-    return `data:${contentType};base64,${base64}`;
-  } catch {
+    const result = await withTimeout(
+      fetch(url, { cache: 'no-store' }).then(async (res) => {
+        if (!res.ok) return null;
+        const buffer = await res.arrayBuffer();
+        const base64 = Buffer.from(buffer).toString('base64');
+        const ct = res.headers.get('content-type') || 'image/png';
+        return `data:${ct};base64,${base64}`;
+      }),
+      8000 // 8 segundos de timeout
+    );
+    return result;
+  } catch (err) {
+    console.error('[OG] Cover fetch failed:', err);
     return null;
   }
 }
@@ -44,7 +58,6 @@ type Props = {
 export default async function Image({ params }: Props) {
   const { slug } = await params;
 
-  // ✅ Busca dados reais do D1 via Worker API
   const { post } = await getPost(slug);
 
   const title = post?.title || 'ASPPIBRA DAO';
@@ -55,8 +68,10 @@ export default async function Image({ params }: Props) {
   const primaryColor = '#65C4A8';
   const darkBg = '#040D1A';
 
-  // ✅ Pré-busca a capa como base64 (necessário para Satori)
-  const coverDataUrl = coverUrl ? await fetchImageAsDataUrl(coverUrl) : null;
+  // ✅ Pré-busca como base64 com timeout robusto
+  const coverDataUrl = coverUrl ? await fetchCoverAsDataUrl(coverUrl) : null;
+
+  console.log('[OG] slug:', slug, '| coverUrl:', coverUrl, '| hasData:', !!coverDataUrl);
 
   return new ImageResponse(
     <div
@@ -70,8 +85,8 @@ export default async function Image({ params }: Props) {
         overflow: 'hidden',
       }}
     >
-      {/* LAYER: Imagem de Capa com Overlay */}
-      {coverDataUrl && (
+      {/* LAYER: Imagem de Capa + Overlay */}
+      {coverDataUrl ? (
         <div style={{ display: 'flex', position: 'absolute', inset: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -83,20 +98,19 @@ export default async function Image({ params }: Props) {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              opacity: 0.35,
+              opacity: 0.45,
             }}
           />
-          {/* Gradiente para legibilidade */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: `linear-gradient(135deg, ${darkBg} 40%, rgba(4,13,26,0) 100%)`,
+              background: `linear-gradient(135deg, ${darkBg} 35%, rgba(4,13,26,0.5) 100%)`,
               display: 'flex',
             }}
           />
         </div>
-      )}
+      ) : null}
 
       {/* LAYER: Conteúdo */}
       <div
@@ -112,15 +126,7 @@ export default async function Image({ params }: Props) {
       >
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <div
-            style={{
-              width: 10,
-              height: 48,
-              backgroundColor: primaryColor,
-              borderRadius: 4,
-              display: 'flex',
-            }}
-          />
+          <div style={{ width: 10, height: 48, backgroundColor: primaryColor, borderRadius: 4, display: 'flex' }} />
           <span style={{ color: primaryColor, fontSize: 28, fontWeight: 800, letterSpacing: 3 }}>
             {CONFIG.appName}
           </span>
@@ -142,7 +148,7 @@ export default async function Image({ params }: Props) {
           </div>
         </div>
 
-        {/* Título */}
+        {/* Título + Descrição */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: '75%' }}>
           <div
             style={{
@@ -158,7 +164,7 @@ export default async function Image({ params }: Props) {
             {title}
           </div>
           {description && (
-            <div style={{ fontSize: 22, color: 'rgba(255,255,255,0.6)', lineHeight: 1.4, display: 'flex' }}>
+            <div style={{ fontSize: 22, color: 'rgba(255,255,255,0.65)', lineHeight: 1.4, display: 'flex' }}>
               {description.length > 120 ? `${description.slice(0, 120)}...` : description}
             </div>
           )}
