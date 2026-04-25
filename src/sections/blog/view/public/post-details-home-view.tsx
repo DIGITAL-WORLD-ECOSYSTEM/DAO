@@ -26,7 +26,7 @@ import { favoritePost, useGetPostComments } from 'src/actions/blog';
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
-import { JsonLd, generateBreadcrumbs } from 'src/components/seo/json-ld';
+import { JsonLd, generateBreadcrumbs, generateArticleSchema } from 'src/components/seo/json-ld';
 
 import { PostItem } from '../../item/item';
 import { PostCommentForm } from '../../forms/post-comment-form';
@@ -108,6 +108,20 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
       <JsonLd schema={generateBreadcrumbs(breadcrumbs)} />
+
+      {/* JSON-LD: Article Schema (Google Rich Results) */}
+      {post && (
+        <JsonLd
+          schema={generateArticleSchema({
+            title,
+            description,
+            coverUrl,
+            createdAt: createdAt ? String(createdAt) : new Date().toISOString(),
+            authorName: author?.name || 'ASPPIBRA Editorial',
+            url: `/post/${post.slug || ''}`,
+          })}
+        />
+      )}
 
       {/* ZONA 1: HERO — Mantém efeito full-bleed premium */}
       <PostDetailsHero title={title} author={author} coverUrl={coverUrl} createdAt={createdAt} />

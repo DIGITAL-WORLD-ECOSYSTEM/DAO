@@ -2,7 +2,7 @@
  * Copyright 2026 ASPPIBRA – Associação dos Proprietários e Possuidores de Imóveis no Brasil.
  * Project: Governance System (ASPPIBRA DAO)
  * Role: Public Blog Post Detail Page
- * Version: 1.4.2 - Fix: Prerender & Serialization Error Resolution
+ * Version: 2.0 - Full OpenGraph & SEO Enterprise Implementation
  */
 
 import type { Metadata } from 'next';
@@ -17,12 +17,6 @@ import { PostDetailsHomeView } from 'src/sections/blog/view/public/post-details-
 
 // ----------------------------------------------------------------------
 
-/**
- * ✅ ESTABILIDADE DE BUILD (SOLUÇÃO DEFINITIVA):
- * Forçamos a renderização dinâmica para evitar que o Next.js tente serializar
- * funções de Server Actions durante o build estático. Isso resolve o erro:
- * "Functions cannot be passed directly to Client Components".
- */
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
@@ -33,12 +27,11 @@ type Props = {
 // ----------------------------------------------------------------------
 
 /**
- * 🌐 GERADOR DE METADADOS (SEO):
+ * 🌐 GERADOR DE METADADOS (SEO Enterprise):
+ * Tags completas para Facebook, Twitter/X, LinkedIn, WhatsApp e Google.
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-
-  // Busca real na API para manter SEO consistente (com fallback interno no getPost)
   const { post } = await getPost(slug);
 
   if (!post) {
@@ -46,28 +39,62 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const postSlug = post.slug || kebabCase(post.title);
+  const postUrl = `${CONFIG.siteUrl}/post/${postSlug}`;
+  const ogImageUrl = `${CONFIG.siteUrl}/post/${postSlug}/opengraph-image`;
 
   return {
     title: `${post.title} | ${CONFIG.appName}`,
     description: post.description,
+
+    // ✅ URL Canônica (evita penalização por conteúdo duplicado)
+    alternates: {
+      canonical: postUrl,
+    },
+
+    // ✅ OpenGraph Completo (Facebook, LinkedIn, WhatsApp, Telegram)
     openGraph: {
       title: post.title,
       description: post.description,
       type: 'article',
-      url: `${CONFIG.siteUrl}/post/${postSlug}`,
+      url: postUrl,
+      siteName: CONFIG.appName,
+      locale: 'pt_BR',
       images: [
         {
-          url: `/post/${postSlug}/opengraph-image`,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: post.title,
+          type: 'image/png',
         },
       ],
+      publishedTime: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+      modifiedTime: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+      authors: post.author?.name ? [post.author.name] : ['ASPPIBRA Editorial'],
+      section: post.category || 'Notícias',
+      tags: Array.isArray(post.tags) ? post.tags : [],
     },
+
+    // ✅ Twitter/X Card Completo
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      site: '@asppibra',
+      creator: '@asppibra',
+      images: [
+        {
+          url: ogImageUrl,
+          alt: post.title,
+        },
+      ],
+    },
+
+    // ✅ Robots
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
     },
   };
 }
@@ -80,7 +107,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { slug } = await params;
 
-  // Busca dos dados no servidor via SSR Action
   const { post } = await getPost(slug);
   const { latestPosts } = await getLatestPosts(slug);
 
@@ -89,10 +115,8 @@ export default async function Page({ params }: Props) {
   }
 
   /**
-   * 🛠️ HIGIENIZAÇÃO DE DADOS (DATA SANITIZATION):
-   * O erro de Prerender ocorre porque objetos vindos de Server Actions podem carregar
-   * funções de revalidação ou mappers. O processo abaixo garante que apenas
-   * dados puros (strings, numbers, arrays) sejam passados para o Client Component (PostDetailsHomeView).
+   * 🛠️ HIGIENIZAÇÃO DE DADOS:
+   * Garante que apenas dados puros sejam passados para o Client Component.
    */
   const sanitizedPost = JSON.parse(JSON.stringify(post));
   const sanitizedLatest = JSON.parse(JSON.stringify(latestPosts));

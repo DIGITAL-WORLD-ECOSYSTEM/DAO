@@ -1,24 +1,38 @@
-import { kebabCase } from 'es-toolkit';
+/**
+ * Twitter/X Card Image Generator — ASPPIBRA Portal
+ * Gera a imagem do card do Twitter (1200x630) com dados reais do D1.
+ */
+
 import { ImageResponse } from 'next/og';
 
-import { _posts } from 'src/_mock/_blog';
 import { CONFIG } from 'src/global-config';
+import { getPost } from 'src/actions/blog-ssr';
 
 // ----------------------------------------------------------------------
 
 export const runtime = 'nodejs';
+export const revalidate = 3600;
 
 export const size = { width: 1200, height: 630 };
-
 export const contentType = 'image/png';
 
 // ----------------------------------------------------------------------
 
-export default async function Image({ params }: { params: { slug: string } }) {
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export default async function Image({ params }: Props) {
   const { slug } = await params;
 
-  // 🟢 CORREÇÃO: Busca resiliente por slug
-  const post = _posts.find((p) => kebabCase(p.title) === slug);
+  // ✅ Busca na API real (D1)
+  const { post } = await getPost(slug);
+
+  const title = post?.title || 'ASPPIBRA DAO';
+  const category = post?.category || 'Portal';
+  const coverUrl = post?.coverUrl || null;
+  const primaryColor = '#65C4A8';
+  const darkBg = '#040D1A';
 
   return new ImageResponse(
     <div
@@ -26,60 +40,103 @@ export default async function Image({ params }: { params: { slug: string } }) {
         width: '100%',
         height: '100%',
         display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#000',
-        padding: '70px',
-        justifyContent: 'center',
-        fontFamily: '"Inter"',
+        position: 'relative',
+        fontFamily: '"Inter", sans-serif',
+        backgroundColor: darkBg,
+        overflow: 'hidden',
       }}
     >
-      {/* Badge de Categoria Estilo Twitter News */}
+      {/* Imagem de capa com overlay */}
+      {coverUrl && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={coverUrl}
+            alt=""
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: 0.3,
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `linear-gradient(to right, ${darkBg} 50%, transparent 100%)`,
+            }}
+          />
+        </>
+      )}
+
+      {/* Conteúdo */}
       <div
         style={{
+          position: 'relative',
           display: 'flex',
-          backgroundColor: '#65C4A8',
-          color: '#000',
-          padding: '8px 20px',
-          borderRadius: '8px',
-          fontSize: '24px',
-          fontWeight: 'bold',
-          marginBottom: '30px',
-          width: 'fit-content',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '70px',
+          gap: 24,
+          width: '65%',
+          height: '100%',
         }}
       >
-        {post?.category || 'ASPPIBRA'}
+        {/* Badge de categoria */}
+        <div
+          style={{
+            display: 'flex',
+            width: 'fit-content',
+            backgroundColor: primaryColor,
+            color: '#000',
+            padding: '8px 22px',
+            borderRadius: 8,
+            fontSize: 22,
+            fontWeight: 800,
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+          }}
+        >
+          {category}
+        </div>
+
+        {/* Título */}
+        <div
+          style={{
+            fontSize: title.length > 60 ? 52 : 64,
+            fontWeight: 900,
+            color: '#FFFFFF',
+            lineHeight: 1.1,
+            letterSpacing: -1,
+          }}
+        >
+          {title}
+        </div>
+
+        {/* Rodapé */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 16 }}>
+          <div style={{ width: 40, height: 4, background: primaryColor, borderRadius: 2 }} />
+          <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 26 }}>
+            {CONFIG.siteUrl.replace('https://www.', '').replace('https://', '')}
+          </span>
+        </div>
       </div>
 
-      {/* Título do Artigo */}
+      {/* Borda esquerda */}
       <div
         style={{
-          fontSize: '78px',
-          fontWeight: 'bold',
-          color: 'white',
-          lineHeight: 1.1,
-          letterSpacing: '-2px',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: 6,
+          background: primaryColor,
         }}
-      >
-        {post?.title || 'Conteúdo Oficial'}
-      </div>
-
-      {/* Rodapé com domínio e branding */}
-      <div
-        style={{
-          display: 'flex',
-          marginTop: '60px',
-          alignItems: 'center',
-          opacity: 0.6,
-        }}
-      >
-        <div style={{ width: 40, height: 4, background: '#65C4A8', marginRight: 15 }} />
-        <span style={{ color: '#fff', fontSize: '32px' }}>
-          {CONFIG.siteUrl.replace('https://www.', '')}
-        </span>
-      </div>
+      />
     </div>,
-    {
-      ...size,
-    }
+    { ...size }
   );
 }

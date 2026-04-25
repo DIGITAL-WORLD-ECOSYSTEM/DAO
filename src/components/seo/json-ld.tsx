@@ -29,7 +29,7 @@ export function generateBreadcrumbs(links: { name: string; href: string }[]) {
   };
 }
 
-// 🟢 AUXILIAR: Gera Esquema de Artigo
+// 🟢 AUXILIAR: Gera Esquema de Artigo (Google Rich Results)
 export function generateArticleSchema(data: {
   title: string;
   description: string;
@@ -37,14 +37,20 @@ export function generateArticleSchema(data: {
   createdAt: string;
   authorName: string;
   url: string;
+  tags?: string[];
+  category?: string;
 }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: data.title,
     description: data.description,
-    image: [data.coverUrl],
+    image: data.coverUrl ? [data.coverUrl] : [],
     datePublished: data.createdAt,
+    dateModified: data.createdAt,
+    keywords: data.tags?.join(', ') || data.category || '',
+    articleSection: data.category || 'Notícias',
+    inLanguage: 'pt-BR',
     author: [{ '@type': 'Person', name: data.authorName }],
     publisher: {
       '@type': 'Organization',
