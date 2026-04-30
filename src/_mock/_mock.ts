@@ -14,13 +14,21 @@ import {
   _nativeL,
   _percents,
   _booleans,
+  _sentences,
   _lastNames,
   _fullNames,
   _tourNames,
+  _jobTitles,
+  _taskNames,
+  _fileNames,
   _postTitles,
   _firstNames,
+  _eventNames,
+  _courseNames,
   _fullAddress,
+  _companyNames,
   _productNames,
+  _descriptions,
   _phoneNumbers,
   _countryNames,
 } from './assets';
@@ -33,44 +41,16 @@ export const _mock = {
   boolean: (index: number) => _booleans[index],
   role: (index: number) => _roles[index],
   // Text
+  courseNames: (index: number) => _courseNames[index],
+  fileNames: (index: number) => _fileNames[index],
+  eventNames: (index: number) => _eventNames[index],
+  taskNames: (index: number) => _taskNames[index],
   postTitle: (index: number) => _postTitles[index],
+  jobTitle: (index: number) => _jobTitles[index],
   tourName: (index: number) => _tourNames[index],
   productName: (index: number) => _productNames[index],
-
-  // ✅ CORREÇÃO 1: Mantendo a função description
-  description: (index: number) =>
-    'The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.',
-
-  // ✅ CORREÇÃO 2: Mantendo a função companyNames
-  companyNames: (index: number) =>
-    ['Minimals UI', 'Google', 'Stripe', 'Airbnb', 'Facebook', 'Amazon', 'Netflix', 'Tesla'][
-      index % 8
-    ],
-
-  // ✅ CORREÇÃO 3: Mantendo a função sentence
-  sentence: (index: number) =>
-    'The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.',
-
-  // ✅ CORREÇÃO 4: Mantendo a função taskNames
-  taskNames: (index: number) =>
-    [
-      'Prepare Monthly Financial Report',
-      'Design New Marketing Campaign',
-      'Analyze Customer Feedback',
-      'Update Website Content',
-      'Conduct Market Research',
-    ][index % 5],
-
-  // ✅ CORREÇÃO 5 (NOVA): Adicionando a função courseNames que quebrou o último build
-  courseNames: (index: number) =>
-    [
-      'Minimal UI Design',
-      'Python for Beginners',
-      'React Masterclass',
-      'Data Science 101',
-      'Digital Marketing Strategy',
-    ][index % 5],
-
+  sentence: (index: number) => _sentences[index],
+  description: (index: number) => _descriptions[index],
   // Contact
   email: (index: number) => _emails[index],
   phoneNumber: (index: number) => _phoneNumbers[index],
@@ -79,6 +59,7 @@ export const _mock = {
   firstName: (index: number) => _firstNames[index],
   lastName: (index: number) => _lastNames[index],
   fullName: (index: number) => _fullNames[index],
+  companyNames: (index: number) => _companyNames[index],
   countryNames: (index: number) => _countryNames[index],
   // Number
   number: {

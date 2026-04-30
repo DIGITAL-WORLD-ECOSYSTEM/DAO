@@ -25,7 +25,7 @@ export function CoreNav() {
     {
       name: 'Profile',
       icon: 'solar:user-id-bold',
-      onClick: () => router.push(paths.auth.signIn),
+      onClick: () => window.location.href = 'https://app.asppibra.com/login',
     },
     { name: 'GitHub', icon: 'mdi:github', onClick: () => console.info('GitHub') },
     {

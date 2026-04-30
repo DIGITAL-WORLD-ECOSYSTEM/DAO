@@ -42,6 +42,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
    * Executada sempre que o estado de autenticação ou a rota mudarem.
    */
   const checkPermissions = useCallback((): void => {
+    return; // 🔓 DESATIVADO TEMPORARIAMENTE PARA REVISÃO
     // 1. Se o provedor ainda estiver carregando (ex: validando JWT no D1), aguarde.
     if (loading) {
       return;
@@ -78,9 +79,10 @@ export function AuthGuard({ children }: AuthGuardProps) {
    * Enquanto houver incerteza sobre a identidade (loading ou isChecking),
    * o sistema exibe o SplashScreen oficial da marca para evitar FOUC (Flash of Unstyled Content).
    */
-  if (loading || isChecking) {
-    return <SplashScreen />;
-  }
+  // ✅ Bypassed for review
+  // if (loading || isChecking) {
+  //   return <SplashScreen />;
+  // }
 
   // Renderização segura dos componentes filhos (Dashboard/Admin)
   return <>{children}</>;

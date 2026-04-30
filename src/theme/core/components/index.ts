@@ -18,7 +18,6 @@ import { dialog } from './dialog';
 import { avatar } from './avatar';
 import { drawer } from './drawer';
 import { select } from './select';
-import { rating } from './rating';
 import { slider } from './slider';
 import { button } from './button';
 import { fab } from './button-fab';
@@ -37,10 +36,7 @@ import { textField } from './text-field';
 import { pagination } from './pagination';
 import { iconButton } from './button-icon';
 import { breadcrumbs } from './breadcrumbs';
-import { dataGrid } from './mui-x-data-grid';
-import { treeView } from './mui-x-tree-view';
 import { buttonGroup } from './button-group';
-import { autocomplete } from './autocomplete';
 import { toggleButton } from './button-toggle';
 import { datePicker } from './mui-x-date-picker';
 
@@ -78,11 +74,9 @@ export const components: Components<Theme> = {
   ...radio,
   ...select,
   ...slider,
-  ...rating,
   ...switches,
   ...checkbox,
   ...textField,
-  ...autocomplete,
   // ➤➤ Buttons ➤➤
   ...fab,
   ...button,
@@ -90,7 +84,5 @@ export const components: Components<Theme> = {
   ...buttonGroup,
   ...toggleButton,
   // ➤➤ MUI X ➤➤
-  ...treeView,
-  ...dataGrid,
   ...datePicker,
 };

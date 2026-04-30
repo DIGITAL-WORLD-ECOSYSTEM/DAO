@@ -111,7 +111,7 @@ export function setSession(accessToken: string | null) {
       // C. SINCRONIZAÇÃO COM MIDDLEWARE (Cookie)
       // Define o cookie com validade global e proteção SameSite
       const isSecure = window.location.protocol === 'https:';
-      document.cookie = `accessToken=${accessToken}; path=/; SameSite=Lax; ${isSecure ? 'Secure' : ''}`;
+      document.cookie = `daoAccessToken=${accessToken}; path=/; SameSite=Lax; ${isSecure ? 'Secure' : ''}`;
 
       // D. Inicia contador de expiração
       const decoded = jwtDecode(accessToken);
@@ -121,7 +121,7 @@ export function setSession(accessToken: string | null) {
       localStorage.removeItem(JWT_STORAGE_KEY);
 
       // Remove o Cookie forçando a expiração no passado
-      document.cookie = 'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+      document.cookie = 'daoAccessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
 
       delete axios.defaults.headers.common.Authorization;
 

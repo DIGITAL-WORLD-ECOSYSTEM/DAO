@@ -1,6 +1,7 @@
-import type { UseFormReturn } from 'react-hook-form';
+'use client';
 
-import { FormProvider as RHFForm } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
+import { FormProvider as RHFFormProvider } from 'react-hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -12,10 +13,10 @@ export type FormProps = {
 
 export function Form({ children, onSubmit, methods }: FormProps) {
   return (
-    <RHFForm {...methods}>
+    <RHFFormProvider {...methods}>
       <form onSubmit={onSubmit} noValidate autoComplete="off">
         {children}
       </form>
-    </RHFForm>
+    </RHFFormProvider>
   );
 }

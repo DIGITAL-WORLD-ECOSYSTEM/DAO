@@ -9,18 +9,18 @@ Fluxo de dados otimizado entre o Edge da Cloudflare e o usuário final:
 
 ```mermaid
 graph TD
-    A[Usuário e Web3 Wallet] -->|HTTPS Auth| B[Cloudflare CDN e WAF]
-    B -->|Cache Hit| A
-    B -->|Miss SSR| C[Next.js App Router]
-    C -->|REST Fetch| D[Cloudflare Workers API]
+    A["Usuário / Web3 Wallet"] -->|"HTTPS / SIWE Auth"| B("Cloudflare CDN / Edge / WAF")
+    B -->|"Cache Hit (KV)"| A
+    B -->|"Miss/Dynamic /post/:slug"| C["Next.js App Router SSR"]
+    C -->|"REST Fetch / SWR"| D("Cloudflare Workers API - Hono")
     
-    subgraph Backend
-      D -->|Validacao RBAC| E[Banco de Dados D1]
-      D -->|Upload| F[Cloudflare R2 Bucket]
+    subgraph backend ["ASPPIBRA DAO Backend Secure Zone"]
+      D -->|"Validação JWT & RBAC"| E[("Banco de Dados D1")]
+      D -->|"Media Request / Upload"| F[("Cloudflare R2 Bucket")]
     end
     
     E --> D
-    F -->|Image Resizing| D
+    F -->|"Cloudflare Image Resizing"| D
     D --> C
     C --> A
 ```
@@ -32,32 +32,54 @@ O banco de dados D1 é desenhado em **3NF (Terceira Forma Normal)** para escalar
 
 ```mermaid
 erDiagram
-    USERS ||--o{ CITIZENS : identity
-    USERS ||--o{ WALLETS : has
-    USERS ||--o{ POSTS : authors
-    POSTS ||--o{ POST_COMMENTS : has
-    USERS ||--o{ POST_COMMENTS : writes
-    POSTS ||--o{ POST_FAVORITES : likes
-    USERS ||--o{ POST_FAVORITES : likes
-    USERS ||--o{ AUDIT_LOGS : generates
+    USERS ||--o{ CITIZENS : "1:1 Identity"
+    USERS ||--o{ WALLETS : "has many"
+    USERS ||--o{ POSTS : "authors"
+    POSTS ||--o{ POST_COMMENTS : "has"
+    USERS ||--o{ POST_COMMENTS : "writes"
+    POSTS ||--o{ POST_FAVORITES : "likes"
+    USERS ||--o{ POST_FAVORITES : "likes"
+    USERS ||--o{ AUDIT_LOGS : "generates"
     
     USERS {
         integer id PK
-        string email
-        string role
+        string email "UK"
+        string role "citizen | admin"
     }
     CITIZENS {
         integer id PK
         integer user_id FK
-        string did
+        string did "Sovereign ID"
     }
     POSTS {
         integer id PK
         integer author_id FK
-        string slug
+        string slug "UK"
+        string status "draft | published"
+    }
+    TREASURY_TRANSACTIONS {
+        integer id PK
+        string asset_type "Stablecoin | RWA"
+        float amount
+        string tx_hash
+    }
+    COMMUNICATION_LOGS {
+        integer id PK
+        string channel "SMS | Email"
+        string destination
         string status
     }
 ```
+
+---
+
+## 🏛️ 1.1 Módulos do Ecossistema (Domínios de Engenharia)
+Para evitar que o "App único" se torne um monólito ingovernável, dividimos a lógica em micro-domínios:
+
+1. **Identity & Profiles (Cidadania Digital):** Gestão de DIDs, KYC e perfis de usuários.
+2. **Finances & RWA (Governance Treasury):** Controle de fluxos financeiros, tokenização de ativos reais e tesouraria da DAO.
+3. **Communications (Mass SMS/Email):** Motor de engajamento para alertas de votação e notificações institucionais.
+4. **Editorial & SocialFi (Blog):** O motor de notícias e interação social já estabelecido.
 
 ---
 
@@ -136,8 +158,16 @@ Integrações seguras com contratos estritos que blindam o Backend.
 
 ---
 
+## 📩 13. Motor de Comunicação em Massa (SMS & Email)
+Dada a natureza crítica de governança, o envio de comunicações não deve onerar o Worker principal:
+- **Email Transactional:** Recomendado uso de **Resend** ou **Amazon SES** via SDK assíncrono.
+- **SMS Alertas:** Integração direta com **Twilio** ou **MessageBird** para 2FA e convocações de assembleia.
+- **Queue System:** Utilizar **Cloudflare Queues** para processar disparos em massa sem travar a API de resposta ao usuário.
+
+---
+
 ## 🛠️ 9. CI/CD DevOps Circle
-- **Ambientes Isolados:** Configurados no `wrangler.toml`. (`preview` para PRs no GitHub, `production` ligado a `main`).
+- **Ambientes Isolados:** Configurados no [wrangler.toml](file:///home/sandro/DAO/backend/wrangler.toml). (`preview` para PRs no GitHub, `production` ligado a `main`).
 - **Migrations CI:** Toda alteração de schema dispara estritamente os scripts `wrangler d1 migrations apply gov-db --remote` via GitHub Action *depois* do build estático, assegurando Rollbacks Zero-Downtime.
 - **Testes Autarquistas:** `Vitest` unit test para validação de Zod Schemas via workers, e `Playwright` na Stage Phase verificando se a navegação SSR não está "Hydratando" mal o DOM na visão pública de Posts.
 
@@ -146,7 +176,7 @@ Integrações seguras com contratos estritos que blindam o Backend.
 ## 🛡️ 10. Segurança Avançada Perimetral
 - **Cloudflare WAF e Rate Limiting:** Endpoints de interação SocialFi (`/api/posts/:id/comments` e `favorites`) estão restritos por Rules do WAF da Cloudflare (Max requests per Minute/per IP), blindando exaustões do banco via spam botnets.
 - **CORS e Headers Sec:** `Access-Control-Allow-Origin` estrito referenciando apenas a `FRONTEND_URL`. 
-- **Secret Management:** Sem `.env` hardcoded. Todos os *Keys* confidenciais estão operantes via **Cloudflare Workers Secrets**.
+- **Secret Management:** Sem [.env](file:///home/sandro/DAO/frontend/.env) hardcoded. Todos os *Keys* confidenciais estão operantes via **Cloudflare Workers Secrets**.
 
 ---
 

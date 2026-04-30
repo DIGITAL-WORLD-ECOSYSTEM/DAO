@@ -88,11 +88,11 @@ export const CONFIG: ConfigValue = {
   auth: {
     method: 'jwt',
     skip: false,
-    redirectPath: paths.dashboard.root,
+    redirectPath: '/',
     defaultPathByRole: {
-      admin: paths.dashboard.root,
-      partner: paths.dashboard.root,
-      citizen: paths.dashboard.user.profile,
+      admin: '/',
+      partner: '/',
+      citizen: '/',
     },
   },
 };

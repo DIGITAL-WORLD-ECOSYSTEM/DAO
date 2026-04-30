@@ -13,9 +13,9 @@ export const _userAbout = {
   id: _mock.id(1),
   role: _mock.role(1),
   email: _mock.email(1),
-  school: 'University of Oxford',
-  company: 'Google',
-  country: 'United Kingdom',
+  school: _mock.companyNames(2),
+  company: _mock.companyNames(1),
+  country: _mock.countryNames(2),
   coverUrl: _mock.image.cover(3),
   totalFollowers: _mock.number.nativeL(1),
   totalFollowing: _mock.number.nativeL(2),
@@ -32,7 +32,7 @@ export const _userAbout = {
 export const _userFollowers = Array.from({ length: 18 }, (_, index) => ({
   id: _mock.id(index),
   name: _mock.fullName(index),
-  country: 'United Kingdom',
+  country: _mock.countryNames(index),
   avatarUrl: _mock.image.avatar(index),
 }));
 
@@ -54,7 +54,7 @@ export const _userFeeds = Array.from({ length: 3 }, (_, index) => ({
   id: _mock.id(index),
   createdAt: _mock.time(index),
   media: _mock.image.travel(index + 1),
-  message: 'This is a mock sentence',
+  message: _mock.sentence(index),
   personLikes: Array.from({ length: 20 }, (__, personIndex) => ({
     name: _mock.fullName(personIndex),
     avatarUrl: _mock.image.avatar(personIndex + 2),
@@ -134,8 +134,8 @@ export const _userList = Array.from({ length: 20 }, (_, index) => ({
   address: '908 Jack Locks',
   name: _mock.fullName(index),
   isVerified: _mock.boolean(index),
-  company: 'Google',
-  country: 'United Kingdom',
+  company: _mock.companyNames(index),
+  country: _mock.countryNames(index),
   avatarUrl: _mock.image.avatar(index),
   phoneNumber: _mock.phoneNumber(index),
   status:

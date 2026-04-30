@@ -69,12 +69,12 @@ axiosInstance.interceptors.response.use(
 
         const debugLog = {
           timestamp: new Date().toISOString(),
-          url: error?.config?.url,
-          method: error?.config?.method,
-          status,
+          url: error?.config?.url || 'URL Indisponível',
+          method: error?.config?.method || 'N/A',
+          status: status || 'Network Error',
           requestData,
           responseData: error?.response?.data || null,
-          error: error?.message,
+          error: error?.message || 'Erro de conexão ou servidor offline',
         };
 
       console.group('🚨 DAO API Error Debug');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useAuthContext } from 'src/auth/hooks';
 import { useTokenGating } from 'src/auth/hooks/use-token-gating';
 
 // ----------------------------------------------------------------------
@@ -25,7 +25,7 @@ export function HasPermission({
   children,
   fallback = null,
 }: Props) {
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
   const { hasAccess: hasTokenAccess, isLoading: isTokenLoading } = useTokenGating({
     contractAddress,
