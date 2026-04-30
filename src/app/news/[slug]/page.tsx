@@ -46,9 +46,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${post.title} | ${CONFIG.appName}`,
     description: post.description,
 
-    // ✅ URL Canônica (evita penalização por conteúdo duplicado)
+    // ✅ URL Canônica e Hreflang (SEO Internacional)
     alternates: {
       canonical: postUrl,
+      languages: {
+        'pt-BR': `${postUrl}?lang=pt`,
+        'en-US': `${postUrl}?lang=en`,
+        'es-ES': `${postUrl}?lang=es`,
+      },
     },
 
     // ✅ OpenGraph Completo (Facebook, LinkedIn, WhatsApp, Telegram)
@@ -90,11 +95,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
 
-    // ✅ Robots
+    // ✅ Robots & IA (Elite Directives)
     robots: {
       index: true,
       follow: true,
-      googleBot: { index: true, follow: true },
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }

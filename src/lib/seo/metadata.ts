@@ -43,11 +43,31 @@ export function constructMetadata({
       creator: '@asppibradao',
     },
     metadataBase: new URL(APP_URL),
-    ...(noIndex && {
-      robots: {
-        index: false,
-        follow: false,
+    alternates: {
+      canonical: '/',
+      languages: {
+        'pt-BR': '/?lang=pt',
+        'en-US': '/?lang=en',
+        'es-ES': '/?lang=es',
+        'fr-FR': '/?lang=fr',
+        'ar-SA': '/?lang=ar',
+        'zh-CN': '/?lang=cn',
+        'ru-RU': '/?lang=ru',
       },
-    }),
+    },
+    robots: {
+      index: !noIndex,
+      follow: !noIndex,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }

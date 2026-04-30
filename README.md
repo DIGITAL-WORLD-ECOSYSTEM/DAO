@@ -32,11 +32,59 @@ Pronto para a expansão global da DAO:
 *   **Engine:** `i18next` com detecção automática de região.
 *   **Estrutura:** Dicionários JSON organizados por módulos para suporte Multi-idioma.
 
-### 3. 🚀 Engine de SEO & Autoridade (E-E-A-T)
-Blindagem para indexação em mecanismos de busca (Padrão YMYL):
-*   **Metadados:** Injeção programática de Meta Tags e OpenGraph (Satori).
-*   **JSON-LD:** Schemas estruturados para artigos, autores e organização.
-*   **Institucional:** Páginas de autoridade: `About`, `Editorial Policy`, `Methodology` e `Fact-Checking`.
+## 🧠 Ecossistema de SEO & AI (Sinais de Autoridade)
+
+Este projeto foi projetado com uma arquitetura **AI-First**, garantindo que o conteúdo seja facilmente consumível por buscadores tradicionais (Google) e modelos de linguagem modernos (GPT, Claude, Perplexity).
+
+### 📂 Mapa Técnico de SEO
+Abaixo estão os arquivos e diretórios que compõem o motor de autoridade digital (E-E-A-T) da ASPPIBRA DAO:
+
+```text
+frontend/
+├── public/
+│   ├── .well-known/
+│   │   └── ai-plugin.json           # SEO para buscadores de IA (ChatGPT, etc)
+│   ├── schemas/                     # Definições estáticas de Structured Data
+│   │   ├── breadcrumb.json
+│   │   ├── organization.json
+│   │   └── website.json
+│   ├── ads.txt                      # Verificação para crawlers de anúncios
+│   ├── favicon.ico                  # Identidade visual nos resultados de busca
+│   └── humans.txt                   # Transparência e autoria (SEO indireto)
+├── src/
+│   ├── app/
+│   │   ├── (main)/
+│   │   │   ├── authors/             # Páginas de autor (Sinal de E-E-A-T)
+│   │   │   ├── editorial-policy/    # Políticas editoriais (Sinal de confiança)
+│   │   │   ├── fact-checking/       # Verificação de fatos (Sinal de autoridade)
+│   │   │   └── methodology/         # Transparência metodológica (E-E-A-T)
+│   │   ├── news/
+│   │   │   └── [slug]/
+│   │   │       ├── opengraph-image.tsx # OG Image dinâmica para notícias
+│   │   │       └── twitter-image.tsx   # Twitter Card dinâmico para notícias
+│   │   ├── rss/
+│   │   │   └── route.ts             # Feed para indexação rápida em agregadores
+│   │   ├── apple-icon.tsx           # SEO Mobile / Favicons
+│   │   ├── manifest.ts              # Web App Manifest (SEO Mobile/PWA)
+│   │   ├── opengraph-image.tsx      # Imagem de compartilhamento global
+│   │   ├── robots.ts                # Geração dinâmica do robots.txt (AI Optimized)
+│   │   ├── sitemap.ts               # Geração dinâmica do sitemap.xml
+│   │   └── twitter-image.tsx        # Imagem do Twitter Card global
+│   ├── components/
+│   │   └── seo/                     # Componentes reutilizáveis de SEO
+│   │       ├── analytics.tsx        # Rastreamento de performance
+│   │       ├── breadcrumb.tsx       # Navegação estruturada para o Google
+│   │       ├── canonical.tsx        # Tags para evitar conteúdo duplicado
+│   │       └── json-ld.tsx          # Injeção de dados estruturados (Schema.org)
+│   ├── lib/
+│   │   └── seo/                     # Lógica e utilitários de SEO
+│   │       ├── metadata.ts          # Gerador central de meta tags (AI Snippets)
+│   │       ├── openGraph.ts         # Configurações de Open Graph
+│   │       ├── robots.ts            # Lógica de permissões de crawlers
+│   │       └── schema.ts            # Builders de JSON-LD
+│   ├── next.config.ts               # Headers de Segurança (HSTS/XSS)
+│   └── .lighthouserc.js             # Automação de auditoria de Performance
+```
 
 ### 4. 🔐 Ponte de Identidade (Auth Bridge)
 Integração transparente com o ecossistema administrativo:

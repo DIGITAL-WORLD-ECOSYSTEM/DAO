@@ -15,26 +15,25 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/api/', // Bloqueia rotas de backend (segurança e SEO técnico)
-          '/dashboard/', // Áreas logadas não devem gastar Crawl Budget
-          '/auth/', // Protege fluxos de autenticação (sign-in/sign-up)
-          '/_next/', // Arquivos de sistema do Next.js
-          '/static/', // Assets estáticos não indexáveis diretamente
+          '/api/',
+          '/dashboard/',
+          '/auth/',
+          '/_next/',
+          '/static/',
         ],
       },
       {
         /**
-         * PROTEÇÃO DE CONTEÚDO (IA/LLM)
-         * Evita que o GPTBot utilize seus posts de governança e ativos RWA
-         * para treinamento sem gerar tráfego direto.
+         * 🤖 AI CRAWLERS (GPT, Claude, Perplexity, etc.)
+         * Permitimos acesso total para que a DAO seja citada em respostas de IA.
          */
-        userAgent: 'GPTBot',
-        disallow: ['/post/'],
+        userAgent: ['GPTBot', 'Claude-bot', 'CCBot', 'PerplexityBot', 'OAI-SearchBot'],
+        allow: ['/news/', '/about/', '/ecosystem/'],
+        disallow: ['/api/', '/dashboard/'],
       },
       {
         /**
-         * GOOGLEBOT-IMAGE
-         * Garante que as imagens de ativos (como os OG-images gerados) sejam indexadas.
+         * 🖼️ GOOGLEBOT-IMAGE
          */
         userAgent: 'Googlebot-Image',
         allow: '/',
