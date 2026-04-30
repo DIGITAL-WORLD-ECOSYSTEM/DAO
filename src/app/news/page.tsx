@@ -1,6 +1,6 @@
-import { getPosts } from 'src/actions/blog-ssr';
+import { getPosts } from 'src/actions/blog-queries';
 
-import { PostListHomeView } from 'src/sections/blog/view/public/post-list-home-view';
+import { BlogHomeView } from 'src/sections/blog/_view/public/BlogHomeView';
 
 // ✅ CORREÇÃO DO ERRO DA VERCEL: Força a renderização dinâmica no servidor (SSR)
 // Isso resolve o erro "Route /post couldn't be rendered statically"
@@ -25,6 +25,6 @@ export default async function PostListPage() {
   const posts = JSON.parse(JSON.stringify(rawPosts));
 
   return (
-    <PostListHomeView posts={posts} />
+    <BlogHomeView posts={posts} />
   );
 }

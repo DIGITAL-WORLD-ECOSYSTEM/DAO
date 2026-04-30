@@ -199,4 +199,23 @@ Como a ASPPIBRA retém tokens de indivíduos soberanos no Brasil e resto do mund
 | **Conformidade de Auditoria (Esquecimento/LGPD)** | Média | Média | Blinda os mantenedores da organização em compliance jurídico brasileiro. |
 
 ---
+
+## 🏛️ 13. Infraestrutura Frontend (Padrão Diamante 2026)
+O ecossistema do Blog segue o **Padrão Diamante de Organização Modular**, garantindo isolamento total e escalabilidade.
+
+### 💎 Regras de Ouro de Nomenclatura:
+1. **PascalCase para Componentes**: Todos os arquivos de componentes React (`.tsx`) devem usar PascalCase (ex: `PostCard.tsx`, `BlogHomeView.tsx`).
+2. **Pastas Privadas (`_`)**: Subdiretórios dentro de uma feature (ex: `sections/blog/_item`) usam o prefixo underscore para indicar que seus componentes são de uso exclusivo daquele módulo.
+3. **Semântica de Actions**:
+   - `blog-queries.ts`: Operações de leitura e busca de dados (Read-only).
+   - `blog-actions.ts`: Operações de escrita, mutação e formulários (Write/Execute).
+4. **Mocks e Contratos**: Arquivos de dados simulados devem usar o sufixo `.mock.ts` para facilitar o isolamento em builds de produção.
+
+### 📂 Mapa de Diretórios Estratégicos:
+- `src/sections/blog/_view/`: Orquestradores de página (Layout e Composição).
+- `src/sections/blog/_item/`: Componentes atômicos e cartões reutilizáveis.
+- `src/sections/blog/_components/`: Peças de UI específicas do domínio do blog.
+- `src/actions/`: Camada de serviço desacoplada da UI.
+
+---
 **Especificação de Engenharia ASPPIBRA DAO Consolidada e Vistoriada.** (Fase Final Grade 10/10).

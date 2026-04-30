@@ -2,7 +2,7 @@
  * Copyright 2026 ASPPIBRA – Associação dos Proprietários e Possuidores de Imóveis no Brasil.
  * Project: Governance System (ASPPIBRA DAO)
  * Role: Blog Category Page (Server Component)
- * Version: 1.5.5 - Fix: Prerender & Serialization Error in Category Routes
+ * Version: 2.0.0 - Elite Infrastructure Upgrade
  */
 
 import type { Metadata } from 'next';
@@ -10,10 +10,10 @@ import type { Metadata } from 'next';
 import { kebabCase } from 'es-toolkit';
 import { notFound } from 'next/navigation';
 
-import { _posts } from 'src/_mock/_blog';
 import { CONFIG } from 'src/global-config';
+import { _posts } from 'src/_mock/blog.mock';
 
-import { PostListHomeView } from 'src/sections/blog/view/public/post-list-home-view';
+import { BlogHomeView } from 'src/sections/blog/_view/public/BlogHomeView';
 
 // ----------------------------------------------------------------------
 
@@ -84,14 +84,5 @@ export default async function Page({ params }: Props) {
    */
   const sanitizedPosts = JSON.parse(JSON.stringify(filteredPosts));
 
-  return <PostListHomeView posts={sanitizedPosts} />;
+  return <BlogHomeView posts={sanitizedPosts} />;
 }
-
-// ----------------------------------------------------------------------
-
-/**
- * 💡 NOTA DE DESEMPENHO:
- * O bloco 'generateStaticParams' foi removido propositalmente para mitigar
- * erros de 'Prerender' no ambiente de CI/CD da Vercel, priorizando a
- * estabilidade do deploy do ecossistema SocialFi.
- */

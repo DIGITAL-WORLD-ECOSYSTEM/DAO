@@ -2,7 +2,7 @@
  * Copyright 2026 ASPPIBRA – Associação dos Proprietários e Possuidores de Imóveis no Brasil.
  * Project: Governance System (ASPPIBRA DAO)
  * Role: Public Blog Post Detail Page
- * Version: 2.0 - Full OpenGraph & SEO Enterprise Implementation
+ * Version: 2.1 - Elite Infrastructure Refactoring
  */
 
 import type { Metadata } from 'next';
@@ -11,9 +11,9 @@ import { kebabCase } from 'es-toolkit';
 import { notFound } from 'next/navigation';
 
 import { CONFIG } from 'src/global-config';
-import { getPost, getLatestPosts } from 'src/actions/blog-ssr';
+import { getPost, getLatestPosts } from 'src/actions/blog-queries';
 
-import { PostDetailsHomeView } from 'src/sections/blog/view/public/post-details-home-view';
+import { PostDetailsHomeView } from 'src/sections/blog/_view/public/PostDetailsHomeView';
 
 // ----------------------------------------------------------------------
 

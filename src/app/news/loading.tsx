@@ -1,4 +1,4 @@
-import { PostItemSkeleton } from 'src/sections/blog/item/skeleton';
+import { PostItemSkeleton } from 'src/sections/blog/_item/PostSkeleton';
 
 export default function Loading() {
   return (

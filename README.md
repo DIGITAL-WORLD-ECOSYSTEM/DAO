@@ -23,9 +23,10 @@
 
 ### 1. 📰 Portal de Notícias (Blog Engine)
 Sistema de alto desempenho para entrega de conteúdo editorial:
+*   **Arquitetura Diamante:** Estrutura modular escalável com separação estrita de camadas.
 *   **Rotas Dinâmicas:** `/news`, `/news/[slug]`, `/news/category/[slug]`.
-*   **Performance:** Renderização Híbrida (ISR/SSR) para carregamento instantâneo.
-*   **Componentes:** Feed de notícias, cards interativos e sistema de autoridade de colunistas.
+*   **SEO Dinâmico:** Geração automática de Metadados, RSS Feed, Sitemap e OG Images.
+*   **Performance:** Renderização Híbrida (SSR/ISR) com suporte a Turbopack.
 
 ### 2. 🌍 Ecossistema de Internacionalização (i18n)
 Pronto para a expansão global da DAO:
@@ -84,6 +85,97 @@ frontend/
 │   │       └── schema.ts            # Builders de JSON-LD
 │   ├── next.config.ts               # Headers de Segurança (HSTS/XSS)
 │   └── .lighthouserc.js             # Automação de auditoria de Performance
+```
+
+### 🎨 Ecossistema Tecnológico do Blog (Padrão Diamante)
+
+Este projeto utiliza o **Padrão Diamante de Organização Modular (Elite 2026)**, garantindo que o motor de notícias seja isolado, performático e fácil de manter.
+
+```text
+frontend/
+├── public/
+│   └── assets/
+│       └── icons/
+│           └── navbar/
+│               └── ic-blog.svg             # Ícone visual do menu de navegação
+├── src/
+│   ├── _mock/
+│   │   └── blog.mock.ts                    # Dados fakes isolados (Padrão .mock.ts)
+│   ├── actions/
+│   │   ├── mappers/
+│   │   │   └── blog-mapper.ts              # Transformação de dados brutos da API
+│   │   ├── blog-queries.ts                 # Leitura Server-Side (Queries/SEO)
+│   │   └── blog-actions.ts                 # Escrita/Interações (Mutations/Forms)
+│   ├── app/
+│   │   ├── (main)/
+│   │   │   ├── authors/                    # Páginas de E-E-A-T (Autores)
+│   │   │   │   ├── [slug]/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   └── page.tsx
+│   │   │   └── tag/                        # Taxonomias dinâmicas
+│   │   │       └── [slug]/
+│   │   │           └── page.tsx
+│   │   ├── news/                           # CORE do Blog (App Router)
+│   │   │   ├── [slug]/                     # Página Interna do Artigo
+│   │   │   │   ├── error.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   ├── opengraph-image.tsx     # OG Image Dinâmica
+│   │   │   │   ├── page.tsx
+│   │   │   │   └── twitter-image.tsx       # Twitter Card Dinâmico
+│   │   │   ├── category/                   # Verticais de Conteúdo
+│   │   │   │   └── [slug]/
+│   │   │   │       └── page.tsx
+│   │   │   ├── error.tsx
+│   │   │   ├── layout.tsx
+│   │   │   ├── loading.tsx
+│   │   │   └── page.tsx                    # Orquestrador Home (Usa BlogHomeView)
+│   │   └── rss/
+│   │       └── route.ts                    # Feed RSS para Indexação IA
+│   ├── hooks/
+│   │   └── use-blog.ts                     # Hooks de estado e filtros do blog
+│   ├── layouts/
+│   │   ├── blog/                           # Wrappers de Layout
+│   │   │   ├── index.ts
+│   │   │   └── layout.tsx
+│   │   ├── nav-config-blog.tsx             # Navegação específica
+│   │   └── nav-config-main.tsx             # Registro no Menu Global
+│   ├── schemas/
+│   │   └── blog-zod.ts                     # Validação Zod (Comentários/News)
+│   ├── sections/
+│   │   └── blog/                           # MOTOR VISUAL (Private Modular)
+│   │       ├── _components/                # Sub-componentes (Privados)
+│   │       │   ├── PostAdvertisement.tsx
+│   │       │   ├── PostAuthors.tsx
+│   │       │   ├── PostCommunity.tsx
+│   │       │   ├── PostFeatured.tsx
+│   │       │   ├── PostSearch.tsx
+│   │       │   ├── PostSort.tsx
+│   │       │   └── PostVideo.tsx
+│   │       ├── _details/                   # Seções Internas do Post
+│   │       │   ├── PostCommentItem.tsx
+│   │       │   ├── PostCommentList.tsx
+│   │       │   └── PostDetailsHero.tsx
+│   │       ├── _forms/                     # Formulários de Conversão
+│   │       │   ├── PostNewsletter.tsx
+│   │       │   └── PostCommentForm.tsx
+│   │       ├── _item/                      # Cards e Listas Atômicas
+│   │       │   ├── PostCategoryItem.tsx
+│   │       │   ├── PostCardHorizontal.tsx
+│   │       │   ├── PostCard.tsx            # Card principal (antigo item.tsx)
+│   │       │   ├── PostListHorizontal.tsx
+│   │       │   ├── PostList.tsx
+│   │       │   ├── PostRecent.tsx          # Seção cronológica
+│   │       │   ├── PostSkeleton.tsx
+│   │       │   └── PostTrending.tsx        # Seção de tendências
+│   │       ├── _view/                      # Orquestradores de Página
+│   │       │   ├── public/                 
+│   │       │   │   ├── PostDetailsHomeView.tsx
+│   │       │   │   └── BlogHomeView.tsx    # Orquestrador da Home do Blog
+│   │       │   └── index.ts
+│   │       ├── ARCHITECTURE.md             # Docs da Infraestrutura
+│   │       └── constants.ts                # Configurações globais do blog
+│   └── types/
+│       └── blog.ts                         # Interfaces e Contratos TS
 ```
 
 ### 4. 🔐 Ponte de Identidade (Auth Bridge)

@@ -20,18 +20,17 @@ import { paths } from 'src/routes/paths';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
-// CORREÇÃO DOS CAMINHOS: Subindo dois níveis (../../) para achar os componentes
-import { favoritePost, useGetPostComments } from 'src/actions/blog';
+import { favoritePost, useGetPostComments } from 'src/actions/blog-actions';
 
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import { JsonLd, generateBreadcrumbs, generateArticleSchema } from 'src/components/seo/json-ld';
 
-import { PostItem } from '../../item/item';
-import { PostCommentForm } from '../../forms/post-comment-form';
-import { PostCommentList } from '../../details/post-comment-list';
-import { PostDetailsHero } from '../../details/post-details-hero';
+import { PostCard } from '../../_item/PostCard';
+import { PostCommentForm } from '../../_forms/PostCommentForm';
+import { PostCommentList } from '../../_details/PostCommentList';
+import { PostDetailsHero } from '../../_details/PostDetailsHero';
 
 // ----------------------------------------------------------------------
 
@@ -133,6 +132,8 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
           borderTop: `1px solid ${theme.palette.divider}`,
           pt: 5,
           pb: 8,
+          position: 'relative',
+          zIndex: 1,
         })}
       >
         <Container maxWidth="md">
@@ -310,7 +311,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
 
       {/* ZONA 3: POSTS RECENTES */}
       {!!recentPosts.length && (
-        <Box sx={(theme) => ({ bgcolor: 'background.paper', borderTop: `1px solid ${theme.palette.divider}`, py: 10 })}>
+        <Box sx={(theme) => ({ bgcolor: 'background.paper', borderTop: `1px solid ${theme.palette.divider}`, py: 10, position: 'relative', zIndex: 1 })}>
           <Container>
             <Typography variant="h4" sx={{ mb: 5 }}>
               Recent Posts
@@ -318,7 +319,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
 
             <Box sx={gridStyles}>
               {recentPosts.map((latestPost: IPostItem) => (
-                <PostItem
+                <PostCard
                   key={latestPost.id}
                   post={latestPost}
                   detailsHref={paths.post.details(latestPost.slug)}

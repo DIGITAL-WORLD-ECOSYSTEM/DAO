@@ -6,7 +6,7 @@
 import { ImageResponse } from 'next/og';
 
 import { CONFIG } from 'src/global-config';
-import { getPost } from 'src/actions/blog-ssr';
+import { getPost } from 'src/actions/blog-queries';
 
 // ----------------------------------------------------------------------
 
