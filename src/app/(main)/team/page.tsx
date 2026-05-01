@@ -1,13 +1,13 @@
-import { ComingSoonView } from 'src/sections/coming-soon/view';
+import { constructMetadata } from 'src/lib/seo/metadata';
+import { TeamView } from 'src/sections/team/_view';
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: 'Equipe Corporativa | ASPPIBRA DAO',
-  description:
-    'Conheça o Core Team, executivos e conselheiros que governam a estrutura do Digital World Ecosystem.',
-};
+export const metadata = constructMetadata({
+  title: 'Nossa Equipe | ASPPIBRA DAO',
+  description: 'Conheça os especialistas e arquitetos por trás da governança ASPPIBRA DAO e do ecossistema RWA.',
+});
 
 export default function TeamPage() {
-  return <ComingSoonView />;
+  return <TeamView />;
 }

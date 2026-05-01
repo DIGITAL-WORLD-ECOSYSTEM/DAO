@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { HomeView } from 'src/sections/home/view';
+import { HomeView } from 'src/sections/home/_view/HomeView';
 
 // ----------------------------------------------------------------------
 

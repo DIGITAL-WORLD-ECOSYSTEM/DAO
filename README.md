@@ -178,6 +178,55 @@ frontend/
 │       └── blog.ts                         # Interfaces e Contratos TS
 ```
 
+### 🏛️ Ecossistema Institucional & Landing Page (Padrão Diamante)
+
+A estrutura institucional foi reconstruída para garantir máxima autoridade de marca e transparência governamental (E-E-A-T).
+
+```text
+frontend/
+├── src/
+│   ├── _mock/
+│   │   └── institutional.mock.ts           # Dados dinâmicos (Time, Missão, FAQs)
+│   ├── app/
+│   │   ├── (home)/
+│   │   │   └── page.tsx                    # HOME: Landing Page (Entry Point)
+│   │   ├── (main)/
+│   │   │   ├── about/                      # Página Quem Somos (Ativa)
+│   │   │   ├── contact/                    # Página de Atendimento (Ativa)
+│   │   │   ├── ecosystem/                  # Explicação RWA/DAO (Ativa)
+│   │   │   ├── team/                       # Vitrine de Governança (Ativa)
+│   │   │   ├── whitepaper/                 # Tese Técnica (Ativa)
+│   │   │   ├── editorial-policy/           # Sinal E-E-A-T (Ativa)
+│   │   │   ├── fact-checking/              # Sinal E-E-A-T (Ativa)
+│   │   │   ├── methodology/                # Sinal E-E-A-T (Ativa)
+│   │   │   └── (legal)/                    # Compliance Jurídico (Ativa)
+│   ├── sections/
+│   │   ├── home/                           # MÓDULO: LANDING PAGE (DIAMANTE)
+│   │   │   ├── _components/                # Blocos PascalCase & Privados
+│   │   │   │   ├── HomeHero.tsx
+│   │   │   │   ├── HomeCommunity.tsx
+│   │   │   │   ├── HomeEcosystem.tsx
+│   │   │   │   ├── HomeFaqs.tsx
+│   │   │   │   ├── HomeRoadmap.tsx
+│   │   │   │   ├── HomeTeam.tsx
+│   │   │   │   ├── HomeLatestNews.tsx
+│   │   │   │   └── HomeCtaBanner.tsx
+│   │   │   └── _view/
+│   │   │       └── HomeView.tsx            # Orquestrador da Landing Page
+│   │   ├── about/                          # MÓDULO: SOBRE A INSTITUIÇÃO
+│   │   │   └── _view/AboutView.tsx
+│   │   ├── contact/                        # MÓDULO: ATENDIMENTO
+│   │   │   └── _view/ContactView.tsx
+│   │   ├── team/                           # MÓDULO: GOVERNANÇA & TIME
+│   │   │   └── _view/TeamView.tsx
+│   │   ├── ecosystem/                      # MÓDULO: RWA & DAO
+│   │   │   └── _view/EcosystemView.tsx
+│   │   └── legal/                          # MÓDULO: COMPLIANCE & POLICIES
+│   │       └── _view/
+│   │           ├── LegalView.tsx           # Reutilizável (Termos/Privacidade)
+│   │           └── PolicyView.tsx          # Reutilizável (E-E-A-T)
+```
+
 ### 4. 🔐 Ponte de Identidade (Auth Bridge)
 Integração transparente com o ecossistema administrativo:
 *   **Session Sync:** O `AuthProvider` lê o cookie compartilhado (`daoAccessToken`) para reconhecer o cidadão logado.
@@ -189,12 +238,13 @@ Integração transparente com o ecossistema administrativo:
 
 ```text
 /src/
-├── app/               # Rotas Públicas e SEO
-├── auth/              # Lógica de Reconhecimento de Sessão
-├── components/        # UI Kit Enxuto (Performance-First)
-├── layouts/           # Design System (Header/Footer Públicos)
-├── locales/           # Dicionários de Tradução Multi-idioma
-└── sections/          # Blocos visuais (Home, Blog, About)
+├── app/               # Rotas Públicas, SEO e App Router CORE
+├── auth/              # Lógica de Reconhecimento de Sessão e JWT Bridge
+├── components/        # UI Kit Global (Animações, Backgrounds, Iconify)
+├── layouts/           # Orquestradores de Frame (Header/Footer/Nav)
+├── locales/           # Dicionários de Tradução Multi-idioma (i18n)
+├── actions/           # Camada de Dados (Queries e Server Actions)
+└── sections/          # Features Modulares (Padrão Diamante: Blog, Home, Institucional)
 ```
 
 ---

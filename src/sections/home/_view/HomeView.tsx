@@ -8,33 +8,32 @@ import Stack from '@mui/material/Stack';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 // ✅ NOVA ARQUITETURA: Importação do Background Modular Global
-// Este componente agora orquestra o Space, FlowerOfLife, GlassCube e SceneController
 import { HomeBackground } from 'src/components/background';
 import { LazyRender } from 'src/components/animate/lazy-render';
 import { BackToTopButton } from 'src/components/animate/back-to-top-button';
 
 // Componentes Críticos (Immediate Loading para LCP)
-import { HomeHero } from '../home-hero';
-import { HomeEcosystem } from '../home-ecosystem';
+import { HomeHero } from '../_components/HomeHero';
+import { HomeEcosystem } from '../_components/HomeEcosystem';
 
-// ✅ Lazy Loading Otimizado para Produção (SSR: false para componentes com Three.js/Browser APIs)
+// ✅ Lazy Loading Otimizado para Produção (SSR: false para componentes com Browser APIs)
 const HomeIntegrations = dynamic(
-  () => import('../home-integrations').then((m) => m.HomeIntegrations),
+  () => import('../_components/HomeIntegrations').then((m) => m.HomeIntegrations),
   { ssr: false }
 );
-const HomeCommunity = dynamic(() => import('../home-community').then((m) => m.HomeCommunity), {
+const HomeCommunity = dynamic(() => import('../_components/HomeCommunity').then((m) => m.HomeCommunity), {
   ssr: false,
 });
-const HomeTeam = dynamic(() => import('../home-team').then((m) => m.HomeTeam), { ssr: false });
-const HomeLatestNews = dynamic(() => import('../home-latest-news').then((m) => m.HomeLatestNews), {
+const HomeTeam = dynamic(() => import('../_components/HomeTeam').then((m) => m.HomeTeam), { ssr: false });
+const HomeLatestNews = dynamic(() => import('../_components/HomeLatestNews').then((m) => m.HomeLatestNews), {
   ssr: false,
 });
-const HomeRoadmap = dynamic(() => import('../home-roadmap').then((m) => m.HomeRoadmap), {
+const HomeRoadmap = dynamic(() => import('../_components/HomeRoadmap').then((m) => m.HomeRoadmap), {
   ssr: false,
 });
-const HomeFAQs = dynamic(() => import('../home-faqs').then((m) => m.HomeFAQs), { ssr: false });
-const CtaBanner = dynamic(() => import('../cta-banner').then((m) => m.CtaBanner), { ssr: false });
-const HomeCountdownDialog = dynamic(() => import('../components/home-countdown-dialog'), {
+const HomeFAQs = dynamic(() => import('../_components/HomeFaqs').then((m) => m.HomeFaqs), { ssr: false });
+const HomeCtaBanner = dynamic(() => import('../_components/HomeCtaBanner').then((m) => m.HomeCtaBanner), { ssr: false });
+const HomeCountdownDialog = dynamic(() => import('../_components/HomeCountdownDialog'), {
   ssr: false,
 });
 
@@ -50,16 +49,9 @@ export function HomeView() {
     <>
       <BackToTopButton />
 
-      {/* 🌌 FUNDO ÚNICO E MODULAR: 
-          Agora gerenciado em src/components/background/index.tsx.
-          Mantém a consistência visual em toda a experiência SocialFi.
-      */}
+      {/* 🌌 FUNDO ÚNICO E MODULAR */}
       <HomeBackground />
 
-      {/* Conteúdo Principal: 
-          zIndex: 1 garante que o conteúdo fique sobre o Canvas 3D.
-          bgcolor: 'transparent' nas seções permite visualizar o vácuo sideral.
-      */}
       <Box component="main" sx={{ position: 'relative', zIndex: 1 }}>
         <HomeHero />
 
@@ -93,7 +85,7 @@ export function HomeView() {
           </LazyRender>
 
           <LazyRender minHeight={400}>
-            <CtaBanner />
+            <HomeCtaBanner />
           </LazyRender>
         </Stack>
       </Box>
