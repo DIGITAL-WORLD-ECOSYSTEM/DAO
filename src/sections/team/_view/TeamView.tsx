@@ -3,7 +3,7 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
@@ -58,10 +58,10 @@ export function TeamView() {
 
                   <Stack direction="row" spacing={1} justifyContent="center">
                     <IconButton color="inherit" component="a" href={member.socials.linkedin} target="_blank">
-                      <Iconify icon="eva:linkedin-fill" />
+                      <Iconify icon="solar:eye-bold" />
                     </IconButton>
                     <IconButton color="inherit" component="a" href={member.socials.twitter} target="_blank">
-                      <Iconify icon="eva:twitter-fill" />
+                      <Iconify icon="solar:heart-bold" />
                     </IconButton>
                   </Stack>
                 </Card>

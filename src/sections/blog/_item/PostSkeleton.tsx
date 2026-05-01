@@ -13,7 +13,7 @@ type PostItemSkeletonProps = BoxProps & {
   variant?: 'vertical' | 'horizontal';
 };
 
-export function PostItemSkeleton({
+export function PostSkeleton({
   sx,
   itemCount = 1, // Geralmente controlado pelo componente pai
   variant = 'vertical',

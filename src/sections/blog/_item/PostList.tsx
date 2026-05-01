@@ -11,7 +11,7 @@ import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
-import { PostItem } from './item';
+import { PostCard } from './PostCard';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ export function PostList({ posts }: Props) {
             size={{ xs: 12, sm: 6, md: 4 }}
           >
             <m.div variants={varFade('inUp')}>
-              <PostItem
+              <PostCard
                 post={post}
                 // 🟢 Uso do helper de caminhos para manter a consistência das rotas
                 detailsHref={paths.post.details(post.slug)}

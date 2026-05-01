@@ -31,8 +31,11 @@ const HomeLatestNews = dynamic(() => import('../_components/HomeLatestNews').the
 const HomeRoadmap = dynamic(() => import('../_components/HomeRoadmap').then((m) => m.HomeRoadmap), {
   ssr: false,
 });
-const HomeFAQs = dynamic(() => import('../_components/HomeFaqs').then((m) => m.HomeFaqs), { ssr: false });
-const HomeCtaBanner = dynamic(() => import('../_components/HomeCtaBanner').then((m) => m.HomeCtaBanner), { ssr: false });
+const HomeFAQs = dynamic(() => import('../_components/HomeFaqs').then((m) => m.HomeFAQs), {
+ ssr: false });
+const HomeCtaBanner = dynamic(() => import('../_components/HomeCtaBanner').then((m) => m.CtaBanner), {
+  ssr: false,
+});
 const HomeCountdownDialog = dynamic(() => import('../_components/HomeCountdownDialog'), {
   ssr: false,
 });

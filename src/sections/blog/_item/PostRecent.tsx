@@ -18,7 +18,7 @@ import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
-import { PostItem } from './item';
+import { PostCard } from './PostCard';
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ export function PostRecent({ posts: postsFromProps }: Props) {
           {posts.slice(0, viewLimit).map((post) => (
             <Grid key={post.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
-                <PostItem post={post as any} detailsHref={paths.post.details((post as any).slug || post.title)} />
+                <PostCard post={post as any} detailsHref={paths.post.details((post as any).slug || post.title)} />
               </m.div>
             </Grid>
           ))}

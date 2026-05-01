@@ -4,6 +4,7 @@ import type { BoxProps } from '@mui/material/Box';
 import type { CardProps } from '@mui/material/Card';
 import type { IPostItem } from 'src/types/blog';
 
+import { deletePost } from 'src/actions/blog-actions';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
@@ -29,7 +30,7 @@ type PostItemProps = CardProps & {
   detailsHref: string;
 };
 
-export function PostItem({ post, detailsHref, sx, ...other }: PostItemProps) {
+export function PostCard({ post, detailsHref, sx, ...other }: PostItemProps) {
   const theme = useTheme();
 
   return (

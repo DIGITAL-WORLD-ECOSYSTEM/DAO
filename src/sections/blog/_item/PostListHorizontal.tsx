@@ -8,8 +8,8 @@ import Pagination, { paginationClasses } from '@mui/material/Pagination';
 
 import { paths } from 'src/routes/paths';
 
-import { PostItemSkeleton } from './skeleton';
-import { PostItemHorizontal } from './item-horizontal';
+import { PostSkeleton } from './PostSkeleton';
+import { PostCardHorizontal } from './PostCardHorizontal';
 
 // ----------------------------------------------------------------------
 
@@ -24,14 +24,14 @@ export function PostListHorizontal({ posts, loading }: Props) {
   const renderLoading = () => (
     <>
       {[...Array(4)].map((_, index) => (
-        <PostItemSkeleton key={index} variant="horizontal" />
+        <PostSkeleton key={index} variant="horizontal" />
       ))}
     </>
   );
 
   const renderList = () =>
     posts.map((post) => (
-      <PostItemHorizontal
+      <PostCardHorizontal
         key={post.id}
         post={post}
         detailsHref={paths.dashboard.post.details(post.title)}

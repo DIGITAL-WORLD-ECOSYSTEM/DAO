@@ -26,7 +26,7 @@ export const _team = [
   // Adicionar mais membros conforme necessário
 ];
 
-export const _faqs = [
+export const _institutionalFaqs = [
   {
     id: 1,
     question: "O que é uma DAO?",

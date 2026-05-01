@@ -33,7 +33,7 @@ export type CommentSchemaType = z.infer<typeof CommentSchema>;
 
 // ----------------------------------------------------------------------
 
-import { addComment } from 'src/actions/blog';
+import { addComment } from 'src/actions/blog-actions';
 
 import { toast } from 'src/components/snackbar';
 

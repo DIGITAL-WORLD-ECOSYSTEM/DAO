@@ -14,7 +14,7 @@ import { paths } from 'src/routes/paths';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
-import { PostItem, PostItemLatest } from './item';
+import { PostCard, PostItemLatest } from './PostCard';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ type Props = {
   posts: IPostItem[];
 };
 
-export function CategoryItem({ category, posts }: Props) {
+export function PostCategoryItem({ category, posts }: Props) {
   const theme = useTheme();
   
   const viewPosts = posts.filter(post => post.category === category);
@@ -127,7 +127,7 @@ export function CategoryItem({ category, posts }: Props) {
             >
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardStyle}>
-                  <PostItem post={post} detailsHref={paths.post.details(post.slug)} />
+                  <PostCard post={post} detailsHref={paths.post.details(post.slug)} />
                 </Box>
               </m.div>
             </Grid>
@@ -138,7 +138,7 @@ export function CategoryItem({ category, posts }: Props) {
             <Grid key={`${categoryId}-list-${post.id}-${index}`} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
               <m.div variants={varFade('inUp')}>
                 <Box sx={cardStyle}>
-                  <PostItem post={post} detailsHref={paths.post.details(post.slug)} />
+                  <PostCard post={post} detailsHref={paths.post.details(post.slug)} />
                 </Box>
               </m.div>
             </Grid>

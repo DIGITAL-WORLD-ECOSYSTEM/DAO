@@ -19,18 +19,18 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/use-boolean'; // Added useBoolean
+import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fDate } from 'src/utils/format-time';
 import { fShortenNumber } from 'src/utils/format-number';
 
-import { deletePost } from 'src/actions/blog'; // Added deletePost
+import { deletePost } from 'src/actions/blog-actions';
 
 import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
-import { toast } from 'src/components/snackbar'; // Added toast
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
-import { ConfirmDialog } from 'src/components/custom-dialog'; // Added ConfirmDialog
+import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ type Props = CardProps & {
   detailsHref: string;
 };
 
-export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }: Props) {
+export function PostCardHorizontal({ sx, post, editHref, detailsHref, ...other }: Props) {
   const theme = useTheme();
   const menuActions = usePopover();
   const confirmDelete = useBoolean();
