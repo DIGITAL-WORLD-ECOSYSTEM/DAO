@@ -230,4 +230,13 @@
     "description": "انضم إلى ثورة الأصول الحقيقية. استكشف حوكمتنا، تابع السيولة عبر السلسلة وكن جزءاً من نظام بيئي ذو أثر عالمي.",
     "button": "استكشف الآن"
   }
+  },
+  "about": {
+    "mission": { "title": "Mission", "content": "Mission content" },
+    "vision": { "title": "Vision", "content": "Vision content" },
+    "values": [
+      { "title": "Value 1", "description": "Description 1" },
+      { "title": "Value 2", "description": "Description 2" }
+    ]
+  }
 }

@@ -14,7 +14,7 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 
 import { fDate } from 'src/utils/format-time';
 
-import { _socials } from 'src/_mock';
+import { CONFIG } from 'src/global-config';
 
 import { Iconify } from 'src/components/iconify';
 import { useFilePreview } from 'src/components/file-thumbnail';
@@ -106,17 +106,16 @@ export function PostDetailsHero({
             FabProps={{ size: 'medium' }}
             sx={{ position: 'absolute', bottom: { xs: 32, md: 64 }, right: { xs: 16, md: 24 } }}
           >
-            {_socials.map((social) => (
+            {[
+              { label: 'Facebook', value: 'facebook', icon: 'socials:facebook', path: CONFIG.socials.facebook },
+              { label: 'Instagram', value: 'instagram', icon: 'socials:instagram', path: CONFIG.socials.instagram },
+              { label: 'Linkedin', value: 'linkedin', icon: 'socials:linkedin', path: CONFIG.socials.linkedin },
+              { label: 'Twitter', value: 'twitter', icon: 'socials:twitter', path: CONFIG.socials.twitter },
+            ].map((social) => (
               <SpeedDialAction
                 key={social.label}
-                icon={
-                  <>
-                    {social.value === 'twitter' && <Iconify icon="socials:twitter" />}
-                    {social.value === 'facebook' && <Iconify icon="socials:facebook" />}
-                    {social.value === 'instagram' && <Iconify icon="socials:instagram" />}
-                    {social.value === 'linkedin' && <Iconify icon="socials:linkedin" />}
-                  </>
-                }
+                icon={<Iconify icon={social.icon as any} />}
+                onClick={() => window.open(social.path, '_blank')}
                 slotProps={{
                   fab: { color: 'default' },
                   tooltip: {

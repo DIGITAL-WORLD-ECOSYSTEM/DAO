@@ -37,17 +37,36 @@ export function PostCard({ post, detailsHref, sx, ...other }: PostItemProps) {
     <Card
       sx={[
         {
-          // 🟢 ESTILO GLASSMORPHISM
-          bgcolor: alpha(theme.palette.grey[900], 0.4),
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+          // 🟢 ESTILO GLASSMORPHISM AVANÇADO
+          bgcolor: alpha('#020817', 0.6),
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          position: 'relative',
+          overflow: 'hidden',
           transition: theme.transitions.create(['transform', 'box-shadow', 'background-color']),
+          
+          // 💎 BORDA REATIVA DE 1PX (Assinatura Elite)
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 'inherit',
+            padding: '1px',
+            background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.5)}, transparent 50%, ${alpha(theme.palette.primary.main, 0.3)})`,
+            WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+            zIndex: 2,
+            transition: 'all 0.4s ease-in-out',
+          },
+
           '&:hover': {
-            transform: 'translateY(-4px)',
-            bgcolor: alpha(theme.palette.grey[900], 0.6),
-            boxShadow: `0 8px 24px 0 ${alpha(theme.palette.primary.main, 0.2)}`,
-            borderColor: alpha(theme.palette.primary.main, 0.4),
+            transform: 'translateY(-6px)',
+            bgcolor: alpha('#020817', 0.8),
+            boxShadow: `0 12px 24px 0 ${alpha(theme.palette.primary.main, 0.25)}`,
+            '&::before': {
+              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${alpha(theme.palette.primary.main, 0.8)})`,
+            },
           },
         },
         ...(Array.isArray(sx) ? sx : [sx]),

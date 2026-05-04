@@ -229,5 +229,29 @@
     "title_highlight": "Evolucionar?",
     "description": "Únete a la revolución de los activos reales. Explora nuestra gobernanza, sigue la liquidez on-chain y forma parte de un ecosistema de impacto global.",
     "button": "Explorar Ahora"
+  },
+  "about": {
+    "mission": {
+      "title": "Nuestra Misión",
+      "content": "Empoderar al productor rural a través de la digitalización de activos, garantizando que el valor generado por la tierra seja rastreable, soberano y conectado a la liquidez global."
+    },
+    "vision": {
+      "title": "Nuestra Visión",
+      "content": "Ser la infraestructura de referencia mundial para la tokenización de activos reales (RWA) en el sector agroecológico, uniendo sostenibilidad y DeFi."
+    },
+    "values": [
+      {
+        "title": "Soberanía",
+        "description": "Garantizamos que el control de los activos permanezca en manos de quienes los producen."
+      },
+      {
+        "title": "Transparencia",
+        "description": "Toda transacción y gobernanza é auditable on-chain en tiempo real."
+      },
+      {
+        "title": "Sostenibilidad",
+        "description": "Nos enfocamos en modelos económicos que regeneran la tierra y fortalecen comunidades."
+      }
+    ]
   }
 }

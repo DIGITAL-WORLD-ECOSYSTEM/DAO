@@ -28,6 +28,12 @@ export type ConfigValue = {
       citizen: string;
     };
   };
+  socials: {
+    facebook: string;
+    instagram: string;
+    linkedin: string;
+    twitter: string;
+  };
 };
 
 // ----------------------------------------------------------------------
@@ -94,5 +100,14 @@ export const CONFIG: ConfigValue = {
       partner: '/',
       citizen: '/',
     },
+  },
+  /**
+   * REDES SOCIAIS OFICIAIS
+   */
+  socials: {
+    facebook: 'https://www.facebook.com/asppibra',
+    instagram: 'https://www.instagram.com/asppibra',
+    linkedin: 'https://www.linkedin.com/company/asppibra',
+    twitter: 'https://www.twitter.com/asppibra',
   },
 };

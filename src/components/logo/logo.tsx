@@ -43,7 +43,7 @@ export function Logo({
     >
       <Image
         alt="ASPPIBRA-DAO Icon"
-        src="/logo/android-chrome-192x192.png"
+        src="/logo/Logo-Fallback.png"
         width={40}
         height={40}
         style={{ objectFit: 'contain' }}

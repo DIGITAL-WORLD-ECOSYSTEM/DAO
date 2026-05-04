@@ -66,7 +66,7 @@ export function PostCategoryItem({ category, posts }: Props) {
   return (
     <Box
       id={categoryId}
-      component="section"
+      component={MotionViewport}
       sx={{
         position: 'relative',
         bgcolor: 'transparent',
@@ -74,7 +74,6 @@ export function PostCategoryItem({ category, posts }: Props) {
         overflow: 'hidden',
       }}
     >
-      <Container component={MotionViewport}>
         <m.div variants={varFade('inDown')}>
           <Typography
             variant="h2"
@@ -144,7 +143,6 @@ export function PostCategoryItem({ category, posts }: Props) {
             </Grid>
           ))}
         </Grid>
-      </Container>
     </Box>
   );
 }

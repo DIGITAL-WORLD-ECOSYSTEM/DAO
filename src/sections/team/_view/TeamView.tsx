@@ -10,13 +10,24 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import { alpha } from '@mui/material/styles';
 
-import { _team } from 'src/_mock/institutional.mock';
+import { useTranslate } from 'src/locales';
+import { CONFIG } from 'src/global-config';
 import { HomeBackground } from 'src/components/background';
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
 export function TeamView() {
+  const { t } = useTranslate();
+
+  const members = t('team.members', { returnObjects: true }) as {
+    id: string;
+    name: string;
+    role: string;
+    avatarUrl: string;
+    bio?: string;
+  }[];
+
   return (
     <>
       <HomeBackground />
@@ -24,49 +35,64 @@ export function TeamView() {
       <Box component="main" sx={{ position: 'relative', zIndex: 1, py: 10 }}>
         <Container>
           <Box sx={{ textAlign: 'center', mb: 10 }}>
-            <Typography variant="h1" sx={{ mb: 2 }}>Nossa Equipe</Typography>
+            <Typography variant="h1" sx={{ mb: 2 }}>
+              {t('team.badge')}
+            </Typography>
             <Typography variant="h5" sx={{ color: 'text.secondary', maxWidth: 800, mx: 'auto' }}>
-              Conheça os arquitetos, desenvolvedores e especialistas em ativos reais que lideram a revolução ASPPIBRA DAO.
+              {t('team.description')}
             </Typography>
           </Box>
 
           <Grid container spacing={4}>
-            {_team.map((member) => (
-              <Grid key={member.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card
-                  sx={{
-                    p: 5,
-                    textAlign: 'center',
-                    bgcolor: (theme) => alpha(theme.palette.grey[900], 0.4),
-                    backdropFilter: 'blur(10px)',
-                    border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-                    transition: (theme) => theme.transitions.create('transform'),
-                    '&:hover': { transform: 'translateY(-10px)' },
-                  }}
-                >
-                  <Avatar
-                    src={member.avatarUrl}
-                    sx={{ width: 120, height: 120, mx: 'auto', mb: 3, border: (theme) => `solid 4px ${theme.palette.primary.main}` }}
-                  />
-                  <Typography variant="h4">{member.name}</Typography>
-                  <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 2 }}>
-                    {member.role}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
-                    {member.bio}
-                  </Typography>
+            {Array.isArray(members) &&
+              members.map((member) => (
+                <Grid key={member.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Card
+                    sx={{
+                      p: 5,
+                      textAlign: 'center',
+                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.4),
+                      backdropFilter: 'blur(10px)',
+                      border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                      transition: (theme) => theme.transitions.create('transform'),
+                      '&:hover': { transform: 'translateY(-10px)' },
+                    }}
+                  >
+                    <Avatar
+                      src={member.avatarUrl}
+                      sx={{
+                        width: 120,
+                        height: 120,
+                        mx: 'auto',
+                        mb: 3,
+                        border: (theme) => `solid 4px ${theme.palette.primary.main}`,
+                      }}
+                    />
+                    <Typography variant="h4">{member.name}</Typography>
+                    <Typography variant="subtitle1" sx={{ color: 'primary.main', mb: 2 }}>
+                      {member.role}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
+                      {member.bio}
+                    </Typography>
 
-                  <Stack direction="row" spacing={1} justifyContent="center">
-                    <IconButton color="inherit" component="a" href={member.socials.linkedin} target="_blank">
-                      <Iconify icon="solar:eye-bold" />
-                    </IconButton>
-                    <IconButton color="inherit" component="a" href={member.socials.twitter} target="_blank">
-                      <Iconify icon="solar:heart-bold" />
-                    </IconButton>
-                  </Stack>
-                </Card>
-              </Grid>
-            ))}
+                    <Stack direction="row" spacing={1} justifyContent="center">
+                      <IconButton
+                        color="inherit"
+                        onClick={() => window.open(CONFIG.socials.linkedin, '_blank')}
+                      >
+                        <Iconify icon={"eva:linkedin-fill" as any} />
+                      </IconButton>
+                      <IconButton
+                        color="inherit"
+                        onClick={() => window.open(CONFIG.socials.twitter, '_blank')}
+                      >
+                        <Iconify icon={"bi:twitter-x" as any} />
+                      </IconButton>
+                    </Stack>
+                  </Card>
+                </Grid>
+              ))}
           </Grid>
         </Container>
       </Box>

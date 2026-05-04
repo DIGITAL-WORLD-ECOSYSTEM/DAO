@@ -26,7 +26,7 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useTranslate } from 'src/locales';
-import { _socials, _carouselsMembers } from 'src/_mock';
+import { CONFIG } from 'src/global-config';
 
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
@@ -44,6 +44,13 @@ export function HomeTeam({ sx, ...other }: BoxProps) {
     slideSpacing: '24px',
     slidesToShow: { xs: 1, sm: 2, md: 3, lg: 4 },
   });
+
+  const members = t('team.members', { returnObjects: true }) as {
+    id: string;
+    name: string;
+    role: string;
+    avatarUrl: string;
+  }[];
 
   return (
     <Box
@@ -180,16 +187,17 @@ export function HomeTeam({ sx, ...other }: BoxProps) {
           <CarouselArrowFloatButtons {...carousel.arrows} options={carousel.options} />
 
           <Carousel carousel={carousel} sx={{ px: 0.5 }}>
-            {_carouselsMembers.map((member) => (
-              <Box
-                key={member.id}
-                component={m.div}
-                variants={varFade('in')}
-                sx={{ py: { xs: 4, md: 5 } }}
-              >
-                <MemberCard member={member} />
-              </Box>
-            ))}
+            {Array.isArray(members) &&
+              members.map((member) => (
+                <Box
+                  key={member.id}
+                  component={m.div}
+                  variants={varFade('in')}
+                  sx={{ py: { xs: 4, md: 5 } }}
+                >
+                  <MemberCard member={member} />
+                </Box>
+              ))}
           </Carousel>
         </Box>
       </Container>
@@ -199,7 +207,11 @@ export function HomeTeam({ sx, ...other }: BoxProps) {
 
 // ----------------------------------------------------------------------
 
-function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) {
+function MemberCard({
+  member,
+}: {
+  member: { id: string; name: string; role: string; avatarUrl: string };
+}) {
   const theme = useTheme();
 
   return (
@@ -284,9 +296,15 @@ function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) 
       </Box>
 
       <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
-        {_socials.map((social) => (
+        {[
+          { value: 'facebook', icon: 'eva:facebook-fill', path: CONFIG.socials.facebook },
+          { value: 'instagram', icon: 'ant-design:instagram-filled', path: CONFIG.socials.instagram },
+          { value: 'linkedin', icon: 'eva:linkedin-fill', path: CONFIG.socials.linkedin },
+          { value: 'twitter', icon: 'bi:twitter-x', path: CONFIG.socials.twitter },
+        ].map((social) => (
           <IconButton
-            key={social.label}
+            key={social.value}
+            onClick={() => window.open(social.path, '_blank')}
             sx={{
               color: '#919EAB',
               '&:hover': {
@@ -295,13 +313,7 @@ function MemberCard({ member }: { member: (typeof _carouselsMembers)[number] }) 
               },
             }}
           >
-            {/* Fix: Type casting para ignorar restrição de ícones Solar */}
-            {social.value === 'twitter' && <Iconify icon={'bi:twitter-x' as any} />}
-            {social.value === 'facebook' && <Iconify icon={'eva:facebook-fill' as any} />}
-            {social.value === 'instagram' && (
-              <Iconify icon={'ant-design:instagram-filled' as any} />
-            )}
-            {social.value === 'linkedin' && <Iconify icon={'eva:linkedin-fill' as any} />}
+            <Iconify icon={social.icon as any} />
           </IconButton>
         ))}
       </Box>

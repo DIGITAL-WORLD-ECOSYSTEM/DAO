@@ -19,7 +19,7 @@ import { paths } from 'src/routes/paths';
 import { usePathname } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { _mock } from 'src/_mock';
+
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -173,28 +173,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
             </Typography>
           </Box>
 
-          <Box
-            sx={{
-              p: 3,
-              gap: 1,
-              flexWrap: 'wrap',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            {Array.from({ length: 3 }, (_, index) => (
-              <Tooltip
-                key={_mock.fullName(index + 1)}
-                title={`User: ${_mock.fullName(index + 1)}`}
-              >
-                <Avatar
-                  alt={_mock.fullName(index + 1)}
-                  src={_mock.image.avatar(index + 1)}
-                  onClick={() => {}}
-                />
-              </Tooltip>
-            ))}
-          </Box>
+
 
           {renderList()}
         </Scrollbar>

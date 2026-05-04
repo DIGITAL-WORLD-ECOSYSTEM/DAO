@@ -77,17 +77,22 @@ axiosInstance.interceptors.response.use(
           error: error?.message || 'Erro de conexão ou servidor offline',
         };
 
-      console.group('🚨 DAO API Error Debug');
-      console.error('URL:', debugLog.url);
-      console.error('Status:', debugLog.status);
-      console.error('Payload:', JSON.stringify(debugLog.requestData, null, 2));
-      console.error('Response:', JSON.stringify(debugLog.responseData, null, 2));
-      
-      if (debugLog.responseData && (debugLog.responseData as any).errors) {
-        console.error('❌ VALIDATION ERRORS:', (debugLog.responseData as any).errors);
+      // 🔍 SILENCIAR ERROS CONHECIDOS (MOCK PHASE)
+      const isExpectedMockError = status === 404 && debugLog.url.includes('/comments');
+
+      if (!isExpectedMockError) {
+        console.group('🚨 DAO API Error Debug');
+        console.error('URL:', debugLog.url);
+        console.error('Status:', debugLog.status);
+        console.error('Payload:', JSON.stringify(debugLog.requestData, null, 2));
+        console.error('Response:', JSON.stringify(debugLog.responseData, null, 2));
+
+        if (debugLog.responseData && (debugLog.responseData as any).errors) {
+          console.error('❌ VALIDATION ERRORS:', (debugLog.responseData as any).errors);
+        }
+
+        console.groupEnd();
       }
-      
-      console.groupEnd();
 
       // Armazenar para extração rápida via console
       (window as any).__DAO_DEBUG_LOGS__ = (window as any).__DAO_DEBUG_LOGS__ || [];

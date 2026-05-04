@@ -230,4 +230,13 @@
     "description": "加入现实资产革命。探索我们的治理，跟踪链上流动性，成为全球影响力生态系统的一部分。",
     "button": "立即探索"
   }
+  },
+  "about": {
+    "mission": { "title": "Mission", "content": "Mission content" },
+    "vision": { "title": "Vision", "content": "Vision content" },
+    "values": [
+      { "title": "Value 1", "description": "Description 1" },
+      { "title": "Value 2", "description": "Description 2" }
+    ]
+  }
 }

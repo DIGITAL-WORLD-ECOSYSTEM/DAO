@@ -115,8 +115,7 @@ export function PostVideo() {
   );
 
   return (
-    <Box component="section" sx={{ py: { xs: 8, md: 12 }, bgcolor: 'transparent' }}>
-      <Container component={MotionViewport}>
+    <Box component={MotionViewport} sx={{ py: { xs: 8, md: 12 }, bgcolor: 'transparent' }}>
         {/* SEÇÃO 1: BRASIL */}
         <Box sx={{ mb: 8 }}>
           {renderSectionHeader('Comunidade Brasileira', 'Insights do mercado nacional')}
@@ -162,7 +161,6 @@ export function PostVideo() {
             ))}
           </Box>
         </Box>
-      </Container>
     </Box>
   );
 }

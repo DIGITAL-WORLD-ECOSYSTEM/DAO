@@ -8,12 +8,18 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import { alpha } from '@mui/material/styles';
 
-import { _about } from 'src/_mock/institutional.mock';
+import { useTranslate } from 'src/locales';
 import { HomeBackground } from 'src/components/background';
 
 // ----------------------------------------------------------------------
 
 export function AboutView() {
+  const { t } = useTranslate();
+
+  const values = (t('about.values', { returnObjects: true }) as {
+    title: string;
+    description: string;
+  }[]) || [];
   return (
     <>
       <HomeBackground />
@@ -33,28 +39,66 @@ export function AboutView() {
           {/* MISSION / VISION / VALUES */}
           <Grid container spacing={4}>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Box sx={{ p: 5, borderRadius: 3, bgcolor: (theme) => alpha(theme.palette.grey[900], 0.4), backdropFilter: 'blur(10px)', border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}` }}>
-                <Typography variant="h3" sx={{ mb: 2, color: 'primary.main' }}>Nossa Missão</Typography>
-                <Typography variant="body1" sx={{ fontSize: 18 }}>{_about.mission}</Typography>
+              <Box
+                sx={{
+                  p: 5,
+                  borderRadius: 3,
+                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.4),
+                  backdropFilter: 'blur(10px)',
+                  border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                }}
+              >
+                <Typography variant="h3" sx={{ mb: 2, color: 'primary.main' }}>
+                  {t('about.mission.title')}
+                </Typography>
+                <Typography variant="body1" sx={{ fontSize: 18 }}>
+                  {t('about.mission.content')}
+                </Typography>
               </Box>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Box sx={{ p: 5, borderRadius: 3, bgcolor: (theme) => alpha(theme.palette.grey[900], 0.4), backdropFilter: 'blur(10px)', border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}` }}>
-                <Typography variant="h3" sx={{ mb: 2, color: 'secondary.main' }}>Nossa Visão</Typography>
-                <Typography variant="body1" sx={{ fontSize: 18 }}>{_about.vision}</Typography>
+              <Box
+                sx={{
+                  p: 5,
+                  borderRadius: 3,
+                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.4),
+                  backdropFilter: 'blur(10px)',
+                  border: (theme) => `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                }}
+              >
+                <Typography variant="h3" sx={{ mb: 2, color: 'secondary.main' }}>
+                  {t('about.vision.title')}
+                </Typography>
+                <Typography variant="body1" sx={{ fontSize: 18 }}>
+                  {t('about.vision.content')}
+                </Typography>
               </Box>
             </Grid>
           </Grid>
 
           {/* VALUES GRID */}
           <Box sx={{ mt: 10 }}>
-            <Typography variant="h2" sx={{ textAlign: 'center', mb: 6 }}>Nossos Valores</Typography>
+            <Typography variant="h2" sx={{ textAlign: 'center', mb: 6 }}>
+              Nossos Valores
+            </Typography>
             <Grid container spacing={3}>
-              {_about.values.map((value) => (
+              {values.map((value) => (
                 <Grid key={value.title} size={{ xs: 12, sm: 4 }}>
-                  <Card sx={{ p: 4, height: 1, textAlign: 'center', bgcolor: 'transparent', border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.1)}` }}>
-                    <Typography variant="h5" sx={{ mb: 2 }}>{value.title}</Typography>
-                    <Typography variant="body2" color="text.secondary">{value.description}</Typography>
+                  <Card
+                    sx={{
+                      p: 4,
+                      height: 1,
+                      textAlign: 'center',
+                      bgcolor: 'transparent',
+                      border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                    }}
+                  >
+                    <Typography variant="h5" sx={{ mb: 2 }}>
+                      {value.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {value.description}
+                    </Typography>
                   </Card>
                 </Grid>
               ))}

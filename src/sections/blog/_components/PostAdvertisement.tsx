@@ -37,14 +37,13 @@ export function PostAdvertisement({
 
   return (
     <Box
-      component="section"
+      component={MotionViewport}
       sx={{
         py: { xs: 5, md: 10 },
         bgcolor: 'transparent',
         position: 'relative',
       }}
     >
-      <Container component={MotionViewport}>
         <Stack
           direction={{ xs: 'column', md: 'row' }}
           alignItems="center"
@@ -193,7 +192,6 @@ export function PostAdvertisement({
             }}
           />
         </Stack>
-      </Container>
     </Box>
   );
 }

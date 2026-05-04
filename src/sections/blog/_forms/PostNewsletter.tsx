@@ -24,14 +24,13 @@ export function PostNewsletter() {
 
   return (
     <Box
-      component="section"
+      component={MotionViewport}
       sx={{
         py: { xs: 8, md: 12 },
         bgcolor: 'transparent', // 🟢 Mantém a continuidade do SpaceBackground
         position: 'relative',
       }}
     >
-      <Container component={MotionViewport}>
         <Stack
           spacing={5}
           alignItems="center"
@@ -178,7 +177,6 @@ export function PostNewsletter() {
             </Typography>
           </m.div>
         </Stack>
-      </Container>
     </Box>
   );
 }

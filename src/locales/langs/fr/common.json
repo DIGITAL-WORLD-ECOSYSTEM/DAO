@@ -230,4 +230,13 @@
     "description": "Rejoignez la révolution des actifs réels. Explorez notre gouvernance, suivez la liquidité on-chain et faites partie d'un écosystème d'impact mondial.",
     "button": "Explorer Maintenant"
   }
+  },
+  "about": {
+    "mission": { "title": "Mission", "content": "Mission content" },
+    "vision": { "title": "Vision", "content": "Vision content" },
+    "values": [
+      { "title": "Value 1", "description": "Description 1" },
+      { "title": "Value 2", "description": "Description 2" }
+    ]
+  }
 }

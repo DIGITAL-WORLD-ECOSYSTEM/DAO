@@ -130,7 +130,33 @@
     "title_bridge": "Expertise &",
     "title_highlight": "Inovação",
     "description": "A equipe ASPPIBRA-DAO combina décadas de experiência em agroecologia com especialistas em tecnologia blockchain e governança institucional para transformar o setor rural.",
-    "button": "Ver Todos os Membros"
+    "button": "Ver Todos os Membros",
+    "members": [
+      {
+        "id": "member-1",
+        "name": "Sandro",
+        "role": "CEO & Founder",
+        "avatarUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/portrait/portrait-1.webp"
+      },
+      {
+        "id": "member-2",
+        "name": "Lucian Obrien",
+        "role": "CTO",
+        "avatarUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/portrait/portrait-2.webp"
+      },
+      {
+        "id": "member-3",
+        "name": "Deja Brady",
+        "role": "Project Coordinator",
+        "avatarUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/portrait/portrait-3.webp"
+      },
+      {
+        "id": "member-4",
+        "name": "Harrison Stein",
+        "role": "Team Leader",
+        "avatarUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/portrait/portrait-4.webp"
+      }
+    ]
   },
   
   "news": {
@@ -141,23 +167,26 @@
     "title_highlight": "Atualizações",
     "description": "Fique por dentro das novidades, anúncios técnicos e análises estratégicas do ecossistema ASPPIBRA-DAO.",
     "button_view_all": "Ver Tudo",
-    "posts": {
-      "post1": {
-        "category": "Novos Recursos",
+    "items": [
+      {
+        "id": "post-1",
         "title": "Lançamento da DEX V2: Mais Rápida e Segura",
-        "description": "Aprimoramos nossa infraestrutura para garantir liquidez descentralizada e auditabilidade total on-chain."
+        "coverUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/cover/cover-4.webp",
+        "createdAt": "2024-05-01T12:00:00Z"
       },
-      "post2": {
-        "category": "Parceria",
+      {
+        "id": "post-2",
         "title": "Parceria Estratégica: Agroecologia e Web3",
-        "description": "Integramos produtores de café agroecológico ao nosso ecossistema de ativos reais (RWA) via blockchain."
+        "coverUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/cover/cover-5.webp",
+        "createdAt": "2024-04-28T12:00:00Z"
       },
-      "post3": {
-        "category": "Análise",
+      {
+        "id": "post-3",
         "title": "O Futuro dos Ativos Reais e a Governança",
-        "description": "Como a ASPPIBRA-DAO utiliza governança institucional para gerir ativos tangíveis com segurança jurídica."
+        "coverUrl": "https://api-dev-minimal-v6.vercel.app/assets/images/mock/cover/cover-6.webp",
+        "createdAt": "2024-04-25T12:00:00Z"
       }
-    }
+    ]
   },
 
   "roadmap": {
@@ -229,6 +258,30 @@
     "title_highlight": "Evoluir?",
     "description": "Junte-se à revolução dos ativos reais. Explore nossa governança, acompanhe a liquidez on-chain e faça parte de um ecossistema de impacto global.",
     "button": "Explorar Agora"
+  },
+
+  "about": {
+    "mission": {
+      "title": "Nossa Missão",
+      "content": "Empoderar o produtor rural através da digitalização de ativos, garantindo que o valor gerado pela terra seja rastreável, soberano e conectado à liquidez global."
+    },
+    "vision": {
+      "title": "Nossa Visão",
+      "content": "Ser a infraestrutura de referência mundial para a tokenização de ativos reais (RWA) no setor agroecológico, unindo sustentabilidade e DeFi."
+    },
+    "values": [
+      {
+        "title": "Soberania",
+        "description": "Garantimos que o controle dos ativos permaneça nas mãos de quem os produz."
+      },
+      {
+        "title": "Transparência",
+        "description": "Toda transação e governança é auditável on-chain em tempo real."
+      },
+      {
+        "title": "Sustentabilidade",
+        "description": "Focamos em modelos econômicos que regeneram a terra e fortalecem comunidades."
+      }
+    ]
   }
-  
 }

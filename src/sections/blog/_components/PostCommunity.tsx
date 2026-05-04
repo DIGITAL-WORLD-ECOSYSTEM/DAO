@@ -159,14 +159,13 @@ export function PostCommunity() {
 
   return (
     <Box
-      component="section"
+      component={MotionViewport}
       sx={{
         py: { xs: 8, md: 12 },
         bgcolor: 'transparent',
         position: 'relative',
       }}
     >
-      <Container component={MotionViewport}>
         <Stack spacing={6}>
           <Stack spacing={1} sx={{ textAlign: 'center' }}>
             <m.div variants={varFade('inDown')}>
@@ -207,7 +206,6 @@ export function PostCommunity() {
             <m.div variants={varFade('inLeft')}>{renderMarqueeRow(true)}</m.div>
           </Stack>
         </Stack>
-      </Container>
     </Box>
   );
 }

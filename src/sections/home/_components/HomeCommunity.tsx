@@ -26,7 +26,6 @@ import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { _mock } from 'src/_mock';
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
@@ -130,7 +129,10 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
         <Stack direction="row" spacing={2} alignItems="center" sx={{ zIndex: 3 }}>
           <StyledAvatarGroup max={4}>
             {[1, 2, 3, 4].map((i) => (
-              <Avatar key={i} src={_mock.image.avatar(i)} />
+              <Avatar
+                key={i}
+                src={`https://api-dev-minimal-v6.vercel.app/assets/images/mock/avatar/avatar-${i}.webp`}
+              />
             ))}
           </StyledAvatarGroup>
           <Typography

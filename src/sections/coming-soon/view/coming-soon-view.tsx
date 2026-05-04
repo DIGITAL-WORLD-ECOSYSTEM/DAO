@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
-import { _socials } from 'src/_mock';
+import { CONFIG } from 'src/global-config';
 import { ComingSoonIllustration } from 'src/assets/illustrations';
 
 import { Iconify } from 'src/components/iconify';
@@ -76,12 +76,14 @@ export function ComingSoonView() {
         sx={{ my: 5 }}
       />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        {_socials.map((social) => (
-          <IconButton key={social.label}>
-            {social.value === 'twitter' && <Iconify icon="socials:twitter" />}
-            {social.value === 'facebook' && <Iconify icon="socials:facebook" />}
-            {social.value === 'instagram' && <Iconify icon="socials:instagram" />}
-            {social.value === 'linkedin' && <Iconify icon="socials:linkedin" />}
+        {[
+          { label: 'Facebook', icon: 'socials:facebook', path: CONFIG.socials.facebook },
+          { label: 'Instagram', icon: 'socials:instagram', path: CONFIG.socials.instagram },
+          { label: 'Linkedin', icon: 'socials:linkedin', path: CONFIG.socials.linkedin },
+          { label: 'Twitter', icon: 'socials:twitter', path: CONFIG.socials.twitter },
+        ].map((social) => (
+          <IconButton key={social.label} onClick={() => window.open(social.path, '_blank')}>
+            <Iconify icon={social.icon as any} />
           </IconButton>
         ))}
       </Box>

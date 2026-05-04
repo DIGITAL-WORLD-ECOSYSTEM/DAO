@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
-import { styled } from '@mui/material/styles';
+import { alpha, styled, useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -48,13 +48,18 @@ const StyledAvatarGroup = styled(AvatarGroup)(() => ({
 
 const gridStyles = {
   display: 'grid',
-  gap: 24,
-  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+  gap: 3,
+  gridTemplateColumns: {
+    xs: 'repeat(1, 1fr)',
+    sm: 'repeat(2, 1fr)',
+    md: 'repeat(4, 1fr)',
+  },
 };
 
 // ----------------------------------------------------------------------
 
 export function PostDetailsHomeView({ post, latestPosts }: Props) {
+  const theme = useTheme();
   const [isFavorited, setIsFavorited] = useState<boolean>(true);
 
   const [favoritesCount, setFavoritesCount] = useState<number>(Number(post?.totalFavorites ?? 0));
@@ -105,7 +110,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
   }, [title]);
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
+    <Box sx={{ bgcolor: 'transparent', minHeight: '100vh', position: 'relative', zIndex: 1 }}>
       <JsonLd schema={generateBreadcrumbs(breadcrumbs)} />
 
       {/* JSON-LD: Article Schema (Google Rich Results) */}
@@ -128,8 +133,9 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
       {/* ZONA 2: ÁREA DE LEITURA — Fundo sólido para legibilidade */}
       <Box
         sx={(theme) => ({
-          bgcolor: 'background.default',
-          borderTop: `1px solid ${theme.palette.divider}`,
+          bgcolor: alpha('#020817', 0.9), // 🟢 Fundo escuro premium para leitura
+          backdropFilter: 'blur(10px)',
+          borderTop: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
           pt: 5,
           pb: 8,
           position: 'relative',
@@ -169,7 +175,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
                   '& p': {
                     fontSize: 17,
                     lineHeight: 1.9,
-                    color: 'text.primary',
+                    color: 'common.white', // 🟢 Forçando branco
                     mb: 2.5,
                     fontFamily: "'Public Sans', sans-serif",
                   },
@@ -178,7 +184,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
                     fontWeight: 800,
                     mt: 5,
                     mb: 2,
-                    color: 'text.primary',
+                    color: 'common.white',
                     fontFamily: "'Orbitron', sans-serif",
                   },
                   '& h3': {
@@ -186,7 +192,7 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
                     fontWeight: 700,
                     mt: 4,
                     mb: 1.5,
-                    color: 'text.primary',
+                    color: 'common.white',
                     fontFamily: "'Orbitron', sans-serif",
                   },
                   '& ul, & ol': {
@@ -309,12 +315,30 @@ export function PostDetailsHomeView({ post, latestPosts }: Props) {
         </Container>
       </Box>
 
-      {/* ZONA 3: POSTS RECENTES */}
+      {/* ZONA 3: POSTS RECENTES — Padronizado com o tema Space */}
       {!!recentPosts.length && (
-        <Box sx={(theme) => ({ bgcolor: 'background.paper', borderTop: `1px solid ${theme.palette.divider}`, py: 10, position: 'relative', zIndex: 1 })}>
-          <Container>
-            <Typography variant="h4" sx={{ mb: 5 }}>
-              Recent Posts
+        <Box 
+          sx={{ 
+            py: 12, 
+            position: 'relative', 
+            zIndex: 1,
+            bgcolor: 'transparent' // 🟢 Libera o fundo Space
+          }}
+        >
+          <Container maxWidth="lg">
+            <Typography 
+              variant="h3" 
+              sx={{ 
+                mb: 6,
+                fontWeight: 900,
+                fontFamily: "'Orbitron', sans-serif",
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: 'common.white',
+                textShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.35)}`,
+              }}
+            >
+              Artigos Relacionados
             </Typography>
 
             <Box sx={gridStyles}>

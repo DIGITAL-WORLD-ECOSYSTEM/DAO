@@ -230,4 +230,13 @@
     "description": "Hãy tham gia cuộc cách mạng tài sản thực. Khám phá quản trị của chúng tôi, theo dõi thanh khoản on-chain và trở thành một phần của hệ sinh thái tác động toàn cầu.",
     "button": "Khám phá ngay"
   }
+  },
+  "about": {
+    "mission": { "title": "Mission", "content": "Mission content" },
+    "vision": { "title": "Vision", "content": "Vision content" },
+    "values": [
+      { "title": "Value 1", "description": "Description 1" },
+      { "title": "Value 2", "description": "Description 2" }
+    ]
+  }
 }

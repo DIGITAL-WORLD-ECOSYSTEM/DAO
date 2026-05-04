@@ -11,8 +11,7 @@ import { kebabCase } from 'es-toolkit';
 import { notFound } from 'next/navigation';
 
 import { CONFIG } from 'src/global-config';
-import { _posts } from 'src/_mock/blog.mock';
-
+import { getPosts, getPostsByCategory } from 'src/actions/blog-queries';
 import { BlogHomeView } from 'src/sections/blog/_view/public/BlogHomeView';
 
 // ----------------------------------------------------------------------
@@ -45,8 +44,9 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
 
-  // Localiza o nome original da categoria para exibição no título (ex: 'tecnologia' -> 'Tecnologia')
-  const categoryName = _posts.find((p) => kebabCase(p.category) === slug)?.category || slug;
+  // Localiza o nome original da categoria
+  const { posts } = await getPosts();
+  const categoryName = posts.find((p: any) => kebabCase(p.category) === slug)?.category || slug;
 
   return {
     title: `${categoryName} | Notícias ASPPIBRA`,
@@ -69,7 +69,7 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
 
   // 🔍 FILTRAGEM: Busca posts cujo kebabCase da categoria coincida com o slug da URL
-  const filteredPosts = _posts.filter((post) => kebabCase(post.category) === slug);
+  const { posts: filteredPosts } = await getPostsByCategory(slug);
 
   // Caso não existam posts para o slug fornecido, dispara a página 404
   if (filteredPosts.length === 0) {

@@ -2,12 +2,15 @@
 
 import type { Theme, SxProps } from '@mui/material/styles';
 
+import type { IPostItem } from 'src/types/blog';
+
 import Autoplay from 'embla-carousel-autoplay';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
@@ -17,6 +20,7 @@ import { RouterLink } from 'src/routes/components';
 import { fDate } from 'src/utils/format-time';
 
 import { Image } from 'src/components/image';
+import { varFade, MotionViewport } from 'src/components/animate';
 import {
   Carousel,
   useCarousel,
@@ -26,61 +30,13 @@ import {
 
 // ----------------------------------------------------------------------
 
-const staticFeaturedPosts = [
-  {
-    id: 'feat-1',
-    title:
-      'Revolução Silenciosa: Como a Prova de Conhecimento Zero (ZKP) está redefinindo a privacidade em blockchains e além',
-    category: 'Tecnologia',
-    coverUrl: '/assets/images/marketing/marketing_post_01.jpg',
-    description:
-      'Mergulhe na tecnologia que permite transações e interações verificáveis sem revelar dados sensíveis, abrindo portas para uma nova era de segurança e confiança digital.',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/avatar/avatar_01.jpg' },
-    createdAt: new Date(),
-    duration: '15 min de leitura',
-  },
-  {
-    id: 'feat-2',
-    title:
-      'Adoção Institucional de Cripto: O catalisador silencioso que pode levar o Bitcoin a US$ 250.000 em 2026',
-    category: 'Economia',
-    coverUrl: '/assets/images/marketing/marketing_post_02.jpg',
-    description:
-      'Analistas apontam para a entrada massiva de fundos de pensão, seguradoras e grandes bancos como o principal motor para a próxima grande alta do mercado.',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/avatar/avatar_02.jpg' },
-    createdAt: new Date(),
-    duration: '12 min de leitura',
-  },
-  {
-    id: 'feat-3',
-    title:
-      'Guerra Fria 2.0: A corrida global pela supremacia em semicondutores e o papel estratégico de Taiwan',
-    category: 'Geopolítica',
-    coverUrl: '/assets/images/marketing/marketing_post_03.jpg',
-    description:
-      'Entenda a complexa teia de alianças, espionagem industrial e poderio militar que define a batalha pela tecnologia mais crucial do século XXI.',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/avatar/avatar_03.jpg' },
-    createdAt: new Date(),
-    duration: '18 min de leitura',
-  },
-  {
-    id: 'feat-4',
-    title:
-      'Finanças Regenerativas (ReFi): Onde a tecnologia blockchain encontra a sustentabilidade para curar o planeta',
-    category: 'Meio Ambiente',
-    coverUrl: '/assets/images/marketing/marketing_post_04.jpg',
-    description:
-      'Descubra como projetos inovadores estão usando DeFi, DAOs e NFTs para financiar a regeneração de ecossistemas e combater as mudanças climáticas de forma transparente.',
-    author: { name: 'Equipe DEX', avatarUrl: '/assets/images/avatar/avatar_04.jpg' },
-    createdAt: new Date(),
-    duration: '14 min de leitura',
-  },
-];
-
-// ----------------------------------------------------------------------
-
-export function PostFeatured({ sx }: { sx?: SxProps<Theme> }) {
+export function PostFeatured({ posts, sx }: { posts: IPostItem[]; sx?: SxProps<Theme> }) {
   const theme = useTheme();
+
+  // Filtrar posts em destaque ou pegar os primeiros 4 como fallback
+  const featuredPosts = posts.filter((post) => post.featured).length > 0
+    ? posts.filter((post) => post.featured)
+    : posts.slice(0, 4);
 
   const carousel = useCarousel(
     {
@@ -95,7 +51,7 @@ export function PostFeatured({ sx }: { sx?: SxProps<Theme> }) {
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', bgcolor: 'transparent', ...sx }}>
       <Carousel carousel={carousel}>
-        {staticFeaturedPosts.map((post) => (
+        {featuredPosts.map((post) => (
           <PostItem key={post.id} post={post} />
         ))}
       </Carousel>
@@ -157,36 +113,38 @@ export function PostFeatured({ sx }: { sx?: SxProps<Theme> }) {
 
 function PostItem({ post }: { post: any }) {
   const theme = useTheme();
-  const { coverUrl, title, slug, author, createdAt, description, duration } = post;
+  const { coverUrl, title, slug, author, createdAt, description, content } = post;
+
+  // Cálculo de leitura (média de 200 palavras por minuto)
+  const wordCount = content ? content.replace(/<[^>]*>/g, '').split(/\s+/).length : 100;
+  const duration = post.duration || `${Math.max(1, Math.round(wordCount / 200))} min de leitura`;
 
   return (
     <Box
       sx={{
-        py: { xs: 8, md: 15 },
+        pt: { xs: 4, md: 5 },
+        pb: { xs: 8, md: 15 },
         display: 'flex',
-        minHeight: { xs: 720, md: 640 }, // Mantido tamanho original
+        minHeight: { xs: 720, md: 640 },
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
-        px: { xs: 2, md: 10 },
         bgcolor: 'transparent',
       }}
     >
       <Card
         sx={{
-          width: 1,
-          maxWidth: 1100, // Mantido tamanho original
-          display: 'flex',
-          overflow: 'hidden',
-          flexDirection: { xs: 'column', md: 'row' },
-          position: 'relative',
-          // 🟢 ESTILO DEEP SPACE
-          bgcolor: alpha('#020817', 0.6),
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-
-          // 💎 BORDA REATIVA DE 1PX (Assinatura Visual)
-          '&::before': {
+            width: 1,
+            display: 'flex',
+            overflow: 'hidden',
+            flexDirection: { xs: 'column', md: 'row' },
+            position: 'relative',
+            // 🟢 ESTILO DEEP SPACE
+            bgcolor: alpha('#020817', 0.6),
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            // 💎 BORDA REATIVA DE 1PX
+            '&::before': {
             content: '""',
             position: 'absolute',
             inset: 0,

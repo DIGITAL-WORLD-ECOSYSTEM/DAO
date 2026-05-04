@@ -39,7 +39,7 @@ export function PostRecent({ posts: postsFromProps }: Props) {
 
   return (
     <Box
-      component="section"
+      component={MotionViewport}
       sx={{
         py: { xs: 8, md: 10 },
         bgcolor: 'transparent', // 🟢 TRANSPARÊNCIA ESTRATÉGICA
@@ -47,7 +47,6 @@ export function PostRecent({ posts: postsFromProps }: Props) {
         overflow: 'hidden',
       }}
     >
-      <Container component={MotionViewport}>
         <Grid container spacing={4}>
           <Grid size={12}>
             <m.div variants={varFade('inDown')}>
@@ -115,7 +114,6 @@ export function PostRecent({ posts: postsFromProps }: Props) {
             </m.div>
           </Stack>
         )}
-      </Container>
     </Box>
   );
 }

@@ -14,44 +14,27 @@ import { RouterLink } from 'src/routes/components';
 
 import { varFade, MotionViewport } from 'src/components/animate';
 
+import type { IPostItem } from 'src/types/blog';
+
 // ----------------------------------------------------------------------
 
-const AUTHORS = [
-  { id: '1', name: 'Creator 1', role: 'Análise de Mercado', avatarUrl: '' },
-  {
-    id: '2',
-    name: 'Jane Doe',
-    role: 'Guia de Airdrops',
-    avatarUrl: '/assets/images/portrait/portrait-1.webp',
-  },
-  {
-    id: '3',
-    name: 'Paulo Camargo',
-    role: 'Estrategista DeFi',
-    avatarUrl: '/assets/images/portrait/portrait-2.webp',
-  },
-  {
-    id: '4',
-    name: 'Tina Horn',
-    role: 'NFT Specialist',
-    avatarUrl: '/assets/images/portrait/portrait-3.webp',
-  },
-  {
-    id: '5',
-    name: 'Milly Lacerda',
-    role: 'Web3 Developer',
-    avatarUrl: '/assets/images/portrait/portrait-4.webp',
-  },
-  {
-    id: '6',
-    name: 'Lucas Silva',
-    role: 'Macro Trader',
-    avatarUrl: '/assets/images/portrait/portrait-5.webp',
-  },
-];
+type Props = {
+  posts: IPostItem[];
+};
 
-export function PostAuthors() {
+export function PostAuthors({ posts }: Props) {
   const theme = useTheme();
+
+  // Extrair autores únicos dos posts
+  const AUTHORS = Array.from(new Set(posts.map((p) => p.author.name))).map((name) => {
+    const post = posts.find((p) => p.author.name === name);
+    return {
+      id: name.toLowerCase().replace(/\s+/g, '-'),
+      name,
+      role: 'Criador de Conteúdo',
+      avatarUrl: post?.author.avatarUrl || '',
+    };
+  });
 
   const renderAuthorCard = (author: (typeof AUTHORS)[0], index: number, rowIndex: number) => (
     <Stack
@@ -182,7 +165,7 @@ export function PostAuthors() {
 
   return (
     <Box
-      component="section"
+      component={MotionViewport}
       sx={{
         py: { xs: 8, md: 12 },
         bgcolor: 'transparent',
@@ -190,7 +173,6 @@ export function PostAuthors() {
         overflow: 'hidden',
       }}
     >
-      <Container component={MotionViewport}>
         <m.div variants={varFade('inDown')}>
           <Typography
             variant="h2"
@@ -216,7 +198,6 @@ export function PostAuthors() {
             {renderMarqueeRow([...AUTHORS].reverse(), true, 2)}
           </m.div>
         </Stack>
-      </Container>
     </Box>
   );
 }

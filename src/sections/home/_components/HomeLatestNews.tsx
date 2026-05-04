@@ -3,7 +3,6 @@
 // ----------------------------------------------------------------------
 import type { BoxProps } from '@mui/material/Box';
 
-import { useMemo } from 'react';
 import { m } from 'framer-motion';
 
 // ----------------------------------------------------------------------
@@ -27,7 +26,6 @@ import { RouterLink } from 'src/routes/components';
 
 import { fDate } from 'src/utils/format-time';
 
-import { _mock } from 'src/_mock';
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
@@ -35,33 +33,21 @@ import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
+import { BLOG_MOCK } from 'src/_mock/blog.mock';
+
+// ----------------------------------------------------------------------
+
 export function HomeLatestNews({ sx, ...other }: BoxProps) {
   const theme = useTheme();
   const { t } = useTranslate();
 
-  const displayPosts = useMemo(
-    () => [
-      {
-        id: 'post-1',
-        title: t('news.posts.post1.title'),
-        coverUrl: _mock.image.cover(4),
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: 'post-2',
-        title: t('news.posts.post2.title'),
-        coverUrl: _mock.image.cover(5),
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: 'post-3',
-        title: t('news.posts.post3.title'),
-        coverUrl: _mock.image.cover(6),
-        createdAt: new Date().toISOString(),
-      },
-    ],
-    [t]
-  );
+  // 1. Tenta pegar das traduções
+  const translateItems = t('news.items', { returnObjects: true });
+
+  // 2. Garante que displayPosts seja um array, usando o BLOG_MOCK como fallback supremo
+  const displayPosts = Array.isArray(translateItems) 
+    ? translateItems 
+    : BLOG_MOCK.slice(0, 4); // Pega os primeiros 4 posts do nosso novo mock
 
   return (
     <Box

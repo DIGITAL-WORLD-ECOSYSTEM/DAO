@@ -2,8 +2,11 @@
 
 import { m } from 'framer-motion';
 
+import type { IPostItem } from 'src/types/blog';
+
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
@@ -83,9 +86,13 @@ const staticTrendingPosts = [
 
 // ----------------------------------------------------------------------
 
-export function PostTrending() {
+export function PostTrending({ posts }: { posts: IPostItem[] }) {
   const theme = useTheme();
-  const viewPosts = staticTrendingPosts;
+
+  // Ordenar posts por visualizações para simular o "Trending" e pegar os top 7
+  const viewPosts = posts?.length 
+    ? [...posts].sort((a, b) => b.totalViews - a.totalViews).slice(0, 7)
+    : [];
 
   return (
     <Box

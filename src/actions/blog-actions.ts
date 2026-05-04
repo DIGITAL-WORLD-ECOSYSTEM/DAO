@@ -5,6 +5,7 @@ import type { SWRConfiguration } from 'swr';
 import { useMemo } from 'react';
 import useSWR, { mutate } from 'swr';
 
+import { BLOG_MOCK } from 'src/_mock/blog.mock';
 import axios, { fetcher, endpoints } from 'src/lib/axios';
 
 import { mapToPostItem, mapToPostList, mapToCommentList } from './mappers/blog-mapper';
@@ -42,7 +43,12 @@ export function useGetPosts(params?: { category?: string; status?: string; sortB
 
   const { data, isLoading, error, isValidating } = useSWR<PostsData>(url, fetcher, swrOptions);
 
-  const posts = useMemo(() => mapToPostList(data?.data || []), [data?.data]);
+  const posts = useMemo(() => {
+    if (error || (!isLoading && !data?.data?.length)) {
+       return BLOG_MOCK; // Fallback para Mock
+    }
+    return mapToPostList(data?.data || []);
+  }, [data?.data, error, isLoading]);
 
   return {
     posts,
@@ -64,7 +70,12 @@ export function useGetPostsByCategory(category: string) {
 
   const { data, isLoading, error, isValidating } = useSWR<PostsData>(url, fetcher, swrOptions);
 
-  const posts = useMemo(() => mapToPostList(data?.data || []), [data?.data]);
+  const posts = useMemo(() => {
+    if (error || (!isLoading && !data?.data?.length)) {
+        return BLOG_MOCK.filter(p => p.category === category);
+    }
+    return mapToPostList(data?.data || []);
+  }, [data?.data, error, isLoading, category]);
 
   const memoizedValue = useMemo(
     () => ({
@@ -92,7 +103,12 @@ export function useGetPost(slug: string) {
 
   const { data, isLoading, error, isValidating } = useSWR<PostData>(url, fetcher, swrOptions);
 
-  const post = useMemo(() => (data?.data ? mapToPostItem(data.data) : undefined), [data?.data]);
+  const post = useMemo(() => {
+    if (error || (!isLoading && !data?.data)) {
+        return BLOG_MOCK.find(p => p.slug === slug);
+    }
+    return data?.data ? mapToPostItem(data.data) : undefined;
+  }, [data?.data, error, isLoading, slug]);
 
   const memoizedValue = useMemo(
     () => ({
@@ -117,7 +133,12 @@ export function useGetLatestPosts(slug: string) {
 
   const { data, isLoading, error, isValidating } = useSWR<PostsData>(url, fetcher, swrOptions);
 
-  const posts = useMemo(() => mapToPostList(data?.data || []), [data?.data]);
+  const posts = useMemo(() => {
+     if (error || (!isLoading && !data?.data?.length)) {
+         return BLOG_MOCK;
+     }
+     return mapToPostList(data?.data || []);
+  }, [data?.data, error, isLoading]);
 
   const latestPosts = useMemo(
     () => posts.filter((p) => p.slug !== slug).slice(0, 4),
@@ -195,9 +216,14 @@ export async function deletePost(id: string) {
 export function useGetPostComments(postId: string) {
   const url = postId ? `${endpoints.post.root}/${postId}/comments` : null;
 
-  const { data, isLoading, error, isValidating } = useSWR<{ success: boolean; data: any[] }>(url, fetcher);
+  const { data, isLoading, error, isValidating } = useSWR<{ success: boolean; data: any[] }>(url, fetcher, swrOptions);
 
-  const comments = useMemo(() => mapToCommentList(data?.data || []), [data?.data]);
+  const comments = useMemo(() => {
+    if (error || (!isLoading && !data?.data)) {
+        return []; // Fallback silencioso enquanto não há API real
+    }
+    return mapToCommentList(data?.data || []);
+  }, [data?.data, error, isLoading]);
 
   const memoizedValue = useMemo(
     () => ({
