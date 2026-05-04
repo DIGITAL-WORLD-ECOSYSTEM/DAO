@@ -39,7 +39,7 @@ export function PostAdvertisement({
     <Box
       component={MotionViewport}
       sx={{
-        py: { xs: 5, md: 10 },
+        py: 4,
         bgcolor: 'transparent',
         position: 'relative',
       }}
@@ -49,7 +49,7 @@ export function PostAdvertisement({
           alignItems="center"
           justifyContent="space-between"
           sx={{
-            p: { xs: 5, md: 8 },
+            p: { xs: 4, md: 5 },
             borderRadius: 3,
             position: 'relative',
             overflow: 'hidden',
@@ -79,6 +79,18 @@ export function PostAdvertisement({
             boxShadow: `0 0 40px ${alpha(theme.palette.primary.main, 0.15)}`,
           }}
         >
+          {/* 🕸️ GRID PATTERN OVERLAY */}
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              opacity: 0.1,
+              zIndex: 1,
+              backgroundImage: `linear-gradient(${alpha(theme.palette.primary.main, 0.2)} 1px, transparent 1px), linear-gradient(90deg, ${alpha(theme.palette.primary.main, 0.2)} 1px, transparent 1px)`,
+              backgroundSize: '30px 30px',
+            }}
+          />
+
           {/* Conteúdo do Banner */}
           <Stack
             spacing={3}

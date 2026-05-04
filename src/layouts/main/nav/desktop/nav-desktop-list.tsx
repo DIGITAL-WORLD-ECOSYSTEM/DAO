@@ -1,7 +1,7 @@
 import type { NavListProps, NavSubListProps } from '../types';
 
 import { useBoolean } from 'minimal-shared/hooks';
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { isEqualPath, isActiveLink, isExternalLink } from 'minimal-shared/utils';
 
 import { usePathname } from 'src/routes/hooks';
@@ -16,7 +16,22 @@ export function NavList({ data, sx, ...other }: NavListProps) {
   const pathname = usePathname();
   const navItemRef = useRef<HTMLButtonElement>(null);
 
-  const isActive = isActiveLink(pathname, data.path, data.deepMatch ?? !!data.children);
+  const [currentHash, setCurrentHash] = useState('');
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [pathname]);
+
+  const isActive = data.path.includes('#')
+    ? pathname === data.path.split('#')[0] && currentHash === `#${data.path.split('#')[1]}`
+    : isActiveLink(pathname, data.path, data.deepMatch ?? !!data.children);
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 

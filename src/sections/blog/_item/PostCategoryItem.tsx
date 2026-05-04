@@ -31,7 +31,11 @@ export function PostCategoryItem({ category, posts }: Props) {
   // Se não houver posts, o grid não renderizará a seção.
   if (viewPosts.length === 0) return null;
 
-  const categoryId = category.toLowerCase().replace(/\s+/g, '-');
+  const categoryId = category
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, '-');
 
   const cardStyle = {
     position: 'relative',
