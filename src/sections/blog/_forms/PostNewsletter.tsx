@@ -121,7 +121,7 @@ export function PostNewsletter() {
               }}
             >
               <Iconify
-                icon="solar:letter-bold-duotone"
+                icon={"solar:letter-bold-duotone" as any}
                 width={40}
                 sx={{ color: '#FA541C' }}
               />
