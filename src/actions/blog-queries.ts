@@ -37,6 +37,12 @@ export async function getPosts(params?: { category?: string; limit?: number; pag
     const json = await res.json();
     const rawData = Array.isArray(json.data) ? json.data : [];
 
+    // Se a API retornar vazio, usamos o Mock como Fallback de design
+    if (rawData.length === 0) {
+      console.log('ℹ️ API retornou lista vazia. Usando Mock para preencher o design.');
+      return { posts: BLOG_MOCK };
+    }
+
     return { posts: mapToPostList(rawData) };
   } catch (error) {
     console.error('❌ Erro ao buscar posts, ativando fallback:', error);

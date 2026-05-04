@@ -5,7 +5,6 @@ import { m } from 'framer-motion';
 // @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
@@ -15,33 +14,18 @@ import { varFade, MotionViewport } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
-const COMMUNITIES = [
-  {
-    name: 'CoinTelegraph',
-    logo: '/assets/icons/communities/cointelegraph.svg',
-    url: 'https://cointelegraph.com',
-  },
-  {
-    name: 'Binance Academy',
-    logo: '/assets/icons/communities/binance.svg',
-    url: 'https://academy.binance.com',
-  },
-  { name: 'Ethereum Org', logo: '/assets/icons/communities/eth.svg', url: 'https://ethereum.org' },
-  { name: 'CoinDesk', logo: '/assets/icons/communities/coindesk.svg', url: 'https://coindesk.com' },
-  {
-    name: 'CryptoPanic',
-    logo: '/assets/icons/communities/cryptopanic.svg',
-    url: 'https://cryptopanic.com',
-  },
-  {
-    name: 'Solana Foundation',
-    logo: '/assets/icons/communities/solana.svg',
-    url: 'https://solana.com',
-  },
-];
+type Props = {
+  communities: {
+    name: string;
+    logo: string;
+    url: string;
+  }[];
+};
 
-export function PostCommunity() {
+export function PostCommunity({ communities }: Props) {
   const theme = useTheme();
+
+  if (!communities || communities.length === 0) return null;
 
   const renderMarqueeRow = (reverse = false) => (
     <Box
@@ -49,10 +33,9 @@ export function PostCommunity() {
         display: 'flex',
         overflow: 'hidden',
         position: 'relative',
-        // Máscara de gradiente para suavizar bordas laterais
-        maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+        maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
         WebkitMaskImage:
-          'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+          'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
         py: 1.5,
       }}
     >
@@ -65,12 +48,12 @@ export function PostCommunity() {
           sx={{ px: 1.5, flexShrink: 0 }}
           animate={{ x: reverse ? ['-100%', '0%'] : ['0%', '-100%'] }}
           transition={{
-            duration: 60, // Velocidade premium suavizada
+            duration: 60,
             ease: 'linear',
             repeat: Infinity,
           }}
         >
-          {COMMUNITIES.map((community) => (
+          {communities.map((community) => (
             <Box
               key={`${index}-${community.name}`}
               component="a"
@@ -87,12 +70,9 @@ export function PostCommunity() {
                 textDecoration: 'none',
                 position: 'relative',
                 overflow: 'hidden',
-                // 🟢 FUNDO DEEP SPACE SCIFI
                 bgcolor: alpha('#020817', 0.7),
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
-
-                // 💎 BORDA REATIVA DE 1PX (Assinatura Visual)
                 '&::before': {
                   content: '""',
                   position: 'absolute',
@@ -109,19 +89,11 @@ export function PostCommunity() {
                   maskComposite: 'exclude',
                   zIndex: 2,
                 },
-
                 transition: theme.transitions.create(['all']),
                 '&:hover': {
                   bgcolor: alpha(theme.palette.info.main, 0.08),
                   transform: 'translateY(-8px)',
                   boxShadow: `0 0 25px ${alpha(theme.palette.info.main, 0.3)}`,
-                  '&::before': {
-                    background: `linear-gradient(180deg, 
-                      ${theme.palette.info.main} 0%, 
-                      ${alpha(theme.palette.common.white, 0.2)} 50%, 
-                      ${theme.palette.info.main} 100%
-                    )`,
-                  },
                 },
               }}
             >

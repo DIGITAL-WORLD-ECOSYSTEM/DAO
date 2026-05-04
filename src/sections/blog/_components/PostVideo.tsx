@@ -4,7 +4,6 @@ import { m } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
@@ -12,82 +11,28 @@ import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { varFade, MotionViewport } from 'src/components/animate';
 
-// --- DADOS DOS VÍDEOS ---
-
-const VIDEOS_BR = [
-  {
-    id: 'HPQeQwPahR0',
-    title: 'O MAIOR ROUBO “LEGAL” de BITCOIN da HISTÓRIA!',
-    channel: 'O Primo Rico',
-    thumbnail: 'https://img.youtube.com/vi/HPQeQwPahR0/maxresdefault.jpg',
-    postedAt: '2 dias atrás',
-    duration: '12:40',
-  },
-  {
-    id: 'hLMnCVEDjqE',
-    title: '🔥 TUDO sobre a XRP em 2025! Vale a pena investir agora?',
-    channel: 'É TopSaber',
-    thumbnail: 'https://img.youtube.com/vi/hLMnCVEDjqE/maxresdefault.jpg',
-    postedAt: '5 horas atrás',
-    duration: '08:15',
-  },
-  {
-    id: 'Xc6juEgNwog',
-    title: 'URGENTE: FED VAI INJETAR TRILHÕES NO MERCADO',
-    channel: 'Investidor 4.20',
-    thumbnail: 'https://img.youtube.com/vi/Xc6juEgNwog/maxresdefault.jpg',
-    postedAt: '1 dia atrás',
-    duration: '15:20',
-  },
-  {
-    id: 'x43e3g-JWWQ',
-    title: 'MEMECOINS: POR QUE COMPRAR? Estratégias para 2024',
-    channel: 'Bruno Perini',
-    thumbnail: 'https://img.youtube.com/vi/x43e3g-JWWQ/maxresdefault.jpg',
-    postedAt: '3 dias atrás',
-    duration: '22:00',
-  },
-];
-
-const VIDEOS_INT = [
-  {
-    id: 'W4mGv_8W-7I',
-    title: 'Bitcoin Strategy for 2025: The Institutional Era',
-    channel: 'Michael Saylor',
-    thumbnail: 'https://img.youtube.com/vi/W4mGv_8W-7I/maxresdefault.jpg',
-    postedAt: '1 dia atrás',
-    duration: '18:10',
-  },
-  {
-    id: 'mS7S5E-WlqU',
-    title: 'Ethereum Roadmap: Beyond the Merge',
-    channel: 'Vitalik Buterin',
-    thumbnail: 'https://img.youtube.com/vi/mS7S5E-WlqU/maxresdefault.jpg',
-    postedAt: '4 dias atrás',
-    duration: '25:45',
-  },
-  {
-    id: 'N64vL67520Q',
-    title: 'Why Solana is Winning the L1 Wars in 2024',
-    channel: 'Coin Bureau',
-    thumbnail: 'https://img.youtube.com/vi/N64vL67520Q/maxresdefault.jpg',
-    postedAt: '6 horas atrás',
-    duration: '14:20',
-  },
-  {
-    id: 'fB05fV7X_7o',
-    title: 'Global Macro: The Debt Crisis Explained',
-    channel: 'Raoul Pal',
-    thumbnail: 'https://img.youtube.com/vi/fB05fV7X_7o/maxresdefault.jpg',
-    postedAt: '12 horas atrás',
-    duration: '32:00',
-  },
-];
-
 // ----------------------------------------------------------------------
 
-export function PostVideo() {
+type VideoItemProps = {
+  id: string;
+  title: string;
+  channel: string;
+  thumbnail: string;
+  postedAt: string;
+  duration: string;
+};
+
+type Props = {
+  videos: {
+    brazil: VideoItemProps[];
+    international: VideoItemProps[];
+  };
+};
+
+export function PostVideo({ videos }: Props) {
   const theme = useTheme();
+
+  if (!videos || (videos.brazil.length === 0 && videos.international.length === 0)) return null;
 
   const renderSectionHeader = (title: string, subtitle: string) => (
     <Box sx={{ mb: 4 }}>
@@ -117,57 +62,61 @@ export function PostVideo() {
   return (
     <Box component={MotionViewport} sx={{ py: { xs: 8, md: 12 }, bgcolor: 'transparent' }}>
         {/* SEÇÃO 1: BRASIL */}
-        <Box sx={{ mb: 8 }}>
-          {renderSectionHeader('Comunidade Brasileira', 'Insights do mercado nacional')}
+        {videos.brazil.length > 0 && (
+          <Box sx={{ mb: 8 }}>
+            {renderSectionHeader('Comunidade Brasileira', 'Insights do mercado nacional')}
 
-          <Box
-            sx={{
-              display: 'grid',
-              gap: 4,
-              gridTemplateColumns: {
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(4, 1fr)',
-              },
-            }}
-          >
-            {VIDEOS_BR.map((video) => (
-              <m.div key={video.id} variants={varFade('inUp')}>
-                <VideoItem video={video} theme={theme} />
-              </m.div>
-            ))}
+            <Box
+              sx={{
+                display: 'grid',
+                gap: 4,
+                gridTemplateColumns: {
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(4, 1fr)',
+                },
+              }}
+            >
+              {videos.brazil.map((video) => (
+                <m.div key={video.id} variants={varFade('inUp')}>
+                  <VideoItem video={video} theme={theme} />
+                </m.div>
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
 
         {/* SEÇÃO 2: INTERNACIONAL */}
-        <Box>
-          {renderSectionHeader('Comunidade Internacional', 'O que está acontecendo no mundo')}
+        {videos.international.length > 0 && (
+          <Box>
+            {renderSectionHeader('Comunidade Internacional', 'O que está acontecendo no mundo')}
 
-          <Box
-            sx={{
-              display: 'grid',
-              gap: 4,
-              gridTemplateColumns: {
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(4, 1fr)',
-              },
-            }}
-          >
-            {VIDEOS_INT.map((video) => (
-              <m.div key={video.id} variants={varFade('inUp')}>
-                <VideoItem video={video} theme={theme} />
-              </m.div>
-            ))}
+            <Box
+              sx={{
+                display: 'grid',
+                gap: 4,
+                gridTemplateColumns: {
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(4, 1fr)',
+                },
+              }}
+            >
+              {videos.international.map((video) => (
+                <m.div key={video.id} variants={varFade('inUp')}>
+                  <VideoItem video={video} theme={theme} />
+                </m.div>
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
     </Box>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function VideoItem({ video, theme }: { video: any; theme: any }) {
+function VideoItem({ video, theme }: { video: VideoItemProps; theme: any }) {
   return (
     <Box
       sx={{
@@ -175,7 +124,6 @@ function VideoItem({ video, theme }: { video: any; theme: any }) {
         cursor: 'pointer',
         borderRadius: 2,
         overflow: 'hidden',
-        // 🟢 ESTILO GLASSMORPHISM
         bgcolor: alpha(theme.palette.grey[900], 0.4),
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',

@@ -86,12 +86,12 @@ const staticTrendingPosts = [
 
 // ----------------------------------------------------------------------
 
-export function PostTrending({ posts }: { posts: IPostItem[] }) {
+export function PostTrending({ posts: postsFromProps }: { posts: IPostItem[] }) {
   const theme = useTheme();
 
   // Ordenar posts por visualizações para simular o "Trending" e pegar os top 7
-  const viewPosts = posts?.length 
-    ? [...posts].sort((a, b) => b.totalViews - a.totalViews).slice(0, 7)
+  const viewPosts = postsFromProps?.length 
+    ? [...postsFromProps].sort((a, b) => (b.totalViews || 0) - (a.totalViews || 0)).slice(0, 7)
     : [];
 
   return (

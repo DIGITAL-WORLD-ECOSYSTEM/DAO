@@ -1,5 +1,6 @@
 import { getPosts } from 'src/actions/blog-queries';
 
+import { BLOG_MOCK, COMMUNITIES_MOCK, VIDEOS_MOCK } from 'src/_mock/blog.mock';
 import { BlogHomeView } from 'src/sections/blog/_view/public/BlogHomeView';
 
 // ✅ CORREÇÃO DO ERRO DA VERCEL: Força a renderização dinâmica no servidor (SSR)
@@ -25,6 +26,10 @@ export default async function PostListPage() {
   const posts = JSON.parse(JSON.stringify(rawPosts));
 
   return (
-    <BlogHomeView posts={posts} />
+    <BlogHomeView 
+        posts={posts} 
+        communities={COMMUNITIES_MOCK} 
+        videos={VIDEOS_MOCK} 
+    />
   );
 }

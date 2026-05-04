@@ -630,3 +630,99 @@ export const BLOG_MOCK: IPostItem[] = [
     favoritePerson: [],
   },
 ];
+
+export const COMMUNITIES_MOCK = [
+  {
+    name: 'CoinTelegraph',
+    logo: '/assets/icons/communities/cointelegraph.svg',
+    url: 'https://cointelegraph.com',
+  },
+  {
+    name: 'Binance Academy',
+    logo: '/assets/icons/communities/binance.svg',
+    url: 'https://academy.binance.com',
+  },
+  { name: 'Ethereum Org', logo: '/assets/icons/communities/eth.svg', url: 'https://ethereum.org' },
+  { name: 'CoinDesk', logo: '/assets/icons/communities/coindesk.svg', url: 'https://coindesk.com' },
+  {
+    name: 'CryptoPanic',
+    logo: '/assets/icons/communities/cryptopanic.svg',
+    url: 'https://cryptopanic.com',
+  },
+  {
+    name: 'Solana Foundation',
+    logo: '/assets/icons/communities/solana.svg',
+    url: 'https://solana.com',
+  },
+];
+
+export const VIDEOS_MOCK = {
+  brazil: [
+    {
+      id: 'HPQeQwPahR0',
+      title: 'O MAIOR ROUBO “LEGAL” de BITCOIN da HISTÓRIA!',
+      channel: 'O Primo Rico',
+      thumbnail: 'https://img.youtube.com/vi/HPQeQwPahR0/maxresdefault.jpg',
+      postedAt: '2 dias atrás',
+      duration: '12:40',
+    },
+    {
+      id: 'hLMnCVEDjqE',
+      title: '🔥 TUDO sobre a XRP em 2025! Vale a pena investir agora?',
+      channel: 'É TopSaber',
+      thumbnail: 'https://img.youtube.com/vi/hLMnCVEDjqE/maxresdefault.jpg',
+      postedAt: '5 horas atrás',
+      duration: '08:15',
+    },
+    {
+      id: 'Xc6juEgNwog',
+      title: 'URGENTE: FED VAI INJETAR TRILHÕES NO MERCADO',
+      channel: 'Investidor 4.20',
+      thumbnail: 'https://img.youtube.com/vi/Xc6juEgNwog/maxresdefault.jpg',
+      postedAt: '1 dia atrás',
+      duration: '15:20',
+    },
+    {
+      id: 'x43e3g-JWWQ',
+      title: 'MEMECOINS: POR QUE COMPRAR? Estratégias para 2024',
+      channel: 'Bruno Perini',
+      thumbnail: 'https://img.youtube.com/vi/x43e3g-JWWQ/maxresdefault.jpg',
+      postedAt: '3 dias atrás',
+      duration: '22:00',
+    },
+  ],
+  international: [
+    {
+      id: 'W4mGv_8W-7I',
+      title: 'Bitcoin Strategy for 2025: The Institutional Era',
+      channel: 'Michael Saylor',
+      thumbnail: 'https://img.youtube.com/vi/W4mGv_8W-7I/maxresdefault.jpg',
+      postedAt: '1 dia atrás',
+      duration: '18:10',
+    },
+    {
+      id: 'mS7S5E-WlqU',
+      title: 'Ethereum Roadmap: Beyond the Merge',
+      channel: 'Vitalik Buterin',
+      thumbnail: 'https://img.youtube.com/vi/mS7S5E-WlqU/maxresdefault.jpg',
+      postedAt: '4 dias atrás',
+      duration: '25:45',
+    },
+    {
+      id: 'N64vL67520Q',
+      title: 'Why Solana is Winning the L1 Wars in 2024',
+      channel: 'Coin Bureau',
+      thumbnail: 'https://img.youtube.com/vi/N64vL67520Q/maxresdefault.jpg',
+      postedAt: '6 horas atrás',
+      duration: '14:20',
+    },
+    {
+      id: 'fB05fV7X_7o',
+      title: 'Global Macro: The Debt Crisis Explained',
+      channel: 'Raoul Pal',
+      thumbnail: 'https://img.youtube.com/vi/fB05fV7X_7o/maxresdefault.jpg',
+      postedAt: '12 horas atrás',
+      duration: '32:00',
+    },
+  ],
+};

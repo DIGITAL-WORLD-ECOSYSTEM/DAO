@@ -22,9 +22,11 @@ import { PostAdvertisement } from '../../_components/PostAdvertisement';
 
 type Props = {
   posts: IPostItem[];
+  communities?: any[];
+  videos?: any;
 };
 
-export function BlogHomeView({ posts }: Props) {
+export function BlogHomeView({ posts, communities, videos }: Props) {
   return (
     <Stack
       spacing={0}
@@ -49,7 +51,7 @@ export function BlogHomeView({ posts }: Props) {
 
         {/* 3. PROVA SOCIAL */}
         <Box key="view-community" sx={{ my: 10 }}>
-          <PostCommunity />
+          <PostCommunity communities={communities || []} />
         </Box>
 
         {/* 4. O "AGORA" */}
@@ -64,7 +66,7 @@ export function BlogHomeView({ posts }: Props) {
 
         {/* 6. VÍDEOS */}
         <Box key="view-video" sx={{ my: 10 }}>
-          <PostVideo />
+          <PostVideo videos={videos} />
         </Box>
 
         {/* 7. TECNOLOGIA */}
