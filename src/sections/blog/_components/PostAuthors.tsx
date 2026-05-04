@@ -5,7 +5,6 @@ import { m } from 'framer-motion';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
@@ -46,18 +45,18 @@ export function PostAuthors({ posts }: Props) {
       spacing={2}
       sx={{
         p: 2,
-        minWidth: 260,
+        minWidth: 280,
         borderRadius: 2,
         cursor: 'pointer',
         textDecoration: 'none',
         position: 'relative',
         overflow: 'hidden',
         // 🟢 FUNDO DEEP SPACE SCIFI
-        bgcolor: alpha('#020817', 0.6),
+        bgcolor: alpha('#020817', 0.45),
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
 
-        // 💎 BORDA REATIVA DE 1PX (Assinatura Visual)
+        // 💎 BORDA REATIVA DE 1PX
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -65,9 +64,9 @@ export function PostAuthors({ posts }: Props) {
           borderRadius: 'inherit',
           padding: '1px',
           background: `linear-gradient(180deg, 
-            ${alpha(theme.palette.primary.main, 0.8)} 0%, 
+            ${alpha(theme.palette.primary.main, 0.4)} 0%, 
             ${alpha(theme.palette.common.white, 0.05)} 50%, 
-            ${alpha(theme.palette.primary.main, 0.4)} 100%
+            ${alpha(theme.palette.primary.main, 0.2)} 100%
           )`,
           WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
           WebkitMaskComposite: 'xor',
@@ -77,13 +76,13 @@ export function PostAuthors({ posts }: Props) {
 
         transition: theme.transitions.create(['all']),
         '&:hover': {
-          transform: 'translateY(-4px) scale(1.02)',
-          bgcolor: alpha(theme.palette.primary.main, 0.1),
-          boxShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.25)}`,
+          transform: 'translateY(-4px)',
+          bgcolor: alpha(theme.palette.primary.main, 0.08),
+          boxShadow: `0 10px 20px ${alpha('#000', 0.4)}`,
           '&::before': {
             background: `linear-gradient(180deg, 
               ${theme.palette.primary.main} 0%, 
-              ${alpha(theme.palette.common.white, 0.2)} 50%, 
+              ${alpha(theme.palette.common.white, 0.3)} 50%, 
               ${theme.palette.primary.main} 100%
             )`,
           },
@@ -94,11 +93,11 @@ export function PostAuthors({ posts }: Props) {
         src={author.avatarUrl}
         alt={author.name}
         sx={{
-          width: 48,
-          height: 48,
+          width: 52,
+          height: 52,
           zIndex: 3,
-          border: `2px solid ${alpha(theme.palette.primary.main, 0.5)}`,
-          boxShadow: `0 0 15px ${alpha(theme.palette.primary.main, 0.2)}`,
+          border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+          boxShadow: `0 0 15px ${alpha(theme.palette.primary.main, 0.15)}`,
         }}
       />
 
@@ -122,6 +121,9 @@ export function PostAuthors({ posts }: Props) {
           sx={{
             color: 'grey.500',
             fontWeight: 600,
+            textTransform: 'uppercase',
+            fontSize: 10,
+            letterSpacing: '0.02em',
             fontFamily: "'Public Sans', sans-serif",
           }}
         >
@@ -137,10 +139,11 @@ export function PostAuthors({ posts }: Props) {
         display: 'flex',
         overflow: 'hidden',
         position: 'relative',
-        py: 1.5,
-        maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+        py: 2,
+        // 🟢 MÁSCARA MAIS SUAVE (5%) PARA MELHOR VISIBILIDADE
+        maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
         WebkitMaskImage:
-          'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+          'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
       }}
     >
       {Array.from({ length: 4 }).map((_, i) => (
@@ -152,7 +155,7 @@ export function PostAuthors({ posts }: Props) {
           sx={{ px: 1.5, flexShrink: 0 }}
           animate={{ x: reverse ? ['-100%', '0%'] : ['0%', '-100%'] }}
           transition={{
-            duration: 80, // Aumentado para um scroll mais suave e premium
+            duration: 60, // Velocidade otimizada
             ease: 'linear',
             repeat: Infinity,
           }}
@@ -167,12 +170,24 @@ export function PostAuthors({ posts }: Props) {
     <Box
       component={MotionViewport}
       sx={{
-        py: { xs: 8, md: 12 },
+        py: { xs: 6, md: 10 },
         bgcolor: 'transparent',
         position: 'relative',
         overflow: 'hidden',
       }}
     >
+        {/* 🕸️ GRID PATTERN SUTIL */}
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            opacity: 0.05,
+            zIndex: 0,
+            backgroundImage: `linear-gradient(${alpha(theme.palette.primary.main, 0.2)} 1px, transparent 1px), linear-gradient(90deg, ${alpha(theme.palette.primary.main, 0.2)} 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+          }}
+        />
+
         <m.div variants={varFade('inDown')}>
           <Typography
             variant="h2"
@@ -183,7 +198,8 @@ export function PostAuthors({ posts }: Props) {
               fontFamily: "'Orbitron', sans-serif",
               textTransform: 'uppercase',
               color: 'common.white',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.1em',
+              fontSize: { xs: '1.5rem', md: '2rem' },
               textShadow: `0 0 20px ${alpha(theme.palette.primary.main, 0.35)}`,
             }}
           >
@@ -191,7 +207,7 @@ export function PostAuthors({ posts }: Props) {
           </Typography>
         </m.div>
 
-        <Stack spacing={2}>
+        <Stack spacing={1}>
           <m.div variants={varFade('inRight')}>{renderMarqueeRow(AUTHORS, false, 1)}</m.div>
 
           <m.div variants={varFade('inLeft')}>
