@@ -36,7 +36,7 @@ jobs:
         run: pnpm audit --audit-level=high
 
       - name: 🔑 Secret Scanning (Gitleaks)
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # continue-on-error removido para garantir que novos secrets não vazem em produção
