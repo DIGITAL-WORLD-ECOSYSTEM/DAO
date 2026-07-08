@@ -100,7 +100,7 @@
     "swr": "^2.3.8",
     "three": "^0.182.0",
     "three-globe": "^2.45.0",
-    "turndown": "^7.2.2",
+    "turndown": "^7.2.4",
     "viem": "^2.48.1",
     "wagmi": "^3.6.4",
     "yet-another-react-lightbox": "^3.28.0",
