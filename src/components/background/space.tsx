@@ -4,20 +4,11 @@
 import type { PropsWithChildren } from 'react';
 
 import { memo, Suspense } from 'react';
-import { Stars } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 
 import Box from '@mui/material/Box';
 
 // ----------------------------------------------------------------------
-
-const STARS_CONFIG = {
-  radius: 120,
-  depth: 60,
-  count: 6000,
-  factor: 4,
-  fade: true,
-};
 
 const LIGHT_CONFIG = {
   ambientIntensity: 0.5,
@@ -50,7 +41,6 @@ export const Space = memo(({ children }: PropsWithChildren) => (
 ================================ */
 export const SpaceAtmosphere = memo(() => (
   <Suspense fallback={null}>
-    <Stars {...STARS_CONFIG} />
     <ambientLight intensity={LIGHT_CONFIG.ambientIntensity} />
     <pointLight position={LIGHT_CONFIG.pointPosition} intensity={LIGHT_CONFIG.pointIntensity} />
   </Suspense>
