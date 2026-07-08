@@ -40,7 +40,7 @@
     "@mui/lab": "7.0.1-beta.21",
     "@mui/material": "^7.3.7",
     "@mui/material-nextjs": "^7.3.7",
-    "@mui/stylis-plugin-rtl": "^7.3.7",
+    "@mui/stylis-plugin-rtl": "^9.0.0",
     "@mui/system": "^7.3.7",
     "@mui/x-data-grid": "^7.29.12",
     "@mui/x-date-pickers": "^7.29.4",
