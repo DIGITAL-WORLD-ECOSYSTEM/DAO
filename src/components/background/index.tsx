@@ -8,7 +8,6 @@ import { memo, useRef, useMemo, Suspense, useEffect } from 'react';
 import { Float, PerspectiveCamera, PerformanceMonitor } from '@react-three/drei';
 
 import { GalacticCore } from './galactic';
-import { EventHorizon } from './event-horizon';
 import { FlowerOfLife } from './flower-of-life';
 import { Space, SpaceAtmosphere } from './space';
 import { SceneController } from './scene-controller';
@@ -121,9 +120,6 @@ export const HomeBackground: React.FC = memo(() => {
 
           {/* Núcleo galáctico (e Evolução Estelar nativa) */}
           <GalacticCore scrollProgress={scrollProgress} />
-
-          {/* Horizonte de eventos */}
-          <EventHorizon scrollProgress={scrollProgress} />
 
           {/* Fase inicial */}
           <InitialPhase
