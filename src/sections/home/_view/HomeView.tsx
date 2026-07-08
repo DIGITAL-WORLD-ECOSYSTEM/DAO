@@ -45,8 +45,8 @@ const HomeCountdownDialog = dynamic(() => import('../_components/HomeCountdownDi
 export function HomeView() {
   const countdown = useBoolean(true);
 
-  // DATA ALVO: Lançamento SocialFi Alpha (15 de Maio de 2026)
-  const TARGET_DATE = new Date('2026-05-15T00:00:00');
+  // DATA ALVO: Lançamento Oficial ASPPIBRA (31 de Dezembro de 2026)
+  const TARGET_DATE = new Date('2026-12-31T23:59:59');
 
   return (
     <>
