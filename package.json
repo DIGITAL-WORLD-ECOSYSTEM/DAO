@@ -43,7 +43,7 @@
     "@mui/stylis-plugin-rtl": "^7.3.7",
     "@mui/system": "^7.3.7",
     "@mui/x-data-grid": "^7.29.12",
-    "@mui/x-date-pickers": "^7.29.4",
+    "@mui/x-date-pickers": "^9.0.2",
     "@mui/x-tree-view": "^7.29.10",
     "@react-pdf/renderer": "^4.3.2",
     "@react-three/drei": "^10.7.7",
