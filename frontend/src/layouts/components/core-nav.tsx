@@ -79,7 +79,7 @@ export function CoreNav() {
           <SpeedDialAction
             key={action.name}
             icon={<Iconify icon={action.icon as any} />}
-            tooltipTitle={action.name}
+            title={action.name}
             onClick={action.onClick}
           />
         ))}
