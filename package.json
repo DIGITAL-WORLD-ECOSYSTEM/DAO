@@ -2,6 +2,7 @@
   "name": "asppibra-dao-workspace",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev:backend": "pnpm --filter gov-system-backend dev",
     "dev:frontend": "pnpm --filter @dao/frontend dev",
