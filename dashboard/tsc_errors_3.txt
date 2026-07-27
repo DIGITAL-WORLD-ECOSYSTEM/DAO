@@ -1,0 +1,118 @@
+src/auth/utils/error-message.ts(4,7): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/auth/utils/error-message.ts(5,12): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(5,29): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(8,14): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(9,12): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(12,14): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(12,36): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(13,27): error TS2304: Cannot find name 'error'.
+src/auth/utils/error-message.ts(19,30): error TS2304: Cannot find name 'error'.
+src/components/editor/editor.tsx(4,40): error TS2307: Cannot find module 'lowlight' or its corresponding type declarations.
+src/components/editor/editor.tsx(157,34): error TS2339: Property 'error' does not exist on type '{ message: string; disabled: string; fullscreen: string; }'.
+src/components/editor/styles.tsx(21,29): error TS2339: Property 'error' does not exist on type '{ message: string; disabled: string; fullscreen: string; }'.
+src/components/hook-form/rhf-code.tsx(67,15): error TS2322: Type '{ placeholder: string; message: boolean; } | { error?: boolean | undefined; ref?: ((instance: HTMLDivElement | null) => void | (() => VoidOrUndefinedOnly)) | RefObject<...> | null | undefined; ... 299 more ...; message: boolean; } | { ...; }' is not assignable to type 'TextFieldProps | ((index: number) => TextFieldProps) | undefined'.
+  Object literal may only specify known properties, and 'message' does not exist in type 'TextFieldProps | ((index: number) => TextFieldProps)'.
+src/components/hook-form/rhf-date-picker.tsx(58,15): error TS2322: Type '{ message: boolean; helperText: ReactNode; } | { message: boolean; helperText: ReactNode; variant?: "filled" | undefined; areAllSectionsEmpty?: boolean | undefined; ... 301 more ...; slotProps?: PickersTextFieldSlotProps<...> | undefined; } | ... 10 more ... | { ...; }' is not assignable to type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState> | undefined'.
+  Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/components/hook-form/rhf-date-picker.tsx(95,15): error TS2322: Type '{ message: boolean; helperText: ReactNode; } | { message: boolean; helperText: ReactNode; variant?: "filled" | undefined; areAllSectionsEmpty?: boolean | undefined; ... 301 more ...; slotProps?: PickersTextFieldSlotProps<...> | undefined; } | ... 10 more ... | { ...; }' is not assignable to type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState> | undefined'.
+  Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/components/hook-form/rhf-date-picker.tsx(132,15): error TS2322: Type '{ message: boolean; helperText: ReactNode; } | { message: boolean; helperText: ReactNode; variant?: "filled" | undefined; areAllSectionsEmpty?: boolean | undefined; ... 301 more ...; slotProps?: PickersTextFieldSlotProps<...> | undefined; } | ... 10 more ... | { ...; }' is not assignable to type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState> | undefined'.
+  Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/components/hook-form/schema-utils.ts(125,33): error TS2339: Property 'error' does not exist on type '{ message: string; minFiles?: number | undefined; }'.
+src/components/snackbar/snackbar.tsx(37,13): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'ToastClassnames'.
+src/components/snackbar/snackbar.tsx(37,38): error TS2339: Property 'error' does not exist on type '{ root: string; toast: string; title: string; content: string; description: string; icon: string; loaderVisible: string; loader: string; loading: string; iconSvg: string; loadingIcon: string; default: string; ... 8 more ...; unset: string; }'.
+src/components/snackbar/snackbar.tsx(49,11): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'ToastIcons'.
+src/components/snackbar/styles.tsx(143,27): error TS2339: Property 'error' does not exist on type '{ root: string; toast: string; title: string; content: string; description: string; icon: string; loaderVisible: string; loader: string; loading: string; iconSvg: string; loadingIcon: string; default: string; ... 8 more ...; unset: string; }'.
+src/components/upload/avatar/styles.tsx(30,29): error TS2339: Property 'error' does not exist on type '{ message: string; focused: string; disabled: string; dragActive: string; dragAccept: string; hasFile: string; hasFiles: string; }'.
+src/components/upload/avatar/upload-avatar.tsx(79,32): error TS2339: Property 'error' does not exist on type '{ message: string; focused: string; disabled: string; dragActive: string; dragAccept: string; hasFile: string; hasFiles: string; }'.
+src/components/upload/box/styles.tsx(31,29): error TS2339: Property 'error' does not exist on type '{ message: string; focused: string; disabled: string; dragActive: string; dragAccept: string; hasFile: string; hasFiles: string; }'.
+src/components/upload/box/upload-box.tsx(33,30): error TS2339: Property 'error' does not exist on type '{ message: string; focused: string; disabled: string; dragActive: string; dragAccept: string; hasFile: string; hasFiles: string; }'.
+src/components/upload/default/styles.tsx(39,29): error TS2339: Property 'error' does not exist on type '{ message: string; focused: string; disabled: string; dragActive: string; dragAccept: string; hasFile: string; hasFiles: string; }'.
+src/components/upload/default/upload-default.tsx(120,32): error TS2339: Property 'error' does not exist on type '{ message: string; focused: string; disabled: string; dragActive: string; dragAccept: string; hasFile: string; hasFiles: string; }'.
+src/locales/use-locales.ts(43,11): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'PromiseData<TFunction<"translation", undefined>>'.
+src/routes/components/error-boundary.tsx(38,28): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(42,12): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(42,28): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(44,54): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(49,7): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(50,56): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(56,12): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(56,26): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/routes/components/error-boundary.tsx(58,56): error TS2552: Cannot find name 'error'. Did you mean 'Error'?
+src/sections/_examples/extra/form-validation-view/other-demo.tsx(90,21): error TS18046: 'values.multiUpload' is of type 'unknown'.
+src/sections/_examples/extra/form-validation-view/other-demo.tsx(90,48): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/sections/_examples/extra/form-validation-view/schema.ts(27,9): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(31,9): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(38,9): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(48,35): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: SchemaErrorMessages | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(49,33): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: SchemaErrorMessages | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(58,7): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(89,35): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(92,33): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-validation-view/schema.ts(109,6): error TS2339: Property 'min' does not exist on type 'ZodEffects<ZodString, string, string>'.
+src/sections/_examples/extra/form-validation-view/schema.ts(111,36): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/form-wizard-view/form-wizard.tsx(31,7): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/_examples/extra/map-view/map-clusters.tsx(2,67): error TS2307: Cannot find module 'maplibre-gl' or its corresponding type declarations.
+src/sections/_examples/extra/map-view/map-highlight-by-filter.tsx(2,46): error TS2307: Cannot find module 'maplibre-gl' or its corresponding type declarations.
+src/sections/_examples/extra/snackbar-view/view.tsx(32,9): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'PromiseData<unknown>'.
+src/sections/_examples/foundation/shadows-view/view.tsx(98,30): error TS7053: Element implicitly has an 'any' type because expression of type 'PaletteColorKey' can't be used to index type 'CustomShadows'.
+  Property 'error' does not exist on type 'CustomShadows'.
+src/sections/_examples/foundation/shadows-view/view.tsx(107,30): error TS7053: Element implicitly has an 'any' type because expression of type 'PaletteColorKey' can't be used to index type 'CustomShadows'.
+  Property 'error' does not exist on type 'CustomShadows'.
+src/sections/_examples/mui/date-pickers-view/picker-date-time.tsx(52,39): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/sections/_examples/mui/pagination-view/view.tsx(84,39): error TS2322: Type '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "standard"' is not assignable to type 'OverridableStringUnion<"primary" | "secondary" | "standard", PaginationPropsColorOverrides> | undefined'.
+  Type '"error"' is not assignable to type 'OverridableStringUnion<"primary" | "secondary" | "standard", PaginationPropsColorOverrides> | undefined'.
+src/sections/_examples/mui/pagination-view/view.tsx(90,39): error TS2322: Type '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "standard"' is not assignable to type 'OverridableStringUnion<"primary" | "secondary" | "standard", PaginationPropsColorOverrides> | undefined'.
+  Type '"error"' is not assignable to type 'OverridableStringUnion<"primary" | "secondary" | "standard", PaginationPropsColorOverrides> | undefined'.
+src/sections/_examples/mui/pagination-view/view.tsx(96,39): error TS2322: Type '"primary" | "secondary" | "info" | "success" | "warning" | "error" | "standard"' is not assignable to type 'OverridableStringUnion<"primary" | "secondary" | "standard", PaginationPropsColorOverrides> | undefined'.
+  Type '"error"' is not assignable to type 'OverridableStringUnion<"primary" | "secondary" | "standard", PaginationPropsColorOverrides> | undefined'.
+src/sections/account/account-general.tsx(27,32): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/account/account-general.tsx(30,5): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/account/account-general.tsx(100,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: { component: "div"; } & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>): Element | null', gave the following error.
+    Type '{ children: Element; component: "div"; item: true; xs: number; md: number; }' is not assignable to type 'IntrinsicAttributes & { component: "div"; } & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+      Property 'item' does not exist on type 'IntrinsicAttributes & { component: "div"; } & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+  Overload 2 of 2, '(props: DefaultComponentProps<GridTypeMap<{}, "div">>): Element | null', gave the following error.
+    Type '{ children: Element; component: string; item: true; xs: number; md: number; }' is not assignable to type 'IntrinsicAttributes & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+      Property 'component' does not exist on type 'IntrinsicAttributes & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+src/sections/account/account-general.tsx(143,10): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: { component: "div"; } & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>): Element | null', gave the following error.
+    Type '{ children: Element; component: "div"; item: true; xs: number; md: number; }' is not assignable to type 'IntrinsicAttributes & { component: "div"; } & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+      Property 'item' does not exist on type 'IntrinsicAttributes & { component: "div"; } & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+  Overload 2 of 2, '(props: DefaultComponentProps<GridTypeMap<{}, "div">>): Element | null', gave the following error.
+    Type '{ children: Element; component: string; item: true; xs: number; md: number; }' is not assignable to type 'IntrinsicAttributes & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+      Property 'component' does not exist on type 'IntrinsicAttributes & GridBaseProps & { sx?: SxProps<Theme> | undefined; } & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "sx" | keyof GridBaseProps>'.
+src/sections/address/address-create-form.tsx(32,5): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/blog/post-create-edit-form.tsx(39,33): error TS2339: Property 'min' does not exist on type 'ZodEffects<ZodString, string, string>'.
+src/sections/blog/post-create-edit-form.tsx(40,32): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/blog/post-create-edit-form.tsx(247,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/sections/blog/post-create-edit-form.tsx(249,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/sections/blog/post-create-edit-form.tsx(251,9): error TS2322: Type 'unknown' is not assignable to type 'FileUploadType'.
+src/sections/blog/post-create-edit-form.tsx(253,9): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/sections/calendar/calendar-filters.tsx(149,13): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/sections/calendar/calendar-form.tsx(124,17): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState> & Partial<PickersTextFieldProps>'.
+src/sections/invoice/invoice-create-edit-form.tsx(32,7): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/invoice/invoice-create-edit-form.tsx(34,36): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: SchemaErrorMessages | undefined; }'.
+src/sections/invoice/invoice-create-edit-form.tsx(35,33): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: SchemaErrorMessages | undefined; }'.
+src/sections/invoice/invoice-table-toolbar.tsx(154,15): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/sections/mail/mail-compose.tsx(84,21): error TS2304: Cannot find name 'error'.
+src/sections/mail/mail-compose.tsx(85,29): error TS2304: Cannot find name 'error'.
+src/sections/order/order-table-toolbar.tsx(108,15): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'SlotComponentPropsFromProps<PickersTextFieldProps, {}, FieldOwnerState>'.
+src/sections/product/product-create-edit-form.tsx(44,15): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/product/product-create-edit-form.tsx(45,6): error TS2339: Property 'min' does not exist on type 'ZodEffects<ZodString, string, string>'.
+src/sections/product/product-create-edit-form.tsx(53,7): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/product/product-create-edit-form.tsx(60,5): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/product/product-create-edit-form.tsx(142,56): error TS2339: Property 'filter' does not exist on type '{}'.
+src/sections/product/product-create-edit-form.tsx(142,64): error TS7006: Parameter 'file' implicitly has an 'any' type.
+src/sections/product/product-create-edit-form.tsx(294,26): error TS18046: 'values.saleLabel' is of type 'unknown'.
+src/sections/product/product-create-edit-form.tsx(304,26): error TS18046: 'values.newLabel' is of type 'unknown'.
+src/sections/user/user-create-edit-form.tsx(31,33): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/user/user-create-edit-form.tsx(36,5): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/user/user-quick-edit-form.tsx(31,5): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type '{ error?: string | undefined; }'.
+src/sections/user/user-quick-edit-form.tsx(89,9): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'PromiseData<unknown>'.
+src/theme/core/components/alert.tsx(113,7): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'Partial<Record<OverridableStringUnion<AlertColor, AlertPropsColorOverrides>, ReactNode>>'.
+src/theme/core/components/button-fab.tsx(87,18): error TS7053: Element implicitly has an 'any' type because expression of type 'PaletteColorKey' can't be used to index type 'CustomShadows'.
+  Property 'error' does not exist on type 'CustomShadows'.
+src/theme/core/components/button.tsx(59,20): error TS7053: Element implicitly has an 'any' type because expression of type 'PaletteColorKey' can't be used to index type 'CustomShadows'.
+  Property 'error' does not exist on type 'CustomShadows'.
+src/theme/theme-config.ts(88,5): error TS2353: Object literal may only specify known properties, and 'message' does not exist in type 'Record<PaletteColorKey, PaletteColorNoChannels> & { common: Pick<CommonColors, "black" | "white">; grey: { ...; }; }'.

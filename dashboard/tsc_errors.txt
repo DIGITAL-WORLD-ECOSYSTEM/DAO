@@ -1,0 +1,374 @@
+src/auth/guard/role-based-guard.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/auth/view/auth-demo/centered/centered-reset-password-view.tsx(33,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ email: string; }, { email: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ email: string; }, { email: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ email: ZodEmail; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/centered/centered-sign-in-view.tsx(46,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ email: string; password: string; }, { email: string; password: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ email: string; password: string; }, { email: string; password: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ email: ZodEmail; password: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/centered/centered-sign-up-view.tsx(51,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ firstName: string; lastName: string; email: string; password: string; }, { firstName: string; lastName: string; email: string; password: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ firstName: string; lastName: string; email: string; password: string; }, { firstName: string; lastName: string; email: string; password: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/centered/centered-update-password-view.tsx(57,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ code: string; email: string; password: string; confirmPassword: string; }, { code: string; email: string; password: string; confirmPassword: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; password: ZodString; confirmPassword: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ code: string; email: string; password: string; confirmPassword: string; }, { code: string; email: string; password: string; confirmPassword: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ code: ZodString; email: ZodEmail; password: ZodString; confirmPassword: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; password: ZodString; confirmPassword: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/centered/centered-verify-view.tsx(39,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ code: string; email: string; }, { code: string; email: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ code: string; email: string; }, { code: string; email: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ code: ZodString; email: ZodEmail; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/split/split-reset-password-view.tsx(33,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ email: string; }, { email: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ email: string; }, { email: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ email: ZodEmail; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/split/split-sign-in-view.tsx(45,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ email: string; password: string; }, { email: string; password: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ email: string; password: string; }, { email: string; password: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ email: ZodEmail; password: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/split/split-sign-up-view.tsx(50,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ firstName: string; lastName: string; email: string; password: string; }, { firstName: string; lastName: string; email: string; password: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ firstName: string; lastName: string; email: string; password: string; }, { firstName: string; lastName: string; email: string; password: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/split/split-update-password-view.tsx(57,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ code: string; email: string; password: string; confirmPassword: string; }, { code: string; email: string; password: string; confirmPassword: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; password: ZodString; confirmPassword: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ code: string; email: string; password: string; confirmPassword: string; }, { code: string; email: string; password: string; confirmPassword: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ code: ZodString; email: ZodEmail; password: ZodString; confirmPassword: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; password: ZodString; confirmPassword: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/auth-demo/split/split-verify-view.tsx(39,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ code: string; email: string; }, { code: string; email: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ code: string; email: string; }, { code: string; email: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ code: ZodString; email: ZodEmail; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ code: ZodString; email: ZodEmail; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/jwt/jwt-sign-in-view.tsx(55,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ email: string; password: string; }, { email: string; password: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ email: string; password: string; }, { email: string; password: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ email: ZodEmail; password: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/auth/view/jwt/jwt-sign-up-view.tsx(60,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ firstName: string; lastName: string; email: string; password: string; }, { firstName: string; lastName: string; email: string; password: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ firstName: string; lastName: string; email: string; password: string; }, { firstName: string; lastName: string; email: string; password: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ firstName: ZodString; lastName: ZodString; email: ZodEmail; password: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/components/animate/animate-border.tsx(12,8): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/animate-border.tsx(205,22): error TS7006: Parameter 'time' implicitly has an 'any' type.
+src/components/animate/animate-border.tsx(207,37): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/components/animate/animate-border.tsx(208,37): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/components/animate/animate-count-up.tsx(1,39): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/animate-count-up.tsx(5,69): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/animate-count-up.tsx(44,45): error TS7006: Parameter 'latest' implicitly has an 'any' type.
+src/components/animate/animate-logo.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/animate-text.tsx(3,49): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/animate-text.tsx(7,44): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/motion-container.tsx(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/motion-container.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/motion-lazy.tsx(1,36): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/motion-viewport.tsx(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/motion-viewport.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/scroll-progress/scroll-progress.tsx(3,47): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/scroll-progress/scroll-progress.tsx(8,44): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/scroll-progress/scroll-progress.tsx(45,3): error TS2339: Property 'className' does not exist on type 'ScrollProgressProps'.
+src/components/animate/scroll-progress/use-scroll-progress.ts(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/scroll-progress/use-scroll-progress.ts(4,27): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/actions.ts(1,33): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/background.ts(1,64): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/bounce.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/container.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/fade.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/flip.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/path.ts(1,52): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/rotate.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/scale.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/slide.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/transition.ts(1,33): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/animate/variants/zoom.ts(1,43): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/image/image.tsx(1,39): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/components/image/image.tsx(5,27): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/components/account-button.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/components/contacts-popover.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/components/language-popover.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/components/nav-upgrade.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/components/notifications-drawer/index.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/components/settings-button.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/layouts/main/nav/desktop/nav-desktop-item-dashboard.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/lib/axios.ts(1,41): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/lib/axios.ts(3,19): error TS2307: Cannot find module 'axios' or its corresponding type declarations.
+src/lib/axios.ts(17,47): error TS7006: Parameter 'config' implicitly has an 'any' type.
+src/lib/axios.ts(49,4): error TS7006: Parameter 'response' implicitly has an 'any' type.
+src/lib/axios.ts(50,4): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/sections/_examples/extra/animate-view/background/container.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/dialog/container.tsx(4,36): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/get-variant.ts(1,31): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/inview/container.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/other/svg-path.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/other/tap-hover.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/scroll/container.tsx(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/animate-view/scroll/container.tsx(5,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/carousel-view/carousel-animation.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/dnd-view/sortable-grid.tsx(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/dnd-view/sortable-grid.tsx(10,36): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/extra/form-validation-view/controls-demo.tsx(38,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ rating: number; radioGroup: string; checkbox: boolean; multiCheckbox: string[]; switch: boolean; multiSwitch: string[]; slider: number; sliderRange: number[]; }, { rating: number; radioGroup: string; ... 5 more ...; sliderRange: number[]; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ rating: ZodNumber; radioGroup: ZodString; checkbox: ZodBoolean; multiCheckbox: ZodArray<ZodString>; switch: ZodBoolean; multiSwitch: ZodArray<...>; slider: ZodNumber; sliderRange: ZodArray<...>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ rating: number; radioGroup: string; checkbox: boolean; multiCheckbox: string[]; switch: boolean; multiSwitch: string[]; slider: number; sliderRange: number[]; }, { rating: number; radioGroup: string; ... 5 more ...; sliderRange: number[]; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ rating: ZodNumber; radioGroup: ZodString; checkbox: ZodBoolean; multiCheckbox: ZodArray<ZodString>; switch: ZodBoolean; multiSwitch: ZodArray<...>; slider: ZodNumber; sliderRange: ZodArray<...>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ rating: ZodNumber; radioGroup: ZodString; checkbox: ZodBoolean; multiCheckbox: ZodArray<ZodString>; switch: ZodBoolean; multiSwitch: ZodArray<...>; slider: ZodNumber; sliderRange: ZodArray<...>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/_examples/extra/form-validation-view/fields-demo.tsx(79,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ fullName: string; email: string; age: number; quantity: number; phoneNumber: string; code: string; startDate: string | number | Date | null; endDate: string | number | Date | null; ... 8 more ...; price?: number | undefined; }, { ...; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ fullName: ZodString; email: ZodEmail; age: ZodNullable<ZodCoercedNumber<unknown>> & ZodType<number, unknown, $ZodTypeInternals<number, unknown>>; ... 13 more ...; multiSelect: ZodArray<...>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ fullName: string; email: string; age: number; quantity: number; phoneNumber: string; code: string; startDate: string | number | Date | null; endDate: string | number | Date | null; ... 8 more ...; price?: number | undefined; }, { ...; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ fullName: ZodString; email: ZodEmail; age: ZodNullable<ZodCoercedNumber<unknown>> & ZodType<number, unknown, $ZodTypeInternals<number, unknown>>; ... 13 more ...; multiSelect: ZodArray<...>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ fullName: ZodString; email: ZodEmail; age: ZodNullable<ZodCoercedNumber<unknown>> & ZodType<number, unknown, $ZodTypeInternals<number, unknown>>; ... 13 more ...; multiSelect: ZodArray<...>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/_examples/extra/form-validation-view/other-demo.tsx(31,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ editor: string; singleUpload: string | File | null; multiUpload: (string | File)[]; }, { editor: string; singleUpload: string | File | null; multiUpload: (string | File)[]; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ editor: ZodString; singleUpload: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; multiUpload: ZodArray<ZodUnion<readonly [ZodString, ZodFile]>>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ editor: string; singleUpload: string | File | null; multiUpload: (string | File)[]; }, { editor: string; singleUpload: string | File | null; multiUpload: (string | File)[]; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ editor: ZodString; singleUpload: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; multiUpload: ZodArray<ZodUnion<readonly [ZodString, ZodFile]>>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ editor: ZodString; singleUpload: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; multiUpload: ZodArray<ZodUnion<readonly [ZodString, ZodFile]>>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/_examples/extra/form-wizard-view/form-wizard.tsx(60,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ stepOne: { firstName: string; lastName: string; }; stepTwo: { age: number; }; stepThree: { email: string; }; }, { stepOne: { firstName: string; lastName: string; }; stepTwo: { age: unknown; }; stepThree: { email: string; }; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ stepOne: ZodObject<{ firstName: ZodString; lastName: ZodString; }, $strip>; stepTwo: ZodObject<{ age: ZodNullable<ZodCoercedNumber<unknown>> & ZodType<...>; }, $strip>; stepThree: ZodObject<...>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ stepOne: { firstName: string; lastName: string; }; stepTwo: { age: number; }; stepThree: { email: string; }; }, { stepOne: { firstName: string; lastName: string; }; stepTwo: { age: unknown; }; stepThree: { email: string; }; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ stepOne: ZodObject<{ firstName: ZodString; lastName: ZodString; }, $strip>; stepTwo: ZodObject<{ age: ZodNullable<ZodCoercedNumber<unknown>> & ZodType<...>; }, $strip>; stepThree: ZodObject<...>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ stepOne: ZodObject<{ firstName: ZodString; lastName: ZodString; }, $strip>; stepTwo: ZodObject<{ age: ZodNullable<ZodCoercedNumber<unknown>> & ZodType<...>; }, $strip>; stepThree: ZodObject<...>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/_examples/layout/component-card.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/mui/button-view/floating-action-button.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/mui/button-view/icon-buttons.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/mui/tooltip-view/view.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/_examples/view.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/about/about-hero.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/about/about-team.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/about/about-testimonials.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/about/about-vision.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/about/about-what.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/account/account-change-password.tsx(51,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ oldPassword: string; newPassword: string; confirmNewPassword: string; }, { oldPassword: string; newPassword: string; confirmNewPassword: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ oldPassword: ZodString; newPassword: ZodString; confirmNewPassword: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ oldPassword: string; newPassword: string; confirmNewPassword: string; }, { oldPassword: string; newPassword: string; confirmNewPassword: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ oldPassword: ZodString; newPassword: ZodString; confirmNewPassword: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ oldPassword: ZodString; newPassword: ZodString; confirmNewPassword: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/account/account-general.tsx(76,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ displayName: string; email: string; photoURL: string | File | null; phoneNumber: string; country: string; address: string; state: string; city: string; zipCode: string; about: string; isPublic: boolean; }, { ...; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ displayName: ZodString; email: ZodEmail; photoURL: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; ... 7 more ...; isPublic: ZodBoolean; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ displayName: string; email: string; photoURL: string | File | null; phoneNumber: string; country: string; address: string; state: string; city: string; zipCode: string; about: string; isPublic: boolean; }, { ...; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ displayName: ZodString; email: ZodEmail; photoURL: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; ... 7 more ...; isPublic: ZodBoolean; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ displayName: ZodString; email: ZodEmail; photoURL: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; ... 7 more ...; isPublic: ZodBoolean; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/address/address-create-form.tsx(65,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ city: string; state: string; name: string; address: string; zipCode: string; phoneNumber: string; country: string; primary: boolean; addressType: string; }, { city: string; state: string; name: string; ... 5 more ...; addressType: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ city: ZodString; state: ZodString; name: ZodString; address: ZodString; zipCode: ZodString; phoneNumber: ZodString; country: ZodNullable<...> & ZodType<...>; primary: ZodBoolean; addressType: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ city: string; state: string; name: string; address: string; zipCode: string; phoneNumber: string; country: string; primary: boolean; addressType: string; }, { city: string; state: string; name: string; ... 5 more ...; addressType: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ city: ZodString; state: ZodString; name: ZodString; address: ZodString; zipCode: ZodString; phoneNumber: ZodString; country: ZodNullable<...> & ZodType<...>; primary: ZodBoolean; addressType: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ city: ZodString; state: ZodString; name: ZodString; address: ZodString; zipCode: ZodString; phoneNumber: ZodString; country: ZodNullable<...> & ZodType<...>; primary: ZodBoolean; addressType: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/blog/post-comment-form.tsx(28,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ comment: string; }, { comment: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ comment: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ comment: string; }, { comment: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ comment: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ comment: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/blog/post-create-edit-form.tsx(74,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ title: string; description: string; content: string; coverUrl: string | File | null; tags: string[]; metaKeywords: string[]; metaTitle: string; metaDescription: string; }, { title: string; ... 6 more ...; metaDescription: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ title: ZodString; description: ZodString; content: ZodString; coverUrl: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; tags: ZodArray<...>; metaKeywords: ZodArray<...>; metaTitle: ZodString; metaDescription: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ title: string; description: string; content: string; coverUrl: string | File | null; tags: string[]; metaKeywords: string[]; metaTitle: string; metaDescription: string; }, { title: string; ... 6 more ...; metaDescription: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ title: ZodString; description: ZodString; content: ZodString; coverUrl: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; tags: ZodArray<...>; metaKeywords: ZodArray<...>; metaTitle: ZodString; metaDescription: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ title: ZodString; description: ZodString; content: ZodString; coverUrl: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; tags: ZodArray<...>; metaKeywords: ZodArray<...>; metaTitle: ZodString; metaDescription: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/calendar/calendar-form.tsx(57,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ title: string; description: string; color: string; allDay: boolean; start: string | number; end: string | number; }, { title: string; description: string; color: string; allDay: boolean; start: string | number; end: string | number; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ title: ZodString; description: ZodString; color: ZodString; allDay: ZodBoolean; start: ZodUnion<readonly [ZodString, ZodNumber]>; end: ZodUnion<...>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ title: string; description: string; color: string; allDay: boolean; start: string | number; end: string | number; }, { title: string; description: string; color: string; allDay: boolean; start: string | number; end: string | number; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ title: ZodString; description: ZodString; color: ZodString; allDay: ZodBoolean; start: ZodUnion<readonly [ZodString, ZodNumber]>; end: ZodUnion<...>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ title: ZodString; description: ZodString; color: ZodString; allDay: ZodBoolean; start: ZodUnion<readonly [ZodString, ZodNumber]>; end: ZodUnion<...>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/checkout/checkout-payment.tsx(78,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ payment: string; delivery: number; }, { payment: string; delivery: number; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ payment: ZodString; delivery: ZodNumber; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ payment: string; delivery: number; }, { payment: string; delivery: number; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ payment: ZodString; delivery: ZodNumber; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ payment: ZodString; delivery: ZodNumber; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/contact/contact-hero.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/error/403-view.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/error/500-view.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/error/not-found-view.tsx(1,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/faqs/faqs-hero.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/hero-background.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/hero-svg.tsx(3,44): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/hero-svg.tsx(6,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/hero-svg.tsx(299,8): error TS2741: Property 'transition' is missing in type '{ color: "error"; animate: { x: number[]; }; sx: { width: number; height: number; transform: "translate(calc(50% - 457px), calc(50% - 259px))"; }; }' but required in type 'Pick<MotionProps, "animate" | "transition">'.
+src/sections/home/components/hero-svg.tsx(305,8): error TS2741: Property 'transition' is missing in type '{ color: "warning"; animate: { y: number[]; }; sx: { transform: "translate(calc(50% - 356px), calc(50% + 37px))"; }; }' but required in type 'Pick<MotionProps, "animate" | "transition">'.
+src/sections/home/components/hero-svg.tsx(311,8): error TS2741: Property 'transition' is missing in type '{ color: "info"; animate: { x: number[]; }; sx: { transform: "translate(calc(50% + 332px), calc(50% + 135px))"; }; }' but required in type 'Pick<MotionProps, "animate" | "transition">'.
+src/sections/home/components/hero-svg.tsx(317,8): error TS2741: Property 'transition' is missing in type '{ color: "secondary"; animate: { x: number[]; }; sx: { transform: "translate(calc(50% + 430px), calc(50% - 160px))"; }; }' but required in type 'Pick<MotionProps, "animate" | "transition">'.
+src/sections/home/components/hero-svg.tsx(323,8): error TS2741: Property 'transition' is missing in type '{ color: "success"; animate: { y: number[]; }; sx: { transform: "translate(calc(50% + 136px), calc(50% + 332px))"; }; }' but required in type 'Pick<MotionProps, "animate" | "transition">'.
+src/sections/home/components/section-title.tsx(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/section-title.tsx(5,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/svg-elements.tsx(3,46): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/svg-elements.tsx(6,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/components/svg-elements.tsx(40,10): error TS7006: Parameter 'theme' implicitly has an 'any' type.
+src/sections/home/components/svg-elements.tsx(94,10): error TS7006: Parameter 'theme' implicitly has an 'any' type.
+src/sections/home/components/svg-elements.tsx(123,10): error TS7006: Parameter 'theme' implicitly has an 'any' type.
+src/sections/home/components/svg-elements.tsx(152,10): error TS7006: Parameter 'theme' implicitly has an 'any' type.
+src/sections/home/components/svg-elements.tsx(179,10): error TS7006: Parameter 'theme' implicitly has an 'any' type.
+src/sections/home/home-advertisement.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-faqs.tsx(4,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-for-designer.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-hero.tsx(3,62): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-hero.tsx(6,76): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-hero.tsx(354,43): error TS7006: Parameter 'scrollHeight' implicitly has an 'any' type.
+src/sections/home/home-highlight-features.tsx(7,76): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-highlight-features.tsx(159,51): error TS7006: Parameter 'latest' implicitly has an 'any' type.
+src/sections/home/home-hugepack-elements.tsx(1,34): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-hugepack-elements.tsx(6,76): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-hugepack-elements.tsx(128,51): error TS7006: Parameter 'latest' implicitly has an 'any' type.
+src/sections/home/home-integrations.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-minimal.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-pricing.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-testimonials.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/home/home-zone-ui.tsx(3,19): error TS2307: Cannot find module 'framer-motion' or its corresponding type declarations.
+src/sections/invoice/invoice-create-edit-form.tsx(91,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ invoiceTo: IAddressItem; createDate: string | number | Date | null; dueDate: string | number | Date | null; items: { title: string; service: string; quantity: number; price: number; total: number; description: string; }[]; ... 7 more ...; invoiceFrom: IAddressItem | null; }, { ...; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ invoiceTo: ZodNullable<ZodNullable<ZodCustom<IAddressItem, IAddressItem>>> & ZodType<IAddressItem, IAddressItem | null, $ZodTypeInternals<...>>; ... 10 more ...; invoiceFrom: ZodNullable<...>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ invoiceTo: IAddressItem; createDate: string | number | Date | null; dueDate: string | number | Date | null; items: { title: string; service: string; quantity: number; price: number; total: number; description: string; }[]; ... 7 more ...; invoiceFrom: IAddressItem | null; }, { ...; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ invoiceTo: ZodNullable<ZodNullable<ZodCustom<IAddressItem, IAddressItem>>> & ZodType<IAddressItem, IAddressItem | null, $ZodTypeInternals<...>>; ... 10 more ...; invoiceFrom: ZodNullable<...>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ invoiceTo: ZodNullable<ZodNullable<ZodCustom<IAddressItem, IAddressItem>>> & ZodType<IAddressItem, IAddressItem | null, $ZodTypeInternals<...>>; ... 10 more ...; invoiceFrom: ZodNullable<...>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/mail/mail-compose.tsx(54,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ to: string; subject: string; message: string; }, { to: string; subject: string; message: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ to: ZodString; subject: ZodString; message: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ to: string; subject: string; message: string; }, { to: string; subject: string; message: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ to: ZodString; subject: ZodString; message: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ to: ZodString; subject: ZodString; message: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/mail/mail-compose.tsx(106,20): error TS2304: Cannot find name 'POSITION'.
+src/sections/mail/mail-compose.tsx(109,21): error TS2304: Cannot find name 'POSITION'.
+src/sections/mail/mail-compose.tsx(114,35): error TS2304: Cannot find name 'POSITION'.
+src/sections/mail/mail-compose.tsx(116,75): error TS2304: Cannot find name 'POSITION'.
+src/sections/mail/mail-compose.tsx(194,13): error TS2322: Type '{ maxHeight: number; flex?: string | undefined; error: boolean; }' is not assignable to type 'SxProps<Theme> | undefined'.
+  Types of property 'error' are incompatible.
+    Type 'boolean' is not assignable to type 'SystemStyleObject<Theme> | CssVariableType | ((theme: Theme) => string | number | SystemStyleObject<Theme>) | undefined'.
+src/sections/product/product-create-edit-form.tsx(108,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ name: string; description: string; images: (string | File)[]; code: string; sku: string; quantity: number; colors: string[]; sizes: string[]; tags: string[]; gender: string[]; price: number; category: string; ... 4 more ...; newLabel: { ...; }; }, { ...; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ name: ZodString; description: ZodString; images: ZodArray<ZodUnion<readonly [ZodString, ZodFile]>>; code: ZodString; ... 12 more ...; newLabel: ZodObject<...>; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ name: string; description: string; images: (string | File)[]; code: string; sku: string; quantity: number; colors: string[]; sizes: string[]; tags: string[]; gender: string[]; price: number; category: string; ... 4 more ...; newLabel: { ...; }; }, { ...; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ name: ZodString; description: ZodString; images: ZodArray<ZodUnion<readonly [ZodString, ZodFile]>>; code: ZodString; ... 12 more ...; newLabel: ZodObject<...>; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ name: ZodString; description: ZodString; images: ZodArray<ZodUnion<readonly [ZodString, ZodFile]>>; code: ZodString; ... 12 more ...; newLabel: ZodObject<...>; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/product/product-review-create-form.tsx(44,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ rating: number; name: string; review: string; email: string; }, { rating: number; name: string; review: string; email: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ rating: ZodNumber; name: ZodString; review: ZodString; email: ZodEmail; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ rating: number; name: string; review: string; email: string; }, { rating: number; name: string; review: string; email: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ rating: ZodNumber; name: ZodString; review: ZodString; email: ZodEmail; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ rating: ZodNumber; name: ZodString; review: ZodString; email: ZodEmail; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/user/user-create-edit-form.tsx(76,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ avatarUrl: string | File | null; name: string; email: string; phoneNumber: string; country: string; address: string; company: string; state: string; city: string; role: string; zipCode: string; status: string; isVerified: boolean; }, { ...; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ avatarUrl: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; name: ZodString; email: ZodEmail; ... 9 more ...; isVerified: ZodBoolean; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ avatarUrl: string | File | null; name: string; email: string; phoneNumber: string; country: string; address: string; company: string; state: string; city: string; role: string; zipCode: string; status: string; isVerified: boolean; }, { ...; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ avatarUrl: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; name: ZodString; email: ZodEmail; ... 9 more ...; isVerified: ZodBoolean; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ avatarUrl: ZodUnion<[ZodUnion<[ZodFile, ZodString]>, ZodNull]>; name: ZodString; email: ZodEmail; ... 9 more ...; isVerified: ZodBoolean; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.
+src/sections/user/user-quick-edit-form.tsx(68,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ name: string; email: string; phoneNumber: string; country: string; state: string; city: string; address: string; zipCode: string; company: string; role: string; status: string; }, { name: string; ... 9 more ...; status: string; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ name: ZodString; email: ZodEmail; phoneNumber: ZodString; country: ZodNullable<ZodString> & ZodType<string, string | null, $ZodTypeInternals<...>>; ... 6 more ...; status: ZodString; }, $strip>' is not assignable to parameter of type 'Zod3Type<{ name: string; email: string; phoneNumber: string; country: string; state: string; city: string; address: string; zipCode: string; company: string; role: string; status: string; }, { name: string; ... 9 more ...; status: string; }>'.
+      Types of property '_def' are incompatible.
+        Property 'typeName' is missing in type '$ZodObjectDef<{ name: ZodString; email: ZodEmail; phoneNumber: ZodString; country: ZodNullable<ZodString> & ZodType<string, string | null, $ZodTypeInternals<...>>; ... 6 more ...; status: ZodString; }>' but required in type '{ typeName: string; }'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<{ name: ZodString; email: ZodEmail; phoneNumber: ZodString; country: ZodNullable<ZodString> & ZodType<string, string | null, $ZodTypeInternals<...>>; ... 6 more ...; status: ZodString; }, $strip>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      The types of '_zod.version.minor' are incompatible between these types.
+        Type '3' is not assignable to type '0'.

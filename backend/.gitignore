@@ -1,0 +1,132 @@
+# ------------------------------------------------------
+# 🔒 ARQUIVOS DE CONFIGURAÇÃO SENSÍVEIS (BLOQUEADOS)
+# ------------------------------------------------------
+# NOTA: IDs de infraestrutura pública podem ser versionados se necessário para CI/CD.
+# Wrangler configs são permitidos, mas SEGREDOS (.dev.vars) são terminantemente proibidos.
+# wrangler.jsonc e wrangler.toml permanecem versionados para transparência da infraestrutura.
+
+# Segredos e Variáveis de Ambiente (CRÍTICO - NUNCA REMOVA)
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+.envrc
+
+# certificados e chaves privadas
+*.pem
+*.key
+*.pfx
+*.crt
+*.cer
+
+# arquivos comuns de credenciais
+secrets.json
+credentials.json
+service-account.json
+
+# ------------------------------------------------------
+# ⚡ Cloudflare Workers & Drizzle Meta
+# ------------------------------------------------------
+.wrangler/
+.mf/
+
+# opcional: versionar apenas se quiser histórico de migrations
+# migrations/meta/
+
+# ------------------------------------------------------
+# 📦 Dependências & Node.js
+# ------------------------------------------------------
+node_modules/
+
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+.pnpm-store/
+.pnpm-debug.log*
+
+# TypeScript incremental build
+*.tsbuildinfo
+
+# ------------------------------------------------------
+# 💾 Banco de Dados Local & Logs
+# ------------------------------------------------------
+.d1/
+
+*.sqlite
+*.sqlite3
+*.db
+
+logs/
+*.log
+wrangler_dev.log
+
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+
+# ------------------------------------------------------
+# 🏗️ Build & Output
+# ------------------------------------------------------
+dist/
+build/
+.cache/
+coverage/
+.nyc_output/
+
+# frameworks modernos (caso sejam usados futuramente)
+.next/
+out/
+.vercel/
+.turbo/
+.vite/
+
+# ------------------------------------------------------
+# 🧪 Testes
+# ------------------------------------------------------
+jest-cache/
+vitest-cache/
+playwright-report/
+test-results/
+
+# ------------------------------------------------------
+# 🖥️ Sistema & IDEs
+# ------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+
+*.sublime-project
+*.sublime-workspace
+
+# JetBrains
+*.iml
+
+# ------------------------------------------------------
+# 🐧 Linux / Mac / Windows lixo comum
+# ------------------------------------------------------
+*.swp
+*.swo
+*~
+.cache-loader/
+
+# ------------------------------------------------------
+# 📊 Coverage & relatórios
+# ------------------------------------------------------
+coverage-final.json
+lcov-report/
+
+# ------------------------------------------------------
+# 🚀 CI/CD temporários
+# ------------------------------------------------------
+.env.ci
+.env.build

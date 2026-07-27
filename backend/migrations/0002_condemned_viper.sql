@@ -1,0 +1,1 @@
+ALTER TABLE `citizens` ADD `encrypted_vault` text;
