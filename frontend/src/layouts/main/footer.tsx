@@ -232,39 +232,41 @@ export function Footer({
                   fullWidth
                   variant="outlined"
                   value={truncate(contractAddress)}
-                  InputProps={{
-                    readOnly: true,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Tooltip title="Copiar endereço" arrow>
-                          <IconButton
-                            edge="end"
-                            sx={{ color: 'grey.500', '&:hover': { color: '#00ff7f' } }}
-                            onClick={handleCopy}
-                          >
-                            <Iconify icon="solar:copy-bold" width={22} />
-                          </IconButton>
-                        </Tooltip>
-                      </InputAdornment>
-                    ),
-                    sx: {
-                      height: 56,
-                      color: 'common.white',
-                      bgcolor: 'rgba(255, 255, 255, 0.04)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: 2,
-                      fontFamily: '"Public Sans", sans-serif',
-                      fontSize: '0.95rem',
-                      fontWeight: 500,
-                      transition: 'all 0.3s ease',
-                      '& fieldset': {
-                        borderColor: 'rgba(255, 255, 255, 0.08)',
-                        transition: 'border-color 0.3s',
-                      },
-                      '&:hover fieldset': { borderColor: 'rgba(0, 255, 127, 0.5) !important' },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#00ff7f !important',
-                        boxShadow: '0 0 15px rgba(0, 255, 127, 0.25)',
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip title="Copiar endereço" arrow>
+                            <IconButton
+                              edge="end"
+                              sx={{ color: 'grey.500', '&:hover': { color: '#00ff7f' } }}
+                              onClick={handleCopy}
+                            >
+                              <Iconify icon="solar:copy-bold" width={22} />
+                            </IconButton>
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        height: 56,
+                        color: 'common.white',
+                        bgcolor: 'rgba(255, 255, 255, 0.04)',
+                        backdropFilter: 'blur(12px)',
+                        borderRadius: 2,
+                        fontFamily: '"Public Sans", sans-serif',
+                        fontSize: '0.95rem',
+                        fontWeight: 500,
+                        transition: 'all 0.3s ease',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.08)',
+                          transition: 'border-color 0.3s',
+                        },
+                        '&:hover fieldset': { borderColor: 'rgba(0, 255, 127, 0.5) !important' },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00ff7f !important',
+                          boxShadow: '0 0 15px rgba(0, 255, 127, 0.25)',
+                        },
                       },
                     },
                   }}
