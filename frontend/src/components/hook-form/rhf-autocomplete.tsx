@@ -62,9 +62,10 @@ export function RHFAutocomplete({
               error={!!error}
               helperText={error?.message ?? helperText}
               slotProps={{
+                ...params.slotProps,
                 ...textField?.slotProps,
                 htmlInput: {
-                  ...params.inputProps,
+                  ...params.slotProps?.htmlInput,
                   ...textField?.slotProps?.htmlInput,
                   autoComplete: 'new-password', // Disable autocomplete and autofill
                 },
