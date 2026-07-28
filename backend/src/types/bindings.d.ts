@@ -56,7 +56,7 @@ export type Bindings = {
 	AI: any;
 
 	// 7. Filas e Armazenamentos (Fase A)
-	EMAIL_SYNC_QUEUE: Queue<any>;
+	EMAIL_PIPELINE_QUEUE: Queue<any>;
 	R2_EMAIL_ATTACHMENTS: R2Bucket;
 };
 

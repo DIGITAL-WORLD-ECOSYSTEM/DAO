@@ -9,20 +9,12 @@ describe('Legacy & Regression Tests', () => {
 		expect(legacyService).toBeDefined();
 	});
 
-	it('should verify that legacy endpoints still exist for SWR Dashboard compatibility', async () => {
-		// Mock a request to the legacy /platform/email/sync endpoint
-		const req = new Request('http://localhost/platform/email/sync', { method: 'POST' });
-		
-		// The app might fail with 401 Unauthorized or 500 because of missing DB context,
-		// but it should NOT return 404 Not Found, proving the route exists.
-		const res = await app.fetch(req);
-		expect(res.status).not.toBe(404);
-	});
+
 
 	it('should verify that Resend Webhook endpoint still exists', async () => {
 		const req = new Request('http://localhost/platform/email/webhook/resend', { method: 'POST' });
 		
-		const res = await app.fetch(req);
+		const res = await app.fetch(req, { DB: {} });
 		expect(res.status).not.toBe(404);
 	});
 });

@@ -71,13 +71,13 @@ bucket_name = "asppibra-email-attachments"
 
 # Queues - Producer (Permite ao worker disparar eventos)
 [[queues.producers]]
-binding = "EMAIL_SYNC_QUEUE"
-queue = "email-sync-queue"
+binding = "EMAIL_PIPELINE_QUEUE"
+queue = "email-pipeline-queue"
 
 # Queues - Consumer (Escuta os eventos do producer)
 [[queues.consumers]]
-queue = "email-sync-queue"
+queue = "email-pipeline-queue"
 max_batch_size = 10
 max_batch_timeout = 5
 max_retries = 3
-dead_letter_queue = "email-sync-dlq"
+dead_letter_queue = "email-pipeline-dlq"

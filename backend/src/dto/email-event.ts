@@ -2,6 +2,7 @@ export const EmailEventTypes = {
     RECEIVED: 'EMAIL_RECEIVED',
     QUEUED: 'EMAIL_QUEUED',
     PROCESSING: 'EMAIL_PROCESSING',
+    SENDING: 'EMAIL_SENDING',
     PARSED: 'EMAIL_PARSED',
     STORED: 'EMAIL_STORED',
     SENT: 'EMAIL_SENT',
@@ -29,6 +30,8 @@ export interface EmailEventMetadata {
     latency?: number;
     attachmentCount?: number;
     spamScore?: number;
+    envelopeType?: string;
+    r2Key?: string;
 }
 
 export interface EmailEventDTO {

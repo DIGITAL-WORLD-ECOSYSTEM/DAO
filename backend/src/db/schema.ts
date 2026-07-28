@@ -1114,7 +1114,7 @@ export const emails = sqliteTable('emails', {
 	subject: text('subject').notNull(),
 	bodyHtml: text('body_html'),
 	bodyText: text('body_text'),
-	status: text('status', { enum: ['sent', 'failed', 'unread', 'read', 'draft', 'queued', 'bounced'] }).notNull().default('sent'),
+	status: text('status', { enum: ['sent', 'failed', 'unread', 'read', 'draft', 'queued', 'processing', 'sending', 'bounced', 'delivered'] }).notNull().default('sent'),
 	priority: text('priority', { enum: ['low', 'normal', 'high', 'urgent', 'critical'] }).default('normal'),
 	messageId: text('message_id').unique(), // Resend Message ID ou Inbound Message-ID
 	inReplyTo: text('in_reply_to'), // RFC 5322 In-Reply-To

@@ -90,6 +90,7 @@ app.use('/*', async (c: Context<AppType>, next: Next) => {
 				'https://www.asppibra.com',
 				'https://api.asppibra.com',
 				'https://social-fi-asppibra.vercel.app',
+				'https://dashboard.asppibra.com',
 			];
 			
 			if (!origin) return allowedOrigins[0];
@@ -99,7 +100,8 @@ app.use('/*', async (c: Context<AppType>, next: Next) => {
 			const isExactMatch = allowedOrigins.some(allowed => allowed === cleanOrigin);
 			const allowedRegexes = [
 				/^http:\/\/localhost:[0-9]+$/,
-				/^https:\/\/[a-zA-Z0-9-]+\.cloudworkstations\.dev$/
+				/^https:\/\/[a-zA-Z0-9-]+\.cloudworkstations\.dev$/,
+				/^https:\/\/[a-zA-Z0-9-]+\.pages\.dev$/
 			];
 			const isRegexMatch = allowedRegexes.some(regex => regex.test(cleanOrigin));
 
@@ -118,6 +120,7 @@ app.use('/*', async (c: Context<AppType>, next: Next) => {
 			'X-Identity-DID',
 			'X-Identity-Timestamp',
 			'X-Correlation-ID',
+			'Idempotency-Key',
 		],
 		allowMethods: ['POST', 'GET', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
 		exposeHeaders: ['Content-Length', 'X-Correlation-ID'],

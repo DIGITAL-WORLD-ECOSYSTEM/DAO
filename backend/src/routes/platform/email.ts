@@ -104,15 +104,7 @@ email.get('/accounts', async (c) => {
 	}
 });
 
-/**
- * Rota de Leitura (Pastas/Folders) - DESATIVADA (Fase 3 usa Labels)
- */
-email.get('/folders', async (c) => {
-	return c.json({
-		success: true,
-		data: []
-	});
-});
+
 
 /**
  * Rota de Criação (Contas Corporativas)
@@ -143,23 +135,7 @@ email.post('/accounts', async (c) => {
 	}
 });
 
-/**
- * Rota de Sincronização Manual (IMAP) - DESATIVADA (Fase 3)
- */
-email.post('/sync', async (c) => {
-	const body = await c.req.json();
-	const accountId = body.accountId;
-	
-	if (!accountId) {
-		return c.json({ success: false, message: 'accountId é obrigatório' }, 400);
-	}
 
-	return c.json({
-		success: true,
-		message: 'Sincronização via IMAP foi descontinuada. E-mails agora chegam em tempo real via Cloudflare Email Routing.',
-		count: 0
-	});
-});
 
 /**
  * Webhook (Resend)

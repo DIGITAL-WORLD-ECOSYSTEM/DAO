@@ -12,13 +12,27 @@ describe('Queue Worker Integration', () => {
 	let batchMock: any;
 
 	beforeEach(() => {
+		vi.mock('../../db', () => ({
+			createDb: vi.fn().mockReturnValue({
+				select: vi.fn().mockReturnThis(),
+				from: vi.fn().mockReturnThis(),
+				where: vi.fn().mockReturnThis(),
+				get: vi.fn().mockResolvedValue({ id: 'local-123', status: 'queued', sender: 'test@test.com', recipient: 'target@test.com' }),
+				insert: vi.fn().mockReturnThis(),
+				values: vi.fn().mockReturnThis(),
+				returning: vi.fn().mockResolvedValue([{ id: 'mocked-id' }]),
+				update: vi.fn().mockReturnThis(),
+				set: vi.fn().mockReturnThis(),
+				limit: vi.fn().mockReturnThis(),
+			}),
+		}));
+
 		envMock = {
 			R2_EMAIL_ATTACHMENTS: {
 				get: vi.fn(),
 				delete: vi.fn(),
 			},
 			DB: {}, 
-			// Mocking Resend environment variables if needed
 			RESEND_API_KEY: 'test_key'
 		};
 		
@@ -48,7 +62,7 @@ describe('Queue Worker Integration', () => {
 	it('should process large inbound emails from R2 and delete from R2 on success', async () => {
 		const msg = { 
 			id: 'm1', 
-			body: { type: 'inbound_large', r2Key: 'test-key' }, 
+			body: { type: 'inbound-large', payload: { r2Key: 'test-key' } }, 
 			ack: vi.fn(), 
 			retry: vi.fn() 
 		};
@@ -83,7 +97,7 @@ describe('Queue Worker Integration', () => {
 			id: 'm2', 
 			body: { 
 				type: 'outbound', 
-				payload: { messageId: 'local-123', subject: 'hi', from: { address: 'a@a.com' }, to: [] }
+				payload: { emailId: 'local-123' }
 			}, 
 			ack: vi.fn(), 
 			retry: vi.fn() 
@@ -129,7 +143,7 @@ describe('Queue Worker Integration', () => {
 	it('should call retry() if R2 returns null (object not found)', async () => {
 		const msg = { 
 			id: 'm1', 
-			body: { type: 'inbound_large', r2Key: 'test-key-null' }, 
+			body: { type: 'inbound-large', payload: { r2Key: 'test-key-null' } }, 
 			ack: vi.fn(), 
 			retry: vi.fn() 
 		};

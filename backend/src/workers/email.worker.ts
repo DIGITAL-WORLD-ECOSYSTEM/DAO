@@ -57,12 +57,18 @@ export async function handleEmailEvent(message: ForwardableEmailMessage, env: Bi
 			const tempKey = `inbound_temp/${Date.now()}-${message.from}.eml`;
 			await env.R2_EMAIL_ATTACHMENTS.put(tempKey, buffer);
 			
-			await env.EMAIL_SYNC_QUEUE.send({ 
+			await env.EMAIL_PIPELINE_QUEUE.send({ 
+				id: crypto.randomUUID(),
+				version: 1,
 				type: 'inbound_large', 
-				r2Key: tempKey, 
-				from: message.from, 
-				to: message.to,
-				headers: Object.fromEntries(message.headers) 
+				correlationId: messageId,
+				createdAt: Date.now(),
+				payload: {
+					r2Key: tempKey, 
+					from: message.from, 
+					to: [message.to],
+					authMetadata: provider.extractAuthMetadata(message.headers) 
+				}
 			});
 			
 			await eventService.emit({

@@ -24,19 +24,18 @@ export class EmailService {
 		});
 
 		try {
-			if (this.env.EMAIL_SYNC_QUEUE) {
-				await this.env.EMAIL_SYNC_QUEUE.send({
+			if (this.env.EMAIL_PIPELINE_QUEUE) {
+				await this.env.EMAIL_PIPELINE_QUEUE.send({
+					id: crypto.randomUUID(),
+					version: 1,
 					type: 'outbound',
-					emailId,
-					payload: {
-						to: payload.recipient,
-						subject: payload.subject,
-						html: payload.bodyHtml,
-					}
+					correlationId: crypto.randomUUID(),
+					createdAt: Date.now(),
+					payload: { emailId }
 				});
 				logger.info('E-mail enfileirado no Outbox com sucesso', { emailId });
 			} else {
-				logger.warn('Fila EMAIL_SYNC_QUEUE não configurada. E-mail permanecerá queued.', { emailId });
+				logger.warn('Fila EMAIL_PIPELINE_QUEUE não configurada. E-mail permanecerá queued.', { emailId });
 			}
 		} catch (error) {
 			logger.error('Falha ao enfileirar e-mail no Outbox', error, { emailId });

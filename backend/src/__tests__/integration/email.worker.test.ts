@@ -8,14 +8,28 @@ describe('Email Worker Integration', () => {
 	let messageMock: any;
 
 	beforeEach(() => {
+		// Mock createDb to avoid actual D1 calls in this unit test
+		vi.mock('../../db', () => ({
+			createDb: vi.fn().mockReturnValue({
+				select: vi.fn().mockReturnThis(),
+				from: vi.fn().mockReturnThis(),
+				where: vi.fn().mockReturnThis(),
+				get: vi.fn().mockResolvedValue(null),
+				insert: vi.fn().mockReturnThis(),
+				values: vi.fn().mockReturnThis(),
+				returning: vi.fn().mockResolvedValue([{ id: 'mocked-id' }]),
+				limit: vi.fn().mockReturnThis(),
+			}),
+		}));
+
 		envMock = {
-			EMAIL_SYNC_QUEUE: {
+			EMAIL_PIPELINE_QUEUE: {
 				send: vi.fn().mockResolvedValue(undefined),
 			},
 			R2_EMAIL_ATTACHMENTS: {
 				put: vi.fn().mockResolvedValue(undefined),
 			},
-			DB: {}, // Not testing DB insertion here unless we mock the whole chain
+			DB: {}, 
 		};
 		
 		ctxMock = {
@@ -51,7 +65,7 @@ describe('Email Worker Integration', () => {
 			errorThrown = true;
 		}
 
-		expect(envMock.EMAIL_SYNC_QUEUE.send).not.toHaveBeenCalled();
+		expect(envMock.EMAIL_PIPELINE_QUEUE.send).not.toHaveBeenCalled();
 		expect(envMock.R2_EMAIL_ATTACHMENTS.put).not.toHaveBeenCalled();
 	});
 
@@ -64,14 +78,16 @@ describe('Email Worker Integration', () => {
 		const putCall = envMock.R2_EMAIL_ATTACHMENTS.put.mock.calls[0];
 		expect(putCall[0]).toContain('inbound_temp/');
 
-		expect(envMock.EMAIL_SYNC_QUEUE.send).toHaveBeenCalled();
-		const sendCall = envMock.EMAIL_SYNC_QUEUE.send.mock.calls[0];
+		expect(envMock.EMAIL_PIPELINE_QUEUE.send).toHaveBeenCalled();
+		const sendCall = envMock.EMAIL_PIPELINE_QUEUE.send.mock.calls[0];
 		expect(sendCall[0]).toMatchObject({
 			type: 'inbound_large',
-			from: 'sender@test.com',
-			to: 'target@test.com',
+			payload: {
+				from: 'sender@test.com',
+				to: ['target@test.com'],
+			}
 		});
-		expect(sendCall[0].r2Key).toBe(putCall[0]);
+		expect(sendCall[0].payload.r2Key).toBe(putCall[0]);
 	});
 
 	it('should handle interrupted streams or invalid messages gracefully by rejecting', async () => {

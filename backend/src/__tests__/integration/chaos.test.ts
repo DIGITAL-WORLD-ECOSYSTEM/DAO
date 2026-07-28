@@ -13,8 +13,8 @@ describe('Security & Chaos Engineering', () => {
 				DB: {}, // Mock
 			};
 
-			const msg1 = { id: 'm1', body: { type: 'inbound_large', r2Key: 'test-1' }, ack: vi.fn(), retry: vi.fn() };
-			const msg2 = { id: 'm2', body: { type: 'inbound_large', r2Key: 'test-2' }, ack: vi.fn(), retry: vi.fn() };
+			const msg1 = { id: 'm1', body: { type: 'inbound-large', payload: { r2Key: 'test-1' } }, ack: vi.fn(), retry: vi.fn() };
+			const msg2 = { id: 'm2', body: { type: 'inbound-large', payload: { r2Key: 'test-2' } }, ack: vi.fn(), retry: vi.fn() };
 			
 			const batchMock = { messages: [msg1, msg2] };
 
@@ -52,7 +52,7 @@ describe('Security & Chaos Engineering', () => {
 				},
 			};
 
-			const msg = { id: 'm1', body: { type: 'inbound_large', r2Key: 'test-1' }, ack: vi.fn(), retry: vi.fn() };
+			const msg = { id: 'm1', body: { type: 'inbound-large', payload: { r2Key: 'test-1' } }, ack: vi.fn(), retry: vi.fn() };
 			
 			// Without properly mocking the whole chain it might fail earlier or later, 
 			// but we know if ANY error bubbles up, queue calls retry()
