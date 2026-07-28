@@ -68,34 +68,15 @@ const HARDCODED_LABELS: IMailLabel[] = [
 ];
 
 export function useGetLabels(accountId: string = '') {
-  const URL = accountId ? `/api/platform/email/folders?accountId=${accountId}` : '/api/platform/email/folders';
-
-  const { data, isLoading, error, isValidating } = useSWR<{ data: EmailFolderDTO[] }>(URL, fetcher, {
-    revalidateOnFocus: true,
-  });
-
   const memoizedValue = useMemo(() => {
-    // Se o banco não retornar pastas, mantemos o fallback hardcoded,
-    // mas priorizamos as pastas reais.
-    let list: IMailLabel[] = HARDCODED_LABELS;
-
-    if (data?.data && data.data.length > 0) {
-      list = data.data.map((folder) => ({
-        id: folder.id,
-        type: folder.isSystem ? 'system' : 'custom',
-        name: folder.name,
-        color: '#1890FF', // default color
-      }));
-    }
-
     return {
-      labels: list,
-      labelsLoading: isLoading,
-      labelsError: error,
-      labelsValidating: isValidating,
-      labelsEmpty: !isLoading && !list.length,
+      labels: HARDCODED_LABELS,
+      labelsLoading: false,
+      labelsError: null,
+      labelsValidating: false,
+      labelsEmpty: false,
     };
-  }, [data?.data, error, isLoading, isValidating]);
+  }, []);
 
   return memoizedValue;
 }
