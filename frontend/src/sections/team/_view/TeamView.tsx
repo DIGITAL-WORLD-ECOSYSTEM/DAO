@@ -76,7 +76,7 @@ export function TeamView() {
                       {member.bio}
                     </Typography>
 
-                    <Stack direction="row" spacing={1} justifyContent="center">
+                    <Stack direction="row" spacing={1} sx={{ justifyContent: 'center' }}>
                       <IconButton
                         color="inherit"
                         onClick={() => window.open(CONFIG.socials.linkedin, '_blank')}

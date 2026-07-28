@@ -142,9 +142,9 @@ export function Texts({ sx, ...other }: BoxProps & MotionProps) {
             <Stack
               key={index}
               direction="row"
-              alignItems="center"
               spacing={2}
               sx={{
+                alignItems: 'center',
                 opacity: 0.4,
                 filter: 'grayscale(1)',
                 transition: theme.transitions.create(['all']),

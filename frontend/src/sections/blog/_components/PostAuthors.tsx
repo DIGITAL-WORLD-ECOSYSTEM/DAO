@@ -39,9 +39,9 @@ export function PostAuthors({ posts }: Props) {
     <Stack
       key={`${rowIndex}-${index}-${author.id}`}
       direction="row"
-      alignItems="center"
       spacing={2}
       sx={{
+        alignItems: 'center',
         p: 2,
         minWidth: 280,
         borderRadius: 2,

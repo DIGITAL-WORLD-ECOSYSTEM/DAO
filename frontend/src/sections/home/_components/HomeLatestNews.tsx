@@ -68,9 +68,7 @@ export function HomeLatestNews({ sx, ...other }: BoxProps) {
           {/* HEADER: TÍTULO À ESQUERDA + BOTÃO À DIREITA */}
           <Stack
             direction={{ xs: 'column', md: 'row' }}
-            alignItems={{ md: 'flex-end' }}
-            justifyContent="space-between"
-            sx={{ mb: 10, gap: 3 }}
+            sx={{ mb: 10, gap: 3, alignItems: { md: 'flex-end' }, justifyContent: 'space-between' }}
           >
             <Box>
               <m.div variants={varFade('inUp')}>

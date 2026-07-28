@@ -100,7 +100,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
           },
         }}
       >
-        <Stack spacing={2} textAlign="left" sx={{ zIndex: 3 }}>
+        <Stack spacing={2} sx={{ zIndex: 3, textAlign: 'left' }}>
           <Typography
             variant="h4"
             sx={{
@@ -126,7 +126,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
           </Typography>
         </Stack>
 
-        <Stack direction="row" spacing={2} alignItems="center" sx={{ zIndex: 3 }}>
+        <Stack direction="row" spacing={2} sx={{ zIndex: 3, alignItems: 'center' }}>
           <StyledAvatarGroup max={4}>
             {[1, 2, 3, 4].map((i) => (
               <Avatar
@@ -148,7 +148,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
           </Typography>
         </Stack>
 
-        <Stack direction="row" spacing={1.5} flexWrap="wrap" sx={{ zIndex: 3 }}>
+        <Stack direction="row" spacing={1.5} sx={{ zIndex: 3, flexWrap: 'wrap' }}>
           {SOCIAL_CHANNELS.map((channel) => (
             <Button
               key={channel.name}
@@ -228,8 +228,7 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
             <Stack
               component={m.div}
               variants={varFade('inLeft')}
-              justifyContent="space-between"
-              sx={{ height: 1 }}
+              sx={{ height: 1, justifyContent: 'space-between' }}
             >
               <Box>
                 <Typography
@@ -316,9 +315,8 @@ export function HomeCommunity({ sx, ...other }: BoxProps) {
 
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
-                alignItems={{ xs: 'stretch', sm: 'center' }}
                 spacing={3}
-                sx={{ mt: { xs: 6, md: 10 } }}
+                sx={{ mt: { xs: 6, md: 10 }, alignItems: { xs: 'stretch', sm: 'center' } }}
               >
                 <Button
                   component={RouterLink}

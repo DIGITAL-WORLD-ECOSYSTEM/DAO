@@ -17,8 +17,10 @@ const MuiCard: Components<Theme>['MuiCard'] = {
 const MuiCardHeader: Components<Theme>['MuiCardHeader'] = {
   // ▼▼▼▼▼▼▼▼ ⚙️ PROPS ▼▼▼▼▼▼▼▼
   defaultProps: {
-    titleTypographyProps: { variant: 'h6' },
-    subheaderTypographyProps: { variant: 'body2', marginTop: '4px' },
+    slotProps: {
+      title: { variant: 'h6' },
+      subheader: { variant: 'body2', sx: { mt: '4px' } },
+    },
   },
   // ▼▼▼▼▼▼▼▼ 🎨 STYLE ▼▼▼▼▼▼▼▼
   styleOverrides: {

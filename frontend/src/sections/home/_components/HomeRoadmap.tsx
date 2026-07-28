@@ -165,11 +165,13 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
           {/* Grid de Fases com Bordas Reativas */}
           <Grid
             container
-            display="grid"
-            gridTemplateColumns={{ xs: '1fr', md: '1fr 64px 1fr' }}
-            rowGap={{ xs: 6, md: 8 }}
-            columnGap={6}
-            sx={{ mt: { xs: 8, md: 10 } }}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: '1fr 64px 1fr' },
+              rowGap: { xs: 6, md: 8 },
+              columnGap: 6,
+              mt: { xs: 8, md: 10 }
+            }}
           >
             {ROADMAP_PHASES.map((item, index) => {
               const isEven = index % 2 === 0;
@@ -178,9 +180,11 @@ export function HomeRoadmap({ sx, ...other }: BoxProps) {
               return (
                 <Grid
                   key={item.title}
-                  gridColumn={{ xs: '1 / -1', md: isEven ? '1 / 2' : '3 / 4' }}
-                  gridRow={{ md: index + 1 }}
-                  sx={{ textAlign: { xs: 'center', md: isEven ? 'right' : 'left' } }}
+                  sx={{
+                    gridColumn: { xs: '1 / -1', md: isEven ? '1 / 2' : '3 / 4' },
+                    gridRow: { md: index + 1 },
+                    textAlign: { xs: 'center', md: isEven ? 'right' : 'left' }
+                  }}
                 >
                   <m.div variants={isEven ? varFade('inRight') : varFade('inLeft')}>
                     <Card

@@ -28,8 +28,8 @@ export function PostNewsletter() {
     >
       <Stack
         spacing={3}
-        alignItems="center"
         sx={{
+          alignItems: 'center',
           px: { xs: 3, md: 8 },
           py: 6,
           borderRadius: 3,

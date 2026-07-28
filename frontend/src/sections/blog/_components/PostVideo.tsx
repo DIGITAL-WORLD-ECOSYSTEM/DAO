@@ -173,9 +173,9 @@ function VideoItem({ video, theme }: { video: VideoItemProps; theme: any }) {
         </Typography>
 
         <Stack
-          alignItems="center"
-          justifyContent="center"
           sx={{
+            alignItems: 'center',
+            justifyContent: 'center',
             top: 0,
             left: 0,
             width: 1,
@@ -231,7 +231,7 @@ function VideoItem({ video, theme }: { video: VideoItemProps; theme: any }) {
           {video.title}
         </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <Typography
             variant="caption"
             sx={{

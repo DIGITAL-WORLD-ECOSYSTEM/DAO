@@ -121,10 +121,8 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
               {/* Painéis Superiores */}
               <Stack
                 direction={{ xs: 'column', md: 'row' }}
-                justifyContent="space-between"
-                alignItems={{ xs: 'center', md: 'flex-start' }}
                 spacing={2}
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', justifyContent: 'space-between', alignItems: { xs: 'center', md: 'flex-start' } }}
               >
                 <DataPanel
                   title={t('integrations.panels.chain.title') || 'ESTADO_DA_CHAIN'}
@@ -149,10 +147,8 @@ export function HomeIntegrations({ sx, ...other }: BoxProps) {
               {/* Painéis Inferiores */}
               <Stack
                 direction={{ xs: 'column', md: 'row' }}
-                justifyContent="space-between"
-                alignItems={{ xs: 'center', md: 'flex-end' }}
                 spacing={2}
-                sx={{ width: '100%', mt: { xs: 0, md: 'auto' } }}
+                sx={{ width: '100%', mt: { xs: 0, md: 'auto' }, justifyContent: 'space-between', alignItems: { xs: 'center', md: 'flex-end' } }}
               >
                 <DataPanel
                   title={t('integrations.panels.network.title') || 'CONSOLA_DE_REDE'}
@@ -187,7 +183,7 @@ function SectionHeader({ t }: { t: any }) {
   const theme = useTheme();
 
   return (
-    <Stack spacing={2} alignItems="center" sx={{ textAlign: 'center', px: 2 }}>
+    <Stack spacing={2} sx={{ textAlign: 'center', px: 2, alignItems: 'center' }}>
       <m.div variants={varFade('inUp')}>
         <Box
           sx={{
@@ -282,7 +278,7 @@ function DataPanel({ title, label, metrics, side, sx }: any) {
         ...sx,
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+      <Stack direction="row" sx={{ mb: 2, justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography
           variant="caption"
           sx={{
@@ -325,8 +321,7 @@ function DataPanel({ title, label, metrics, side, sx }: any) {
           <Stack
             key={metric.label}
             direction="row"
-            justifyContent="space-between"
-            sx={{ borderBottom: `1px solid ${alpha(theme.palette.grey[500], 0.1)}`, pb: 0.8 }}
+            sx={{ borderBottom: `1px solid ${alpha(theme.palette.grey[500], 0.1)}`, pb: 0.8, justifyContent: 'space-between' }}
           >
             <Typography
               sx={{

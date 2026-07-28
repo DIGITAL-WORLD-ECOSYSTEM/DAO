@@ -220,20 +220,22 @@ export default function HomeCountdownDialog({
       aria-labelledby="countdown-dialog-title"
       aria-describedby="countdown-dialog-description"
       {...other}
-      PaperProps={{
-        sx: {
-          width: 440,
-          height: 640,
-          maxWidth: 'calc(100% - 32px)',
-          overflow: 'hidden',
-          borderRadius: 3,
-          bgcolor: '#0B0F13',
-          backgroundImage: `radial-gradient(circle at top right, ${alpha('#00A76F', 0.15)}, transparent)`,
-          border: `1px solid ${alpha(theme.palette.common.white, 0.08)}`,
-          color: 'common.white',
-          position: 'relative',
-          zIndex: (muiTheme) => muiTheme.zIndex.modal + 1,
-        },
+      slotProps={{
+        paper: {
+          sx: {
+            width: 440,
+            height: 640,
+            maxWidth: 'calc(100% - 32px)',
+            overflow: 'hidden',
+            borderRadius: 3,
+            bgcolor: '#0B0F13',
+            backgroundImage: `radial-gradient(circle at top right, ${alpha('#00A76F', 0.15)}, transparent)`,
+            border: `1px solid ${alpha(theme.palette.common.white, 0.08)}`,
+            color: 'common.white',
+            position: 'relative',
+            zIndex: (muiTheme) => muiTheme.zIndex.modal + 1,
+          },
+        }
       }}
     >
       <IconButton
@@ -286,12 +288,10 @@ export default function HomeCountdownDialog({
               >
                 <Stack
                   direction="row"
-                  alignItems="center"
-                  justifyContent="center"
                   spacing={1.5}
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 3, alignItems: 'center', justifyContent: 'center' }}
                 >
-                  <Stack direction="row" alignItems="center" spacing={0.5}>
+                  <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
                     <Box
                       sx={{
                         width: 6,
@@ -368,7 +368,7 @@ export default function HomeCountdownDialog({
                   e posicione-se agora.
                 </Typography>
 
-                <Stack direction="row" justifyContent="center" spacing={1.5} sx={{ mb: 4 }}>
+                <Stack direction="row" spacing={1.5} sx={{ mb: 4, justifyContent: 'center' }}>
                   <TimeBlock label="DIAS" value={countdown.days} />
                   <TimeBlock label="HORAS" value={countdown.hours} />
                   <TimeBlock label="MIN" value={countdown.minutes} />
@@ -430,10 +430,8 @@ export default function HomeCountdownDialog({
 
                 <Stack
                   direction="row"
-                  alignItems="center"
-                  justifyContent="center"
                   spacing={2}
-                  sx={{ mb: 4 }}
+                  sx={{ mb: 4, alignItems: 'center', justifyContent: 'center' }}
                 >
                   <IconButton
                     onClick={() => setSelectedIdx((prev) => Math.max(0, prev - 1))}
@@ -522,7 +520,7 @@ export default function HomeCountdownDialog({
                   </IconButton>
                 </Stack>
 
-                <Stack direction="row" justifyContent="center" spacing={1} sx={{ mb: 4 }}>
+                <Stack direction="row" spacing={1} sx={{ mb: 4, justifyContent: 'center' }}>
                   {SEED_TIERS.map((_, index) => (
                     <Box
                       key={index}
@@ -672,7 +670,7 @@ export default function HomeCountdownDialog({
 
 function TimeBlock({ label, value, isLast }: { label: string; value: string; isLast?: boolean }) {
   return (
-    <Stack spacing={1} alignItems="center" sx={{ position: 'relative' }}>
+    <Stack spacing={1} sx={{ position: 'relative', alignItems: 'center' }}>
       <Box
         sx={{
           width: 72,

@@ -189,9 +189,9 @@ function PostItem({ post }: { post: any }) {
         >
           <Stack
             direction="row"
-            alignItems="center"
             spacing={1.5}
             sx={{
+              alignItems: 'center',
               mb: 3,
               typography: 'caption',
               color: 'primary.main',
@@ -254,7 +254,7 @@ function PostItem({ post }: { post: any }) {
             {description}
           </Typography>
 
-          <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 'auto' }}>
+          <Stack direction="row" spacing={2} sx={{ mt: 'auto', alignItems: 'center' }}>
             <Avatar
               src={author?.avatarUrl}
               alt={author?.name}

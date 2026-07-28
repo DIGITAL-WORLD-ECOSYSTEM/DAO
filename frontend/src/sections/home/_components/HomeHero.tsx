@@ -129,9 +129,8 @@ export function HomeHero({ sx, ...other }: BoxProps) {
   const renderButtons = () => (
     <Stack
       direction={{ xs: 'column', sm: 'row' }}
-      justifyContent={{ xs: 'center', md: 'flex-start' }}
       spacing={2}
-      sx={{ mt: 5 }}
+      sx={{ mt: 5, justifyContent: { xs: 'center', md: 'flex-start' } }}
     >
       <Box>
         {/* 🟢 Botão Principal: Estilo Crystal (Fundo Deep + Borda Reativa Ciano) */}
@@ -256,9 +255,8 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         <Container>
           <Stack
             direction={{ xs: 'column', md: 'row' }}
-            alignItems="center"
-            justifyContent="space-between"
             spacing={{ xs: 8, md: 4 }}
+            sx={{ alignItems: 'center', justifyContent: 'space-between' }}
           >
             <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
               {renderHeading()}
