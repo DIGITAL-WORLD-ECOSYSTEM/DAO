@@ -58,7 +58,7 @@ export class InboundEmailService {
 		}
 
 		// 6. Save Email (D1)
-		const emailId = await this.emailRepo.create(dto);
+		const emailId = await this.emailRepo.create(dto, accountId);
 
 		// 7. Save Attachments (D1)
 		await this.attachmentRepo.createMany(emailId, dto.attachments);

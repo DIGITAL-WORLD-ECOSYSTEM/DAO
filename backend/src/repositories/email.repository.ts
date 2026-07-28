@@ -50,10 +50,11 @@ export class EmailRepository {
 	}
 
 	// === LEGACY METHODS (For Phase 1 & 2 backward compatibility) ===
-	async createOutboundEmail(data: { sender: string; recipient: string; subject: string; bodyHtml: string; status: 'queued' | 'sent' | 'failed'; idempotencyKey?: string; }) {
+	async createOutboundEmail(data: { accountId?: string; sender: string; recipient: string; subject: string; bodyHtml: string; status: 'queued' | 'sent' | 'failed'; idempotencyKey?: string; }) {
 		const id = crypto.randomUUID();
 		await this.db.insert(emails).values({
 			id,
+			accountId: data.accountId,
 			direction: 'outbound',
 			sender: data.sender,
 			recipient: data.recipient,
