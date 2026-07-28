@@ -5,7 +5,7 @@ import crypto from 'node:crypto'; // Supported in Cloudflare Workers nodejs_comp
 export class ThreadService {
 	constructor(private threadRepo: ThreadRepository) {}
 
-	async resolveThread(dto: NormalizeEmailDTO): Promise<string> {
+	async resolveThread(dto: NormalizeEmailDTO, accountId: string = 'system'): Promise<string> {
 		// Calculate a robust thread hash based on normalized subject and references
 		const subjectCore = dto.subject.replace(/^(re|fwd|fw|enc):\s*/i, '').trim();
 		const threadHash = this.calculateThreadHash(subjectCore);
@@ -23,7 +23,7 @@ export class ThreadService {
 			await this.threadRepo.updateThreadTimestamp(threadId);
 		} else {
 			// Create a new thread
-			threadId = await this.threadRepo.createThread(subjectCore);
+			threadId = await this.threadRepo.createThread(subjectCore, accountId);
 		}
 
 		return threadId;

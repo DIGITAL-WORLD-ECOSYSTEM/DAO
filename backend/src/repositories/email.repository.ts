@@ -1,4 +1,4 @@
-import { emails } from '../db/schema';
+import { emails, emailAccounts } from '../db/schema';
 import { Database } from '../db';
 import { eq, or, isNull } from 'drizzle-orm';
 import { NormalizeEmailDTO } from '../dto/normalize-email';
@@ -36,6 +36,11 @@ export class EmailRepository {
 	async existsByMessageId(messageId: string): Promise<boolean> {
 		const result = await this.db.select({ id: emails.id }).from(emails).where(eq(emails.messageId, messageId)).limit(1);
 		return result.length > 0;
+	}
+
+	async getAccountIdByEmail(emailAddress: string): Promise<string | null> {
+		const result = await this.db.select({ id: emailAccounts.id }).from(emailAccounts).where(eq(emailAccounts.email, emailAddress)).limit(1);
+		return result.length > 0 ? result[0].id : null;
 	}
 
 	async updateStatusAndMessageId(id: string, status: string, messageId: string) {

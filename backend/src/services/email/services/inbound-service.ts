@@ -40,7 +40,12 @@ export class InboundEmailService {
 		dto.authMetadata.isSafe = spamResult.isSafe;
 
 		// 3. Thread Resolver
-		dto.threadId = await this.threadService.resolveThread(dto);
+		let accountId = 'system';
+		if (dto.to && dto.to.length > 0) {
+			const foundId = await this.emailRepo.getAccountIdByEmail(dto.to[0].address);
+			if (foundId) accountId = foundId;
+		}
+		dto.threadId = await this.threadService.resolveThread(dto, accountId);
 
 		// 4. Attachment Upload
 		dto.attachments = await this.attachmentService.processAttachments(dto.attachments);
