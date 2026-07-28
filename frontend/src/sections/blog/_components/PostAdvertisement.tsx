@@ -46,9 +46,9 @@ export function PostAdvertisement({
     >
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          alignItems="center"
-          justifyContent="space-between"
           sx={{
+            alignItems: 'center',
+            justifyContent: 'space-between',
             p: { xs: 4, md: 5 },
             borderRadius: 3,
             position: 'relative',
