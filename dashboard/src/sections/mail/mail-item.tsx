@@ -38,7 +38,7 @@ export function MailItem({ mail, selected, sx, ...other }: Props) {
 
         <ListItemText
           primary={mail.from.name}
-          secondary={mail.message}
+          secondary={mail.message.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim()}
           slotProps={{
             primary: { noWrap: true },
             secondary: {
