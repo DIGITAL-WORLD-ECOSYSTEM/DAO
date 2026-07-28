@@ -1,6 +1,6 @@
 import { emails, emailAccounts } from '../db/schema';
 import { Database } from '../db';
-import { eq, or, isNull } from 'drizzle-orm';
+import { eq, or, isNull, desc, and } from 'drizzle-orm';
 import { NormalizeEmailDTO } from '../dto/normalize-email';
 
 export class EmailRepository {
@@ -84,7 +84,18 @@ export class EmailRepository {
 	}
 
 	async list(accountId?: string, limit: number = 50, cursor?: string) {
-		// Mock implementation just to pass typescript
-		return [];
+		let conditions = [];
+		if (accountId) {
+			conditions.push(eq(emails.accountId, accountId));
+		}
+		// TODO: Add cursor logic if needed
+
+		let query = this.db.select().from(emails);
+		if (conditions.length > 0) {
+			query = query.where(and(...conditions)) as any;
+		}
+
+		const results = await query.orderBy(desc(emails.createdAt)).limit(limit);
+		return results;
 	}
 }
