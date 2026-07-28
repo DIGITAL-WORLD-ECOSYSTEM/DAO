@@ -1,5 +1,5 @@
 import type { SWRConfiguration } from 'swr';
-import type { IMail, EmailDTO , IMailLabel, EmailFolderDTO } from 'src/types/mail';
+import type { IMail, EmailDTO , IMailLabel } from 'src/types/mail';
 
 import useSWR from 'swr';
 import { useMemo } from 'react';
@@ -68,15 +68,13 @@ const HARDCODED_LABELS: IMailLabel[] = [
 ];
 
 export function useGetLabels(accountId: string = '') {
-  const memoizedValue = useMemo(() => {
-    return {
-      labels: HARDCODED_LABELS,
-      labelsLoading: false,
-      labelsError: null,
-      labelsValidating: false,
-      labelsEmpty: false,
-    };
-  }, []);
+  const memoizedValue = useMemo(() => ({
+    labels: HARDCODED_LABELS,
+    labelsLoading: false,
+    labelsError: null,
+    labelsValidating: false,
+    labelsEmpty: false,
+  }), []);
 
   return memoizedValue;
 }
