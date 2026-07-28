@@ -14,7 +14,7 @@ export class EmailService {
 
 	async sendCampaign(payload: { recipient: string; subject: string; bodyHtml: string; senderEmail?: string }) {
 		// Outbox Pattern: Saves first, then enqueues
-		const sender = payload.senderEmail || 'atendimento@asppibra.com.br';
+		const sender = payload.senderEmail || 'atendimento@asppibra.com';
 		const emailId = await this.emailRepo.createOutboundEmail({
 			sender,
 			recipient: payload.recipient,

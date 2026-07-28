@@ -6,7 +6,7 @@ compatibility_flags = [ "nodejs_compat" ]
 [vars]
 FRONTEND_URL = "https://app.asppibra.com"
 JWT_EXPIRE_IN = "24h"
-SENDER_EMAIL = "suporte@asppibra.com.br"
+SENDER_EMAIL = "suporte@asppibra.com"
 
 # Custom Domain — Produção
 routes = [

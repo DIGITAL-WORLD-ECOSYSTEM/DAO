@@ -7,7 +7,7 @@ export class ResendProvider implements OutboundEmailProvider {
 
 	constructor(env: { RESEND_API_KEY: string; SENDER_EMAIL: string }) {
 		this.apiKey = env.RESEND_API_KEY;
-		this.defaultSender = env.SENDER_EMAIL || 'suporte@asppibra.com.br';
+		this.defaultSender = env.SENDER_EMAIL || 'suporte@asppibra.com';
 	}
 
 	async send(email: NormalizeEmailDTO): Promise<{ success: boolean; messageId?: string; error?: string }> {
