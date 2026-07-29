@@ -146,7 +146,7 @@ export const fetcher = async <T = unknown>(
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  chat: '/api/chat',
+  chat: '/api/platform/chat',
   calendar: '/api/calendar',
   auth: {
     me: '/api/core/identity/me',
