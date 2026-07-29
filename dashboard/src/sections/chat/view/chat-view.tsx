@@ -9,8 +9,8 @@ import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/global-config';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { useGetContacts, useGetConversation, useGetConversations } from 'src/actions/chat';
 import { useChatRealtime } from 'src/contexts/chat-realtime-context';
+import { useGetContacts, useGetConversation, useGetConversations } from 'src/actions/chat';
 
 import { EmptyContent } from 'src/components/empty-content';
 

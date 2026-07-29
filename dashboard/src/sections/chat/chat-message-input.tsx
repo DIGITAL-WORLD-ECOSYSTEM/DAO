@@ -1,5 +1,7 @@
 
 
+import type { IChatParticipant } from 'src/types/chat';
+
 import { toast } from 'sonner';
 import { useRef, useState, useCallback } from 'react';
 
@@ -7,9 +9,9 @@ import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 
-import { Iconify } from 'src/components/iconify';
 import { useChatRealtime } from 'src/contexts/chat-realtime-context';
-import type { IChatParticipant } from 'src/types/chat';
+
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
