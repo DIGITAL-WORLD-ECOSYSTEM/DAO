@@ -10,6 +10,7 @@ import { useRouter, useSearchParams } from 'src/routes/hooks';
 import { CONFIG } from 'src/global-config';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { useGetContacts, useGetConversation, useGetConversations } from 'src/actions/chat';
+import { useChatRealtime } from 'src/contexts/chat-realtime-context';
 
 import { EmptyContent } from 'src/components/empty-content';
 
@@ -53,6 +54,16 @@ export function ChatView() {
     }
   }, [conversationError, router, selectedConversationId]);
 
+  const { connect, disconnect, connectionState } = useChatRealtime();
+
+  useEffect(() => {
+    if (selectedConversationId) {
+      connect(selectedConversationId);
+    } else {
+      disconnect();
+    }
+  }, [selectedConversationId, connect, disconnect]);
+
   const handleAddRecipients = useCallback((selected: IChatParticipant[]) => {
     setRecipients(selected);
   }, []);
@@ -69,7 +80,7 @@ export function ChatView() {
       sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}
     >
       <Typography variant="h4" sx={{ mb: { xs: 3, md: 5 } }}>
-        Chat
+        Chat {connectionState !== 'DISCONNECTED' && `(${connectionState.toLowerCase()})`}
       </Typography>
 
       <ChatLayout

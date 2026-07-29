@@ -1,23 +1,15 @@
-import type { IChatParticipant } from 'src/types/chat';
 
-import { useRef, useMemo, useState, useCallback } from 'react';
+
+import { toast } from 'sonner';
+import { useRef, useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
-import { today } from 'src/utils/format-time';
-
-import { sendMessage, createConversation } from 'src/actions/chat';
-
 import { Iconify } from 'src/components/iconify';
-
-import { useMockedUser } from 'src/auth/hooks';
-
-import { initialConversation } from './utils/initial-conversation';
+import { useChatRealtime } from 'src/contexts/chat-realtime-context';
+import type { IChatParticipant } from 'src/types/chat';
 
 // ----------------------------------------------------------------------
 
@@ -34,39 +26,14 @@ export function ChatMessageInput({
   onAddRecipients,
   selectedConversationId,
 }: Props) {
-  const router = useRouter();
-
-  const { user } = useMockedUser();
-
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [message, setMessage] = useState('');
-
-  const myContact: IChatParticipant = useMemo(
-    () => ({
-      id: `${user?.id}`,
-      role: `${user?.role}`,
-      email: `${user?.email}`,
-      address: `${user?.address}`,
-      name: `${user?.displayName}`,
-      lastActivity: today(),
-      avatarUrl: `${user?.photoURL}`,
-      phoneNumber: `${user?.phoneNumber}`,
-      status: 'online',
-    }),
-    [user]
-  );
-
-  const { messageData, conversationData } = initialConversation({
-    message,
-    recipients,
-    me: myContact,
-  });
+  
+  const { sendMessage: sendWsMessage } = useChatRealtime();
 
   const handleAttach = useCallback(() => {
-    if (fileRef.current) {
-      fileRef.current.click();
-    }
+    toast.info('Recurso em implantação. O envio de anexos será liberado em breve.');
   }, []);
 
   const handleChangeMessage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,25 +43,19 @@ export function ChatMessageInput({
   const handleSendMessage = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter' || !message) return;
-
-      try {
-        if (selectedConversationId) {
-          // If the conversation already exists
-          await sendMessage(selectedConversationId, messageData);
-        } else {
-          // If the conversation does not exist
-          const res = await createConversation(conversationData);
-          router.push(`${paths.dashboard.chat}?id=${res.conversation.id}`);
-
-          onAddRecipients([]);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setMessage('');
-      }
+      
+      const payload = {
+        id: crypto.randomUUID(),
+        body: message,
+        contentType: 'text',
+        createdAt: new Date(),
+        senderId: 'mock-user-id' // Será substituído pelo backend ou context real
+      };
+      
+      sendWsMessage(payload);
+      setMessage('');
     },
-    [conversationData, message, messageData, onAddRecipients, router, selectedConversationId]
+    [message, sendWsMessage]
   );
 
   return (

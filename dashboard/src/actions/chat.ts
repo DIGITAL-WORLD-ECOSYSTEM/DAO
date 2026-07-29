@@ -9,14 +9,12 @@ import axios, { fetcher, endpoints } from 'src/lib/axios';
 
 // ----------------------------------------------------------------------
 
-const enableServer = false;
-
 const CHAT_ENDPOINT = endpoints.chat;
 
 const swrOptions: SWRConfiguration = {
-  revalidateIfStale: enableServer,
-  revalidateOnFocus: enableServer,
-  revalidateOnReconnect: enableServer,
+  revalidateIfStale: true,
+  revalidateOnFocus: true,
+  revalidateOnReconnect: true,
 };
 
 // ----------------------------------------------------------------------
@@ -33,12 +31,12 @@ export function useGetContacts() {
   });
 
   const memoizedValue = useMemo(() => {
-    const dataSource = enableServer && data ? data.contacts : _chatContacts;
+    const dataSource = data?.contacts || [];
     return {
       contacts: dataSource,
-      contactsLoading: enableServer ? isLoading : false,
-      contactsError: enableServer ? error : null,
-      contactsValidating: enableServer ? isValidating : false,
+      contactsLoading: isLoading,
+      contactsError: error,
+      contactsValidating: isValidating,
       contactsEmpty: !dataSource.length,
     };
   }, [data?.contacts, error, isLoading, isValidating]);
@@ -52,25 +50,23 @@ type ConversationsData = {
   conversations: IChatConversation[];
 };
 
-import { _chatContacts, _conversations } from 'src/_mock/_chat';
-
 export function useGetConversations() {
-  const url = [CHAT_ENDPOINT, { params: { endpoint: 'conversations' } }];
+  const url = `${CHAT_ENDPOINT}/conversations`;
 
   const { data, isLoading, error, isValidating } = useSWR<ConversationsData>(url, fetcher, {
     ...swrOptions,
   });
 
   const memoizedValue = useMemo(() => {
-    const dataSource = enableServer && data ? data.conversations : _conversations;
+    const dataSource = data?.conversations || [];
     const byId = dataSource.length ? keyBy(dataSource, (option) => option.id) : {};
     const allIds = Object.keys(byId);
 
     return {
       conversations: { byId, allIds },
-      conversationsLoading: enableServer ? isLoading : false,
-      conversationsError: enableServer ? error : null,
-      conversationsValidating: enableServer ? isValidating : false,
+      conversationsLoading: isLoading,
+      conversationsError: error,
+      conversationsValidating: isValidating,
       conversationsEmpty: !allIds.length,
     };
   }, [data?.conversations, error, isLoading, isValidating]);
@@ -86,7 +82,7 @@ type ConversationData = {
 
 export function useGetConversation(conversationId: string) {
   const url = conversationId
-    ? [CHAT_ENDPOINT, { params: { conversationId: `${conversationId}`, endpoint: 'conversation' } }]
+    ? `${CHAT_ENDPOINT}/conversations/${conversationId}/messages`
     : '';
 
   const { data, isLoading, error, isValidating } = useSWR<ConversationData>(url, fetcher, {
@@ -94,16 +90,13 @@ export function useGetConversation(conversationId: string) {
   });
 
   const memoizedValue = useMemo(() => {
-    const dataSource =
-      enableServer && data
-        ? data.conversation
-        : _conversations.find((c) => c.id === conversationId);
+    const dataSource = data?.conversation;
 
     return {
       conversation: dataSource,
-      conversationLoading: enableServer ? isLoading : false,
-      conversationError: enableServer ? error : null,
-      conversationValidating: enableServer ? isValidating : false,
+      conversationLoading: isLoading,
+      conversationError: error,
+      conversationValidating: isValidating,
       conversationEmpty: !dataSource,
     };
   }, [data?.conversation, error, isLoading, isValidating, conversationId]);
@@ -114,107 +107,20 @@ export function useGetConversation(conversationId: string) {
 // ----------------------------------------------------------------------
 
 export async function sendMessage(conversationId: string, messageData: IChatMessage) {
-  const conversationsUrl = [CHAT_ENDPOINT, { params: { endpoint: 'conversations' } }];
-
-  const conversationUrl = [CHAT_ENDPOINT, { params: { conversationId, endpoint: 'conversation' } }];
-
-  /**
-   * Work on server
-   */
-  if (enableServer) {
-    const data = { conversationId, messageData };
-    await axios.put(CHAT_ENDPOINT, data);
-  }
-
-  /**
-   * Work in local
-   */
-  mutate(
-    conversationUrl,
-    (currentData) => {
-      const currentConversation: IChatConversation = currentData.conversation;
-
-      const conversation = {
-        ...currentConversation,
-        messages: [...currentConversation.messages, messageData],
-      };
-
-      return { ...currentData, conversation };
-    },
-    false
-  );
-
-  mutate(
-    conversationsUrl,
-    (currentData) => {
-      const currentConversations: IChatConversation[] = currentData.conversations;
-
-      const conversations: IChatConversation[] = currentConversations.map(
-        (conversation: IChatConversation) =>
-          conversation.id === conversationId
-            ? { ...conversation, messages: [...conversation.messages, messageData] }
-            : conversation
-      );
-
-      return { ...currentData, conversations };
-    },
-    false
-  );
+  const data = { conversationId, messageData };
+  await axios.post(`${CHAT_ENDPOINT}/conversations/${conversationId}/messages`, data);
 }
 
 // ----------------------------------------------------------------------
 
 export async function createConversation(conversationData: IChatConversation) {
-  const url = [CHAT_ENDPOINT, { params: { endpoint: 'conversations' } }];
-
-  /**
-   * Work on server
-   */
   const data = { conversationData };
-  const res = await axios.post(CHAT_ENDPOINT, data);
-
-  /**
-   * Work in local
-   */
-  mutate(
-    url,
-    (currentData) => {
-      const currentConversations: IChatConversation[] = currentData.conversations;
-
-      const conversations: IChatConversation[] = [...currentConversations, conversationData];
-
-      return { ...currentData, conversations };
-    },
-    false
-  );
-
+  const res = await axios.post(`${CHAT_ENDPOINT}/conversations`, data);
   return res.data;
 }
 
 // ----------------------------------------------------------------------
 
 export async function clickConversation(conversationId: string) {
-  /**
-   * Work on server
-   */
-  if (enableServer) {
-    await axios.get(CHAT_ENDPOINT, { params: { conversationId, endpoint: 'mark-as-seen' } });
-  }
-
-  /**
-   * Work in local
-   */
-  mutate(
-    [CHAT_ENDPOINT, { params: { endpoint: 'conversations' } }],
-    (currentData) => {
-      const currentConversations: IChatConversation[] = currentData.conversations;
-
-      const conversations = currentConversations.map((conversation: IChatConversation) =>
-        conversation.id === conversationId ? { ...conversation, unreadCount: 0 } : conversation
-      );
-
-      return { ...currentData, conversations };
-    },
-    false
-  );
+  await axios.post(`${CHAT_ENDPOINT}/conversations/${conversationId}/read`);
 }

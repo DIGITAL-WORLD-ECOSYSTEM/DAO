@@ -16,6 +16,7 @@ import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/component
 import { CheckoutProvider } from 'src/sections/checkout/context';
 
 import { AuthProvider } from 'src/auth/context/jwt';
+import { ChatRealtimeProvider } from 'src/contexts/chat-realtime-context';
 
 // ----------------------------------------------------------------------
 
@@ -37,10 +38,12 @@ export default function App({ children }: AppProps) {
             >
               <MotionLazy>
                 <CheckoutProvider>
-                  <Snackbar />
-                  <ProgressBar />
-                  <SettingsDrawer defaultSettings={defaultSettings} />
-                  {children}
+                  <ChatRealtimeProvider>
+                    <Snackbar />
+                    <ProgressBar />
+                    <SettingsDrawer defaultSettings={defaultSettings} />
+                    {children}
+                  </ChatRealtimeProvider>
                 </CheckoutProvider>
               </MotionLazy>
             </ThemeProvider>
