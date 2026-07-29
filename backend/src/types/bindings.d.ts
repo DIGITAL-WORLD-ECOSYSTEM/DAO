@@ -57,6 +57,7 @@ export type Bindings = {
 
 	// 7. Filas e Armazenamentos (Fase A)
 	EMAIL_PIPELINE_QUEUE: Queue<any>;
+	CHAT_PIPELINE_QUEUE: Queue<any>;
 	R2_EMAIL_ATTACHMENTS: R2Bucket;
 };
 

@@ -1203,6 +1203,8 @@ export const chatParticipants = sqliteTable('chat_participants', {
 	muted: integer('muted', { mode: 'boolean' }).default(false),
 	archived: integer('archived', { mode: 'boolean' }).default(false),
 	pinned: integer('pinned', { mode: 'boolean' }).default(false),
+	presence: text('presence', { enum: ['online', 'away', 'offline'] }).default('offline'),
+	lastSeen: integer('last_seen', { mode: 'timestamp' }),
 }, (t) => ({
 	pk: primaryKey({ columns: [t.conversationId, t.userId] }),
 	convoIdx: index('idx_chat_participants_convo').on(t.conversationId),
@@ -1218,6 +1220,7 @@ export const chatMessages = sqliteTable('chat_messages', {
 	status: text('status').default('sent'), // sent, delivered, read, edited, deleted
 	replyTo: text('reply_to'), // Self-referencing chatMessages.id handled at app level to avoid circular deps
 	metadata: text('metadata', { mode: 'json' }),
+	version: integer('version').default(1),
 	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
 	editedAt: integer('edited_at', { mode: 'timestamp' }),
 	deletedAt: integer('deleted_at', { mode: 'timestamp' }),

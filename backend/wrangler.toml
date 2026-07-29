@@ -81,3 +81,16 @@ max_batch_size = 10
 max_batch_timeout = 5
 max_retries = 3
 dead_letter_queue = "email-pipeline-dlq"
+
+# --- CHAT INFRASTRUCTURE (FASE P1) ---
+
+[[queues.producers]]
+binding = "CHAT_PIPELINE_QUEUE"
+queue = "chat-pipeline-queue"
+
+[[queues.consumers]]
+queue = "chat-pipeline-queue"
+max_batch_size = 50
+max_batch_timeout = 2
+max_retries = 3
+dead_letter_queue = "chat-pipeline-dlq"

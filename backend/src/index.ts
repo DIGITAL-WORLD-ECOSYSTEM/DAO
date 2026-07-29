@@ -241,6 +241,7 @@ app.onError((err, c) => {
 
 import { handleEmailEvent } from './workers/email.worker';
 import { handleQueueEvent } from './workers/queue.worker';
+import { ChatQueueWorker } from './workers/chat-queue.worker';
 import type { ForwardableEmailMessage } from '@cloudflare/workers-types';
 
 export { app }; // Export for testing
@@ -265,7 +266,11 @@ export default {
 
 	// Worker QUEUE: Processamento de Eventos (Consumer)
 	async queue(batch: MessageBatch<any>, env: Bindings, ctx: ExecutionContext) {
-		await handleQueueEvent(batch, env, ctx);
+		if (batch.queue === 'chat-pipeline-queue') {
+			await ChatQueueWorker.consume(batch, env);
+		} else {
+			await handleQueueEvent(batch, env, ctx);
+		}
 	}
 };
 
