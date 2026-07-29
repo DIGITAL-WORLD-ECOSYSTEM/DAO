@@ -1,13 +1,13 @@
 import { eq, and, desc, inArray, or } from 'drizzle-orm';
 import type { D1Database } from '@cloudflare/workers-types';
 import { drizzle } from 'drizzle-orm/d1';
-import { 
-  chatConversations, 
-  chatParticipants, 
-  chatMessages, 
-  chatAttachments, 
-  chatReadReceipts, 
-  chatEvents 
+import {
+  chatConversations,
+  chatParticipants,
+  chatMessages,
+  chatAttachments,
+  chatReadReceipts,
+  chatEvents,
 } from '../db/schema';
 import type { CreateConversationDto, SendMessageDto } from '../dto/chat.dto';
 
@@ -22,11 +22,7 @@ export class ChatRepository {
   // CONVERSATIONS
   // ==========================================
 
-  async createConversation(
-    id: string, 
-    ownerId: number, 
-    data: CreateConversationDto
-  ) {
+  async createConversation(id: string, ownerId: number, data: CreateConversationDto) {
     return this.db.transaction(async (tx) => {
       // 1. Create the conversation
       await tx.insert(chatConversations).values({
@@ -45,7 +41,7 @@ export class ChatRepository {
           conversationId: id,
           userId: ownerId,
           role: 'owner',
-        }
+        },
       ];
 
       // 3. Add other participants
@@ -75,29 +71,32 @@ export class ChatRepository {
 
   async getUserConversations(userId: number) {
     // Busca as conversas que o usuário participa
-    const participantRows = await this.db.select({
-      conversationId: chatParticipants.conversationId,
-    })
-    .from(chatParticipants)
-    .where(eq(chatParticipants.userId, userId));
+    const participantRows = await this.db
+      .select({
+        conversationId: chatParticipants.conversationId,
+      })
+      .from(chatParticipants)
+      .where(eq(chatParticipants.userId, userId));
 
     if (participantRows.length === 0) return [];
 
     const conversationIds = participantRows.map((r) => r.conversationId);
 
     // Retorna as conversas detalhadas
-    return this.db.select()
+    return this.db
+      .select()
       .from(chatConversations)
       .where(inArray(chatConversations.id, conversationIds))
       .orderBy(desc(chatConversations.updatedAt));
   }
 
   async getConversationById(id: string) {
-    const result = await this.db.select()
+    const result = await this.db
+      .select()
       .from(chatConversations)
       .where(eq(chatConversations.id, id))
       .limit(1);
-    
+
     return result[0] || null;
   }
 
@@ -105,26 +104,25 @@ export class ChatRepository {
   // MESSAGES
   // ==========================================
 
-  async saveMessage(
-    id: string, 
-    conversationId: string, 
-    senderId: number, 
-    data: SendMessageDto
-  ) {
+  async saveMessage(id: string, conversationId: string, senderId: number, data: SendMessageDto) {
     return this.db.transaction(async (tx) => {
       // 1. Save the message
-      const msg = await tx.insert(chatMessages).values({
-        id,
-        conversationId,
-        senderId,
-        body: data.body,
-        type: data.type,
-        replyTo: data.replyTo,
-        metadata: data.metadata,
-      }).returning();
+      const msg = await tx
+        .insert(chatMessages)
+        .values({
+          id,
+          conversationId,
+          senderId,
+          body: data.body,
+          type: data.type,
+          replyTo: data.replyTo,
+          metadata: data.metadata,
+        })
+        .returning();
 
       // 2. Update conversation updatedAt
-      await tx.update(chatConversations)
+      await tx
+        .update(chatConversations)
         .set({ updatedAt: new Date() })
         .where(eq(chatConversations.id, conversationId));
 
@@ -141,7 +139,8 @@ export class ChatRepository {
   }
 
   async getMessagesByConversation(conversationId: string, limit = 50, offset = 0) {
-    return this.db.select()
+    return this.db
+      .select()
       .from(chatMessages)
       .where(eq(chatMessages.conversationId, conversationId))
       .orderBy(desc(chatMessages.createdAt))
@@ -154,13 +153,15 @@ export class ChatRepository {
   // ==========================================
 
   async getParticipants(conversationId: string) {
-    return this.db.select()
+    return this.db
+      .select()
       .from(chatParticipants)
       .where(eq(chatParticipants.conversationId, conversationId));
   }
 
   async isUserInConversation(conversationId: string, userId: number) {
-    const result = await this.db.select()
+    const result = await this.db
+      .select()
       .from(chatParticipants)
       .where(
         and(
@@ -169,7 +170,7 @@ export class ChatRepository {
         )
       )
       .limit(1);
-      
+
     return result.length > 0;
   }
 }

@@ -17,6 +17,6 @@
  * Role: Central System API & Identity Provider
  */
 declare module '__STATIC_CONTENT_MANIFEST' {
-	const manifest: string;
-	export default manifest;
+  const manifest: string;
+  export default manifest;
 }

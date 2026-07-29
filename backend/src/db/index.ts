@@ -12,7 +12,7 @@ import * as schema from './schema';
  * @param d1 O binding do D1Database vindo do ambiente (c.env.DB)
  */
 export const createDb = (d1: D1Database) => {
-	return drizzle(d1, { schema });
+  return drizzle(d1, { schema });
 };
 
 /**

@@ -1,6 +1,7 @@
 import type { UseNavCollapseReturn } from './hooks/use-collapse-nav';
 import type { IChatParticipant, IChatConversations } from 'src/types/chat';
 
+import { toast } from 'sonner';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -105,11 +106,8 @@ export function ChatNav({
   }, [mdUp, onCloseMobile, onCollapseDesktop]);
 
   const handleClickCompose = useCallback(() => {
-    if (!mdUp) {
-      onCloseMobile();
-    }
-    router.push(paths.dashboard.chat);
-  }, [mdUp, onCloseMobile, router]);
+    toast.info('Recurso em implantação. A criação de novos chats será liberada em breve.');
+  }, []);
 
   const handleSearchContacts = useCallback(
     (inputValue: string) => {

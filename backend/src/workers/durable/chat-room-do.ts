@@ -40,17 +40,17 @@ export class ChatRoomDO extends DurableObject<Bindings> {
 
     const url = new URL(request.url);
     const conversationId = url.pathname.split('/').slice(-2, -1)[0];
-    
+
     // Auth context extracted from the request (passed by the Hono router)
     const userId = Number(request.headers.get('X-User-Id'));
     const deviceId = request.headers.get('X-Device-Id') || 'unknown';
-    
+
     if (!userId) {
       return new Response('Unauthorized', { status: 401 });
     }
 
     const { 0: client, 1: server } = new WebSocketPair();
-    
+
     this.handleConnection(server, userId, deviceId, conversationId);
 
     return new Response(null, {
@@ -59,7 +59,12 @@ export class ChatRoomDO extends DurableObject<Bindings> {
     });
   }
 
-  private handleConnection(ws: WebSocket, userId: number, deviceId: string, conversationId: string) {
+  private handleConnection(
+    ws: WebSocket,
+    userId: number,
+    deviceId: string,
+    conversationId: string
+  ) {
     ws.accept();
 
     const connectionInfo: ConnectionInfo = {
@@ -82,7 +87,7 @@ export class ChatRoomDO extends DurableObject<Bindings> {
       conversationId,
       userId,
       timestamp: Date.now(),
-      payload: { presence: 'ONLINE' }
+      payload: { presence: 'ONLINE' },
     });
 
     ws.addEventListener('message', async (event) => {
@@ -102,9 +107,9 @@ export class ChatRoomDO extends DurableObject<Bindings> {
         conversationId,
         userId,
         timestamp: Date.now(),
-        payload: { presence: 'OFFLINE' }
+        payload: { presence: 'OFFLINE' },
       });
-      
+
       // Update Presence in DB via Queue
       this.publishToQueue({
         eventId: crypto.randomUUID(),
@@ -112,19 +117,24 @@ export class ChatRoomDO extends DurableObject<Bindings> {
         conversationId,
         userId,
         timestamp: Date.now(),
-        payload: { status: 'offline' }
+        payload: { status: 'offline' },
       });
     });
   }
 
-  private async handleMessage(ws: WebSocket, data: any, info: ConnectionInfo, conversationId: string) {
+  private async handleMessage(
+    ws: WebSocket,
+    data: any,
+    info: ConnectionInfo,
+    conversationId: string
+  ) {
     // 1. Rate Limiting: 20 messages per 10 seconds
     const now = Date.now();
     if (now - info.windowStart > 10000) {
       info.windowStart = now;
       info.messageCount = 0;
     }
-    
+
     if (info.messageCount >= 20) {
       ws.send(JSON.stringify({ version: 1, type: 'MESSAGE_RATE_LIMITED' }));
       return;
@@ -149,35 +159,40 @@ export class ChatRoomDO extends DurableObject<Bindings> {
           timestamp: now,
           payload: data.payload,
         };
-        
+
         // Broadcast to room
         this.broadcast(messagePayload, ws); // exclude sender
-        
+
         // Send ACK back to sender
-        ws.send(JSON.stringify({
-          version: 1,
-          type: 'ACK',
-          originalMessageId: data.payload.id,
-          sequenceNumber: this.globalSequence,
-          timestamp: now
-        }));
+        ws.send(
+          JSON.stringify({
+            version: 1,
+            type: 'ACK',
+            originalMessageId: data.payload.id,
+            sequenceNumber: this.globalSequence,
+            timestamp: now,
+          })
+        );
 
         // Send to Queue for Async DB Persistance
         await this.publishToQueue({
           eventId: crypto.randomUUID(),
-          ...messagePayload
+          ...messagePayload,
         });
         break;
 
       case ChatEventType.USER_TYPING:
       case ChatEventType.USER_STOPPED_TYPING:
-        this.broadcast({
-          version: 1,
-          type: data.type,
-          conversationId,
-          userId: info.userId,
-          timestamp: now
-        }, ws);
+        this.broadcast(
+          {
+            version: 1,
+            type: data.type,
+            conversationId,
+            userId: info.userId,
+            timestamp: now,
+          },
+          ws
+        );
         break;
 
       // Adicione outros eventos conforme necessário

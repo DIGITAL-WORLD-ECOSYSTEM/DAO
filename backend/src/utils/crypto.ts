@@ -27,20 +27,11 @@ export class CryptoCore {
       // Correction for common Ed25519 string in different environments
       const algorithm = { name: 'Ed25519' };
 
-      const importedKey = await crypto.subtle.importKey(
-        'raw',
-        publicKey,
-        algorithm,
-        false,
-        ['verify']
-      );
+      const importedKey = await crypto.subtle.importKey('raw', publicKey, algorithm, false, [
+        'verify',
+      ]);
 
-      return await crypto.subtle.verify(
-        algorithm,
-        importedKey,
-        signature,
-        message
-      );
+      return await crypto.subtle.verify(algorithm, importedKey, signature, message);
     } catch (e) {
       console.error('CryptoCore Error:', e);
       return false;

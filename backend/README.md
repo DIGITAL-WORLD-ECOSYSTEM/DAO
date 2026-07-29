@@ -182,9 +182,11 @@ Cada ação sensível (voto, emissão de ativo, proposta, admin) exige um AAL m�
 ## 7. Relatório Técnico Definitivo: Arquitetura de Autenticação e Controle de Acesso
 
 ### 7.1. Objetivo da Arquitetura (Versão 2.1 Enterprise)
+
 Implementar uma arquitetura de autenticação multicamadas autônoma (zero dependência de serviços externos proprietários como Auth0 ou Firebase) operando inteiramente no edge com Cloudflare Workers, Hono, D1, Drizzle ORM, Web Crypto API e React 19 / MUI v6.
 
 Esta arquitetura suporta:
+
 - **Usuários Comuns (User)**: Autenticação por e-mail/senha.
 - **Administradores (Admin)**: Autenticação por e-mail/senha + MFA (TOTP).
 - **Desenvolvedores (Dev - Superuser)**: Restrito a GitHub OAuth + Desafio SSH.
@@ -196,22 +198,23 @@ Esta arquitetura suporta:
 
 ### 7.2. Matriz de Acesso e Níveis de Autenticação (Assurance Levels - AAL)
 
-| Perfil | Senha | TOTP | GitHub | SSH Challenge | Web3 SIWE | Nível Mínimo AAL |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **user** | Sim | Opcional | Não | Não | Opcional | **AAL1** (Senha) |
-| **admin** | Sim | **Obrigatório** | Não | Não | Não | **AAL2** (Senha + TOTP) |
-| **dev** | Não | Não | **Sim** | **Obrigatório** | Opcional | **AAL3** (GitHub + SSH) |
-| **auditor** | Sim | **Sim** | Opcional | Não | Não | **AAL2** (Senha + TOTP) |
+| Perfil      | Senha |      TOTP       |  GitHub  |  SSH Challenge  | Web3 SIWE |    Nível Mínimo AAL     |
+| :---------- | :---: | :-------------: | :------: | :-------------: | :-------: | :---------------------: |
+| **user**    |  Sim  |    Opcional     |   Não    |       Não       | Opcional  |    **AAL1** (Senha)     |
+| **admin**   |  Sim  | **Obrigatório** |   Não    |       Não       |    Não    | **AAL2** (Senha + TOTP) |
+| **dev**     |  Não  |       Não       | **Sim**  | **Obrigatório** | Opcional  | **AAL3** (GitHub + SSH) |
+| **auditor** |  Sim  |     **Sim**     | Opcional |       Não       |    Não    | **AAL2** (Senha + TOTP) |
 
-* **AAL1**: Autenticação básica via E-mail + Senha.
-* **AAL2**: Autenticação forte via E-mail/Senha + Verificação baseada em TOTP.
-* **AAL3**: Autenticação máxima via Login social no GitHub + Assinatura criptográfica de desafio SSH.
+- **AAL1**: Autenticação básica via E-mail + Senha.
+- **AAL2**: Autenticação forte via E-mail/Senha + Verificação baseada em TOTP.
+- **AAL3**: Autenticação máxima via Login social no GitHub + Assinatura criptográfica de desafio SSH.
 
 ---
 
 ### 7.3. Modelagem de Dados Relacional (Drizzle ORM)
 
 #### A. Tabela Principal de Cidadãos/Usuários (`citizens` / `users`)
+
 ```typescript
 export const citizens = sqliteTable('citizens', {
   id: text('id').primaryKey(),
@@ -219,20 +222,21 @@ export const citizens = sqliteTable('citizens', {
   name: text('name'),
   passwordHash: text('password_hash'),
   role: text('role', {
-    enum: ['user', 'admin', 'auditor', 'dev']
+    enum: ['user', 'admin', 'auditor', 'dev'],
   }),
   status: text('status', {
-    enum: ['active', 'blocked', 'pending']
+    enum: ['active', 'blocked', 'pending'],
   }),
   tokenVersion: integer('token_version').default(1), // Revogação global de tokens
   githubId: text('github_id'),
   walletAddress: text('wallet_address'),
   createdAt: integer('created_at'),
-  updatedAt: integer('updated_at')
+  updatedAt: integer('updated_at'),
 });
 ```
 
 #### B. Tabela de Credenciais Segregadas (`user_credentials`)
+
 ```typescript
 export const userCredentials = sqliteTable('user_credentials', {
   id: text('id').primaryKey(),
@@ -243,11 +247,12 @@ export const userCredentials = sqliteTable('user_credentials', {
   name: text('name'), // Apelido da credencial (ex: "Chave YubiKey 5C", "MacBook Principal")
   createdAt: integer('created_at'),
   lastUsedAt: integer('last_used_at'), // Auditoria e rastreabilidade de uso
-  revokedAt: integer('revoked_at')
+  revokedAt: integer('revoked_at'),
 });
 ```
 
 #### C. Controle de Sessões e Refresh Tokens (`user_sessions`)
+
 ```typescript
 export const userSessions = sqliteTable('user_sessions', {
   id: text('id').primaryKey(),
@@ -258,11 +263,12 @@ export const userSessions = sqliteTable('user_sessions', {
   refreshTokenHash: text('refresh_token_hash'), // Hash do refresh token ativo
   createdAt: integer('created_at'),
   expiresAt: integer('expires_at'),
-  revoked: integer('revoked') // Boolean (0 ou 1) para revogação imediata
+  revoked: integer('revoked'), // Boolean (0 ou 1) para revogação imediata
 });
 ```
 
 #### D. Desafios Anti-Replay (`auth_challenges`)
+
 ```typescript
 export const authChallenges = sqliteTable('auth_challenges', {
   id: text('id').primaryKey(),
@@ -270,11 +276,12 @@ export const authChallenges = sqliteTable('auth_challenges', {
   challenge: text('challenge'),
   challengeType: text('challenge_type'), // 'ssh', 'totp', 'webauthn', 'siwe'
   used: integer('used'), // Boolean (0 ou 1)
-  expiresAt: integer('expires_at')
+  expiresAt: integer('expires_at'),
 });
 ```
 
 #### E. Dispositivos Confiáveis (`trusted_devices`)
+
 ```typescript
 export const trustedDevices = sqliteTable('trusted_devices', {
   id: text('id').primaryKey(),
@@ -282,11 +289,12 @@ export const trustedDevices = sqliteTable('trusted_devices', {
   fingerprint: text('fingerprint'), // Hash do dispositivo (canvas, headers, plugins)
   firstSeen: integer('first_seen'),
   lastSeen: integer('last_seen'),
-  trusted: integer('trusted') // Boolean (0 ou 1)
+  trusted: integer('trusted'), // Boolean (0 ou 1)
 });
 ```
 
 #### F. Logs de Auditoria de Segurança (`security_audit_logs`)
+
 ```typescript
 export const securityAuditLogs = sqliteTable('security_audit_logs', {
   id: text('id').primaryKey(),
@@ -296,7 +304,7 @@ export const securityAuditLogs = sqliteTable('security_audit_logs', {
   ip: text('ip'),
   userAgent: text('user_agent'),
   metadata: text('metadata'), // JSON contendo geolocalização, Turnstile status, etc.
-  createdAt: integer('created_at')
+  createdAt: integer('created_at'),
 });
 ```
 
@@ -305,18 +313,21 @@ export const securityAuditLogs = sqliteTable('security_audit_logs', {
 ### 7.4. Detalhamento dos Fluxos de Autenticação
 
 #### A. Usuários Comuns (User)
+
 1. Envia E-mail + Senha.
 2. Validação Turnstile obrigatória para prevenção contra credential stuffing.
 3. Backend executa colisão e validação do hash usando a Web Crypto API nativa:
    - Algoritmo: **PBKDF2 com SHA-256 e 100.000 iterações** (`crypto.subtle.deriveBits()`).
 
 #### B. Administradores (Admin)
+
 1. Envia E-mail + Senha.
 2. Senha validada com sucesso -> solicita o código TOTP de 6 dígitos.
 3. Validação do código TOTP gerado via app autenticador (Google Authenticator, Microsoft Authenticator, Authy, etc.) usando a biblioteca `otplib`.
 4. Emite a sessão JWT elevada para **AAL2**.
 
 #### C. Desenvolvedor (Dev - Superusuário)
+
 1. Inicia login clicando em **GitHub Login**.
 2. OAuth Callback do GitHub valida a conta e retorna o e-mail cadastrado.
 3. Se o e-mail for o de superusuário (`felipe.dev@empresa.com.br`):
@@ -330,6 +341,7 @@ export const securityAuditLogs = sqliteTable('security_audit_logs', {
 ---
 
 ### 7.5. Diretrizes de Segurança Enterprise
+
 - **JWT de Sessão**: Payload seguro contendo `{ sub, role, aal, jti, sessionId, exp, iat }`. Armazenado exclusivamente via **HttpOnly, Secure, SameSite=Strict Cookies** (Access Token: 15 min / Refresh Token: 30 dias com rotação no banco de dados).
 - **Proteção contra Robôs**: Integração de segurança com o **Cloudflare Turnstile** nos endpoints de login, reset de senha, TOTP e desafio SSH.
 - **Revogação de Sessão Global**: Sempre que um usuário alterar senha, permissões ou cadastrar uma nova credencial, incrementa-se o campo `tokenVersion` no banco de dados, invalidando imediatamente todos os tokens JWT emitidos anteriormente.
@@ -341,6 +353,7 @@ export const securityAuditLogs = sqliteTable('security_audit_logs', {
 ---
 
 ### 7.6. Roteiro de Implementação por Sprints
+
 - **Sprint 1**: Estruturação de `user_sessions`, `auth_challenges`, cookies HttpOnly, claims JWT (`jti`, `sessionId`), rotação de refresh tokens e Rate Limiting básico.
 - **Sprint 2**: Implementação do fluxo MFA TOTP, tabela `trusted_devices` e auditoria de segurança categorizada por severidade (INFO, WARNING, CRITICAL).
 - **Sprint 3**: Restrição exclusiva GitHub OAuth + verificação de assinatura SSH, parser OpenSSH no backend e integração do Cloudflare Turnstile.
@@ -536,39 +549,39 @@ _(Gerenciado estruturalmente através do Custom Domain Cloudflare no wrangler.to
 
 A documentação completa da API será disponibilizada via Swagger/OpenAPI. Abaixo, um resumo dos endpoints essenciais:
 
-| Verbo  | Endpoint                                       | Descrição                                               | AAL Mín. |
-| :----- | :--------------------------------------------- | :------------------------------------------------------ | :------- |
-| `GET`  | `/api/core/identity/challenge/:u`              | Obtém nonce para handshake W3C.                         | Open     |
-| `POST` | `/api/core/identity/register`                  | Registro via assinatura Ed25519 pura.                   | Open     |
-| `POST` | `/api/core/identity/login`                     | Login ZK-Handshake normal.                              | Open     |
-| `GET`  | `/api/core/identity/me`                        | Valida JWT e retorna dados do usuário (dual OAuth/SSI). | Bearer   |
-| `GET`  | `/api/core/identity/web3/nonce`                | Obtém UUID para assinatura de Carteira EIP-4361.        | Open     |
-| `POST` | `/api/core/identity/web3/verify`               | Verifica criptografia e injeta Shadow Account.          | Open     |
-| `GET`  | `/api/core/identity/oauth/google/login`        | Inicia fluxo OAuth Google (redirect).                   | Open     |
-| `GET`  | `/api/core/identity/oauth/google/callback`     | Callback Google → gera JWT → redirect frontend.         | Open     |
-| `GET`  | `/api/core/identity/oauth/github/login`        | Inicia fluxo OAuth GitHub (redirect).                   | Open     |
-| `GET`  | `/api/core/identity/oauth/github/callback`     | Callback GitHub → gera JWT → redirect frontend.         | Open     |
-| `POST` | `/api/core/identity/local/register`            | Cria uma identidade manualmente (PBKDF2 WebCrypto)      | Open     |
-| `POST` | `/api/core/identity/local/login`               | Executa a colisão Criptográfica e Autentica.            | Open     |
-| `POST` | `/api/core/identity/local/forgot-password`     | Inicia fluxo anti-enumeração de reset via Token.        | Open     |
-| `POST` | `/api/core/identity/local/reset-password`      | Valida Token de 1 Hora e altera Hash do Banco.          | Open     |
-| `GET`  | `/api/core/identity/did/:id`                   | Resolve documento DID W3C.                              | Open     |
-| `GET`  | `/api/posts`                                   | Lista posts do Blog (Paginação & Filtro).               | Open     |
-| `GET`  | `/api/posts/:slug`                             | Detalhes do Post por Slug.                              | Open     |
-| `POST` | `/api/posts`                                   | Cria um novo post (Blog/SocialFi).                      | AAL1     |
-| `PUT`  | `/api/posts/:id`                               | Atualiza post existente.                                | AAL1     |
-| `DELETE`| `/api/posts/:id`                               | Remove post do Blog.                                    | AAL1     |
-| `POST` | `/api/platform/storage/upload`                 | Upload de Mídia (R2) para Blog e KYC.                   | AAL1     |
-| `POST` | `/api/posts/:id/favorite`                      | Alterna Favorito em um post.                            | AAL1     |
-| `GET`  | `/api/posts/:id/comments`                      | Lista comentários de um post.                           | Open     |
-| `POST` | `/api/posts/:id/comments`                      | Adiciona comentário a um post.                          | AAL1     |
-| `GET`  | `/api/products/real-estate`                    | Lista imóveis (Real Estate).                            | Open     |
-| `POST` | `/api/products/real-estate`                    | Cadastra novo imóvel (Real Estate).                     | AAL1     |
-| `GET`  | `/api/products/exchange/binance/price/:symbol` | Cotação da corretora em tempo real (Binance).           | Open     |
-| `GET`  | `/api/products/exchange/binance/balance`       | Saldo da conta usando API Keys HMAC criptografadas.     | AAL1     |
-| `POST` | `/api/core/identity/totp/setup`                | Habilita MFA via TOTP.                                  | AAL1     |
-| `POST` | `/api/core/compliance`                         | Verifica status KYC.                                    | AAL1     |
-| `GET`  | `/api/core/health`                             | Status da infraestrutura.                               | Open     |
+| Verbo    | Endpoint                                       | Descrição                                               | AAL Mín. |
+| :------- | :--------------------------------------------- | :------------------------------------------------------ | :------- |
+| `GET`    | `/api/core/identity/challenge/:u`              | Obtém nonce para handshake W3C.                         | Open     |
+| `POST`   | `/api/core/identity/register`                  | Registro via assinatura Ed25519 pura.                   | Open     |
+| `POST`   | `/api/core/identity/login`                     | Login ZK-Handshake normal.                              | Open     |
+| `GET`    | `/api/core/identity/me`                        | Valida JWT e retorna dados do usuário (dual OAuth/SSI). | Bearer   |
+| `GET`    | `/api/core/identity/web3/nonce`                | Obtém UUID para assinatura de Carteira EIP-4361.        | Open     |
+| `POST`   | `/api/core/identity/web3/verify`               | Verifica criptografia e injeta Shadow Account.          | Open     |
+| `GET`    | `/api/core/identity/oauth/google/login`        | Inicia fluxo OAuth Google (redirect).                   | Open     |
+| `GET`    | `/api/core/identity/oauth/google/callback`     | Callback Google → gera JWT → redirect frontend.         | Open     |
+| `GET`    | `/api/core/identity/oauth/github/login`        | Inicia fluxo OAuth GitHub (redirect).                   | Open     |
+| `GET`    | `/api/core/identity/oauth/github/callback`     | Callback GitHub → gera JWT → redirect frontend.         | Open     |
+| `POST`   | `/api/core/identity/local/register`            | Cria uma identidade manualmente (PBKDF2 WebCrypto)      | Open     |
+| `POST`   | `/api/core/identity/local/login`               | Executa a colisão Criptográfica e Autentica.            | Open     |
+| `POST`   | `/api/core/identity/local/forgot-password`     | Inicia fluxo anti-enumeração de reset via Token.        | Open     |
+| `POST`   | `/api/core/identity/local/reset-password`      | Valida Token de 1 Hora e altera Hash do Banco.          | Open     |
+| `GET`    | `/api/core/identity/did/:id`                   | Resolve documento DID W3C.                              | Open     |
+| `GET`    | `/api/posts`                                   | Lista posts do Blog (Paginação & Filtro).               | Open     |
+| `GET`    | `/api/posts/:slug`                             | Detalhes do Post por Slug.                              | Open     |
+| `POST`   | `/api/posts`                                   | Cria um novo post (Blog/SocialFi).                      | AAL1     |
+| `PUT`    | `/api/posts/:id`                               | Atualiza post existente.                                | AAL1     |
+| `DELETE` | `/api/posts/:id`                               | Remove post do Blog.                                    | AAL1     |
+| `POST`   | `/api/platform/storage/upload`                 | Upload de Mídia (R2) para Blog e KYC.                   | AAL1     |
+| `POST`   | `/api/posts/:id/favorite`                      | Alterna Favorito em um post.                            | AAL1     |
+| `GET`    | `/api/posts/:id/comments`                      | Lista comentários de um post.                           | Open     |
+| `POST`   | `/api/posts/:id/comments`                      | Adiciona comentário a um post.                          | AAL1     |
+| `GET`    | `/api/products/real-estate`                    | Lista imóveis (Real Estate).                            | Open     |
+| `POST`   | `/api/products/real-estate`                    | Cadastra novo imóvel (Real Estate).                     | AAL1     |
+| `GET`    | `/api/products/exchange/binance/price/:symbol` | Cotação da corretora em tempo real (Binance).           | Open     |
+| `GET`    | `/api/products/exchange/binance/balance`       | Saldo da conta usando API Keys HMAC criptografadas.     | AAL1     |
+| `POST`   | `/api/core/identity/totp/setup`                | Habilita MFA via TOTP.                                  | AAL1     |
+| `POST`   | `/api/core/compliance`                         | Verifica status KYC.                                    | AAL1     |
+| `GET`    | `/api/core/health`                             | Status da infraestrutura.                               | Open     |
 
 ## 18. Glossário de Termos
 
@@ -596,14 +609,14 @@ O Governance System integra uma camada de inteligência artificial nativa (Cloud
 
 ### 21.1. Modelos Integrados (Esquadrão de Elite)
 
-| Função | Modelo de IA | Aplicação |
-| :--- | :--- | :--- |
-| **Escrita Criativa** | `@cf/meta/llama-3.1-8b-instruct` | Geração de posts, artigos e comunicações oficiais. |
-| **SEO & Metadados** | `@cf/meta/llama-3.2-3b-instruct` | Análise de tags, títulos e descrições otimizadas. |
-| **Segurança & Auditoria**| `@cf/meta/llama-guard-3-8b` | Revisão de segurança e filtro de conteúdo impróprio. |
-| **Imagens de Capa** | `@cf/black-forest-labs/flux-1-schnell`| Geração de imagens exclusivas e fotorrealistas. |
-| **Acessibilidade** | `@cf/llava-hf/llava-1.5-7b-hf` | Geração automática de Alt-Text (descrição de imagem). |
-| **Tradução Global** | `@cf/meta/m2m100-1.2b` | Internacionalização de conteúdo (EN/ES/PT). |
+| Função                    | Modelo de IA                           | Aplicação                                             |
+| :------------------------ | :------------------------------------- | :---------------------------------------------------- |
+| **Escrita Criativa**      | `@cf/meta/llama-3.1-8b-instruct`       | Geração de posts, artigos e comunicações oficiais.    |
+| **SEO & Metadados**       | `@cf/meta/llama-3.2-3b-instruct`       | Análise de tags, títulos e descrições otimizadas.     |
+| **Segurança & Auditoria** | `@cf/meta/llama-guard-3-8b`            | Revisão de segurança e filtro de conteúdo impróprio.  |
+| **Imagens de Capa**       | `@cf/black-forest-labs/flux-1-schnell` | Geração de imagens exclusivas e fotorrealistas.       |
+| **Acessibilidade**        | `@cf/llava-hf/llava-1.5-7b-hf`         | Geração automática de Alt-Text (descrição de imagem). |
+| **Tradução Global**       | `@cf/meta/m2m100-1.2b`                 | Internacionalização de conteúdo (EN/ES/PT).           |
 
 ### 21.2. Arquitetura de Agentes (Roles)
 
@@ -618,6 +631,7 @@ A lógica de operação é dividida em agentes especializados que operam em uma 
 ### 21.3. Fluxo de Operação Autônomo
 
 O sistema opera sob dois gatilhos:
+
 - **Manual**: Via Dashboard (Geração por demanda).
 - **Scheduled (Cron)**: Janelas de monitoramento automático que sugerem pautas baseadas em eventos reais do mundo.
 

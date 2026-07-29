@@ -15,7 +15,7 @@ export enum ChatEventType {
   USER_PRESENCE_CHANGED = 'USER_PRESENCE_CHANGED',
   CONVERSATION_CREATED = 'CONVERSATION_CREATED',
   CONVERSATION_ARCHIVED = 'CONVERSATION_ARCHIVED',
-  ATTACHMENT_UPLOADED = 'ATTACHMENT_UPLOADED'
+  ATTACHMENT_UPLOADED = 'ATTACHMENT_UPLOADED',
 }
 
 export interface BaseChatEvent {
@@ -43,7 +43,7 @@ export interface UserPresenceEvent extends BaseChatEvent {
 }
 
 // União de todos os eventos possíveis na Fila
-export type ChatPipelineEvent = 
-  | MessageCreatedEvent 
+export type ChatPipelineEvent =
+  | MessageCreatedEvent
   | UserPresenceEvent
   | (BaseChatEvent & { payload?: any });

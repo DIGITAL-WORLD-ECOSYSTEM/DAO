@@ -23,25 +23,25 @@ import { z } from 'zod';
 // =================================================================
 
 export const signUpSchema = z.object({
-	firstName: z.string().min(2, 'O nome deve ter pelo menos 2 caracteres'),
-	lastName: z.string().min(2, 'O sobrenome deve ter pelo menos 2 caracteres'),
-	email: z.string().email('Formato de email inválido'),
-	password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres'),
-	walletAddress: z.string().startsWith('0x', 'Endereço de carteira inválido').optional(),
+  firstName: z.string().min(2, 'O nome deve ter pelo menos 2 caracteres'),
+  lastName: z.string().min(2, 'O sobrenome deve ter pelo menos 2 caracteres'),
+  email: z.string().email('Formato de email inválido'),
+  password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres'),
+  walletAddress: z.string().startsWith('0x', 'Endereço de carteira inválido').optional(),
 });
 
 export const legacyLoginSchema = z.object({
-	email: z.string().email('Digite um email válido'),
-	password: z.string().min(1, 'A senha é obrigatória'),
+  email: z.string().email('Digite um email válido'),
+  password: z.string().min(1, 'A senha é obrigatória'),
 });
 
 export const forgotPasswordSchema = z.object({
-	email: z.string().email('Digite um email válido'),
+  email: z.string().email('Digite um email válido'),
 });
 
 export const resetPasswordSchema = z.object({
-	token: z.string().min(1, 'Token de recuperação é obrigatório'),
-	password: z.string().min(8, 'A nova senha deve ter no mínimo 8 caracteres'),
+  token: z.string().min(1, 'Token de recuperação é obrigatório'),
+  password: z.string().min(8, 'A nova senha deve ter no mínimo 8 caracteres'),
 });
 
 // =================================================================
@@ -50,10 +50,10 @@ export const resetPasswordSchema = z.object({
 
 /** Username: apenas letras minúsculas, números e underscore, 3–32 chars */
 const usernameSchema = z
-	.string()
-	.min(3, 'Username deve ter pelo menos 3 caracteres')
-	.max(32, 'Username deve ter no máximo 32 caracteres')
-	.regex(/^[a-z0-9_]+$/, 'Username deve conter apenas letras minúsculas, números e _');
+  .string()
+  .min(3, 'Username deve ter pelo menos 3 caracteres')
+  .max(32, 'Username deve ter no máximo 32 caracteres')
+  .regex(/^[a-z0-9_]+$/, 'Username deve conter apenas letras minúsculas, números e _');
 
 /** Challenge UUID gerado pelo endpoint /challenge */
 const challengeSchema = z.string().uuid('Challenge deve ser um UUID válido');
@@ -66,53 +66,53 @@ const publicKeySchema = z.string().min(1, 'Chave pública é obrigatória');
 
 // --- 1. Registro de Cidadão ---
 export const ssiRegisterSchema = z.object({
-	username: usernameSchema,
-	publicKey: publicKeySchema,
-	signature: signatureSchema,
-	challenge: challengeSchema,
-	firstName: z.string().min(1, 'Nome é obrigatório').max(64),
-	lastName: z.string().min(1, 'Sobrenome é obrigatório').max(64),
-	encryptedVault: z.string().optional(),
+  username: usernameSchema,
+  publicKey: publicKeySchema,
+  signature: signatureSchema,
+  challenge: challengeSchema,
+  firstName: z.string().min(1, 'Nome é obrigatório').max(64),
+  lastName: z.string().min(1, 'Sobrenome é obrigatório').max(64),
+  encryptedVault: z.string().optional(),
 });
 
 // --- 2. Login (Handshake ZK) ---
 export const ssiLoginSchema = z.object({
-	username: usernameSchema,
-	signature: signatureSchema,
-	challenge: challengeSchema,
-	otpCode: z.string().length(6, 'Código OTP deve ter 6 dígitos').optional(),
+  username: usernameSchema,
+  signature: signatureSchema,
+  challenge: challengeSchema,
+  otpCode: z.string().length(6, 'Código OTP deve ter 6 dígitos').optional(),
 });
 
 // --- 3. Bind Passkey ---
 export const passkeyBindSchema = z.object({
-	username: usernameSchema,
-	credentialId: z.string().min(1, 'Credential ID é obrigatório'),
-	publicKey: publicKeySchema,
-	challenge: challengeSchema,
-	signature: signatureSchema,
+  username: usernameSchema,
+  credentialId: z.string().min(1, 'Credential ID é obrigatório'),
+  publicKey: publicKeySchema,
+  challenge: challengeSchema,
+  signature: signatureSchema,
 });
 
 // --- 3.1. Login Passkey ---
 export const passkeyLoginSchema = z.object({
-	username: usernameSchema,
-	challenge: challengeSchema,
-	signature: signatureSchema,
+  username: usernameSchema,
+  challenge: challengeSchema,
+  signature: signatureSchema,
 });
 
 // --- 4. Setup TOTP ---
 export const totpSetupSchema = z.object({
-	username: usernameSchema,
+  username: usernameSchema,
 });
 
 // --- 5. Verify TOTP ---
 export const totpVerifySchema = z.object({
-	username: usernameSchema,
-	code: z.string().length(6, 'Código TOTP deve ter 6 dígitos'),
+  username: usernameSchema,
+  code: z.string().length(6, 'Código TOTP deve ter 6 dígitos'),
 });
 
 // --- 6. Revogação de Identidade ---
 export const revokeSchema = z.object({
-	username: usernameSchema,
+  username: usernameSchema,
 });
 
 // =================================================================
@@ -120,14 +120,16 @@ export const revokeSchema = z.object({
 // =================================================================
 
 export const kycSubmitSchema = z.object({
-	userId: z.number().int().positive('userId deve ser um número inteiro positivo'),
-	documentType: z.enum(['RG', 'CPF', 'CNH', 'PASSAPORTE', 'OUTROS'], { message: 'Tipo de documento inválido' }),
+  userId: z.number().int().positive('userId deve ser um número inteiro positivo'),
+  documentType: z.enum(['RG', 'CPF', 'CNH', 'PASSAPORTE', 'OUTROS'], {
+    message: 'Tipo de documento inválido',
+  }),
 });
 
 export const kycReviewSchema = z.object({
-	userId: z.number().int().positive('userId deve ser um número inteiro positivo'),
-	status: z.enum(['approved', 'rejected', 'pending'], { message: 'Status inválido' }),
-	reason: z.string().max(500).optional(),
+  userId: z.number().int().positive('userId deve ser um número inteiro positivo'),
+  status: z.enum(['approved', 'rejected', 'pending'], { message: 'Status inválido' }),
+  reason: z.string().max(500).optional(),
 });
 
 // =================================================================

@@ -20,14 +20,11 @@ const chatApp = new Hono<{
  */
 chatApp.get('/ws-token', async (c) => {
   const user = c.var.user;
-  
+
   // Token curto de 60 segundos
   const exp = Math.floor(Date.now() / 1000) + 60;
-  
-  const token = await sign(
-    { userId: user.userId, exp, type: 'chat-ws' }, 
-    c.env.JWT_SECRET
-  );
+
+  const token = await sign({ userId: user.userId, exp, type: 'chat-ws' }, c.env.JWT_SECRET);
 
   return c.json({ success: true, token });
 });
@@ -40,7 +37,7 @@ chatApp.get('/ws-token', async (c) => {
 chatApp.get('/conversations/:id/ws', async (c) => {
   const conversationId = c.req.param('id');
   const upgradeHeader = c.req.header('Upgrade');
-  
+
   if (!upgradeHeader || upgradeHeader !== 'websocket') {
     return c.text('Expected Upgrade: websocket', 426);
   }
@@ -48,7 +45,7 @@ chatApp.get('/conversations/:id/ws', async (c) => {
   // Extrair token do subprotocolo
   // Exemplo de header: "asppibra-chat-v1, eyJhbGciOi..."
   const protocolHeader = c.req.header('Sec-WebSocket-Protocol') || '';
-  const protocols = protocolHeader.split(',').map(p => p.trim());
+  const protocols = protocolHeader.split(',').map((p) => p.trim());
   const token = protocols.length > 1 ? protocols[1] : null;
 
   if (!token) {
@@ -68,7 +65,7 @@ chatApp.get('/conversations/:id/ws', async (c) => {
   // Validar se o usuário pertence à sala no D1
   const service = new ChatService(c.env.DB);
   const isInConversation = await service.isUserInConversation(userId, conversationId);
-  
+
   if (!isInConversation) {
     return c.text('Forbidden: You do not belong to this conversation', 403);
   }
@@ -97,9 +94,9 @@ chatApp.get('/conversations/:id/ws', async (c) => {
 chatApp.get('/conversations', async (c) => {
   const user = c.var.user;
   const service = new ChatService(c.env.DB);
-  
+
   const conversations = await service.getConversations(user.userId);
-  
+
   return c.json({
     success: true,
     conversations,
@@ -110,23 +107,19 @@ chatApp.get('/conversations', async (c) => {
  * [POST] /conversations
  * Cria uma nova sala de chat.
  */
-chatApp.post(
-  '/conversations', 
-  zValidator('json', createConversationSchema), 
-  async (c) => {
-    const user = c.var.user;
-    const body = c.req.valid('json');
-    const service = new ChatService(c.env.DB);
-    
-    const result = await service.createConversation(user.userId, body);
-    
-    return c.json({
-      success: true,
-      conversationId: result.id,
-      message: 'Conversa criada com sucesso.',
-    });
-  }
-);
+chatApp.post('/conversations', zValidator('json', createConversationSchema), async (c) => {
+  const user = c.var.user;
+  const body = c.req.valid('json');
+  const service = new ChatService(c.env.DB);
+
+  const result = await service.createConversation(user.userId, body);
+
+  return c.json({
+    success: true,
+    conversationId: result.id,
+    message: 'Conversa criada com sucesso.',
+  });
+});
 
 /**
  * [GET] /conversations/:id/messages
@@ -137,10 +130,10 @@ chatApp.get('/conversations/:id/messages', async (c) => {
   const conversationId = c.req.param('id');
   const limit = Number(c.req.query('limit')) || 50;
   const offset = Number(c.req.query('offset')) || 0;
-  
+
   const service = new ChatService(c.env.DB);
   const messages = await service.getMessages(user.userId, conversationId, limit, offset);
-  
+
   return c.json({
     success: true,
     messages,
@@ -151,23 +144,19 @@ chatApp.get('/conversations/:id/messages', async (c) => {
  * [POST] /conversations/:id/messages
  * Envia uma mensagem para a conversa.
  */
-chatApp.post(
-  '/conversations/:id/messages', 
-  zValidator('json', sendMessageSchema), 
-  async (c) => {
-    const user = c.var.user;
-    const conversationId = c.req.param('id');
-    const body = c.req.valid('json');
-    
-    const service = new ChatService(c.env.DB);
-    const message = await service.sendMessage(user.userId, conversationId, body);
-    
-    return c.json({
-      success: true,
-      message,
-    });
-  }
-);
+chatApp.post('/conversations/:id/messages', zValidator('json', sendMessageSchema), async (c) => {
+  const user = c.var.user;
+  const conversationId = c.req.param('id');
+  const body = c.req.valid('json');
+
+  const service = new ChatService(c.env.DB);
+  const message = await service.sendMessage(user.userId, conversationId, body);
+
+  return c.json({
+    success: true,
+    message,
+  });
+});
 
 // Endpoints mockados para P0, lógica a ser expandida no P1/P2
 chatApp.post('/conversations/:id/read', async (c) => {

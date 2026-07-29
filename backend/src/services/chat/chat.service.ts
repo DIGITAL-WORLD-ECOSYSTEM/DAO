@@ -21,7 +21,9 @@ export class ChatService {
   async createConversation(userId: number, data: CreateConversationDto) {
     // Validação básica
     if (data.type === 'single' && data.participantIds.length !== 1) {
-      throw new HTTPException(400, { message: 'Conversas individuais precisam de exatamente 1 outro participante.' });
+      throw new HTTPException(400, {
+        message: 'Conversas individuais precisam de exatamente 1 outro participante.',
+      });
     }
 
     const conversationId = crypto.randomUUID();
@@ -31,9 +33,11 @@ export class ChatService {
   async getMessages(userId: number, conversationId: string, limit = 50, offset = 0) {
     // 1. Verificar se o usuário participa desta conversa
     const isParticipant = await this.repository.isUserInConversation(conversationId, userId);
-    
+
     if (!isParticipant) {
-      throw new HTTPException(403, { message: 'Acesso negado. Você não participa desta conversa.' });
+      throw new HTTPException(403, {
+        message: 'Acesso negado. Você não participa desta conversa.',
+      });
     }
 
     // 2. Retornar mensagens
@@ -43,9 +47,11 @@ export class ChatService {
   async sendMessage(userId: number, conversationId: string, data: SendMessageDto) {
     // 1. Verificar se a conversa existe e o usuário é participante
     const isParticipant = await this.repository.isUserInConversation(conversationId, userId);
-    
+
     if (!isParticipant) {
-      throw new HTTPException(403, { message: 'Acesso negado. Você não participa desta conversa.' });
+      throw new HTTPException(403, {
+        message: 'Acesso negado. Você não participa desta conversa.',
+      });
     }
 
     // 2. Gravar a mensagem

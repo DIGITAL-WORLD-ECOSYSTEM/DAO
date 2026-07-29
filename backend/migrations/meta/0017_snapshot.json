@@ -69,16 +69,12 @@
       "indexes": {
         "idx_audit_action": {
           "name": "idx_audit_action",
-          "columns": [
-            "action"
-          ],
+          "columns": ["action"],
           "isUnique": false
         },
         "idx_audit_actor": {
           "name": "idx_audit_actor",
-          "columns": [
-            "actor_id"
-          ],
+          "columns": ["actor_id"],
           "isUnique": false
         }
       },
@@ -87,12 +83,8 @@
           "name": "audit_logs_actor_id_users_id_fk",
           "tableFrom": "audit_logs",
           "tableTo": "users",
-          "columnsFrom": [
-            "actor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -100,12 +92,8 @@
           "name": "audit_logs_citizen_id_citizens_id_fk",
           "tableFrom": "audit_logs",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -200,9 +188,7 @@
       "indexes": {
         "audit_logs_immutable_event_hash_unique": {
           "name": "audit_logs_immutable_event_hash_unique",
-          "columns": [
-            "event_hash"
-          ],
+          "columns": ["event_hash"],
           "isUnique": true
         }
       },
@@ -211,12 +197,8 @@
           "name": "audit_logs_immutable_actor_id_users_id_fk",
           "tableFrom": "audit_logs_immutable",
           "tableTo": "users",
-          "columnsFrom": [
-            "actor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -278,12 +260,8 @@
           "name": "auth_challenges_user_id_users_id_fk",
           "tableFrom": "auth_challenges",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -381,9 +359,7 @@
       "indexes": {
         "idx_bounties_status": {
           "name": "idx_bounties_status",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         }
       },
@@ -392,12 +368,8 @@
           "name": "bounties_creator_id_users_id_fk",
           "tableFrom": "bounties",
           "tableTo": "users",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -405,12 +377,8 @@
           "name": "bounties_assignee_id_users_id_fk",
           "tableFrom": "bounties",
           "tableTo": "users",
-          "columnsFrom": [
-            "assignee_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["assignee_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -726,37 +694,27 @@
       "indexes": {
         "citizens_username_unique": {
           "name": "citizens_username_unique",
-          "columns": [
-            "username"
-          ],
+          "columns": ["username"],
           "isUnique": true
         },
         "citizens_did_unique": {
           "name": "citizens_did_unique",
-          "columns": [
-            "did"
-          ],
+          "columns": ["did"],
           "isUnique": true
         },
         "idx_citizens_username": {
           "name": "idx_citizens_username",
-          "columns": [
-            "username"
-          ],
+          "columns": ["username"],
           "isUnique": false
         },
         "idx_citizens_did": {
           "name": "idx_citizens_did",
-          "columns": [
-            "did"
-          ],
+          "columns": ["did"],
           "isUnique": true
         },
         "idx_citizens_user": {
           "name": "idx_citizens_user",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -765,12 +723,8 @@
           "name": "citizens_user_id_users_id_fk",
           "tableFrom": "citizens",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -862,12 +816,8 @@
           "name": "contracts_user_id_users_id_fk",
           "tableFrom": "contracts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1039,9 +989,7 @@
       "indexes": {
         "email_accounts_email_unique": {
           "name": "email_accounts_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },
@@ -1154,12 +1102,8 @@
           "name": "email_attachments_email_id_emails_id_fk",
           "tableFrom": "email_attachments",
           "tableTo": "emails",
-          "columnsFrom": [
-            "email_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["email_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1214,12 +1158,8 @@
           "name": "email_labels_account_id_email_accounts_id_fk",
           "tableFrom": "email_labels",
           "tableTo": "email_accounts",
-          "columnsFrom": [
-            "account_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["account_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1252,12 +1192,8 @@
           "name": "email_message_labels_message_id_emails_id_fk",
           "tableFrom": "email_message_labels",
           "tableTo": "emails",
-          "columnsFrom": [
-            "message_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["message_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1265,22 +1201,15 @@
           "name": "email_message_labels_label_id_email_labels_id_fk",
           "tableFrom": "email_message_labels",
           "tableTo": "email_labels",
-          "columnsFrom": [
-            "label_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["label_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "email_message_labels_message_id_label_id_pk": {
-          "columns": [
-            "message_id",
-            "label_id"
-          ],
+          "columns": ["message_id", "label_id"],
           "name": "email_message_labels_message_id_label_id_pk"
         }
       },
@@ -1356,12 +1285,8 @@
           "name": "email_threads_account_id_email_accounts_id_fk",
           "tableFrom": "email_threads",
           "tableTo": "email_accounts",
-          "columnsFrom": [
-            "account_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["account_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1564,37 +1489,27 @@
       "indexes": {
         "emails_message_id_unique": {
           "name": "emails_message_id_unique",
-          "columns": [
-            "message_id"
-          ],
+          "columns": ["message_id"],
           "isUnique": true
         },
         "idx_emails_account_id": {
           "name": "idx_emails_account_id",
-          "columns": [
-            "account_id"
-          ],
+          "columns": ["account_id"],
           "isUnique": false
         },
         "idx_emails_thread_id": {
           "name": "idx_emails_thread_id",
-          "columns": [
-            "thread_id"
-          ],
+          "columns": ["thread_id"],
           "isUnique": false
         },
         "idx_emails_created_at": {
           "name": "idx_emails_created_at",
-          "columns": [
-            "created_at"
-          ],
+          "columns": ["created_at"],
           "isUnique": false
         },
         "idx_emails_message_id": {
           "name": "idx_emails_message_id",
-          "columns": [
-            "message_id"
-          ],
+          "columns": ["message_id"],
           "isUnique": false
         }
       },
@@ -1603,12 +1518,8 @@
           "name": "emails_account_id_email_accounts_id_fk",
           "tableFrom": "emails",
           "tableTo": "email_accounts",
-          "columnsFrom": [
-            "account_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["account_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1616,12 +1527,8 @@
           "name": "emails_thread_id_email_threads_id_fk",
           "tableFrom": "emails",
           "tableTo": "email_threads",
-          "columnsFrom": [
-            "thread_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["thread_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1726,9 +1633,7 @@
       "indexes": {
         "idx_gov_status": {
           "name": "idx_gov_status",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         }
       },
@@ -1737,12 +1642,8 @@
           "name": "gov_proposals_creator_id_users_id_fk",
           "tableFrom": "gov_proposals",
           "tableTo": "users",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["creator_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1809,10 +1710,7 @@
       "indexes": {
         "unique_proposal_voter": {
           "name": "unique_proposal_voter",
-          "columns": [
-            "proposal_id",
-            "voter_id"
-          ],
+          "columns": ["proposal_id", "voter_id"],
           "isUnique": true
         }
       },
@@ -1821,12 +1719,8 @@
           "name": "gov_votes_proposal_id_gov_proposals_id_fk",
           "tableFrom": "gov_votes",
           "tableTo": "gov_proposals",
-          "columnsFrom": [
-            "proposal_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["proposal_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1834,12 +1728,8 @@
           "name": "gov_votes_voter_id_users_id_fk",
           "tableFrom": "gov_votes",
           "tableTo": "users",
-          "columnsFrom": [
-            "voter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["voter_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1952,10 +1842,7 @@
       "indexes": {
         "idx_integration_provider_env": {
           "name": "idx_integration_provider_env",
-          "columns": [
-            "provider",
-            "environment"
-          ],
+          "columns": ["provider", "environment"],
           "isUnique": true
         }
       },
@@ -2017,12 +1904,8 @@
           "name": "integration_secret_versions_secret_id_integration_secrets_id_fk",
           "tableFrom": "integration_secret_versions",
           "tableTo": "integration_secrets",
-          "columnsFrom": [
-            "secret_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["secret_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2030,12 +1913,8 @@
           "name": "integration_secret_versions_created_by_users_id_fk",
           "tableFrom": "integration_secret_versions",
           "tableTo": "users",
-          "columnsFrom": [
-            "created_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2131,10 +2010,7 @@
       "indexes": {
         "idx_integration_secret_config_key": {
           "name": "idx_integration_secret_config_key",
-          "columns": [
-            "config_id",
-            "key_name"
-          ],
+          "columns": ["config_id", "key_name"],
           "isUnique": true
         }
       },
@@ -2143,12 +2019,8 @@
           "name": "integration_secrets_config_id_integration_configs_id_fk",
           "tableFrom": "integration_secrets",
           "tableTo": "integration_configs",
-          "columnsFrom": [
-            "config_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["config_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2156,12 +2028,8 @@
           "name": "integration_secrets_owner_user_id_users_id_fk",
           "tableFrom": "integration_secrets",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2169,12 +2037,8 @@
           "name": "integration_secrets_updated_by_users_id_fk",
           "tableFrom": "integration_secrets",
           "tableTo": "users",
-          "columnsFrom": [
-            "updated_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["updated_by"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2257,23 +2121,17 @@
       "indexes": {
         "membership_cards_card_hash_unique": {
           "name": "membership_cards_card_hash_unique",
-          "columns": [
-            "card_hash"
-          ],
+          "columns": ["card_hash"],
           "isUnique": true
         },
         "idx_cards_citizen": {
           "name": "idx_cards_citizen",
-          "columns": [
-            "citizen_id"
-          ],
+          "columns": ["citizen_id"],
           "isUnique": false
         },
         "idx_cards_hash": {
           "name": "idx_cards_hash",
-          "columns": [
-            "card_hash"
-          ],
+          "columns": ["card_hash"],
           "isUnique": true
         }
       },
@@ -2282,12 +2140,8 @@
           "name": "membership_cards_citizen_id_citizens_id_fk",
           "tableFrom": "membership_cards",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2347,9 +2201,7 @@
       "indexes": {
         "password_resets_token_unique": {
           "name": "password_resets_token_unique",
-          "columns": [
-            "token"
-          ],
+          "columns": ["token"],
           "isUnique": true
         }
       },
@@ -2358,12 +2210,8 @@
           "name": "password_resets_user_id_users_id_fk",
           "tableFrom": "password_resets",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2423,16 +2271,12 @@
       "indexes": {
         "idx_comments_post": {
           "name": "idx_comments_post",
-          "columns": [
-            "post_id"
-          ],
+          "columns": ["post_id"],
           "isUnique": false
         },
         "idx_comments_user": {
           "name": "idx_comments_user",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -2441,12 +2285,8 @@
           "name": "post_comments_post_id_posts_id_fk",
           "tableFrom": "post_comments",
           "tableTo": "posts",
-          "columnsFrom": [
-            "post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2454,12 +2294,8 @@
           "name": "post_comments_user_id_users_id_fk",
           "tableFrom": "post_comments",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2504,10 +2340,7 @@
       "indexes": {
         "unique_post_user_favorite": {
           "name": "unique_post_user_favorite",
-          "columns": [
-            "post_id",
-            "user_id"
-          ],
+          "columns": ["post_id", "user_id"],
           "isUnique": true
         }
       },
@@ -2516,12 +2349,8 @@
           "name": "post_favorites_post_id_posts_id_fk",
           "tableFrom": "post_favorites",
           "tableTo": "posts",
-          "columnsFrom": [
-            "post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -2529,12 +2358,8 @@
           "name": "post_favorites_user_id_users_id_fk",
           "tableFrom": "post_favorites",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2714,30 +2539,22 @@
       "indexes": {
         "posts_slug_unique": {
           "name": "posts_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         },
         "idx_posts_slug": {
           "name": "idx_posts_slug",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": false
         },
         "idx_posts_status": {
           "name": "idx_posts_status",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "idx_posts_category": {
           "name": "idx_posts_category",
-          "columns": [
-            "category"
-          ],
+          "columns": ["category"],
           "isUnique": false
         }
       },
@@ -2746,12 +2563,8 @@
           "name": "posts_author_id_users_id_fk",
           "tableFrom": "posts",
           "tableTo": "users",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["author_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2893,44 +2706,32 @@
       "indexes": {
         "re_properties_uuid_unique": {
           "name": "re_properties_uuid_unique",
-          "columns": [
-            "uuid"
-          ],
+          "columns": ["uuid"],
           "isUnique": true
         },
         "re_properties_slug_unique": {
           "name": "re_properties_slug_unique",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         },
         "re_properties_registration_number_rgi_unique": {
           "name": "re_properties_registration_number_rgi_unique",
-          "columns": [
-            "registration_number_rgi"
-          ],
+          "columns": ["registration_number_rgi"],
           "isUnique": true
         },
         "idx_re_properties_slug": {
           "name": "idx_re_properties_slug",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": false
         },
         "idx_re_properties_status": {
           "name": "idx_re_properties_status",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "idx_re_properties_type": {
           "name": "idx_re_properties_type",
-          "columns": [
-            "property_type"
-          ],
+          "columns": ["property_type"],
           "isUnique": false
         }
       },
@@ -2939,12 +2740,8 @@
           "name": "re_properties_citizen_id_citizens_id_fk",
           "tableFrom": "re_properties",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3017,16 +2814,12 @@
       "indexes": {
         "idx_re_audit_action": {
           "name": "idx_re_audit_action",
-          "columns": [
-            "action"
-          ],
+          "columns": ["action"],
           "isUnique": false
         },
         "idx_re_audit_property": {
           "name": "idx_re_audit_property",
-          "columns": [
-            "property_id"
-          ],
+          "columns": ["property_id"],
           "isUnique": false
         }
       },
@@ -3035,12 +2828,8 @@
           "name": "re_property_audit_log_property_id_re_properties_id_fk",
           "tableFrom": "re_property_audit_log",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3048,12 +2837,8 @@
           "name": "re_property_audit_log_actor_citizen_id_citizens_id_fk",
           "tableFrom": "re_property_audit_log",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "actor_citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3184,9 +2969,7 @@
       "indexes": {
         "idx_re_blockchain_contract": {
           "name": "idx_re_blockchain_contract",
-          "columns": [
-            "contract_address"
-          ],
+          "columns": ["contract_address"],
           "isUnique": false
         }
       },
@@ -3195,12 +2978,8 @@
           "name": "re_property_blockchain_property_id_re_properties_id_fk",
           "tableFrom": "re_property_blockchain",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3336,12 +3115,8 @@
           "name": "re_property_construction_property_id_re_properties_id_fk",
           "tableFrom": "re_property_construction",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3478,9 +3253,7 @@
       "indexes": {
         "idx_re_documents_type": {
           "name": "idx_re_documents_type",
-          "columns": [
-            "doc_type"
-          ],
+          "columns": ["doc_type"],
           "isUnique": false
         }
       },
@@ -3489,12 +3262,8 @@
           "name": "re_property_documents_property_id_re_properties_id_fk",
           "tableFrom": "re_property_documents",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3599,12 +3368,8 @@
           "name": "re_property_infrastructure_property_id_re_properties_id_fk",
           "tableFrom": "re_property_infrastructure",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3722,12 +3487,8 @@
           "name": "re_property_land_property_id_re_properties_id_fk",
           "tableFrom": "re_property_land",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3893,16 +3654,12 @@
       "indexes": {
         "idx_re_location_city": {
           "name": "idx_re_location_city",
-          "columns": [
-            "city"
-          ],
+          "columns": ["city"],
           "isUnique": false
         },
         "idx_re_location_state": {
           "name": "idx_re_location_state",
-          "columns": [
-            "state"
-          ],
+          "columns": ["state"],
           "isUnique": false
         }
       },
@@ -3911,12 +3668,8 @@
           "name": "re_property_location_property_id_re_properties_id_fk",
           "tableFrom": "re_property_location",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4005,9 +3758,7 @@
       "indexes": {
         "idx_re_media_type": {
           "name": "idx_re_media_type",
-          "columns": [
-            "media_type"
-          ],
+          "columns": ["media_type"],
           "isUnique": false
         }
       },
@@ -4016,12 +3767,8 @@
           "name": "re_property_media_property_id_re_properties_id_fk",
           "tableFrom": "re_property_media",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4127,12 +3874,8 @@
           "name": "re_property_owners_property_id_re_properties_id_fk",
           "tableFrom": "re_property_owners",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4140,12 +3883,8 @@
           "name": "re_property_owners_citizen_id_citizens_id_fk",
           "tableFrom": "re_property_owners",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -4254,9 +3993,7 @@
       "indexes": {
         "idx_re_pricing_type": {
           "name": "idx_re_pricing_type",
-          "columns": [
-            "price_type"
-          ],
+          "columns": ["price_type"],
           "isUnique": false
         }
       },
@@ -4265,12 +4002,8 @@
           "name": "re_property_pricing_property_id_re_properties_id_fk",
           "tableFrom": "re_property_pricing",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4381,12 +4114,8 @@
           "name": "re_property_professionals_property_id_re_properties_id_fk",
           "tableFrom": "re_property_professionals",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4460,16 +4189,12 @@
       "indexes": {
         "idx_re_workflow_step": {
           "name": "idx_re_workflow_step",
-          "columns": [
-            "step"
-          ],
+          "columns": ["step"],
           "isUnique": false
         },
         "idx_re_workflow_status": {
           "name": "idx_re_workflow_status",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         }
       },
@@ -4478,12 +4203,8 @@
           "name": "re_property_workflow_property_id_re_properties_id_fk",
           "tableFrom": "re_property_workflow",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -4491,12 +4212,8 @@
           "name": "re_property_workflow_actor_citizen_id_citizens_id_fk",
           "tableFrom": "re_property_workflow",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "actor_citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["actor_citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -4572,12 +4289,8 @@
           "name": "re_survey_points_property_id_re_properties_id_fk",
           "tableFrom": "re_survey_points",
           "tableTo": "re_properties",
-          "columnsFrom": [
-            "property_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["property_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4667,16 +4380,12 @@
       "indexes": {
         "idx_treasury_type": {
           "name": "idx_treasury_type",
-          "columns": [
-            "type"
-          ],
+          "columns": ["type"],
           "isUnique": false
         },
         "idx_treasury_citizen": {
           "name": "idx_treasury_citizen",
-          "columns": [
-            "citizen_id"
-          ],
+          "columns": ["citizen_id"],
           "isUnique": false
         }
       },
@@ -4685,12 +4394,8 @@
           "name": "treasury_ledger_citizen_id_citizens_id_fk",
           "tableFrom": "treasury_ledger",
           "tableTo": "citizens",
-          "columnsFrom": [
-            "citizen_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["citizen_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -4743,10 +4448,7 @@
       "indexes": {
         "idx_notifications_user_type": {
           "name": "idx_notifications_user_type",
-          "columns": [
-            "user_id",
-            "type"
-          ],
+          "columns": ["user_id", "type"],
           "isUnique": true
         }
       },
@@ -4755,12 +4457,8 @@
           "name": "user_notification_settings_user_id_users_id_fk",
           "tableFrom": "user_notification_settings",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4849,9 +4547,7 @@
       "indexes": {
         "idx_sessions_user": {
           "name": "idx_sessions_user",
-          "columns": [
-            "user_id"
-          ],
+          "columns": ["user_id"],
           "isUnique": false
         }
       },
@@ -4860,12 +4556,8 @@
           "name": "user_sessions_user_id_users_id_fk",
           "tableFrom": "user_sessions",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4917,10 +4609,7 @@
       "indexes": {
         "idx_socials_user_provider": {
           "name": "idx_socials_user_provider",
-          "columns": [
-            "user_id",
-            "provider"
-          ],
+          "columns": ["user_id", "provider"],
           "isUnique": true
         }
       },
@@ -4929,12 +4618,8 @@
           "name": "user_social_links_user_id_users_id_fk",
           "tableFrom": "user_social_links",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5087,30 +4772,22 @@
       "indexes": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         },
         "idx_users_email": {
           "name": "idx_users_email",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": false
         },
         "idx_users_role": {
           "name": "idx_users_role",
-          "columns": [
-            "role"
-          ],
+          "columns": ["role"],
           "isUnique": false
         },
         "idx_users_citizen_id_unique": {
           "name": "idx_users_citizen_id_unique",
-          "columns": [
-            "citizen_id"
-          ],
+          "columns": ["citizen_id"],
           "isUnique": true
         }
       },
@@ -5170,9 +4847,7 @@
       "indexes": {
         "wallets_address_unique": {
           "name": "wallets_address_unique",
-          "columns": [
-            "address"
-          ],
+          "columns": ["address"],
           "isUnique": true
         }
       },
@@ -5181,12 +4856,8 @@
           "name": "wallets_user_id_users_id_fk",
           "tableFrom": "wallets",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

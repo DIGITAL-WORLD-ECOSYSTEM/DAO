@@ -244,3 +244,27 @@ Antes da certificação do módulo Banking, o Treasury deve aprovar:
 ## 19. Nota de Consolidação Técnica
 O módulo atingiu a pontuação arquitetural de **9,8/10** em clareza executiva e governança técnica.
 A principal descoberta não é a ausência de Blockchain ou Event Sourcing; é que o Treasury atual não possui as garantias mínimas de integridade financeira para servir como fundação de um módulo Banking. Este documento passa a servir como **Guia Obrigatório** para toda evolução futura, substituindo narrativas antigas pela verdade física do sistema.
+
+---
+
+## 20. Subsistema de Comunicação (E-mail) - Production Gate
+**Data da Certificação:** 28/07/2026
+
+Embora este ASOT foque primordialmente no core financeiro, o sistema de E-mail foi estabilizado em Produção e é vital para a notificação de transações e compliance do ecossistema ASPPIBRA. A rastreabilidade abaixo assegura o entendimento das próximas evoluções.
+
+### Arquitetura de Produção Consolidada
+* **Domínio Global:** `asppibra.com` (Padrão internacional, substituindo o `.com.br`).
+* **Inbound (Recebimento):** Cloudflare Email Routing → Cloudflare Worker (Processamento) → Banco de Dados D1 (`emails`, `emailThreads`).
+* **Outbound (Envio):** Interface Dashboard → API Worker → Resend API.
+* **Persistência:** Drizzle ORM sincronizando o estado das caixas de entrada e saída no SQLite Distribuído (D1).
+
+### Correções Críticas Aplicadas (Production Gate)
+1. **Integridade de Chaves Estrangeiras (Accounts):** E-mails de entrada perdiam a associação (ficando como *órfãos*) ou geravam erros 555 na Cloudflare ao tentar vincular a um ID inexistente. **Ação Executada:** O Worker passou a mapear o destinatário (ex: `suporte@asppibra.com`) e injetar o `accountId` dinâmico em tempo de execução. Correção retroativa aplicada no banco de dados.
+2. **Mockagem da API:** A rota de listagem `/api/platform/email/list` retornava listas vazias fictícias. **Ação Executada:** A integração real com a tabela `emails` foi implementada, ativando gráficos e contadores de tempo real no frontend.
+3. **Ghost Loading e Quebras de CI/CD:** O frontend realizava *polling* em endpoints deprecados (`/folders`), causando piscadas intermitentes no menu lateral. O *Linter* travou o deploy devido à formatação de funções (*arrow-body-style*). **Ação Executada:** Limpeza do SWR problemático, pacificação do Linter e re-deploy concluído com sucesso.
+4. **UX de Visualização:** As _tags_ HTML poluíam os resumos das mensagens. Foi implementado um limpador Regex instantâneo para preservar o estilo *Plain Text* nos previews.
+
+### Roadmap Futuro (Comunicação / Notificações)
+* **Webhooks (Tracking):** Integrar os webhooks da Resend para atualizar o status do e-mail no Banco D1 (Entregue, Lido, Falha, Spam).
+* **Módulo de Campanhas em Massa:** Ferramenta corporativa de despachos gerais da Tesouraria e Governança para os Cidadãos.
+* **Transacional Ativo:** Interceptar eventos estruturais (ex: `TreasuryDepositCreated`) para envio automático de recibos PDF e avisos aos membros.

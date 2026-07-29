@@ -14,19 +14,19 @@ import { ContentfulStatusCode } from 'hono/utils/http-status';
  * @param status Código HTTP que aceita conteúdo (ex: 200, 201)
  */
 export const success = (
-	c: Context,
-	message: string = 'Operação realizada com sucesso',
-	data: any = null,
-	status: ContentfulStatusCode = 200,
+  c: Context,
+  message: string = 'Operação realizada com sucesso',
+  data: any = null,
+  status: ContentfulStatusCode = 200
 ) => {
-	return c.json(
-		{
-			success: true,
-			message,
-			data,
-		},
-		status,
-	);
+  return c.json(
+    {
+      success: true,
+      message,
+      data,
+    },
+    status
+  );
 };
 
 /**
@@ -36,13 +36,18 @@ export const success = (
  * @param errors Detalhes técnicos ou de validação
  * @param status Código HTTP que aceita conteúdo (ex: 400, 401, 404, 500)
  */
-export const error = (c: Context, message: string, errors: any = null, status: ContentfulStatusCode = 400) => {
-	return c.json(
-		{
-			success: false,
-			message,
-			errors,
-		},
-		status,
-	);
+export const error = (
+  c: Context,
+  message: string,
+  errors: any = null,
+  status: ContentfulStatusCode = 400
+) => {
+  return c.json(
+    {
+      success: false,
+      message,
+      errors,
+    },
+    status
+  );
 };

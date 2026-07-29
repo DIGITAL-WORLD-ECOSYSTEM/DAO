@@ -8,9 +8,9 @@ import { Bindings } from '../../types/bindings';
  * Platform Identity & Membership Routes
  */
 
-type AppType = { 
-  Bindings: Bindings; 
-  Variables: { db: any } 
+type AppType = {
+  Bindings: Bindings;
+  Variables: { db: any };
 };
 
 const identity = new Hono<AppType>();
@@ -50,16 +50,16 @@ identity.get('/profile/:username', async (c) => {
     if (!result) {
       return c.json({ success: false, message: 'Perfil não encontrado' }, 404);
     }
-    
+
     // Sanitização de dados sensíveis
     const { password, ...userSafe } = result.users;
-    
+
     return c.json({
       success: true,
       data: {
         ...result.citizens,
-        user: userSafe
-      }
+        user: userSafe,
+      },
     });
   } catch (e: any) {
     return c.json({ success: false, message: 'Erro ao buscar perfil', error: e.message }, 500);
@@ -99,11 +99,14 @@ identity.get('/me/card', verifyAuth, async (c) => {
       success: true,
       data: {
         citizen,
-        card
-      }
+        card,
+      },
     });
   } catch (e: any) {
-    return c.json({ success: false, message: 'Erro ao recuperar carterinha', error: e.message }, 500);
+    return c.json(
+      { success: false, message: 'Erro ao recuperar carterinha', error: e.message },
+      500
+    );
   }
 });
 
@@ -128,7 +131,7 @@ identity.get('/list', async (c) => {
       .from(citizens)
       .innerJoin(users, eq(citizens.userId, users.id))
       .limit(100);
-    
+
     return c.json({ success: true, data: list });
   } catch (e: any) {
     return c.json({ success: false, error: e.message }, 500);
@@ -142,25 +145,31 @@ identity.post('/', verifyAuth, async (c) => {
 
   try {
     // 1. Criar usuário (Auth)
-    const [newUser] = await db.insert(users).values({
-      email: body.email,
-      password: body.password || '$argon2id$v=19$m=65536,t=3,p=4$default_hash', // Senha padrão ou hash
-      role: body.role || 'citizen',
-      kycStatus: body.kycStatus || 'pending',
-      avatarUrl: body.avatarUrl,
-    }).returning();
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        email: body.email,
+        password: body.password || '$argon2id$v=19$m=65536,t=3,p=4$default_hash', // Senha padrão ou hash
+        role: body.role || 'citizen',
+        kycStatus: body.kycStatus || 'pending',
+        avatarUrl: body.avatarUrl,
+      })
+      .returning();
 
     // 2. Criar cidadão vinculado
-    const [newCitizen] = await db.insert(citizens).values({
-      userId: newUser.id,
-      username: body.username || body.email.split('@')[0],
-      firstName: body.firstName,
-      lastName: body.lastName,
-      cargoOsc: body.cargoOsc,
-      phoneNumber: body.phoneNumber,
-      nacionalidade: body.nacionalidade,
-      did: body.did || `did:dao:asppibra:${newUser.id}`,
-    }).returning();
+    const [newCitizen] = await db
+      .insert(citizens)
+      .values({
+        userId: newUser.id,
+        username: body.username || body.email.split('@')[0],
+        firstName: body.firstName,
+        lastName: body.lastName,
+        cargoOsc: body.cargoOsc,
+        phoneNumber: body.phoneNumber,
+        nacionalidade: body.nacionalidade,
+        did: body.did || `did:dao:asppibra:${newUser.id}`,
+      })
+      .returning();
 
     return c.json({ success: true, data: { citizen: newCitizen, user: newUser } }, 201);
   } catch (e: any) {
@@ -180,20 +189,26 @@ identity.patch('/:id', verifyAuth, async (c) => {
     if (!citizen) return c.json({ success: false, message: 'Cidadão não encontrado' }, 404);
 
     // 2. Atualizar tabela citizens
-    await db.update(citizens).set({
-      firstName: body.firstName,
-      lastName: body.lastName,
-      cargoOsc: body.cargoOsc,
-      phoneNumber: body.phoneNumber,
-      nacionalidade: body.nacionalidade,
-    }).where(eq(citizens.id, id));
+    await db
+      .update(citizens)
+      .set({
+        firstName: body.firstName,
+        lastName: body.lastName,
+        cargoOsc: body.cargoOsc,
+        phoneNumber: body.phoneNumber,
+        nacionalidade: body.nacionalidade,
+      })
+      .where(eq(citizens.id, id));
 
     // 3. Atualizar tabela users
-    await db.update(users).set({
-      role: body.role,
-      kycStatus: body.kycStatus,
-      avatarUrl: body.avatarUrl,
-    }).where(eq(users.id, citizen.userId));
+    await db
+      .update(users)
+      .set({
+        role: body.role,
+        kycStatus: body.kycStatus,
+        avatarUrl: body.avatarUrl,
+      })
+      .where(eq(users.id, citizen.userId));
 
     return c.json({ success: true, message: 'Perfil atualizado com sucesso' });
   } catch (e: any) {
@@ -214,9 +229,18 @@ identity.delete('/:id', verifyAuth, async (c) => {
     await db.update(auditLogs).set({ citizenId: null }).where(eq(auditLogs.citizenId, id));
 
     if (citizen.userId) {
-      await db.update(auditLogs).set({ actorId: null }).where(eq(auditLogs.actorId, citizen.userId));
-      await db.update(bounties).set({ creatorId: null }).where(eq(bounties.creatorId, citizen.userId));
-      await db.update(bounties).set({ assigneeId: null }).where(eq(bounties.assigneeId, citizen.userId));
+      await db
+        .update(auditLogs)
+        .set({ actorId: null })
+        .where(eq(auditLogs.actorId, citizen.userId));
+      await db
+        .update(bounties)
+        .set({ creatorId: null })
+        .where(eq(bounties.creatorId, citizen.userId));
+      await db
+        .update(bounties)
+        .set({ assigneeId: null })
+        .where(eq(bounties.assigneeId, citizen.userId));
 
       await db.delete(users).where(eq(users.id, citizen.userId));
     }
@@ -235,18 +259,27 @@ identity.post('/bulk-delete', verifyAuth, async (c) => {
 
   try {
     for (const id of ids) {
-       const [citizen] = await db.select().from(citizens).where(eq(citizens.id, id)).limit(1);
-       if (citizen) {
-         await db.update(auditLogs).set({ citizenId: null }).where(eq(auditLogs.citizenId, id));
+      const [citizen] = await db.select().from(citizens).where(eq(citizens.id, id)).limit(1);
+      if (citizen) {
+        await db.update(auditLogs).set({ citizenId: null }).where(eq(auditLogs.citizenId, id));
 
-         if (citizen.userId) {
-           await db.update(auditLogs).set({ actorId: null }).where(eq(auditLogs.actorId, citizen.userId));
-           await db.update(bounties).set({ creatorId: null }).where(eq(bounties.creatorId, citizen.userId));
-           await db.update(bounties).set({ assigneeId: null }).where(eq(bounties.assigneeId, citizen.userId));
-           await db.delete(users).where(eq(users.id, citizen.userId));
-         }
-         await db.delete(citizens).where(eq(citizens.id, id));
-       }
+        if (citizen.userId) {
+          await db
+            .update(auditLogs)
+            .set({ actorId: null })
+            .where(eq(auditLogs.actorId, citizen.userId));
+          await db
+            .update(bounties)
+            .set({ creatorId: null })
+            .where(eq(bounties.creatorId, citizen.userId));
+          await db
+            .update(bounties)
+            .set({ assigneeId: null })
+            .where(eq(bounties.assigneeId, citizen.userId));
+          await db.delete(users).where(eq(users.id, citizen.userId));
+        }
+        await db.delete(citizens).where(eq(citizens.id, id));
+      }
     }
     return c.json({ success: true, message: `${ids.length} usuários removidos` });
   } catch (e: any) {

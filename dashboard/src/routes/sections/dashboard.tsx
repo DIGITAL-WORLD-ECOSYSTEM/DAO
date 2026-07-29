@@ -124,6 +124,7 @@ export const dashboardRoutes: RouteObject[] = [
           </RoleBasedGuard>
         ) 
       },
+      { path: 'chat', element: <ChatPage /> },
       {
         path: 'analytics',
         element: <AdminGuardOutlet />,

@@ -16,19 +16,19 @@ const compliance = new Hono<AppType>();
  * Protegido por Zero-Trust signature. Valida schema de entrada via Zod.
  */
 compliance.post('/kyc/submit', authSignature, zValidator('json', kycSubmitSchema), async (c) => {
-	const { userId, documentType } = c.req.valid('json');
-	const db = c.get('db');
+  const { userId, documentType } = c.req.valid('json');
+  const db = c.get('db');
 
-	await db.update(users).set({ kycStatus: 'pending' }).where(eq(users.id, userId));
+  await db.update(users).set({ kycStatus: 'pending' }).where(eq(users.id, userId));
 
-	await db.insert(auditLogs).values({
-		action: 'KYC_SUBMITTED',
-		actorId: userId,
-		status: 'success',
-		metadata: { documentType },
-	});
+  await db.insert(auditLogs).values({
+    action: 'KYC_SUBMITTED',
+    actorId: userId,
+    status: 'success',
+    metadata: { documentType },
+  });
 
-	return c.json({ success: true, message: 'Documentos enviados para revisão.' });
+  return c.json({ success: true, message: 'Documentos enviados para revisão.' });
 });
 
 /**
@@ -37,32 +37,35 @@ compliance.post('/kyc/submit', authSignature, zValidator('json', kycSubmitSchema
  * Valida schema de entrada via Zod.
  */
 compliance.post('/kyc/review', zValidator('json', kycReviewSchema), async (c) => {
-	const { userId, status, reason } = c.req.valid('json');
-	const adminKey = c.req.header('x-admin-key') ?? '';
-	const db = c.get('db');
+  const { userId, status, reason } = c.req.valid('json');
+  const adminKey = c.req.header('x-admin-key') ?? '';
+  const db = c.get('db');
 
-	// Guard: ADMIN_PASSWORD deve estar configurado como secret no Cloudflare
-	const adminPassword = c.env.ADMIN_PASSWORD;
-	if (!adminPassword) {
-		return c.json({ success: false, message: 'Configuração de segurança ausente. Contate o administrador.' }, 500);
-	}
+  // Guard: ADMIN_PASSWORD deve estar configurado como secret no Cloudflare
+  const adminPassword = c.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    return c.json(
+      { success: false, message: 'Configuração de segurança ausente. Contate o administrador.' },
+      500
+    );
+  }
 
-	// SEC-02: Comparação em tempo constante (previne timing attacks)
-	// Rejeita também se adminKey estiver vazio
-	if (!adminKey || !timingSafeEqual(adminKey, adminPassword)) {
-		return c.json({ success: false, message: 'Unauthorized' }, 401);
-	}
+  // SEC-02: Comparação em tempo constante (previne timing attacks)
+  // Rejeita também se adminKey estiver vazio
+  if (!adminKey || !timingSafeEqual(adminKey, adminPassword)) {
+    return c.json({ success: false, message: 'Unauthorized' }, 401);
+  }
 
-	await db.update(users).set({ kycStatus: status }).where(eq(users.id, userId));
+  await db.update(users).set({ kycStatus: status }).where(eq(users.id, userId));
 
-	await db.insert(auditLogs).values({
-		action: `KYC_${status.toUpperCase()}`,
-		actorId: userId,
-		status: 'success',
-		metadata: { reason },
-	});
+  await db.insert(auditLogs).values({
+    action: `KYC_${status.toUpperCase()}`,
+    actorId: userId,
+    status: 'success',
+    metadata: { reason },
+  });
 
-	return c.json({ success: true, message: `Status KYC atualizado para: ${status}` });
+  return c.json({ success: true, message: `Status KYC atualizado para: ${status}` });
 });
 
 export default compliance;
