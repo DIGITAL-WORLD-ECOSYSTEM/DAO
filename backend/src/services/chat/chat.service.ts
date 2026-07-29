@@ -14,6 +14,10 @@ export class ChatService {
     return this.repository.getUserConversations(userId);
   }
 
+  async isUserInConversation(userId: number, conversationId: string) {
+    return this.repository.isUserInConversation(conversationId, userId);
+  }
+
   async createConversation(userId: number, data: CreateConversationDto) {
     // Validação básica
     if (data.type === 'single' && data.participantIds.length !== 1) {

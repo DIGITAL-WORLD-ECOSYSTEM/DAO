@@ -242,9 +242,10 @@ app.onError((err, c) => {
 import { handleEmailEvent } from './workers/email.worker';
 import { handleQueueEvent } from './workers/queue.worker';
 import { ChatQueueWorker } from './workers/chat-queue.worker';
+import { ChatRoomDO } from './workers/durable/chat-room-do';
 import type { ForwardableEmailMessage } from '@cloudflare/workers-types';
 
-export { app }; // Export for testing
+export { app, ChatRoomDO }; // Export for testing and Cloudflare Bindings
 export default {
 	fetch: app.fetch,
 

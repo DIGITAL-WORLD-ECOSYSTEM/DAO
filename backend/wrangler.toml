@@ -94,3 +94,11 @@ max_batch_size = 50
 max_batch_timeout = 2
 max_retries = 3
 dead_letter_queue = "chat-pipeline-dlq"
+
+[[durable_objects.bindings]]
+name = "CHAT_ROOM"
+class_name = "ChatRoomDO"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["ChatRoomDO"]

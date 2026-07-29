@@ -59,6 +59,9 @@ export type Bindings = {
 	EMAIL_PIPELINE_QUEUE: Queue<any>;
 	CHAT_PIPELINE_QUEUE: Queue<any>;
 	R2_EMAIL_ATTACHMENTS: R2Bucket;
+	
+	// 8. Durable Objects
+	CHAT_ROOM: DurableObjectNamespace;
 };
 
 /**
