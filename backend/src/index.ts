@@ -35,6 +35,7 @@ import identityRouter from './routes/platform/identity';
 import governanceRouter from './routes/platform/governance';
 import treasuryRouter from './routes/platform/treasury';
 import emailRouter from './routes/platform/email';
+import chatRouter from './routes/platform/chat';
 import devosRouter from './routes/platform/devos';
 import devosDatabaseRouter from './routes/platform/devos-database';
 
@@ -215,6 +216,7 @@ app.route('/api/products/exchange', exchangeRouter);
 app.route('/api/platform/governance', governanceRouter);
 app.route('/api/platform/treasury', treasuryRouter);
 app.route('/api/platform/email', emailRouter);
+app.route('/api/platform/chat', chatRouter);
 app.route('/api/platform/devos', devosRouter); // DevOS API & Secrets Vault
 app.route('/api/platform/devos/database', devosDatabaseRouter); // DevOS API & Secrets Vault
 app.route('/api/posts', blogRouter); // SocialFi Integration

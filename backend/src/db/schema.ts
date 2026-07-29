@@ -1177,3 +1177,79 @@ export const emailEvents = sqliteTable('email_events', {
 	metadata: text('metadata', { mode: 'json' }).$type<EmailEventMetadata>(),
 	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
 });
+
+// === 14. CHAT (MENSAGERIA INSTANTÂNEA) ===
+
+export const chatConversations = sqliteTable('chat_conversations', {
+	id: text('id').primaryKey(),
+	type: text('type', { enum: ['single', 'group'] }).notNull(),
+	category: text('category', { enum: ['ai', 'ticket', 'p2p', 'dao', 'system'] }).notNull(),
+	title: text('title'),
+	description: text('description'),
+	ownerId: integer('owner_id').references(() => users.id),
+	status: text('status').default('active'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+	deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+});
+
+export const chatParticipants = sqliteTable('chat_participants', {
+	conversationId: text('conversation_id').references(() => chatConversations.id).notNull(),
+	userId: integer('user_id').references(() => users.id).notNull(),
+	role: text('role').default('member'),
+	joinedAt: integer('joined_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+	lastReadMessageId: text('last_read_message_id'),
+	lastReadAt: integer('last_read_at', { mode: 'timestamp' }),
+	muted: integer('muted', { mode: 'boolean' }).default(false),
+	archived: integer('archived', { mode: 'boolean' }).default(false),
+	pinned: integer('pinned', { mode: 'boolean' }).default(false),
+}, (t) => ({
+	pk: primaryKey({ columns: [t.conversationId, t.userId] }),
+	convoIdx: index('idx_chat_participants_convo').on(t.conversationId),
+	userIdx: index('idx_chat_participants_user').on(t.userId),
+}));
+
+export const chatMessages = sqliteTable('chat_messages', {
+	id: text('id').primaryKey(),
+	conversationId: text('conversation_id').references(() => chatConversations.id).notNull(),
+	senderId: integer('sender_id').references(() => users.id), // Nullable for system messages
+	type: text('type').default('text'),
+	body: text('body').notNull(),
+	status: text('status').default('sent'), // sent, delivered, read, edited, deleted
+	replyTo: text('reply_to'), // Self-referencing chatMessages.id handled at app level to avoid circular deps
+	metadata: text('metadata', { mode: 'json' }),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+	editedAt: integer('edited_at', { mode: 'timestamp' }),
+	deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+}, (t) => ({
+	convoIdx: index('idx_chat_messages_convo').on(t.conversationId),
+	createdAtIdx: index('idx_chat_messages_created_at').on(t.createdAt),
+}));
+
+export const chatAttachments = sqliteTable('chat_attachments', {
+	id: text('id').primaryKey(),
+	messageId: text('message_id').references(() => chatMessages.id).notNull(),
+	r2Key: text('r2_key').notNull(),
+	mime: text('mime'),
+	size: integer('size'),
+	width: integer('width'),
+	height: integer('height'),
+	duration: integer('duration'), // Para áudios/vídeos
+});
+
+export const chatReadReceipts = sqliteTable('chat_read_receipts', {
+	messageId: text('message_id').references(() => chatMessages.id).notNull(),
+	userId: integer('user_id').references(() => users.id).notNull(),
+	readAt: integer('read_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+}, (t) => ({
+	pk: primaryKey({ columns: [t.messageId, t.userId] }),
+}));
+
+export const chatEvents = sqliteTable('chat_events', {
+	id: text('id').primaryKey(),
+	conversationId: text('conversation_id').references(() => chatConversations.id).notNull(),
+	event: text('event').notNull(),
+	userId: integer('user_id').references(() => users.id), // Quem disparou o evento
+	metadata: text('metadata', { mode: 'json' }),
+	createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+});
