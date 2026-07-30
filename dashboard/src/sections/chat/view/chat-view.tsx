@@ -19,11 +19,13 @@ import { useMockedUser } from 'src/auth/hooks';
 import { ChatNav } from '../chat-nav';
 import { ChatLayout } from '../layout';
 import { ChatRoom } from '../chat-room';
+import { ChatKpiBar } from '../chat-kpi-bar';
+import { ChatDashboard } from '../chat-dashboard';
 import { ChatMessageList } from '../chat-message-list';
 import { ChatMessageInput } from '../chat-message-input';
-import { ChatHeaderDetails } from '../chat-header-details';
-import { ChatHeaderCompose } from '../chat-header-compose';
 import { useCollapseNav } from '../hooks/use-collapse-nav';
+import { ChatHeaderCompose } from '../chat-header-compose';
+import { ChatHeaderDetails } from '../chat-header-details';
 
 // ----------------------------------------------------------------------
 
@@ -70,8 +72,8 @@ export function ChatView() {
 
   const filteredParticipants: IChatParticipant[] = conversation
     ? conversation.participants.filter(
-        (participant: IChatParticipant) => participant.id !== `${user?.id}`
-      )
+      (participant: IChatParticipant) => participant.id !== `${user?.id}`
+    )
     : [];
 
   return (
@@ -85,6 +87,7 @@ export function ChatView() {
 
       <ChatLayout
         slots={{
+          kpiBar: <ChatKpiBar />,
           header: selectedConversationId ? (
             <ChatHeaderDetails
               collapseNav={roomNav}
@@ -120,11 +123,7 @@ export function ChatView() {
                   />
                 )
               ) : (
-                <EmptyContent
-                  title="Good morning!"
-                  description="Write something awesome..."
-                  imgUrl={`${CONFIG.assetsDir}/assets/icons/empty/ic-chat-active.svg`}
-                />
+                <ChatDashboard />
               )}
 
               <ChatMessageInput

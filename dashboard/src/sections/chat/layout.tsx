@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 type ChatLayoutProps = React.ComponentProps<'div'> & {
   sx?: SxProps<Theme>;
   slots: {
+    kpiBar?: React.ReactNode;
     nav: React.ReactNode;
     main: React.ReactNode;
     header: React.ReactNode;
@@ -17,16 +18,20 @@ type ChatLayoutProps = React.ComponentProps<'div'> & {
 export function ChatLayout({ slots, sx, ...other }: ChatLayoutProps) {
   return (
     <LayoutRoot sx={sx} {...other}>
-      <LayoutNav>{slots.nav}</LayoutNav>
+      {slots.kpiBar && <LayoutKpiBar>{slots.kpiBar}</LayoutKpiBar>}
+      
+      <LayoutMiddle>
+        <LayoutNav>{slots.nav}</LayoutNav>
 
-      <LayoutContainer>
-        <LayoutHeader>{slots.header}</LayoutHeader>
+        <LayoutContainer>
+          <LayoutHeader>{slots.header}</LayoutHeader>
 
-        <LayoutContent>
-          <LayoutMain>{slots.main}</LayoutMain>
-          <LayoutDetails>{slots.details}</LayoutDetails>
-        </LayoutContent>
-      </LayoutContainer>
+          <LayoutContent>
+            <LayoutMain>{slots.main}</LayoutMain>
+            <LayoutDetails>{slots.details}</LayoutDetails>
+          </LayoutContent>
+        </LayoutContainer>
+      </LayoutMiddle>
     </LayoutRoot>
   );
 }
@@ -37,10 +42,23 @@ const LayoutRoot = styled('div')(({ theme }) => ({
   minHeight: 0,
   flex: '1 1 0',
   display: 'flex',
+  flexDirection: 'column',
   position: 'relative',
   boxShadow: theme.vars.customShadows.card,
   borderRadius: Number(theme.shape.borderRadius) * 2,
   backgroundColor: theme.vars.palette.background.paper,
+}));
+
+const LayoutKpiBar = styled('div')(() => ({
+  flexShrink: 0,
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const LayoutMiddle = styled('div')(() => ({
+  display: 'flex',
+  flex: '1 1 auto',
+  minHeight: 0,
 }));
 
 const LayoutHeader = styled('div')(({ theme }) => ({

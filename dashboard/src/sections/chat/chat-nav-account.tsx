@@ -11,6 +11,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
@@ -125,7 +126,7 @@ export function ChatNavAccount() {
   );
 
   return (
-    <>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
       <Badge
         variant={status}
         badgeContent=" "
@@ -142,7 +143,16 @@ export function ChatNavAccount() {
         </Avatar>
       </Badge>
 
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 'fontWeightBold' }}>
+          {user?.displayName}
+        </Typography>
+        <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}>
+          {user?.role || 'Administrador'} • ASPPIBRA
+        </Typography>
+      </Box>
+
       {renderMenuActions()}
-    </>
+    </Box>
   );
 }

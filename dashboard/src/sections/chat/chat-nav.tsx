@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Drawer from '@mui/material/Drawer';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -36,7 +38,7 @@ import { initialConversation } from './utils/initial-conversation';
 
 // ----------------------------------------------------------------------
 
-const NAV_WIDTH = 320;
+const NAV_WIDTH = 380;
 const NAV_COLLAPSE_WIDTH = 96;
 
 type Props = {
@@ -212,7 +214,7 @@ export function ChatNav({
         fullWidth
         value={searchContacts.query}
         onChange={(event) => handleSearchContacts(event.target.value)}
-        placeholder="Search contacts..."
+        placeholder="Pesquisar contatos ou mensagens..."
         slotProps={{
           input: {
             startAdornment: (
@@ -222,7 +224,17 @@ export function ChatNav({
             ),
           },
         }}
-        sx={{ mt: 2.5 }}
+        sx={{
+          mt: 2.5,
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 1.5,
+            bgcolor: 'background.neutral',
+            transition: (theme) => theme.transitions.create(['background-color', 'border-color']),
+            '&.Mui-focused': {
+              bgcolor: 'background.paper',
+            },
+          },
+        }}
       />
     </ClickAwayListener>
   );
@@ -236,52 +248,47 @@ export function ChatNav({
     { value: 'system', label: 'Sistema', icon: 'solar:bell-bing-bold' },
   ];
 
-  const renderTabs = () => (
-    <Box sx={{ px: 2.5, pb: 2 }}>
-      <Tabs
-        value={currentTab}
-        onChange={(e, newValue) => setCurrentTab(newValue)}
-        variant="scrollable"
-        scrollButtons="auto"
-        allowScrollButtonsMobile
-        sx={{
-          minHeight: 36,
-          '& .MuiTab-root': {
-            minHeight: 36,
-            minWidth: 60,
-            px: 1,
-            py: 0.5,
-            fontSize: '0.75rem',
-            fontWeight: 'bold',
-          },
-        }}
-      >
-        {TABS.map((tab) => (
-          <Tab
-            key={tab.value}
-            value={tab.value}
-            label={collapseDesktop ? '' : tab.label}
-            icon={<Iconify icon={tab.icon as any} width={16} />}
-            iconPosition="start"
-            sx={{ mx: 0.5, borderRadius: 1, '&.Mui-selected': { bgcolor: 'action.selected' } }}
-          />
-        ))}
-      </Tabs>
-
+  const renderFilterDropdown = () => (
+    <Box sx={{ px: 2.5, pb: 2, borderBottom: (theme) => `solid 1px ${theme.vars.palette.divider}` }}>
       {!collapseDesktop && (
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, px: 1 }}>
-          <Typography
-            variant="caption"
-            sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}
-          >
-            {currentTab === 'all' && `${conversations.allIds.length} conversas no total`}
-            {currentTab === 'ai' && 'Assistente operacional'}
-            {currentTab === 'ticket' && `${filteredConversationIds.length} tickets abertos`}
-            {currentTab === 'p2p' && 'Mesa de operações Segura'}
-            {currentTab === 'dao' && `${filteredConversationIds.length} propostas ativas`}
-            {currentTab === 'system' && 'Notificações da rede'}
-          </Typography>
-        </Box>
+        <Select
+          fullWidth
+          size="small"
+          value={currentTab}
+          onChange={(e) => setCurrentTab(e.target.value as string)}
+          displayEmpty
+          renderValue={(selected) => {
+            const selectedTab = TABS.find((tab) => tab.value === selected);
+            return (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Iconify icon={(selectedTab?.icon as any) || 'solar:hashtag-bold'} width={18} sx={{ color: 'text.disabled' }} />
+                <Typography variant="body2" sx={{ fontWeight: 'fontWeightMedium' }}>
+                  {selectedTab?.label || 'Filtrar por...'}
+                </Typography>
+              </Box>
+            );
+          }}
+          sx={{
+            borderRadius: 1.5,
+            bgcolor: 'background.paper',
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'divider',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'text.disabled',
+            },
+            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'primary.main',
+            },
+          }}
+        >
+          {TABS.map((tab) => (
+            <MenuItem key={tab.value} value={tab.value}>
+              <Iconify icon={tab.icon as any} width={20} sx={{ mr: 1.5, color: 'text.secondary' }} />
+              {tab.label}
+            </MenuItem>
+          ))}
+        </Select>
       )}
     </Box>
   );
@@ -319,7 +326,7 @@ export function ChatNav({
 
       <Box sx={{ p: 2.5, pt: 0 }}>{!collapseDesktop && renderSearchInput()}</Box>
 
-      {renderTabs()}
+      {renderFilterDropdown()}
 
       {loading ? (
         renderLoading()

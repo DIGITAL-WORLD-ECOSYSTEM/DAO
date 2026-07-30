@@ -18,6 +18,8 @@ import { fToNow } from 'src/utils/format-time';
 
 import { clickConversation } from 'src/actions/chat';
 
+import { Iconify } from 'src/components/iconify';
+
 import { useMockedUser } from 'src/auth/hooks';
 
 import { getNavItem } from './utils/get-nav-item';
@@ -89,7 +91,19 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
           py: 1.5,
           px: 2.5,
           gap: 2,
-          ...(selected && { bgcolor: 'action.selected' }),
+          borderRadius: 1.5,
+          mb: 0.5,
+          transition: (theme) => theme.transitions.create('all'),
+          ...(selected && { 
+            bgcolor: (theme) => theme.vars.palette.primary.lighter,
+            border: (theme) => `solid 1px ${theme.vars.palette.primary.light}`,
+          }),
+          ...(!selected && {
+            border: 'solid 1px transparent',
+            '&:hover': {
+              bgcolor: 'action.hover',
+            }
+          })
         }}
       >
         <Badge
@@ -102,51 +116,56 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
 
         {!collapse && (
           <>
-            <ListItemText
-              primary={displayName}
-              secondary={displayText}
-              slotProps={{
-                primary: { noWrap: true },
-                secondary: {
-                  noWrap: true,
-                  sx: {
-                    ...(conversation.unreadCount && {
-                      color: 'text.primary',
-                      fontWeight: 'fontWeightSemiBold',
-                    }),
-                  },
-                },
-              }}
-            />
+            <Box sx={{ flexGrow: 1, minWidth: 0, overflow: 'hidden' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                <Typography variant="subtitle2" noWrap sx={{ flexGrow: 1, ...(selected && { color: 'primary.main' }) }}>
+                  {displayName}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  {/* Pinned Icon Mock */}
+                  <Iconify icon={"solar:pin-bold" as any} width={14} sx={{ color: 'text.disabled' }} />
+                  <Typography variant="caption" sx={{ color: conversation.unreadCount ? 'primary.main' : 'text.disabled', fontWeight: 'fontWeightMedium' }}>
+                    {fToNow(lastActivity)}
+                  </Typography>
+                </Box>
+              </Box>
 
-            <Box
-              sx={{
-                display: 'flex',
-                alignSelf: 'stretch',
-                alignItems: 'flex-end',
-                flexDirection: 'column',
-              }}
-            >
-              <Typography
-                noWrap
-                variant="body2"
-                component="span"
-                sx={{ mb: 1.5, fontSize: 12, color: 'text.disabled' }}
-              >
-                {fToNow(lastActivity)}
-              </Typography>
-
-              {!!conversation.unreadCount && (
-                <Box
-                  component="span"
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                {/* Typing Indicator Mock */}
+                {/* {isTyping ? ( ... ) : ( ... )} */}
+                <Typography
+                  variant="body2"
+                  noWrap
                   sx={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    bgcolor: 'info.main',
+                    color: conversation.unreadCount ? 'text.primary' : 'text.secondary',
+                    fontWeight: conversation.unreadCount ? 'fontWeightBold' : 'fontWeightRegular',
                   }}
-                />
-              )}
+                >
+                  {displayText}
+                </Typography>
+
+                {!!conversation.unreadCount && (
+                  <Box
+                    component="span"
+                    sx={{
+                      flexShrink: 0,
+                      minWidth: 20,
+                      height: 20,
+                      px: 0.75,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 10,
+                      bgcolor: 'primary.main',
+                      color: 'primary.contrastText',
+                      fontSize: 10,
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {conversation.unreadCount}
+                  </Box>
+                )}
+              </Box>
             </Box>
           </>
         )}

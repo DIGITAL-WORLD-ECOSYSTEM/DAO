@@ -11,6 +11,7 @@ import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
@@ -52,33 +53,63 @@ export function ChatHeaderDetails({ collapseNav, participants, loading, conversa
   }, [lgUp]);
 
   const renderGroup = () => (
-    <AvatarGroup
-      max={3}
-      sx={{
-        [`& .${avatarGroupClasses.avatar}`]: {
-          width: 32,
-          height: 32,
-        },
-      }}
-    >
-      {participants.map((participant) => (
-        <Avatar key={participant.id} alt={participant.name} src={participant.avatarUrl} />
-      ))}
-    </AvatarGroup>
+    <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
+      <Badge variant="online" badgeContent=" ">
+        <AvatarGroup
+          max={3}
+          sx={{
+            [`& .${avatarGroupClasses.avatar}`]: {
+              width: 32,
+              height: 32,
+            },
+          }}
+        >
+          {participants.map((participant) => (
+            <Avatar key={participant.id} alt={participant.name} src={participant.avatarUrl} />
+          ))}
+        </AvatarGroup>
+      </Badge>
+
+      <ListItemText
+        primary={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'fontWeightBold' }}>
+              Grupo
+            </Typography>
+          </Box>
+        }
+        secondary={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, typography: 'caption', color: 'text.secondary', fontWeight: 'fontWeightMedium' }}>
+            <Box component="span" sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: 'success.main' }} />
+            Online • {participants.length} membros - TI
+          </Box>
+        }
+      />
+    </Box>
   );
 
   const renderSingle = () => (
     <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-      <Badge variant={singleParticipant?.status} badgeContent=" ">
+      <Badge variant={singleParticipant?.status || 'online'} badgeContent=" ">
         <Avatar src={singleParticipant?.avatarUrl} alt={singleParticipant?.name} />
       </Badge>
 
       <ListItemText
-        primary={singleParticipant?.name}
+        primary={
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'fontWeightBold' }}>{singleParticipant?.name}</Typography>
+            {conversation?.chatCategory === 'ticket' && (
+              <Box component="span" sx={{ px: 1, py: 0.25, borderRadius: 1, typography: 'overline', bgcolor: 'warning.lighter', color: 'warning.dark' }}>
+                Suporte
+              </Box>
+            )}
+          </Box>
+        }
         secondary={
-          singleParticipant?.status === 'offline'
-            ? fToNow(singleParticipant?.lastActivity)
-            : singleParticipant?.status
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, typography: 'caption', color: 'text.secondary', fontWeight: 'fontWeightMedium' }}>
+            <Box component="span" sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: singleParticipant?.status === 'offline' ? 'text.disabled' : 'success.main' }} />
+            {singleParticipant?.status === 'offline' ? 'Offline' : 'Online'} • Administrador - ASPPIBRA
+          </Box>
         }
       />
     </Box>
@@ -187,7 +218,11 @@ export function ChatHeaderDetails({ collapseNav, participants, loading, conversa
       <Box sx={{ display: 'flex', alignItems: 'center', p: 2, pb: 1, width: 1 }}>
         {isGroup ? renderGroup() : renderSingle()}
 
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+          <IconButton>
+            <Iconify icon="eva:search-fill" />
+          </IconButton>
+
           <IconButton>
             <Iconify icon="solar:phone-bold" />
           </IconButton>
@@ -195,15 +230,20 @@ export function ChatHeaderDetails({ collapseNav, participants, loading, conversa
           <IconButton>
             <Iconify icon="solar:videocamera-record-bold" />
           </IconButton>
+          
+          <Divider orientation="vertical" flexItem sx={{ mx: 1, height: 24, my: 'auto' }} />
 
-          <IconButton onClick={handleToggleNav}>
-            <Iconify
-              icon={!collapseDesktop ? 'custom:sidebar-unfold-fill' : 'custom:sidebar-fold-fill'}
-            />
-          </IconButton>
-
-          <IconButton onClick={menuActions.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
+          <IconButton 
+            onClick={handleToggleNav}
+            sx={{
+              color: !collapseDesktop ? 'primary.main' : 'default',
+              bgcolor: !collapseDesktop ? 'primary.lighter' : 'transparent',
+              '&:hover': {
+                bgcolor: !collapseDesktop ? 'primary.lighter' : 'action.hover',
+              }
+            }}
+          >
+            <Iconify icon="solar:info-circle-bold" />
           </IconButton>
         </Box>
       </Box>

@@ -2,14 +2,19 @@ import type { BoxProps } from '@mui/material/Box';
 import type { UseNavCollapseReturn } from './hooks/use-collapse-nav';
 import type { IChatParticipant, IChatConversation } from 'src/types/chat';
 
+import { useState } from 'react';
+
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
 import { ChatRoomGroup } from './chat-room-group';
@@ -19,8 +24,7 @@ import { ChatRoomAttachments } from './chat-room-attachments';
 
 // ----------------------------------------------------------------------
 
-const NAV_WIDTH = 280;
-
+const NAV_WIDTH = 320;
 const NAV_DRAWER_WIDTH = 320;
 
 type Props = BoxProps & {
@@ -42,13 +46,14 @@ export function ChatRoom({
 }: Props) {
   const { collapseDesktop, openMobile, onCloseMobile } = collapseNav;
 
+  const [currentTab, setCurrentTab] = useState('info');
+
   const isGroup = participants.length > 1;
 
-  const attachments = messages.map((msg) => msg.attachments).flat(1) || [];
+  const attachments = messages?.map((msg) => msg.attachments).flat(1) || [];
 
   const handleP2PAction = (action: string) => {
     toast.success(`Navegando para: ${action}`);
-    console.log(`[AUDIT] Action: ${action} initiated in P2P room ${conversation?.id}`);
   };
 
   const renderContextSpecificContent = () => {
@@ -129,23 +134,122 @@ export function ChatRoom({
     return null;
   };
 
+  const TABS = [
+    { value: 'info', label: 'Info' },
+    { value: 'files', label: 'Arquivos' },
+    { value: 'participants', label: 'Membros' },
+    { value: 'settings', label: 'Config' },
+  ];
+
   const renderContent = () =>
     loading ? (
       <ChatRoomSkeleton />
     ) : (
-      <Scrollbar>
-        <div>
-          {isGroup ? (
-            <ChatRoomGroup participants={participants} />
-          ) : (
-            <ChatRoomSingle participant={participants[0]} />
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: 1 }}>
+        {/* Modular Tabs Row */}
+        <Box sx={{ px: 2, pt: 1, borderBottom: (theme) => `solid 1px ${theme.vars.palette.divider}` }}>
+          <Tabs
+            value={currentTab}
+            onChange={(e, newValue) => setCurrentTab(newValue)}
+            variant="scrollable"
+            sx={{
+              minHeight: 48,
+              '& .MuiTab-root': {
+                minHeight: 48,
+                minWidth: 72,
+                px: 2,
+                fontWeight: 'fontWeightSemiBold',
+              },
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab key={tab.value} value={tab.value} label={tab.label} />
+            ))}
+          </Tabs>
+        </Box>
+
+        <Scrollbar sx={{ flexGrow: 1 }}>
+          {currentTab === 'info' && (
+            <Box>
+              <Box sx={{ p: 3, textAlign: 'center' }}>
+                {isGroup ? (
+                  <ChatRoomGroup participants={participants} />
+                ) : (
+                  <ChatRoomSingle participant={participants[0]} />
+                )}
+              </Box>
+
+              <Stack spacing={2} sx={{ p: 2 }}>
+                <Box sx={{ p: 2, bgcolor: 'background.neutral', borderRadius: 1.5, border: (theme) => `solid 1px ${theme.vars.palette.divider}` }}>
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="overline" sx={{ color: 'text.disabled', display: 'block', mb: 0.5 }}>
+                        Departamento
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                        <Iconify icon={"solar:case-bold" as any} width={16} sx={{ color: 'text.secondary' }} />
+                        {isGroup ? 'TI & Desenvolvimento' : 'ASPPIBRA'}
+                      </Box>
+                    </Box>
+                    <Box>
+                      <Typography variant="overline" sx={{ color: 'text.disabled', display: 'block', mb: 0.5 }}>
+                        Contato / DID
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, typography: 'body2', fontWeight: 'fontWeightMedium' }}>
+                        <Iconify icon="solar:letter-bold" width={16} sx={{ color: 'text.secondary' }} />
+                        did:asppibra:{conversation?.id?.split('-')[0] || 'unknown'}
+                      </Box>
+                    </Box>
+                  </Stack>
+                </Box>
+                
+                {renderContextSpecificContent()}
+              </Stack>
+            </Box>
           )}
 
-          {renderContextSpecificContent()}
+          {currentTab === 'files' && (
+            <Box sx={{ p: 2 }}>
+              <ChatRoomAttachments attachments={attachments} />
+            </Box>
+          )}
 
-          <ChatRoomAttachments attachments={attachments} />
-        </div>
-      </Scrollbar>
+          {currentTab === 'participants' && (
+            <Box sx={{ p: 3, textAlign: 'center' }}>
+              <Iconify icon="solar:users-group-rounded-bold" width={48} sx={{ color: 'text.disabled', mx: 'auto', mb: 2 }} />
+              <Typography variant="body2" sx={{ fontWeight: 'fontWeightMedium', color: 'text.secondary', mb: 2 }}>
+                {participants.length} membros na sala
+              </Typography>
+              <Button size="small" variant="soft" color="primary">
+                Ver Lista Completa
+              </Button>
+            </Box>
+          )}
+
+          {currentTab === 'settings' && (
+            <Stack spacing={2} sx={{ p: 2 }}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="inherit"
+                startIcon={<Iconify icon="solar:bell-off-bold" />}
+                sx={{ justifyContent: 'flex-start' }}
+              >
+                Silenciar Notificações
+              </Button>
+              <Button
+                fullWidth
+                variant="soft"
+                color="error"
+                startIcon={<Iconify icon={"solar:shield-bold" as any} />}
+                sx={{ justifyContent: 'flex-start' }}
+              >
+                Bloquear / Sair da Sala
+              </Button>
+            </Stack>
+          )}
+        </Scrollbar>
+      </Box>
     );
 
   return (
