@@ -79,17 +79,27 @@ O núcleo de apresentação e rotas dinâmicas do dashboard já foi refatorado. 
 * **Objetivo:** Substituir as simulações (`Promise.resolve`) no componente `account-general.tsx`.
 * **Ação:** Implementar upload `multipart/form-data` conectando ao **Cloudflare R2**, salvando a URL gerada de volta no banco de dados SQLite (D1) e atualizando a sessão em tempo real.
 
-### Etapa C: Chat e Comunicação Real-Time
-* **Objetivo:** Romper o isolamento do Módulo de Chat.
-* **Ação:** Substituir totalmente o estado estático e o hook `useMockedUser` por uma arquitetura em tempo real. A decisão da engenharia pendula entre Polling REST otimizado (via Cloudflare Workers) ou WebSocket/SSE gerenciado via Cloudflare Durable Objects.
+### Etapa C: Central de Comunicação (Chat & Real-Time)
+*Status: Descongelado e Refatorado (Fase 1)*
+
+O módulo de Chat (`src/sections/chat`) foi completamente auditado e refatorado para uma arquitetura de classe corporativa, espelhando os padrões Enterprise (Slack/Teams).
+
+**Arquitetura Visual (Three-Pane Layout):**
+* **Barra Global (ChatKpiBar):** Injetada no topo da tela com 100% de largura, atuando como um painel executivo intocável contendo os indicadores vitais (Não Lidas, Online, Tickets, Ações IA, Chamadas). Desvinculada completamente do workspace.
+* **Sidebar (ChatNav):** Painel lateral esquerdo com lista de contatos e conversas. Altamente responsivo (transforma-se nativamente em um Drawer no Mobile).
+* **Main Panel (Workspace):** Orquestrado pela Máquina de Estados no `chat-view.tsx`. Quando não há foco, exibe o `<ChatDashboard>` (Portal e Ações Rápidas). Quando uma conversa é selecionada, injeta o Header nativo, o histórico de mensagens e o Compositor de texto (Input).
+* **Details (ChatRoom):** Gaveta lateral direita exibindo metadados, arquivos anexos e ações financeiras do contrato associado (P2P).
+
+**Arquitetura de Dados (Engine Offline-First):**
+A camada UI é 100% desacoplada do motor de envio de rede. A orquestração ocorre via `ChatRealtimeProvider`:
+* Estado de conexão governado por **WebSocket** (`Connecting`, `Connected`, `Offline`).
+* **Fila Offline nativa (IndexedDB):** Mensagens criadas sem conexão com a internet ou em flutuação de rede são enfileiradas no disco do navegador (`Queued`) e injetadas no WebSocket automaticamente assim que o handshake é reestabelecido, alcançando sincronia perfeita (Status: *Sent / Delivered / Read*).
 
 ---
 
 ## ⚠️ Débitos Técnicos e Módulos Congelados (Known Issues)
 
-> [!WARNING]
-> **Módulo de Chat Congelado:** 
-> Todos os arquivos dentro de `src/sections/chat/*` foram isolados deliberadamente da refatoração arquitetural. Atualmente, este módulo **continua consumindo o Hook estático `useMockedUser`**. Qualquer alteração estrutural no chat deve aguardar o início da **Etapa C** do nosso Roadmap para evitar regressões e trabalho duplo.
+*(Atualmente sem grandes módulos bloqueados. O monolito estrutural do componente `ChatMessageItem` e a virtualização do Scroll de histórico do Chat estão mapeados para refatoração na Fase 2 e 3 do Roadmap da Área de Comunicação).*
 
 ---
 
