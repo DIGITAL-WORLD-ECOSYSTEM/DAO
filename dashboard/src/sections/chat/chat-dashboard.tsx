@@ -26,7 +26,7 @@ const RECENT_FILES = [
     source: 'Maria (Financeiro)',
     date: 'Hoje, 09:30',
     icon: 'solar:document-bold',
-    color: 'error.main',
+    color: 'error',
   },
   {
     name: 'Comprovante_PIX_Ref_892.png',
@@ -34,7 +34,7 @@ const RECENT_FILES = [
     source: 'Ticket #8921',
     date: 'Ontem, 16:45',
     icon: 'solar:gallery-bold',
-    color: 'info.main',
+    color: 'info',
   },
   {
     name: 'Contrato_Prestacao_Servicos.docx',
@@ -42,7 +42,7 @@ const RECENT_FILES = [
     source: 'Nexus AI',
     date: 'Segunda, 10:15',
     icon: 'solar:document-text-bold',
-    color: 'primary.main',
+    color: 'primary',
   },
 ];
 
@@ -71,14 +71,13 @@ export function ChatDashboard() {
           </Typography>
         </Box>
 
-        {/* Content Split */}
         <Box
           sx={{
             display: 'grid',
             gap: 4,
             gridTemplateColumns: {
               xs: 'repeat(1, 1fr)',
-              lg: 'repeat(3, 1fr)',
+              md: 'repeat(2, minmax(0, 1fr))',
             },
           }}
         >
@@ -151,45 +150,55 @@ export function ChatDashboard() {
           </Stack>
 
           {/* Recent Files */}
-          <Stack spacing={3} sx={{ gridColumn: { lg: 'span 2' } }}>
+          <Stack spacing={3}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Iconify icon={"solar:folder-with-files-bold" as any} width={24} sx={{ color: 'info.main' }} />
               <Typography variant="h6">Últimos Anexos na Rede</Typography>
             </Box>
 
-            <Card sx={{ border: `solid 1px ${theme.vars.palette.divider}`, boxShadow: 'none' }}>
-              <Scrollbar>
-                <TableContainer sx={{ minWidth: 600 }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Arquivo</TableCell>
-                        <TableCell>Origem</TableCell>
-                        <TableCell align="right">Data</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {RECENT_FILES.map((file) => (
-                        <TableRow hover key={file.name} sx={{ cursor: 'pointer' }}>
-                          <TableCell>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                              <Iconify icon={file.icon as any} width={24} sx={{ color: file.color }} />
-                              <Typography variant="subtitle2" noWrap>
-                                {file.name}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell sx={{ color: 'text.secondary' }}>{file.source}</TableCell>
-                          <TableCell align="right" sx={{ color: 'text.secondary' }}>
-                            {file.date}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Scrollbar>
-            </Card>
+            <Stack spacing={2}>
+              {RECENT_FILES.map((file) => (
+                <Card
+                  key={file.name}
+                  sx={{
+                    p: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    cursor: 'pointer',
+                    '&:hover': {
+                      borderColor: `${file.color}.main`,
+                      bgcolor: 'action.hover',
+                    },
+                    border: `solid 1px ${theme.vars.palette.divider}`,
+                    boxShadow: 'none',
+                    transition: theme.transitions.create(['border-color', 'background-color']),
+                  }}
+                >
+                  <Box
+                    sx={{
+                      p: 1.5,
+                      borderRadius: 1,
+                      color: `${file.color}.main`,
+                      bgcolor: alpha(theme.palette[file.color as 'error' | 'info' | 'primary'].main, 0.12),
+                    }}
+                  >
+                    <Iconify icon={file.icon as any} width={24} />
+                  </Box>
+                  <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                    <Typography variant="subtitle2" noWrap sx={{ mb: 0.5 }}>
+                      {file.name}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                      {file.source}
+                    </Typography>
+                  </Box>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', flexShrink: 0 }}>
+                    {file.date}
+                  </Typography>
+                </Card>
+              ))}
+            </Stack>
           </Stack>
         </Box>
       </Box>
