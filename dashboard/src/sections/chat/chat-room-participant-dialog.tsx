@@ -4,13 +4,14 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogContent from '@mui/material/DialogContent';
 
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ export function ChatRoomParticipantDialog({ participant, open, onClose }: Props)
       </IconButton>
 
       <DialogContent sx={{ py: 5, px: 3, display: 'flex' }}>
-        <Avatar
+        <IdentityAvatar
           alt={participant.name}
           src={participant.avatarUrl}
           sx={{ width: 96, height: 96, mr: 3 }}

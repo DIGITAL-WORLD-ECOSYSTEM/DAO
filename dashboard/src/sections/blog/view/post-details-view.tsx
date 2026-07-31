@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
@@ -25,6 +24,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { EmptyContent } from 'src/components/empty-content';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { PostDetailsSkeleton } from '../post-skeleton';
 import { PostDetailsHero } from '../post-details-hero';
@@ -157,7 +158,7 @@ export function PostDetailsView({ post, loading, error }: Props) {
               }}
             >
               {post?.favoritePerson.map((person) => (
-                <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
+                <IdentityAvatar key={person.name} alt={person.name} src={person.avatarUrl} />
               ))}
             </AvatarGroup>
           </Box>

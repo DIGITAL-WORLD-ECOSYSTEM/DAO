@@ -5,7 +5,6 @@ import { useState, useCallback } from 'react';
 import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Select from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
@@ -22,12 +21,13 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
 export function ChatNavAccount() {
-  const { user } = useMockedUser();
+  const user = useUserProfile();
 
   const menuActions = usePopover();
 
@@ -57,7 +57,7 @@ export function ChatNavAccount() {
           alignItems: 'center',
         }}
       >
-        <ListItemText primary={user?.displayName} secondary={user?.email} />
+        <ListItemText primary={user?.displayName} secondary={user?.displayEmail} />
 
         <Tooltip title="Log out">
           <IconButton color="error">
@@ -133,14 +133,14 @@ export function ChatNavAccount() {
         overlap="circular"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Avatar
+        <IdentityAvatar
           src={user?.photoURL}
           alt={user?.displayName}
           onClick={menuActions.onOpen}
           sx={{ cursor: 'pointer', width: 48, height: 48 }}
         >
           {user?.displayName?.charAt(0).toUpperCase()}
-        </Avatar>
+        </IdentityAvatar>
       </Badge>
 
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>

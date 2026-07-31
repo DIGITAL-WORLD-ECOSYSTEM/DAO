@@ -9,7 +9,6 @@ import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
@@ -18,6 +17,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { fDateTime } from 'src/utils/format-time';
 
 import { Carousel, useCarousel, CarouselArrowBasicButtons } from 'src/components/carousel';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -101,7 +102,7 @@ function Item({ item, sx, ...other }: ItemProps) {
       {...other}
     >
       <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={item.name} src={item.avatarUrl} sx={{ width: 48, height: 48 }} />
+        <IdentityAvatar alt={item.name} src={item.avatarUrl} sx={{ width: 48, height: 48 }} />
 
         <ListItemText
           primary={item.name}

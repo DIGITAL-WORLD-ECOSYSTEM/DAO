@@ -5,7 +5,6 @@ import { usePopover } from 'minimal-shared/hooks';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
@@ -18,6 +17,8 @@ import { _socials } from 'src/_mock';
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
 import { SearchNotFound } from 'src/components/search-not-found';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -136,7 +137,7 @@ function FriendCard({ item }: FriendCardProps) {
           flexDirection: 'column',
         }}
       >
-        <Avatar alt={item.name} src={item.avatarUrl} sx={{ width: 64, height: 64, mb: 3 }} />
+        <IdentityAvatar alt={item.name} src={item.avatarUrl} sx={{ width: 64, height: 64, mb: 3 }} />
 
         <Link variant="subtitle1" color="text.primary">
           {item.name}

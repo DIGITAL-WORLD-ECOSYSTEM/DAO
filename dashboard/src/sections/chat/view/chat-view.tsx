@@ -14,7 +14,7 @@ import { useGetContacts, useGetConversation, useGetConversations } from 'src/act
 
 import { EmptyContent } from 'src/components/empty-content';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
 
 import { ChatNav } from '../chat-nav';
 import { ChatLayout } from '../layout';
@@ -32,7 +32,7 @@ import { ChatHeaderDetails } from '../chat-header-details';
 export function ChatView() {
   const router = useRouter();
 
-  const { user } = useMockedUser();
+  const user = useUserProfile();
 
   const { contacts } = useGetContacts();
 

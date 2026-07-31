@@ -2,12 +2,13 @@ import type { ListItemButtonProps } from '@mui/material/ListItemButton';
 import type { IMail } from 'src/types/mail';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
 import { fToNow } from 'src/utils/format-time';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -32,9 +33,9 @@ export function MailItem({ mail, selected, sx, ...other }: Props) {
         ]}
         {...other}
       >
-        <Avatar alt={mail.from.name} src={mail.from.avatarUrl ?? ''}>
+        <IdentityAvatar alt={mail.from.name} src={mail.from.avatarUrl ?? ''}>
           {mail.from.name.charAt(0).toUpperCase()}
-        </Avatar>
+        </IdentityAvatar>
 
         <ListItemText
           primary={mail.from.name}

@@ -4,7 +4,6 @@ import type { IPostHero } from 'src/types/blog';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
 import SpeedDial from '@mui/material/SpeedDial';
 import Typography from '@mui/material/Typography';
@@ -18,6 +17,8 @@ import { _socials } from 'src/_mock';
 
 import { Iconify } from 'src/components/iconify';
 import { useFilePreview } from 'src/components/file-thumbnail';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +82,7 @@ export function PostDetailsHero({
                 pb: { xs: 3, md: 8 },
               }}
             >
-              <Avatar
+              <IdentityAvatar
                 alt={author.name}
                 src={author.avatarUrl}
                 sx={{ width: 64, height: 64, mr: 2 }}

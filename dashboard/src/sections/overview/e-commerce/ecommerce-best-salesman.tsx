@@ -4,7 +4,6 @@ import type { TableHeadCellProps } from 'src/components/table';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Avatar from '@mui/material/Avatar';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
@@ -16,6 +15,8 @@ import { Label } from 'src/components/label';
 import { FlagIcon } from 'src/components/flag-icon';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +74,7 @@ function RowItem({ row }: RowItemProps) {
     <TableRow>
       <TableCell>
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={row.name} src={row.avatarUrl} />
+          <IdentityAvatar alt={row.name} src={row.avatarUrl} />
           {row.name}
         </Box>
       </TableCell>

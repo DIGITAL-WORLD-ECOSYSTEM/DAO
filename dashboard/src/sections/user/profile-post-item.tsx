@@ -8,7 +8,6 @@ import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
@@ -24,7 +23,8 @@ import { fShortenNumber } from 'src/utils/format-number';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -60,9 +60,9 @@ export function ProfilePostItem({ post }: Props) {
     <CardHeader
       disableTypography
       avatar={
-        <Avatar src={undefined} alt={displayName}>
+        <IdentityAvatar src={undefined} alt={displayName}>
           {displayName.charAt(0).toUpperCase()}
-        </Avatar>
+        </IdentityAvatar>
       }
       title={
         <Link color="inherit" variant="subtitle1">
@@ -86,7 +86,7 @@ export function ProfilePostItem({ post }: Props) {
     <Stack spacing={1.5} sx={{ px: 3, pb: 2 }}>
       {post.comments.map((comment) => (
         <Box key={comment.id} sx={{ gap: 2, display: 'flex' }}>
-          <Avatar alt={comment.author.name} src={comment.author.avatarUrl} />
+          <IdentityAvatar alt={comment.author.name} src={comment.author.avatarUrl} />
 
           <Paper sx={{ p: 1.5, flexGrow: 1, bgcolor: 'background.neutral' }}>
             <Box
@@ -123,9 +123,9 @@ export function ProfilePostItem({ post }: Props) {
         }),
       ]}
     >
-      <Avatar src={undefined} alt={displayName}>
+      <IdentityAvatar src={undefined} alt={displayName}>
         {displayName.charAt(0).toUpperCase()}
-      </Avatar>
+      </IdentityAvatar>
 
       <InputBase
         fullWidth
@@ -195,7 +195,7 @@ export function ProfilePostItem({ post }: Props) {
           }}
         >
           {post.personLikes.map((person) => (
-            <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
+            <IdentityAvatar key={person.name} alt={person.name} src={person.avatarUrl} />
           ))}
         </AvatarGroup>
       )}

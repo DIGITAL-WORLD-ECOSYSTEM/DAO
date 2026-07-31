@@ -13,14 +13,12 @@ import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/global-config';
 
-import { useAuthContext } from 'src/auth/hooks';
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
 
 // ----------------------------------------------------------------------
 
 export function DevPanelView() {
-  const { user } = useAuthContext();
-  const viewModel = useUserProfile();
+  const user = useUserProfile();
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const nativeRole = 'Nativo do Banco';
@@ -170,7 +168,7 @@ export function DevPanelView() {
                     Nome Completo:
                   </Typography>
                   <Typography variant="body2">
-                    {user?.firstName ? `${user.firstName} ${user.lastName || ''}` : 'N/A'}
+                    {user?.displayName || 'N/A'}
                   </Typography>
                 </Stack>
 
@@ -178,15 +176,15 @@ export function DevPanelView() {
                   <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                     E-mail:
                   </Typography>
-                  <Typography variant="body2">{user?.email || 'N/A'}</Typography>
+                  <Typography variant="body2">{user?.displayEmail || 'N/A'}</Typography>
                 </Stack>
 
                 <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
                   <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                    Decentralized ID (DID):
+                    Web3 Wallet:
                   </Typography>
                   <Typography variant="body2" sx={{ fontFamily: 'monospace', fontSize: 11 }}>
-                    {user?.did || 'Provedor Local Web2.0'}
+                    {user?.walletAddress || 'N/A'}
                   </Typography>
                 </Stack>
               </Stack>

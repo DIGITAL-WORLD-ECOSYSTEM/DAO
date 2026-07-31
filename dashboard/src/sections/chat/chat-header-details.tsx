@@ -6,7 +6,6 @@ import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,10 +15,10 @@ import ListItemText from '@mui/material/ListItemText';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
-import { fToNow } from 'src/utils/format-time';
-
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { ChatHeaderSkeleton } from './chat-skeleton';
 
@@ -65,7 +64,7 @@ export function ChatHeaderDetails({ collapseNav, participants, loading, conversa
           }}
         >
           {participants.map((participant) => (
-            <Avatar key={participant.id} alt={participant.name} src={participant.avatarUrl} />
+            <IdentityAvatar key={participant.id} user={{ displayName: participant.name, displayEmail: '', photoURL: participant.avatarUrl, isWeb3Account: false }} size="sm" />
           ))}
         </AvatarGroup>
       </Badge>
@@ -90,9 +89,11 @@ export function ChatHeaderDetails({ collapseNav, participants, loading, conversa
 
   const renderSingle = () => (
     <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-      <Badge variant={singleParticipant?.status || 'online'} badgeContent=" ">
-        <Avatar src={singleParticipant?.avatarUrl} alt={singleParticipant?.name} />
-      </Badge>
+      <IdentityAvatar
+        user={{ displayName: singleParticipant?.name || '', displayEmail: '', photoURL: singleParticipant?.avatarUrl, isWeb3Account: false }}
+        status={(singleParticipant?.status as any) || 'online'}
+        size="md"
+      />
 
       <ListItemText
         primary={

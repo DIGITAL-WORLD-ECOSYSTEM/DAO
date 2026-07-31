@@ -8,7 +8,6 @@ import type { FileThumbnailProps } from 'src/components/file-thumbnail';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
@@ -19,6 +18,8 @@ import { CONFIG } from 'src/global-config';
 
 import { Iconify } from 'src/components/iconify';
 import { FileThumbnail } from 'src/components/file-thumbnail';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -276,7 +277,7 @@ export function FileItemAvatar({ sharedUsers, sx, ...other }: FileItemAvatarProp
       {...other}
     >
       {sharedUsers.map((person) => (
-        <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
+        <IdentityAvatar key={person.id} alt={person.name} src={person.avatarUrl} />
       ))}
     </AvatarGroup>
   );

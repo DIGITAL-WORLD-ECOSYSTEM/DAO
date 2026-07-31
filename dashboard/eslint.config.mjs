@@ -196,4 +196,20 @@ export default [
   ...eslintTs.configs.recommended,
   reactPlugin.configs.flat.recommended,
   customConfig,
+  {
+    files: ['src/sections/**/*.{js,jsx,ts,tsx}', 'src/layouts/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/use-auth-context', '**/context/jwt/**'],
+              message: 'Architecture Violation (ID-001): Do not bypass the Domain. Use src/auth/facades/* instead.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];

@@ -16,13 +16,11 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 import { fData } from 'src/utils/format-number';
 
-import { updateMyProfile } from 'src/actions/identity';
-
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
-import { useAuthContext } from 'src/auth/hooks/use-auth-context';
+import { useAccountFacade } from 'src/auth/facades/use-account-facade';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +69,7 @@ export const UpdateUserSchema = z.object({
 // ----------------------------------------------------------------------
 
 export function AccountGeneral() {
-  const { user } = useAuthContext();
+  const { user, updateProfile } = useAccountFacade();
 
   const defaultValues: UpdateUserSchemaType = {
     firstName: '',
@@ -220,10 +218,11 @@ export function AccountGeneral() {
       const payload = {
         ...data,
         birthDate: data.birthDate ? data.birthDate.toISOString() : null,
+        country: data.country || undefined,
       };
 
       console.info('Submetendo atualização de perfil:', payload);
-      await updateMyProfile(payload);
+      await updateProfile(payload);
       setLastSaved(new Date());
       toast.success('Perfil atualizado com sucesso!');
     } catch (error) {

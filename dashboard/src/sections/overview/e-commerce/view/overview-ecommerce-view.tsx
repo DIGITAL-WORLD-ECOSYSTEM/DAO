@@ -11,7 +11,7 @@ import {
   _ecommerceLatestProducts,
 } from 'src/_mock';
 
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
 
 import { EcommerceWelcome } from '../ecommerce-welcome';
 import { EcommerceNewProducts } from '../ecommerce-new-products';

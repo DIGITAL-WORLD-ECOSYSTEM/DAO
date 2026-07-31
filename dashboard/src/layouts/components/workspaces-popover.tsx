@@ -5,7 +5,6 @@ import { useState, useCallback } from 'react';
 import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,6 +16,8 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { CustomPopover } from 'src/components/custom-popover';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -127,7 +128,7 @@ export function WorkspacesPopover({ data = [], sx, ...other }: WorkspacesPopover
               onClick={() => handleChangeWorkspace(option)}
               sx={{ height: 48 }}
             >
-              <Avatar alt={option.name} src={option.logo} sx={{ width: 24, height: 24 }} />
+              <IdentityAvatar alt={option.name} src={option.logo} sx={{ width: 24, height: 24 }} />
 
               <Typography
                 noWrap

@@ -4,7 +4,6 @@ import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import Avatar from '@mui/material/Avatar';
 import Drawer from '@mui/material/Drawer';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -20,8 +19,8 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { AnimateBorder } from 'src/components/animate';
 
-import { useAuthContext } from 'src/auth/hooks';
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
+import { IdentityAvatar } from 'src/auth/components';
 
 import { UpgradeBlock } from './nav-upgrade';
 import { AccountButton } from './account-button';
@@ -41,8 +40,7 @@ export type AccountDrawerProps = IconButtonProps & {
 export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
   const pathname = usePathname();
 
-  const { user } = useAuthContext();
-  const { displayName, displayEmail, photoURL } = useUserProfile();
+  const { displayName, displayEmail } = useUserProfile();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
@@ -53,9 +51,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
         primaryBorder: { size: 120, sx: { color: 'primary.main' } },
       }}
     >
-      <Avatar src={photoURL} alt={displayName} sx={{ width: 1, height: 1 }}>
-        {displayName.charAt(0).toUpperCase()}
-      </Avatar>
+      <IdentityAvatar sx={{ width: 1, height: 1 }} />
     </AnimateBorder>
   );
 
@@ -117,8 +113,6 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
     <>
       <AccountButton
         onClick={onOpen}
-        photoURL={photoURL || ''}
-        displayName={displayName}
         sx={sx}
         {...other}
       />

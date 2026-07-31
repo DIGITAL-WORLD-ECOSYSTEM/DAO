@@ -5,7 +5,6 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,6 +16,8 @@ import { AvatarShape } from 'src/assets/illustrations';
 
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ export function UserCard({ user, sx, ...other }: Props) {
           }}
         />
 
-        <Avatar
+        <IdentityAvatar
           alt={user.name}
           src={user.avatarUrl}
           sx={{

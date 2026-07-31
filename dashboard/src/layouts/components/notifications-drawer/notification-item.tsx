@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import SvgIcon from '@mui/material/SvgIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
@@ -10,6 +9,8 @@ import { fToNow } from 'src/utils/format-time';
 
 import { Label } from 'src/components/label';
 import { FileThumbnail } from 'src/components/file-thumbnail';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { notificationIcons } from './icons';
 
@@ -50,7 +51,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   const renderAvatar = () => (
     <ListItemAvatar>
       {notification.avatarUrl ? (
-        <Avatar src={notification.avatarUrl} sx={{ bgcolor: 'background.neutral' }} />
+        <IdentityAvatar src={notification.avatarUrl} sx={{ bgcolor: 'background.neutral' }} />
       ) : (
         <Box
           sx={{

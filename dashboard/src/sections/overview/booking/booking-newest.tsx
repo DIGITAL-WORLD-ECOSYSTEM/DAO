@@ -2,7 +2,6 @@ import type { BoxProps } from '@mui/material/Box';
 import type { IDateValue } from 'src/types/common';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -13,6 +12,8 @@ import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { Carousel, useCarousel, CarouselArrowBasicButtons } from 'src/components/carousel';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -97,7 +98,7 @@ function CarouselItem({ item, sx, ...other }: ItemProps) {
         }}
       >
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={item.name} src={item.avatarUrl} />
+          <IdentityAvatar alt={item.name} src={item.avatarUrl} />
           <ListItemText
             primary={item.name}
             secondary={fDateTime(item.bookedAt)}

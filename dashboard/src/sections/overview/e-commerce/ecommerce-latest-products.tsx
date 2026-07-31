@@ -4,13 +4,14 @@ import type { CardProps } from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
 import CardHeader from '@mui/material/CardHeader';
 
 import { fCurrency } from 'src/utils/format-number';
 
 import { Scrollbar } from 'src/components/scrollbar';
 import { ColorPreview } from 'src/components/color-utils';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +64,7 @@ function Item({ item, sx, ...other }: ItemProps) {
       sx={[{ gap: 2, display: 'flex', alignItems: 'center' }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
-      <Avatar
+      <IdentityAvatar
         variant="rounded"
         alt={item.name}
         src={item.coverUrl}

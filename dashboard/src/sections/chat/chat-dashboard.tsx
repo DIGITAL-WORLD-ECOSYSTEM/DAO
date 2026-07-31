@@ -1,19 +1,13 @@
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
-import TableContainer from '@mui/material/TableContainer';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +41,7 @@ const RECENT_FILES = [
 ];
 
 export function ChatDashboard() {
-  const { user } = useMockedUser();
+  const user = useUserProfile();
   const theme = useTheme();
 
   return (

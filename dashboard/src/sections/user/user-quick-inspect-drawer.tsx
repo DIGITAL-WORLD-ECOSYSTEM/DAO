@@ -3,7 +3,6 @@ import type { IUserItem } from 'src/types/user';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
@@ -14,6 +13,8 @@ import { fDate, fToNow } from 'src/utils/format-time';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +42,7 @@ export function UserQuickInspectDrawer({ open, onClose, currentUser }: Props) {
 
   const renderIdentity = (
     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <Avatar src={currentUser.avatarUrl} alt={currentUser.name} sx={{ width: 96, height: 96, mb: 2 }} />
+      <IdentityAvatar src={currentUser.avatarUrl} alt={currentUser.name} sx={{ width: 96, height: 96, mb: 2 }} />
       <Typography variant="h5" gutterBottom>
         {currentUser.name}
       </Typography>

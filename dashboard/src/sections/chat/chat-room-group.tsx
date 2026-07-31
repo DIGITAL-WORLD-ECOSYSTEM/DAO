@@ -4,10 +4,11 @@ import { useState, useCallback } from 'react';
 import { useBoolean } from 'minimal-shared/hooks';
 
 import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { CollapseButton } from './styles';
 import { ChatRoomParticipantDialog } from './chat-room-participant-dialog';
@@ -38,7 +39,7 @@ export function ChatRoomGroup({ participants }: Props) {
       {participants.map((participant) => (
         <ListItemButton key={participant.id} onClick={() => handleOpen(participant)}>
           <Badge variant={participant.status} badgeContent=" ">
-            <Avatar alt={participant.name} src={participant.avatarUrl} />
+            <IdentityAvatar alt={participant.name} src={participant.avatarUrl} />
           </Badge>
 
           <ListItemText

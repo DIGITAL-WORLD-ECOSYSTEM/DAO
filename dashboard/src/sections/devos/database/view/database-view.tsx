@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
@@ -13,6 +12,8 @@ import axios from 'src/lib/axios';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +60,7 @@ export function DatabaseView() {
       >
         {/* Health Score */}
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-          <Avatar
+          <IdentityAvatar
             sx={{
               width: 80,
               height: 80,
@@ -72,7 +73,7 @@ export function DatabaseView() {
             }}
           >
             {metrics.score || 99}
-          </Avatar>
+          </IdentityAvatar>
           <Stack spacing={0.5}>
             <Typography variant="h6">Database Health</Typography>
             <Typography variant="body2" sx={{ color: 'success.main', fontWeight: 'bold' }}>

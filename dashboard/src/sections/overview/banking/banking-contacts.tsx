@@ -4,7 +4,6 @@ import type { CardProps } from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
@@ -12,6 +11,8 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ function Item({ item, sx, ...other }: ItemProps) {
       sx={[{ gap: 2, display: 'flex', alignItems: 'center' }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
-      <Avatar src={item.avatarUrl} />
+      <IdentityAvatar src={item.avatarUrl} />
 
       <ListItemText primary={item.name} secondary={item.email} />
 

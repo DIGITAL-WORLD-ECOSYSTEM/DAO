@@ -113,8 +113,12 @@ export function buildDisplayAvatar(user: AuthUser | null): string {
  */
 export function transformUserProfile(user: AuthUser | null): UserProfileViewModel {
   return {
+    id: user?.id?.toString(),
     displayName: buildDisplayName(user),
     displayEmail: buildDisplayEmail(user),
+    role: user?.role,
+    address: user?.address || user?.physicalAddress,
+    phoneNumber: user?.phoneNumber,
     walletAddress: extractWalletAddress(user?.did),
     isWeb3Account: checkIsWeb3Account(user),
     photoURL: buildDisplayAvatar(user),

@@ -4,11 +4,12 @@ import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { CollapseButton } from './styles';
 
@@ -29,7 +30,7 @@ export function ChatRoomSingle({ participant }: Props) {
 
   const renderInfo = () => (
     <Stack sx={{ alignItems: 'center', py: 5 }}>
-      <Avatar
+      <IdentityAvatar
         alt={participant?.name}
         src={participant?.avatarUrl}
         sx={{ width: 96, height: 96, mb: 2 }}

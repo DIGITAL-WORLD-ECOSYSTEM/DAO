@@ -5,8 +5,6 @@ import { toast } from 'sonner';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Drawer from '@mui/material/Drawer';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -27,7 +25,7 @@ import { createConversation } from 'src/actions/chat';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
 
 import { ToggleButton } from './styles';
 import { ChatNavItem } from './chat-nav-item';
@@ -58,7 +56,7 @@ export function ChatNav({
 }: Props) {
   const router = useRouter();
 
-  const { user } = useMockedUser();
+  const user = useUserProfile();
 
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
@@ -82,7 +80,7 @@ export function ChatNav({
     () => ({
       id: `${user?.id}`,
       role: `${user?.role}`,
-      email: `${user?.email}`,
+      email: `${user?.displayEmail}`,
       address: `${user?.address}`,
       name: `${user?.displayName}`,
       lastActivity: today(),

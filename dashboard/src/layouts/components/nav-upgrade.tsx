@@ -5,7 +5,6 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
@@ -14,14 +13,13 @@ import { CONFIG } from 'src/global-config';
 
 import { Label } from 'src/components/label';
 
-import { useAuthContext } from 'src/auth/hooks';
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
 export function NavUpgrade({ sx, ...other }: BoxProps) {
-  const { user } = useAuthContext();
-  const { displayName, displayEmail, photoURL } = useUserProfile();
+  const { displayName, displayEmail, photoURL, role } = useUserProfile();
 
   return (
     <Box
@@ -30,9 +28,9 @@ export function NavUpgrade({ sx, ...other }: BoxProps) {
     >
       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         <Box sx={{ position: 'relative' }}>
-          <Avatar src={photoURL} alt={displayName} sx={{ width: 48, height: 48 }}>
+          <IdentityAvatar src={photoURL} alt={displayName} sx={{ width: 48, height: 48 }}>
             {displayName.charAt(0).toUpperCase()}
-          </Avatar>
+          </IdentityAvatar>
 
           <Label
             color="success"
@@ -46,7 +44,7 @@ export function NavUpgrade({ sx, ...other }: BoxProps) {
               borderBottomLeftRadius: 2,
             }}
           >
-            {user?.role?.toUpperCase() || 'USER'}
+            {role?.toUpperCase() || 'USER'}
           </Label>
         </Box>
 

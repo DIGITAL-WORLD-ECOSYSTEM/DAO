@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Collapse from '@mui/material/Collapse';
 import Checkbox from '@mui/material/Checkbox';
@@ -26,6 +25,8 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { EmptyContent } from 'src/components/empty-content';
 import { FileThumbnail } from 'src/components/file-thumbnail';
 import { LoadingScreen } from 'src/components/loading-screen';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { EmailRenderer } from './email-renderer';
 
@@ -177,13 +178,13 @@ export function MailDetails({ mail, renderLabel, error, loading }: Props) {
 
   const renderSender = () => (
     <>
-      <Avatar
+      <IdentityAvatar
         alt={mail?.from.name}
         src={mail?.from.avatarUrl ? `${mail?.from.avatarUrl}` : ''}
         sx={{ mr: 2 }}
       >
         {mail?.from.name.charAt(0).toUpperCase()}
-      </Avatar>
+      </IdentityAvatar>
 
       <Stack spacing={0.5} sx={{ width: 0, flexGrow: 1 }}>
         <Box sx={{ gap: 0.5, display: 'flex' }}>

@@ -4,10 +4,8 @@ import { useCallback, startTransition } from 'react';
 
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import ListItemText from '@mui/material/ListItemText';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ListItemButton from '@mui/material/ListItemButton';
 
@@ -20,7 +18,8 @@ import { clickConversation } from 'src/actions/chat';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
+import { IdentityAvatar } from 'src/auth/components';
 
 import { getNavItem } from './utils/get-nav-item';
 
@@ -34,7 +33,7 @@ type Props = {
 };
 
 export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }: Props) {
-  const { user } = useMockedUser();
+  const user = useUserProfile();
 
   const router = useRouter();
 
@@ -67,20 +66,22 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
     <Badge variant={hasOnlineInGroup ? 'online' : 'invisible'} badgeContent=" ">
       <AvatarGroup variant="compact" sx={{ width: 48, height: 48 }}>
         {participants.slice(0, 2).map((participant) => (
-          <Avatar key={participant.id} alt={participant.name} src={participant.avatarUrl} />
+          <IdentityAvatar 
+            key={participant.id} 
+            user={{ displayName: participant.name, displayEmail: '', photoURL: participant.avatarUrl, isWeb3Account: false }} 
+            size="md" 
+          />
         ))}
       </AvatarGroup>
     </Badge>
   );
 
   const renderSingle = () => (
-    <Badge variant={singleParticipant?.status} badgeContent=" ">
-      <Avatar
-        alt={singleParticipant?.name}
-        src={singleParticipant?.avatarUrl}
-        sx={{ width: 48, height: 48 }}
-      />
-    </Badge>
+    <IdentityAvatar
+      user={{ displayName: singleParticipant?.name || '', displayEmail: '', photoURL: singleParticipant?.avatarUrl, isWeb3Account: false }}
+      status={singleParticipant?.status as any}
+      sx={{ width: 48, height: 48 }}
+    />
   );
 
   return (
@@ -115,8 +116,7 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
         </Badge>
 
         {!collapse && (
-          <>
-            <Box sx={{ flexGrow: 1, minWidth: 0, overflow: 'hidden' }}>
+          <Box sx={{ flexGrow: 1, minWidth: 0, overflow: 'hidden' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
                 <Typography variant="subtitle2" noWrap sx={{ flexGrow: 1, ...(selected && { color: 'primary.main' }) }}>
                   {displayName}
@@ -167,7 +167,6 @@ export function ChatNavItem({ selected, collapse, conversation, onCloseMobile }:
                 )}
               </Box>
             </Box>
-          </>
         )}
       </ListItemButton>
     </Box>

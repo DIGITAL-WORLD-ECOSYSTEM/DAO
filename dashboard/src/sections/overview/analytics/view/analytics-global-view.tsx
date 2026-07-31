@@ -6,7 +6,7 @@ import { _appFeatured } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 import { SeoIllustration } from 'src/assets/illustrations';
 
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
 
 import { AppWelcome } from '../../app/app-welcome';
 import { AppFeatured } from '../../app/app-featured';

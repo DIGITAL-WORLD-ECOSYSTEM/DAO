@@ -2,19 +2,17 @@ import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { m } from 'framer-motion';
 
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 
 import { varTap, varHover, AnimateBorder, transitionTap } from 'src/components/animate';
 
+import { IdentityAvatar } from 'src/auth/components';
+
 // ----------------------------------------------------------------------
 
-export type AccountButtonProps = IconButtonProps & {
-  photoURL: string;
-  displayName: string;
-};
+export type AccountButtonProps = IconButtonProps;
 
-export function AccountButton({ photoURL, displayName, sx, ...other }: AccountButtonProps) {
+export function AccountButton({ sx, ...other }: AccountButtonProps) {
   return (
     <IconButton
       component={m.button}
@@ -32,9 +30,7 @@ export function AccountButton({ photoURL, displayName, sx, ...other }: AccountBu
           secondaryBorder: { sx: { color: 'warning.main' } },
         }}
       >
-        <Avatar src={photoURL} alt={displayName} sx={{ width: 1, height: 1 }}>
-          {displayName?.charAt(0).toUpperCase()}
-        </Avatar>
+        <IdentityAvatar sx={{ width: 1, height: 1 }} />
       </AnimateBorder>
     </IconButton>
   );

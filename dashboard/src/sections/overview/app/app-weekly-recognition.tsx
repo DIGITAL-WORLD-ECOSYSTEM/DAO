@@ -3,11 +3,12 @@ import type { RecognitionItem } from 'src/types/home';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ export function AppWeeklyRecognition({ list, ...other }: Props) {
         {list.map((item) => (
           <Box key={item.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box sx={{ position: 'relative' }}>
-              <Avatar src={item.avatarUrl} alt={item.name} sx={{ width: 48, height: 48 }} />
+              <IdentityAvatar src={item.avatarUrl} alt={item.name} sx={{ width: 48, height: 48 }} />
               <Box
                 sx={{
                   right: -4,

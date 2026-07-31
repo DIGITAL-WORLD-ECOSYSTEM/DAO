@@ -11,7 +11,7 @@ import {
   _weeklyRecognitions,
 } from 'src/_mock/_home';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
 
 import { AppMyActions } from '../app-my-actions';
 import { AppOnboarding } from '../app-onboarding';
@@ -30,7 +30,7 @@ import { AppNetworkGrowth, AppEcosystemNumbers } from '../app-ecosystem-numbers'
 // ----------------------------------------------------------------------
 
 export function OverviewAppView() {
-  const { user } = useMockedUser();
+  const user = useUserProfile();
 
   // Exemplo de Role Based Dashboard Rendering
   // admin, user, partner, etc.

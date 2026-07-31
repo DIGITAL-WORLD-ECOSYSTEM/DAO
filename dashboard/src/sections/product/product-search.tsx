@@ -7,7 +7,6 @@ import match from 'autosuggest-highlight/match';
 import { useDebounce } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Link, { linkClasses } from '@mui/material/Link';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -21,6 +20,8 @@ import { useSearchProducts } from 'src/actions/product';
 
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -121,7 +122,7 @@ export function ProductSearch({ redirectPath, sx }: Props) {
               color="inherit"
               underline="none"
             >
-              <Avatar
+              <IdentityAvatar
                 alt={option.name}
                 src={option.coverUrl}
                 variant="rounded"

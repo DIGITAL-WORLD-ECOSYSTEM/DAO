@@ -6,12 +6,13 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
 import CardHeader from '@mui/material/CardHeader';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +68,7 @@ function Item({ item, index, sx, ...other }: ItemProps) {
       ]}
       {...other}
     >
-      <Avatar alt={item.name} src={item.avatarUrl} />
+      <IdentityAvatar alt={item.name} src={item.avatarUrl} />
 
       <Box sx={{ flex: '1 1 auto' }}>
         <Box sx={{ typography: 'subtitle2' }}>{item.name}</Box>

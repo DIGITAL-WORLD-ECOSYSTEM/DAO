@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import MenuList from '@mui/material/MenuList';
 import Collapse from '@mui/material/Collapse';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,6 +24,8 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +65,7 @@ export function OrderTableRow({ row, selected, onSelectRow, onDeleteRow, details
 
       <TableCell>
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={row.customer.name} src={row.customer.avatarUrl} />
+          <IdentityAvatar alt={row.customer.name} src={row.customer.avatarUrl} />
           <ListItemText
             primary={row.customer.name}
             secondary={row.customer.email}
@@ -152,7 +153,7 @@ export function OrderTableRow({ row, selected, onSelectRow, onDeleteRow, details
                   },
                 })}
               >
-                <Avatar
+                <IdentityAvatar
                   src={item.coverUrl}
                   variant="rounded"
                   sx={{ width: 48, height: 48, mr: 2 }}

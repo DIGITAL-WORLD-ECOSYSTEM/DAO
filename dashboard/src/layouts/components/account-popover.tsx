@@ -16,7 +16,7 @@ import { RouterLink } from 'src/routes/components';
 import { Label } from 'src/components/label';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
 
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';
@@ -117,8 +117,6 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
     <>
       <AccountButton
         onClick={onOpen}
-        photoURL={photoURL || ''}
-        displayName={displayName}
         sx={sx}
         {...other}
       />

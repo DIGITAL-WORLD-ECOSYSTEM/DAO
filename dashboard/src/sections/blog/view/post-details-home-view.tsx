@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
@@ -22,6 +21,8 @@ import { Iconify } from 'src/components/iconify';
 import { Markdown } from 'src/components/markdown';
 import { EmptyContent } from 'src/components/empty-content';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { PostItem } from '../post-item';
 import { PostDetailsSkeleton } from '../post-skeleton';
@@ -142,7 +143,7 @@ export function PostDetailsHomeView({ post, latestPosts, loading, error }: Props
                 }}
               >
                 {post?.favoritePerson.map((person) => (
-                  <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
+                  <IdentityAvatar key={person.name} alt={person.name} src={person.avatarUrl} />
                 ))}
               </AvatarGroup>
             </Box>

@@ -19,7 +19,7 @@ import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
-import { useAuthContext } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ export type UserProvisionSchemaType = z.infer<typeof UserProvisionSchema>;
 
 export function UserCreateForm() {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const { role: userRole } = useUserProfile();
 
   const defaultValues: UserProvisionSchemaType = {
     name: '',
@@ -166,7 +166,7 @@ export function UserCreateForm() {
             <Field.Select slotProps={{ select: { native: true } }} name="role" label="Nível de Acesso">
               <option value="citizen">Cidadão (Acesso Padrão)</option>
               <option value="partner">Parceiro (Institucional)</option>
-              {user?.role === 'dev' && (
+              {userRole === 'dev' && (
                 <>
                   <option value="admin">Administrador (Master)</option>
                   <option value="dev">Desenvolvedor (DevOS)</option>

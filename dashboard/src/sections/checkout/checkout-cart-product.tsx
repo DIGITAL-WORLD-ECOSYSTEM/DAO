@@ -2,7 +2,6 @@ import type { ICheckoutItem, CheckoutContextValue } from 'src/types/checkout';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -15,6 +14,8 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ColorPreview } from 'src/components/color-utils';
 import { NumberInput } from 'src/components/number-input';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ export function CheckoutCartProduct({ row, onDeleteCartItem, onChangeItemQuantit
     <TableRow>
       <TableCell>
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-          <Avatar
+          <IdentityAvatar
             variant="rounded"
             alt={row.name}
             src={row.coverUrl}

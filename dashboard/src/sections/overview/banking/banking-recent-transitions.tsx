@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
@@ -28,6 +27,8 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
 import { CustomPopover } from 'src/components/custom-popover';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -134,7 +135,7 @@ function RowItem({ row }: RowItemProps) {
         }
         sx={{ [`& .${badgeClasses.badge}`]: { p: 0, width: 20 } }}
       >
-        <Avatar
+        <IdentityAvatar
           src={row.avatarUrl || ''}
           sx={{
             width: 48,
@@ -147,7 +148,7 @@ function RowItem({ row }: RowItemProps) {
           {row.category === 'Fitness' && (
             <Iconify icon="solar:dumbbell-large-minimalistic-bold" width={24} />
           )}
-        </Avatar>
+        </IdentityAvatar>
       </Badge>
     </Box>
   );

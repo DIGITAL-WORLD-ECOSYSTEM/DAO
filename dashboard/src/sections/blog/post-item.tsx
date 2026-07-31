@@ -7,7 +7,6 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 
@@ -20,6 +19,8 @@ import { AvatarShape } from 'src/assets/illustrations';
 
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +44,7 @@ export function PostItem({ post, detailsHref, sx, ...other }: PostItemProps) {
           }}
         />
 
-        <Avatar
+        <IdentityAvatar
           alt={post.author.name}
           src={post.author.avatarUrl}
           sx={{
@@ -97,7 +98,7 @@ export function PostItemLatest({ post, index, detailsHref }: PostItemLatestProps
 
   return (
     <Card>
-      <Avatar
+      <IdentityAvatar
         alt={post.author.name}
         src={post.author.avatarUrl}
         sx={{

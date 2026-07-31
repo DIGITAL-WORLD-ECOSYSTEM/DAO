@@ -8,8 +8,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { toast } from 'src/components/snackbar';
 
-import { useAuthContext } from 'src/auth/hooks';
-import { signOut } from 'src/auth/context/jwt/action';
+import { useSessionFacade } from 'src/auth/facades';
 
 // ----------------------------------------------------------------------
 
@@ -20,12 +19,11 @@ type Props = ButtonProps & {
 export function SignOutButton({ onClose, sx, ...other }: Props) {
   const router = useRouter();
 
-  const { checkUserSession } = useAuthContext();
+  const { logout } = useSessionFacade();
 
   const handleLogout = useCallback(async () => {
     try {
-      await signOut();
-      await checkUserSession?.();
+      await logout();
 
       onClose?.();
       router.replace('/login');
@@ -33,7 +31,7 @@ export function SignOutButton({ onClose, sx, ...other }: Props) {
       console.error(error);
       toast.error('Não foi possível sair!');
     }
-  }, [checkUserSession, onClose, router]);
+  }, [logout, onClose, router]);
 
   return (
     <Button

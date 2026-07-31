@@ -6,7 +6,6 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
@@ -23,6 +22,8 @@ import { fCurrency } from 'src/utils/format-number';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 type Props = {
   title?: string;
@@ -127,7 +128,7 @@ function FinancialTransactionsTableRow({ row }: FinancialTransactionsTableRowPro
 
       <TableCell>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Avatar
+          <IdentityAvatar
             sx={{
               width: 36,
               height: 36,
@@ -138,7 +139,7 @@ function FinancialTransactionsTableRow({ row }: FinancialTransactionsTableRowPro
             }}
           >
             {row.counterparty_name?.charAt(0) || '?'}
-          </Avatar>
+          </IdentityAvatar>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'text.primary' }}>
               {row.counterparty_name}

@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
@@ -22,6 +21,8 @@ import { Label } from 'src/components/label';
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -168,7 +169,7 @@ export function PostItemHorizontal({ sx, post, editHref, detailsHref, ...other }
             display: { xs: 'none', sm: 'block' },
           }}
         >
-          <Avatar
+          <IdentityAvatar
             alt={post.author.name}
             src={post.author.avatarUrl}
             sx={{

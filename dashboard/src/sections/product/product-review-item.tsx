@@ -2,7 +2,6 @@ import type { IProductReview } from 'src/types/product';
 
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import ListItemText from '@mui/material/ListItemText';
@@ -10,6 +9,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { fDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,7 @@ export function ProductReviewItem({ review }: Props) {
         flexDirection: { xs: 'row', md: 'column' },
       }}
     >
-      <Avatar
+      <IdentityAvatar
         src={review.avatarUrl}
         sx={{ width: { xs: 48, md: 64 }, height: { xs: 48, md: 64 } }}
       />

@@ -3,7 +3,6 @@ import type { AccountData } from '../types';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Avatar from '@mui/material/Avatar';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,6 +14,8 @@ import { fCurrency } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -71,9 +72,9 @@ export function AccountAssets({ account, hideBalances }: Props) {
               <TableRow key={row.id}>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar sx={{ bgcolor: 'background.neutral' }}>
+                    <IdentityAvatar sx={{ bgcolor: 'background.neutral' }}>
                       <Iconify icon={row.icon as any} width={24} />
-                    </Avatar>
+                    </IdentityAvatar>
                     <Box>
                       <Typography variant="subtitle2">{row.asset}</Typography>
                       <Typography variant="caption" sx={{ color: 'text.secondary' }}>

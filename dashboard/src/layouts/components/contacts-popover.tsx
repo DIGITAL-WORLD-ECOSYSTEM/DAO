@@ -5,7 +5,6 @@ import { m } from 'framer-motion';
 import { usePopover } from 'minimal-shared/hooks';
 
 import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Typography from '@mui/material/Typography';
@@ -18,6 +17,8 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { CustomPopover } from 'src/components/custom-popover';
 import { varTap, varHover, transitionTap } from 'src/components/animate';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +50,7 @@ export function ContactsPopover({ data = [], sx, ...other }: ContactsPopoverProp
           {data.map((contact) => (
             <MenuItem key={contact.id} sx={{ p: 1 }}>
               <Badge variant={contact.status as BadgeProps['variant']} badgeContent=" ">
-                <Avatar alt={contact.name} src={contact.avatarUrl} />
+                <IdentityAvatar alt={contact.name} src={contact.avatarUrl} />
               </Badge>
 
               <ListItemText

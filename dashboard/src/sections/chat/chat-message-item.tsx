@@ -2,7 +2,6 @@ import type { IChatMessage, IChatParticipant } from 'src/types/chat';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -12,7 +11,8 @@ import { fToNow } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useUserProfile } from 'src/auth/facades';
+import { IdentityAvatar } from 'src/auth/components';
 
 import { getMessage } from './utils/get-message';
 
@@ -25,7 +25,7 @@ type Props = {
 };
 
 export function ChatMessageItem({ message, participants, onOpenLightbox }: Props) {
-  const { user } = useMockedUser();
+  const user = useUserProfile();
 
   const { me, senderDetails, hasImage } = getMessage({
     message,
@@ -214,7 +214,7 @@ export function ChatMessageItem({ message, participants, onOpenLightbox }: Props
 
   return (
     <Box sx={{ mb: 5, display: 'flex', justifyContent: me ? 'flex-end' : 'unset' }}>
-      {!me && <Avatar alt={firstName} src={avatarUrl} sx={{ width: 32, height: 32, mr: 2 }} />}
+      {!me && <IdentityAvatar user={{ displayName: firstName || '', displayEmail: '', photoURL: avatarUrl, isWeb3Account: false }} size="sm" sx={{ mr: 2 }} />}
 
       <Stack sx={{ alignItems: me ? 'flex-end' : 'flex-start' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

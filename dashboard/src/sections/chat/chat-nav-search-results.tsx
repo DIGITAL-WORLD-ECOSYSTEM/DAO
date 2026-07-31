@@ -1,11 +1,12 @@
 import type { IChatParticipant } from 'src/types/chat';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 
 import { SearchNotFound } from 'src/components/search-not-found';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +47,7 @@ export function ChatNavSearchResults({ query, results, onClickResult }: Props) {
                 typography: 'subtitle2',
               }}
             >
-              <Avatar alt={result.name} src={result.avatarUrl} />
+              <IdentityAvatar alt={result.name} src={result.avatarUrl} />
               {result.name}
             </ListItemButton>
           </li>

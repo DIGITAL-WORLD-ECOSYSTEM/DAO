@@ -15,7 +15,7 @@ import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } fr
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { useUserProfile } from 'src/auth/hooks/use-user-profile';
+import { useUserProfile } from 'src/auth/facades';
 
 import { ProfileHome } from '../profile-home';
 import { ProfileCover } from '../profile-cover';

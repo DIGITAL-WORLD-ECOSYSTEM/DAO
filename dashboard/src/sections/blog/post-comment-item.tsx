@@ -4,13 +4,14 @@ import { useBoolean } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { fDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +37,7 @@ export function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, h
         ...(hasReply && { pl: 8 }),
       }}
     >
-      <Avatar alt={name} src={avatarUrl} sx={{ width: 48, height: 48 }} />
+      <IdentityAvatar alt={name} src={avatarUrl} sx={{ width: 48, height: 48 }} />
 
       <Box
         sx={[

@@ -5,13 +5,14 @@ import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export function ChatHeaderCompose({ contacts, onAddRecipients }: Props) {
                   position: 'relative',
                 }}
               >
-                <Avatar alt={option.name} src={option.avatarUrl} sx={{ width: 1, height: 1 }} />
+                <IdentityAvatar alt={option.name} src={option.avatarUrl} sx={{ width: 1, height: 1 }} />
                 <Box
                   sx={[
                     (theme) => ({
@@ -101,7 +102,7 @@ export function ChatHeaderCompose({ contacts, onAddRecipients }: Props) {
               {...getItemProps({ index })}
               key={option.id}
               label={option.name}
-              avatar={<Avatar alt={option.name} src={option.avatarUrl} />}
+              avatar={<IdentityAvatar alt={option.name} src={option.avatarUrl} />}
               size="small"
               variant="soft"
             />

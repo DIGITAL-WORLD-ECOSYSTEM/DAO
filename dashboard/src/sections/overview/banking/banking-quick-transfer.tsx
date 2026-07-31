@@ -14,7 +14,6 @@ import {
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Slider from '@mui/material/Slider';
 import Dialog from '@mui/material/Dialog';
 import Tooltip from '@mui/material/Tooltip';
@@ -30,6 +29,8 @@ import { fCurrency } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
 import { Carousel, useCarousel, CarouselArrowFloatButtons } from 'src/components/carousel';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -103,11 +104,11 @@ export function BankingQuickTransfer({ title, subheader, list, sx, ...other }: P
       <Carousel carousel={carousel} sx={{ py: 5 }}>
         {list.map((contact, index) => (
           <Tooltip key={contact.id} title={contact.name} arrow placement="top">
-            <Avatar
+            <IdentityAvatar
               src={contact.avatarUrl}
               onClick={() => carousel.dots.onClickDot(index)}
               sx={[
-                (theme) => ({
+                (theme: Theme) => ({
                   mx: 'auto',
                   opacity: 0.48,
                   cursor: 'pointer',
@@ -263,7 +264,7 @@ function ConfirmTransferDialog({
         }}
       >
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-          <Avatar src={contactInfo?.avatarUrl} sx={{ width: 48, height: 48 }} />
+          <IdentityAvatar src={contactInfo?.avatarUrl} sx={{ width: 48, height: 48 }} />
 
           <ListItemText
             primary={contactInfo?.name}

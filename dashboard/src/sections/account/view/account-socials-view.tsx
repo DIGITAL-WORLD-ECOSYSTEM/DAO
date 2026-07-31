@@ -1,13 +1,13 @@
 import type { ISocialLink } from 'src/types/common';
 
-import { useAuthContext } from 'src/auth/hooks/use-auth-context';
+import { useAccountFacade } from 'src/auth/facades/use-account-facade';
 
 import { AccountSocials } from '../account-socials';
 
 // ----------------------------------------------------------------------
 
 export function AccountSocialsView() {
-  const { user } = useAuthContext();
+  const { user } = useAccountFacade();
 
   const socialLinks: ISocialLink = {
     facebook: user?.socialLinks?.facebook || '',

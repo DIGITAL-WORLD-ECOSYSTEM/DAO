@@ -6,13 +6,14 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -88,7 +89,7 @@ export function FinancialSummaryHeader({
                 IDENTIFICAÇÃO
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <Avatar
+                <IdentityAvatar
                   src={user.photoURL || ''}
                   sx={{
                     width: 64,
@@ -103,7 +104,7 @@ export function FinancialSummaryHeader({
                   }}
                 >
                   {avatarInitials}
-                </Avatar>
+                </IdentityAvatar>
                 <Box>
                   <Typography variant="h6" sx={{ color: 'common.white', mb: 0.5 }}>
                     {isEmptyState ? '—' : displayName}

@@ -4,8 +4,9 @@ import type { IUserProfileCover } from 'src/types/user';
 import { varAlpha } from 'minimal-shared/utils';
 
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import ListItemText from '@mui/material/ListItemText';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -45,20 +46,18 @@ export function ProfileCover({
           flexDirection: { xs: 'column', md: 'row' },
         }}
       >
-        <Avatar
-          alt={name}
-          src={avatarUrl}
+        <IdentityAvatar
+          user={{ displayName: name, displayEmail: '', photoURL: avatarUrl, isWeb3Account: false }}
+          size="xl"
           sx={[
-            (theme) => ({
+            (theme: any) => ({
               mx: 'auto',
               width: { xs: 64, md: 128 },
               height: { xs: 64, md: 128 },
               border: `solid 2px ${theme.vars.palette.common.white}`,
             }),
           ]}
-        >
-          {name?.charAt(0).toUpperCase()}
-        </Avatar>
+        />
 
         <ListItemText
           primary={name}

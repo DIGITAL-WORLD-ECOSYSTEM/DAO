@@ -9,7 +9,6 @@ import Card from '@mui/material/Card';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Rating from '@mui/material/Rating';
-import Avatar from '@mui/material/Avatar';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import { svgIconClasses } from '@mui/material/SvgIcon';
@@ -19,6 +18,8 @@ import { fData, fCurrency, fShortenNumber } from 'src/utils/format-number';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 // ----------------------------------------------------------------------
 
@@ -99,7 +100,7 @@ function Item({ item, sx, ...other }: ItemProps) {
       sx={[{ gap: 2, display: 'flex', alignItems: 'center' }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
-      <Avatar
+      <IdentityAvatar
         variant="rounded"
         src={item.shortcut}
         sx={{

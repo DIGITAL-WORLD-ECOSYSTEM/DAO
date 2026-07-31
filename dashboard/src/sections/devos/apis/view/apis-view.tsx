@@ -6,7 +6,6 @@ import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
@@ -20,6 +19,8 @@ import axios from 'src/lib/axios';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import { IdentityAvatar } from 'src/auth/components';
 
 import { ApiConfigDrawer } from './api-config-drawer';
 
@@ -136,7 +137,7 @@ export function ApisView() {
         {/* Security Score */}
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
           <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <Avatar
+            <IdentityAvatar
               sx={{
                 width: 80,
                 height: 80,
@@ -147,7 +148,7 @@ export function ApisView() {
               }}
             >
               96
-            </Avatar>
+            </IdentityAvatar>
           </Box>
           <Stack spacing={0.5}>
             <Typography variant="h6">Security Risk Score</Typography>
@@ -325,13 +326,13 @@ export function ApisView() {
           </Box>
 
           <Stack direction="row" spacing={2} sx={{ alignItems: 'center', mb: 2 }}>
-            <Avatar variant="rounded" sx={{ width: 48, height: 48, bgcolor: 'background.neutral' }}>
+            <IdentityAvatar variant="rounded" sx={{ width: 48, height: 48, bgcolor: 'background.neutral' }}>
               <Iconify
                 icon={'eva:cube-outline' as any}
                 width={24}
                 sx={{ color: 'text.secondary' }}
               />
-            </Avatar>
+            </IdentityAvatar>
             <Stack>
               <Typography variant="subtitle1">{integration.name}</Typography>
               <Typography variant="caption" sx={{ color: 'text.secondary' }}>
