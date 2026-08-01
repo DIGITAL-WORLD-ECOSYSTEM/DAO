@@ -87,7 +87,7 @@ identity.get('/me/card', verifyAuth, async (c) => {
     const [card] = await db
       .select()
       .from(membershipCards)
-      .where(eq(membershipCards.citizenId, citizen.id))
+      .where(eq(membershipCards.userId, citizen.userId!))
       .orderBy(sql`created_at DESC`)
       .limit(1);
 
@@ -226,7 +226,9 @@ identity.delete('/:id', verifyAuth, async (c) => {
     if (!citizen) return c.json({ success: false, message: 'Cidadão não encontrado' }, 404);
 
     // Remover referências de chaves estrangeiras que impediriam o delete físico (sem cascade nativo no SQLite)
-    await db.update(auditLogs).set({ citizenId: null }).where(eq(auditLogs.citizenId, id));
+    if (citizen.userId) {
+      await db.update(auditLogs).set({ targetUserId: null }).where(eq(auditLogs.targetUserId, citizen.userId));
+    }
 
     if (citizen.userId) {
       await db
@@ -261,7 +263,9 @@ identity.post('/bulk-delete', verifyAuth, async (c) => {
     for (const id of ids) {
       const [citizen] = await db.select().from(citizens).where(eq(citizens.id, id)).limit(1);
       if (citizen) {
-        await db.update(auditLogs).set({ citizenId: null }).where(eq(auditLogs.citizenId, id));
+        if (citizen.userId) {
+          await db.update(auditLogs).set({ targetUserId: null }).where(eq(auditLogs.targetUserId, citizen.userId));
+        }
 
         if (citizen.userId) {
           await db

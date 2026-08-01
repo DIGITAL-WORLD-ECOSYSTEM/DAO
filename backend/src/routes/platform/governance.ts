@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { eq, desc, sql } from 'drizzle-orm';
 import { govProposals, govVotes, users, citizens } from '../../db/schema';
 import { verifyRole } from '../../middleware/rbac';
+import { rateLimit } from '../../middleware/rate_limit';
 import { Bindings } from '../../types/bindings';
 import { success, error } from '../../utils/response';
 
@@ -35,7 +36,8 @@ governance.get('/proposals', async (c) => {
 });
 
 // 2. Criar Proposta (Mínimo Partner)
-governance.post('/proposals', verifyRole(['admin', 'partner']), async (c) => {
+const proposalRateLimiter = rateLimit({ windowMs: 60000, maxRequests: 5 });
+governance.post('/proposals', verifyRole(['admin', 'partner']), proposalRateLimiter, async (c) => {
   const db = c.get('db');
   const payload = c.get('jwtPayload');
   const { title, description, content, type } = await c.req.json();
@@ -64,7 +66,8 @@ governance.post('/proposals', verifyRole(['admin', 'partner']), async (c) => {
 });
 
 // 3. Votar em Proposta (Requer Cidadania)
-governance.post('/vote', verifyRole(['admin', 'partner', 'citizen']), async (c) => {
+const voteRateLimiter = rateLimit({ windowMs: 10000, maxRequests: 5 });
+governance.post('/vote', verifyRole(['admin', 'partner', 'citizen']), voteRateLimiter, async (c) => {
   const db = c.get('db');
   const payload = c.get('jwtPayload');
   const { proposalId, support, reason } = await c.req.json();

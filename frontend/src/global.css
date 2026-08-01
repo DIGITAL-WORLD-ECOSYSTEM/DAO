@@ -2,7 +2,7 @@
 * Plugins
 *************************************** */
 /* scrollbar */
-@import './components/scrollbar/styles.css';
+@import './legacy/components/scrollbar/styles.css';
 
 /* map */
 

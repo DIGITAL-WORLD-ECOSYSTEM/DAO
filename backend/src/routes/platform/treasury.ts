@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { sql, desc, eq } from 'drizzle-orm';
-import { treasuryLedger, citizens, contracts } from '../../db/schema';
+import { treasuryLedger, citizens, contracts, auditLogs } from '../../db/schema';
 import { verifyRole } from '../../middleware/rbac';
+import { idempotency, rateLimit } from '../../middleware/rate_limit';
 import { Bindings } from '../../types/bindings';
 import { success, error } from '../../utils/response';
 
@@ -51,29 +52,52 @@ treasury.get('/transactions', async (c) => {
 });
 
 // 3. Registrar Movimentação (Admin Only)
-treasury.post('/transactions', verifyRole(['admin']), async (c) => {
+const treasuryRateLimiter = rateLimit({ windowMs: 10000, maxRequests: 10 });
+treasury.post('/transactions', verifyRole(['admin']), treasuryRateLimiter, idempotency(), async (c) => {
   const db = c.get('db');
-  const { type, category, amountCents, description, txHash } = await c.req.json();
+  const payload = c.get('jwtPayload'); // Operador Admin
+  const { userId, type, category, amountCents, description, txHash, externalTransactionId } = await c.req.json();
 
-  if (!type || !amountCents || !description) {
+  if (!userId || !type || !amountCents || !description) {
     return error(c, 'Campos obrigatórios ausentes.', null, 400);
   }
+
+  // Gera um UUID interno se não for passado um externalTransactionId
+  const extTxId = externalTransactionId || `INTERNAL-${crypto.randomUUID()}`;
 
   try {
     const [newTx] = await db
       .insert(treasuryLedger)
       .values({
+        userId,
         type,
         category,
         amountCents,
         description,
         txHash,
+        externalTransactionId: extTxId,
         status: 'completed',
       })
       .returning();
 
+    // Registro de auditoria: quem operou a transação?
+    await db.insert(auditLogs).values({
+      targetUserId: userId,
+      action: 'TREASURY_MANUAL_ENTRY',
+      status: 'success',
+      metadata: {
+        operatorAdminId: payload.userId,
+        amountCents,
+        type,
+        externalTransactionId: extTxId,
+      },
+    });
+
     return success(c, 'Transação registrada com sucesso.', newTx, 201);
   } catch (err: any) {
+    if (err.message.includes('UNIQUE')) {
+      return error(c, 'Transação duplicada detectada (externalTransactionId).', null, 409);
+    }
     return error(c, 'Erro ao persistir transação.', err.message, 500);
   }
 });
@@ -296,7 +320,7 @@ treasury.get('/citizen/:id/ledger', async (c) => {
     const txs = await db
       .select()
       .from(treasuryLedger)
-      .where(eq(treasuryLedger.citizenId, citizenId))
+      .where(eq(treasuryLedger.userId, citizen.userId!))
       .orderBy(desc(treasuryLedger.createdAt));
 
     // Processar transações no formato esperado pelo frontend
@@ -396,12 +420,7 @@ treasury.get('/citizen/:id/ledger', async (c) => {
       phone: citizen.phoneNumber || '',
       category: citizen.cargoOsc || 'Associado',
       photoURL: citizen.profileTags ? '' : '', // TODO: map from avatarUrl if we had it. We can add later.
-      status:
-        citizen.status === 'active'
-          ? 'active'
-          : citizen.status === 'suspended'
-            ? 'suspended'
-            : 'inactive',
+      status: 'active', // Substituído: status agora pertence apenas à conta (users)
     };
 
     // 2. Contract Data

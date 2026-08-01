@@ -43,7 +43,6 @@ export const users = sqliteTable(
     ),
 
     // Identidade Soberana & Status
-    citizenId: integer('citizen_id'),
     active: integer('active', { mode: 'boolean' }).default(true).notNull(),
     status: text('status').default('active').notNull(),
 
@@ -59,7 +58,6 @@ export const users = sqliteTable(
   (table) => ({
     emailIdx: index('idx_users_email').on(table.email),
     roleIdx: index('idx_users_role').on(table.role),
-    citizenIdUnique: uniqueIndex('idx_users_citizen_id_unique').on(table.citizenId),
   })
 );
 
@@ -274,7 +272,9 @@ export const citizens = sqliteTable(
   'citizens',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
-    userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
 
     username: text('username').notNull().unique(),
     firstName: text('first_name'),
@@ -285,7 +285,7 @@ export const citizens = sqliteTable(
     // 👤 Identidade Civil (Ficha Cadastral)
     rg: text('rg'),
     orgaoEmissor: text('orgao_emissor'),
-    cpf: text('cpf'),
+    cpf: text('cpf').unique(),
     nacionalidade: text('nacionalidade'),
     dataNascimento: text('data_nascimento'),
     estadoCivil: text('estado_civil'),
@@ -324,8 +324,6 @@ export const citizens = sqliteTable(
     totpSecret: text('totp_secret'), // Google Authenticator Secret
     totpEnabled: integer('totp_enabled', { mode: 'boolean' }).default(false),
 
-    status: text('status').default('active'),
-
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
   },
@@ -341,9 +339,9 @@ export const membershipCards = sqliteTable(
   'membership_cards',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
-    citizenId: integer('citizen_id')
+    userId: integer('user_id')
       .notNull()
-      .references(() => citizens.id, { onDelete: 'cascade' }),
+      .references(() => users.id, { onDelete: 'cascade' }),
 
     cardHash: text('card_hash').notNull().unique(), // SHA-256 para verificação offline
     tier: text('tier', { enum: ['citizen', 'partner', 'founder', 'honorary'] }).default('citizen'),
@@ -357,7 +355,7 @@ export const membershipCards = sqliteTable(
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
   },
   (table) => ({
-    citizenIdx: index('idx_cards_citizen').on(table.citizenId),
+    userIdx: index('idx_cards_user').on(table.userId),
     hashIdx: uniqueIndex('idx_cards_hash').on(table.cardHash),
   })
 );
@@ -371,7 +369,7 @@ export const auditLogs = sqliteTable(
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
     actorId: integer('actor_id').references(() => users.id),
-    citizenId: integer('citizen_id').references(() => citizens.id),
+    targetUserId: integer('target_user_id').references(() => users.id),
 
     action: text('action').notNull(), // Ex: 'VAULT_GENESIS', 'HANDSHAKE_SUCCESS'
     status: text('status').default('success'),
@@ -398,7 +396,7 @@ export const reProperties = sqliteTable(
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
     uuid: text('uuid').notNull().unique(), // UUID v4 gerado na criação
-    citizenId: integer('citizen_id').references(() => citizens.id, { onDelete: 'set null' }),
+    userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
 
     title: text('title').notNull(), // Título descritivo
     slug: text('slug').notNull().unique(), // URL amigável
@@ -633,7 +631,7 @@ export const rePropertyOwners = sqliteTable('re_property_owners', {
   propertyId: integer('property_id')
     .notNull()
     .references(() => reProperties.id, { onDelete: 'cascade' }),
-  citizenId: integer('citizen_id').references(() => citizens.id, { onDelete: 'set null' }),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
 
   ownerType: text('owner_type', {
     enum: ['primary', 'spouse', 'heir', 'legal_entity', 'co_owner'],
@@ -813,7 +811,7 @@ export const rePropertyWorkflow = sqliteTable(
     propertyId: integer('property_id')
       .notNull()
       .references(() => reProperties.id, { onDelete: 'cascade' }),
-    actorCitizenId: integer('actor_citizen_id').references(() => citizens.id, {
+    actorUserId: integer('actor_user_id').references(() => users.id, {
       onDelete: 'set null',
     }),
 
@@ -855,7 +853,7 @@ export const rePropertyAuditLog = sqliteTable(
     propertyId: integer('property_id')
       .notNull()
       .references(() => reProperties.id, { onDelete: 'cascade' }),
-    actorCitizenId: integer('actor_citizen_id').references(() => citizens.id, {
+    actorUserId: integer('actor_user_id').references(() => users.id, {
       onDelete: 'set null',
     }),
 
@@ -940,7 +938,9 @@ export const treasuryLedger = sqliteTable(
   'treasury_ledger',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
-    citizenId: integer('citizen_id').references(() => citizens.id, { onDelete: 'set null' }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'restrict' }),
 
     type: text('type', { enum: ['inbound', 'outbound', 'internal_transfer'] }).notNull(),
     category: text('category', {
@@ -952,6 +952,7 @@ export const treasuryLedger = sqliteTable(
 
     description: text('description').notNull(),
     txHash: text('tx_hash'), // Hash on-chain se aplicável
+    externalTransactionId: text('external_transaction_id').unique(), // Pix ID, Boleto ID, etc.
 
     status: text('status', { enum: ['pending', 'completed', 'failed'] }).default('completed'),
 
@@ -959,7 +960,7 @@ export const treasuryLedger = sqliteTable(
   },
   (table) => ({
     typeIdx: index('idx_treasury_type').on(table.type),
-    citizenIdx: index('idx_treasury_citizen').on(table.citizenId),
+    userIdx: index('idx_treasury_user').on(table.userId),
   })
 );
 

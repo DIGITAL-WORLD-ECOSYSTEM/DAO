@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { eq } from 'drizzle-orm';
-import { authSignature } from '../../../middleware/auth_signature';
+import { verifyRole } from '../../../middleware/rbac';
 import {
   reProperties,
   rePropertyLocation,
@@ -63,29 +63,20 @@ app.get('/:slug', async (c) => {
 });
 
 // ==========================================
-// ZERO-TRUST PROTECTED ROUTES
+// JWT & RBAC PROTECTED ROUTES
 // ==========================================
-app.use('/*', authSignature);
+app.use('/*', verifyRole(['admin', 'partner', 'citizen']));
 
 // --- CREATE NEW PROPERTY DRAFT ---
 app.post('/', zValidator('json', propertyCreateSchema), async (c) => {
   const db = c.get('db');
   const data = c.req.valid('json');
 
-  // O middleware authSignature garante que X-Identity-DID é válido.
-  // Falta tipar o Cidadão de forma que o middleware passe os dados,
-  // mas vamos buscar o cidadão atual
-  const did = c.req.header('X-Identity-DID');
-  let citizenId = null;
+  const payload = c.get('jwtPayload') as any;
+  const userId = payload?.userId;
 
-  if (did) {
-    const username = did.split(':').pop();
-    if (username) {
-      const citizen = await db.query.citizens.findFirst({
-        where: eq(citizens.username, username),
-      });
-      if (citizen) citizenId = citizen.id;
-    }
+  if (!userId) {
+    return c.json({ success: false, message: 'Conta não identificada na sessão' }, 401);
   }
 
   try {
@@ -108,7 +99,7 @@ app.post('/', zValidator('json', propertyCreateSchema), async (c) => {
         registrationNumberRgi: data.registrationNumberRgi,
         iptuNumber: data.iptuNumber,
         notes: data.notes,
-        citizenId,
+        userId,
       })
       .returning();
 
@@ -142,7 +133,7 @@ app.post('/:id/location', zValidator('json', locationSchema), async (c) => {
       throw new HTTPException(404, { message: 'Imóvel não encontrado' });
     }
 
-    if (property.citizenId !== citizen.id) {
+    if (property.userId !== citizen.userId) {
       throw new HTTPException(403, { message: 'Você não tem permissão para alterar este imóvel' });
     }
 
@@ -188,7 +179,7 @@ app.post('/:id/pricing', zValidator('json', pricingSchema), async (c) => {
       throw new HTTPException(404, { message: 'Imóvel não encontrado' });
     }
 
-    if (property.citizenId !== citizen.id) {
+    if (property.userId !== citizen.userId) {
       throw new HTTPException(403, { message: 'Você não tem permissão para alterar este imóvel' });
     }
 

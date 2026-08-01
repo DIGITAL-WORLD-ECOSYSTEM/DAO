@@ -4,7 +4,8 @@ import { zValidator } from '@hono/zod-validator';
 import { authenticator } from 'otplib';
 import { CryptoCore } from '../../../utils/crypto';
 import { citizens, auditLogs, users } from '../../../db/schema';
-import { eq } from 'drizzle-orm';
+import { sql, desc, eq, and } from 'drizzle-orm';
+import { rateLimit } from '../../../middleware/rate_limit';
 
 import { DIDResolver } from '../../../utils/did_resolver';
 import { authSignature } from '../../../middleware/auth_signature';
@@ -112,46 +113,26 @@ identity.post('/register', zValidator('json', ssiRegisterSchema), async (c) => {
   const did = `did:dao:asppibra:${username.toLowerCase()}`;
 
   try {
-    const [citizen] = await db
-      .insert(citizens)
-      .values({
-        username,
-        firstName,
-        lastName,
-        did,
-        publicKey: JSON.stringify(Array.from(pub)),
-        encryptedVault,
-        status: 'active',
-      })
-      .returning();
-
-    if (!citizen) throw new Error('Falha ao criar cidadão (D1 Returning Error).');
-
-    // AJUSTE 2: Check if a user record already exists for this citizen_id
+    const userEmail = `${username.toLowerCase()}@ssi.local`;
     let [existingUser] = await db
       .select({ id: users.id, email: users.email, role: users.role })
       .from(users)
-      .where(eq(users.citizenId, citizen.id))
+      .where(eq(users.email, userEmail))
       .limit(1);
 
     let userId: number;
-    let userEmail: string;
     let userRole: string;
 
     if (existingUser) {
       userId = existingUser.id;
-      userEmail = existingUser.email;
       userRole = existingUser.role || 'citizen';
     } else {
-      // Create a shadow user
-      userEmail = `${username.toLowerCase()}@ssi.local`;
       const [newUser] = await db
         .insert(users)
         .values({
           email: userEmail,
           password: crypto.randomUUID(),
           role: 'citizen',
-          citizenId: citizen.id,
           active: true,
           status: 'active',
         })
@@ -160,11 +141,23 @@ identity.post('/register', zValidator('json', ssiRegisterSchema), async (c) => {
       userRole = 'citizen';
     }
 
-    // Update citizen's userId to point to the user ID
-    await db.update(citizens).set({ userId: userId }).where(eq(citizens.id, citizen.id));
+    const [citizen] = await db
+      .insert(citizens)
+      .values({
+        userId,
+        username,
+        firstName,
+        lastName,
+        did,
+        publicKey: JSON.stringify(Array.from(pub)),
+        encryptedVault,
+      })
+      .returning();
+
+    if (!citizen) throw new Error('Falha ao criar cidadão (D1 Returning Error).');
 
     await db.insert(auditLogs).values({
-      citizenId: citizen.id,
+      targetUserId: userId,
       action: 'CITIZEN_GENESIS_COMPLETE',
       status: 'success',
       metadata: { username, did },
@@ -256,26 +249,16 @@ identity.post('/login', zValidator('json', ssiLoginSchema), async (c) => {
   // CMP-03: Invalidar nonce após login bem-sucedido (previne replay attacks)
   await c.env.KV_AUTH.delete(`nonce:${username}`);
 
-  // AJUSTE 2: lookup shadow user using citizen_id
+  // AJUSTE 2: lookup shadow user using userId from citizen
   let [userRecord] = await db
     .select({ id: users.id, role: users.role, email: users.email })
     .from(users)
-    .where(eq(users.citizenId, citizen.id))
+    .where(eq(users.id, citizen.userId))
     .limit(1);
 
   let userId: number;
   let userEmail: string;
   let userRole: string;
-
-  if (!userRecord) {
-    if (citizen.userId) {
-      [userRecord] = await db
-        .select({ id: users.id, role: users.role, email: users.email })
-        .from(users)
-        .where(eq(users.id, citizen.userId))
-        .limit(1);
-    }
-  }
 
   if (!userRecord) {
     userEmail = `${username.toLowerCase()}@ssi.local`;
@@ -285,7 +268,6 @@ identity.post('/login', zValidator('json', ssiLoginSchema), async (c) => {
         email: userEmail,
         password: crypto.randomUUID(),
         role: 'citizen',
-        citizenId: citizen.id,
         active: true,
         status: 'active',
       })
@@ -303,8 +285,6 @@ identity.post('/login', zValidator('json', ssiLoginSchema), async (c) => {
         : userRecord.role === 'citizen'
           ? 'user'
           : userRecord.role || 'user';
-
-    await db.update(users).set({ citizenId: citizen.id }).where(eq(users.id, userId));
   }
 
   const { issueSession } = await import('../../../utils/auth');
@@ -433,26 +413,16 @@ identity.post('/passkey/login', zValidator('json', passkeyLoginSchema), async (c
 
   await c.env.KV_AUTH.delete(`passkey_login_challenge:${username}`);
 
-  // Lookup user using citizenId
+  // Lookup user using citizen.userId
   let [userRecord] = await db
     .select({ id: users.id, role: users.role, email: users.email })
     .from(users)
-    .where(eq(users.citizenId, citizen.id))
+    .where(eq(users.id, citizen.userId))
     .limit(1);
 
   let userId: number;
   let userEmail: string;
   let userRole: string;
-
-  if (!userRecord) {
-    if (citizen.userId) {
-      [userRecord] = await db
-        .select({ id: users.id, role: users.role, email: users.email })
-        .from(users)
-        .where(eq(users.id, citizen.userId))
-        .limit(1);
-    }
-  }
 
   if (!userRecord) {
     userEmail = `${username.toLowerCase()}@ssi.local`;
@@ -462,7 +432,6 @@ identity.post('/passkey/login', zValidator('json', passkeyLoginSchema), async (c
         email: userEmail,
         password: crypto.randomUUID(),
         role: 'citizen',
-        citizenId: citizen.id,
         active: true,
         status: 'active',
       })
@@ -480,8 +449,6 @@ identity.post('/passkey/login', zValidator('json', passkeyLoginSchema), async (c
         : userRecord.role === 'citizen'
           ? 'user'
           : userRecord.role || 'user';
-
-    await db.update(users).set({ citizenId: citizen.id }).where(eq(users.id, userId));
   }
 
   const { issueSession } = await import('../../../utils/auth');
@@ -566,7 +533,7 @@ identity.post('/totp/verify', authSignature, zValidator('json', totpVerifySchema
 
   await db.insert(auditLogs).values({
     action: 'MFA_ENABLED',
-    citizenId: citizen.id,
+    targetUserId: citizen.userId,
     status: 'success',
     metadata: { method: 'TOTP' },
   });
@@ -620,7 +587,7 @@ identity.post('/revoke', authSignature, zValidator('json', revokeSchema), async 
 
   await db.insert(auditLogs).values({
     action: 'CITIZEN_REVOKED',
-    citizenId: citizen.id,
+    targetUserId: citizen.userId,
     status: 'success',
     metadata: { reason: 'Self-revocation requested via Zero-Trust signature' },
   });
@@ -682,43 +649,49 @@ identity.get('/me', async (c) => {
     });
     const notificationsList = notifications.filter((n: any) => n.enabled).map((n: any) => n.type);
 
-    // Normalização: Combina os dados para o frontend
+    // Normalização: Combina os dados para o frontend respeindo a Account-Centric Constitution
     return c.json({
       success: true,
-      user: {
+      account: {
         id: user.id,
         email: user.email,
         role: user.role,
         avatarUrl: user.avatarUrl,
         kycStatus: user.kycStatus,
-        address: wallet?.address || null,
-
-        // Dados do cidadão
-        citizenId: citizen?.id || null,
-        username: citizen?.username || payload.username || null,
-        firstName: citizen?.firstName || '',
-        lastName: citizen?.lastName || '',
-        did: citizen?.did || null,
-        phoneNumber: citizen?.phoneNumber || '',
-        cpf: citizen?.cpf || '',
-        rg: citizen?.rg || '',
-        occupation: citizen?.occupation || '',
-        company: citizen?.company || '',
-        website: citizen?.website || '',
-        about: citizen?.about || '',
-        isPublic: citizen?.isPublic || false,
-
-        // Localização
-        country: citizen?.country || '',
-        state: citizen?.state || '',
-        city: citizen?.city || '',
-        zipCode: citizen?.zipCode || '',
-        physicalAddress: citizen?.address || '',
-
-        // Relações
-        socialLinks: socialLinksMap,
-        notificationPreferences: notificationsList,
+        status: user.status,
       },
+      profiles: {
+        citizen: citizen
+          ? {
+              id: citizen.id,
+              username: citizen.username || payload.username || null,
+              firstName: citizen.firstName || '',
+              lastName: citizen.lastName || '',
+              did: citizen.did || null,
+              phoneNumber: citizen.phoneNumber || '',
+              cpf: citizen.cpf || '',
+              rg: citizen.rg || '',
+              occupation: citizen.occupation || '',
+              company: citizen.company || '',
+              website: citizen.website || '',
+              about: citizen.about || '',
+              isPublic: citizen.isPublic || false,
+              country: citizen.country || '',
+              state: citizen.state || '',
+              city: citizen.city || '',
+              zipCode: citizen.zipCode || '',
+              physicalAddress: citizen.address || '',
+            }
+          : null,
+      },
+      wallet: wallet
+        ? {
+            address: wallet.address,
+            chainId: wallet.chainId,
+          }
+        : null,
+      socialLinks: socialLinksMap,
+      notificationPreferences: notificationsList,
     });
   } catch (err) {
     return c.json({ success: false, message: 'Sessão inválida ou expirada' }, 401);
@@ -726,7 +699,8 @@ identity.get('/me', async (c) => {
 });
 
 // 8.1 Atualização de Perfil (Self-Service)
-identity.patch('/me', async (c) => {
+const profileUpdateRateLimiter = rateLimit({ windowMs: 60000, maxRequests: 10 });
+identity.patch('/me', profileUpdateRateLimiter, async (c) => {
   try {
     const { getJwtToken, verifySession } = await import('../../../utils/auth');
     const token = getJwtToken(c);
@@ -741,41 +715,49 @@ identity.patch('/me', async (c) => {
       await import('../../../db/schema');
     const { eq, and } = await import('drizzle-orm');
 
-    // 1. Atualizar users (avatar) se fornecido
-    if (body.photoURL !== undefined) {
-      await db.update(users).set({ avatarUrl: body.photoURL }).where(eq(users.id, userId));
+    // 1. Atualizar users (Account) se fornecido
+    if (body.account) {
+      const accountUpdates: any = {};
+      if (body.account.avatarUrl !== undefined) accountUpdates.avatarUrl = body.account.avatarUrl;
+      if (Object.keys(accountUpdates).length > 0) {
+        await db.update(users).set(accountUpdates).where(eq(users.id, userId));
+      }
     }
 
-    // 2. Atualizar citizens
-    const citizenUpdates: any = {};
-    if (body.firstName !== undefined) citizenUpdates.firstName = body.firstName;
-    if (body.lastName !== undefined) citizenUpdates.lastName = body.lastName;
-    if (body.username !== undefined) citizenUpdates.username = body.username;
-    if (body.phoneNumber !== undefined) citizenUpdates.phoneNumber = body.phoneNumber;
-    if (body.cpf !== undefined) citizenUpdates.cpf = body.cpf;
-    if (body.rg !== undefined) citizenUpdates.rg = body.rg;
-    if (body.occupation !== undefined) citizenUpdates.occupation = body.occupation;
-    if (body.company !== undefined) citizenUpdates.company = body.company;
-    if (body.website !== undefined) citizenUpdates.website = body.website;
-    if (body.about !== undefined) citizenUpdates.about = body.about;
-    if (body.isPublic !== undefined) citizenUpdates.isPublic = body.isPublic;
+    // 2. Atualizar citizens (Profile)
+    if (body.profiles && body.profiles.citizen) {
+      const citizenUpdates: any = {};
+      const payloadCitizen = body.profiles.citizen;
+      
+      if (payloadCitizen.firstName !== undefined) citizenUpdates.firstName = payloadCitizen.firstName;
+      if (payloadCitizen.lastName !== undefined) citizenUpdates.lastName = payloadCitizen.lastName;
+      if (payloadCitizen.username !== undefined) citizenUpdates.username = payloadCitizen.username;
+      if (payloadCitizen.phoneNumber !== undefined) citizenUpdates.phoneNumber = payloadCitizen.phoneNumber;
+      if (payloadCitizen.cpf !== undefined) citizenUpdates.cpf = payloadCitizen.cpf;
+      if (payloadCitizen.rg !== undefined) citizenUpdates.rg = payloadCitizen.rg;
+      if (payloadCitizen.occupation !== undefined) citizenUpdates.occupation = payloadCitizen.occupation;
+      if (payloadCitizen.company !== undefined) citizenUpdates.company = payloadCitizen.company;
+      if (payloadCitizen.website !== undefined) citizenUpdates.website = payloadCitizen.website;
+      if (payloadCitizen.about !== undefined) citizenUpdates.about = payloadCitizen.about;
+      if (payloadCitizen.isPublic !== undefined) citizenUpdates.isPublic = payloadCitizen.isPublic;
 
-    if (body.country !== undefined) citizenUpdates.country = body.country;
-    if (body.state !== undefined) citizenUpdates.state = body.state;
-    if (body.city !== undefined) citizenUpdates.city = body.city;
-    if (body.zipCode !== undefined) citizenUpdates.zipCode = body.zipCode;
-    if (body.address !== undefined) citizenUpdates.address = body.address;
+      if (payloadCitizen.country !== undefined) citizenUpdates.country = payloadCitizen.country;
+      if (payloadCitizen.state !== undefined) citizenUpdates.state = payloadCitizen.state;
+      if (payloadCitizen.city !== undefined) citizenUpdates.city = payloadCitizen.city;
+      if (payloadCitizen.zipCode !== undefined) citizenUpdates.zipCode = payloadCitizen.zipCode;
+      if (payloadCitizen.address !== undefined) citizenUpdates.address = payloadCitizen.address;
 
-    if (Object.keys(citizenUpdates).length > 0) {
-      const citizen = await db.query.citizens.findFirst({ where: eq(citizens.userId, userId) });
-      if (citizen) {
-        await db.update(citizens).set(citizenUpdates).where(eq(citizens.id, citizen.id));
-      } else {
-        await db.insert(citizens).values({
-          userId,
-          username: citizenUpdates.username || `user_${userId}`,
-          ...citizenUpdates,
-        });
+      if (Object.keys(citizenUpdates).length > 0) {
+        const citizen = await db.query.citizens.findFirst({ where: eq(citizens.userId, userId) });
+        if (citizen) {
+          await db.update(citizens).set(citizenUpdates).where(eq(citizens.id, citizen.id));
+        } else {
+          await db.insert(citizens).values({
+            userId,
+            username: citizenUpdates.username || `user_${userId}`,
+            ...citizenUpdates,
+          });
+        }
       }
     }
 

@@ -8,18 +8,28 @@ FRONTEND_URL = "https://app.asppibra.com"
 JWT_EXPIRE_IN = "24h"
 SENDER_EMAIL = "suporte@asppibra.com"
 
+[env.production]
 # Custom Domain — Produção
 routes = [
   { pattern = "api.asppibra.com", custom_domain = true }
 ]
+[env.production.vars]
+FRONTEND_URL = "https://app.asppibra.com"
+JWT_EXPIRE_IN = "15m"
+
+[env.staging]
+name = "asppibra-api-staging"
+[env.staging.vars]
+FRONTEND_URL = "https://staging.app.asppibra.com"
+JWT_EXPIRE_IN = "24h"
 
 
 [observability]
-enabled = false
+enabled = true
 head_sampling_rate = 1
 
 [observability.logs]
-enabled = false
+enabled = true
 head_sampling_rate = 1
 persist = true
 invocation_logs = true
