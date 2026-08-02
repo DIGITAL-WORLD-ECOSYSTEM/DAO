@@ -9,6 +9,9 @@ import {
   resetPasswordSchema,
 } from '../../../validators/auth';
 import { Bindings } from '../../../types/bindings';
+import { AccountRepository } from '../../../domains/identity/repositories/AccountRepository';
+import { AuthenticateAccountUseCase } from '../../../domains/identity/usecases/AuthenticateAccountUseCase';
+import { IdentityController } from '../../../domains/identity/controllers/IdentityController';
 
 type AppType = {
   Bindings: Bindings;
@@ -215,80 +218,15 @@ localAuth.post('/register', zValidator('json', signUpSchema), async (c) => {
 // ==========================================
 
 localAuth.post('/login', loginRateLimiter, zValidator('json', legacyLoginSchema), async (c) => {
-  const { email, password } = c.req.valid('json');
-  const db = c.get('db');
-
   try {
-    // 1. Captura as Credenciais (Join com Citizens para obter o nome)
-    const [user] = await db
-      .select({
-        id: users.id,
-        email: users.email,
-        password: users.password,
-        role: users.role,
-        firstName: citizens.firstName,
-        lastName: citizens.lastName,
-        username: citizens.username,
-      })
-      .from(users)
-      .leftJoin(citizens, eq(users.id, citizens.userId))
-      .where(eq(users.email, email))
-      .limit(1);
-
-    // Se o usuário existir mas não tiver os formatos Salt:Hash puros (Tipo as ShadowAccounts Web3 = UUIDs e Web2.0)
-    if (!user || !user.password) {
-      return c.json(
-        {
-          success: false,
-          message: 'Conta Inexistente ou Incompatível com o modelo Manual de Login.',
-        },
-        401
-      );
-    }
-
-    if (!user.password.includes(':')) {
-      // Tentativa de invadir Web3 accounts ou OAuth puro com hash gerado (que não levam Salt:Hash explícito)
-      return c.json(
-        {
-          success: false,
-          message: 'Este e-mail está emparelhado a um provedor OAuth ou Web3. Efetue Login por lá.',
-        },
-        401
-      );
-    }
-
-    // 2. Colisão Frontal (Verifica a Senha Criptografada)
-    const isMatched = await verifyPassword(password, user.password);
-
-    if (!isMatched) {
-      return c.json({ success: false, message: 'As Credenciais de Acesso não batem.' }, 401);
-    }
-
-    // 3. Token Sessão Genuíno
-    const { issueSession } = await import('../../../utils/auth');
-    const userRole =
-      user.email === 'dev@asppibra.com'
-        ? 'dev'
-        : user.role === 'citizen'
-          ? 'user'
-          : user.role || 'user';
-
-    const { accessToken } = await issueSession(c, {
-      userId: user.id,
-      email: user.email,
-      role: userRole,
-      aal: 1, // AAL1: Senha simples
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      username: user.username || '',
-    });
-
-    return c.json({
-      success: true,
-      message: 'Credenciais Manuais Válidas',
-      accessToken,
-      user: { id: user.id, email: user.email, role: userRole },
-    });
+    const db = c.get('db');
+    
+    // Clean Architecture Instantiation (Strangler Bridge)
+    const repository = new AccountRepository(db);
+    const useCase = new AuthenticateAccountUseCase(repository);
+    const controller = new IdentityController(useCase);
+    
+    return await controller.login(c);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'Falha Mestra na Validação do Cidadão', details: err.message },
