@@ -5,7 +5,7 @@ import { verifyRole } from '../../middleware/rbac';
 import { idempotency, rateLimit } from '../../middleware/rate_limit';
 import { Bindings } from '../../types/bindings';
 import { success, error } from '../../utils/response';
-import { LedgerRepository } from '../../domains/treasury/repositories/LedgerRepository';
+import { DrizzleTreasuryRepository } from '../../infrastructure/repositories/TreasuryRepository';
 import { GetFinancialAnalyticsUseCase } from '../../domains/treasury/usecases/GetFinancialAnalyticsUseCase';
 import { TreasuryController } from '../../domains/treasury/controllers/TreasuryController';
 
@@ -110,13 +110,18 @@ treasury.get('/analytics', async (c) => {
   const db = c.get('db');
 
   try {
-    const repo = new LedgerRepository(db);
+    const repo = new DrizzleTreasuryRepository(db);
     const useCase = new GetFinancialAnalyticsUseCase(repo);
     const controller = new TreasuryController(useCase);
     
-    const data = await controller.getAnalytics(c);
+    const req = { query: c.req.query(), body: {}, params: {}, headers: {} };
+    const httpResponse = await controller.getAnalytics(req);
     
-    return success(c, 'Dados de analytics recuperados.', data);
+    if (httpResponse.status !== 200) {
+      return error(c, httpResponse.body.message, null, httpResponse.status);
+    }
+    
+    return success(c, 'Dados de analytics recuperados.', httpResponse.body);
   } catch (err: any) {
     return error(c, 'Falha ao processar analytics financeiro.', err.message, 500);
   }

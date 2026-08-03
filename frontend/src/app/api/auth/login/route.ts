@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { Login } from '@asppibra/contracts/http';
 
 const HONO_URL = process.env.NEXT_PUBLIC_API_URL || 'https://staging.app.asppibra.com';
-
-const LoginRequestSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, password } = LoginRequestSchema.parse(body);
+    const { email, password } = Login.Schema.parse(body);
 
     const honoRes = await fetch(`${HONO_URL}/api/core/identity/login`, {
       method: 'POST',

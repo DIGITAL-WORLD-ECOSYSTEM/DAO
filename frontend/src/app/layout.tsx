@@ -47,6 +47,7 @@ import { JsonLd } from 'src/components/seo/json-ld';
 import { detectSettings } from 'src/components/settings/server';
 import { defaultSettings, SettingsProvider } from 'src/components/settings';
 
+import { Providers } from './providers';
 import App from './app';
 
 // ----------------------------------------------------------------------
@@ -207,7 +208,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           >
             <LocalizationProvider>
               <AppRouterCacheProvider options={{ key: 'css' }}>
-                <App>{children}</App>
+                <Providers>
+                  <App>{children}</App>
+                </Providers>
               </AppRouterCacheProvider>
             </LocalizationProvider>
           </SettingsProvider>

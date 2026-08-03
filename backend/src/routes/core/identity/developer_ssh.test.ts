@@ -224,12 +224,12 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
     devSshPublicKey = encodeSshPublicKey(pubRaw);
 
     // Issue real JWT tokens for developer and normal user using the actual auth utility functions
-    const { signJwtWithKid, getJwtSigningKeyForKid } = await import('../../../utils/auth');
-    const jwtKey = await getJwtSigningKeyForKid('v1', { JWT_SECRET: 'test_secret' });
+    const { JwtService } = await import('../../../infrastructure/security/jwt/JwtService');
+    const jwtService = new JwtService();
 
     const now = Math.floor(Date.now() / 1000);
 
-    devToken = await signJwtWithKid(
+    devToken = await jwtService.sign(
       {
         iss: 'asppibra-dao',
         aud: 'asppibra-app',
@@ -245,11 +245,11 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
         nbf: now - 5,
         exp: now + 15 * 60,
       },
-      jwtKey,
+      'test_secret',
       'v1'
     );
 
-    userToken = await signJwtWithKid(
+    userToken = await jwtService.sign(
       {
         iss: 'asppibra-dao',
         aud: 'asppibra-app',
@@ -265,7 +265,7 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
         nbf: now - 5,
         exp: now + 15 * 60,
       },
-      jwtKey,
+      'test_secret',
       'v1'
     );
   });

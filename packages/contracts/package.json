@@ -1,0 +1,26 @@
+{
+  "name": "@asppibra/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./http": "./src/http/index.ts",
+    "./common": "./src/common/index.ts",
+    "./errors": "./src/errors/index.ts",
+    "./pagination": "./src/pagination/index.ts",
+    "./events": "./src/events/index.ts",
+    "./openapi": "./src/openapi/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}

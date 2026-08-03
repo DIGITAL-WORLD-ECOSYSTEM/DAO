@@ -1,13 +1,23 @@
-import { ILedgerRepository } from '../repositories/LedgerRepository';
+import { ITreasuryRepository } from '../../../application/ports/output/ITreasuryRepository';
 
 export class GetFinancialAnalyticsUseCase {
-  constructor(private repo: ILedgerRepository) {}
+  constructor(private repo: ITreasuryRepository) {}
 
   async execute(year?: string) {
-    const stats = await this.repo.getSummaryStats(year);
-    const monthlyTrend = await this.repo.getMonthlyTrend(year);
-    const latestTx = await this.repo.getLatestTransactions(year);
-    const yearResults = await this.repo.getAvailableYears();
+    const statsResult = await this.repo.getSummaryStats(year);
+    const monthlyTrendResult = await this.repo.getMonthlyTrend(year);
+    const latestTxResult = await this.repo.getLatestTransactions(year);
+    const yearResultsResult = await this.repo.getAvailableYears();
+
+    if (statsResult.isFailure || monthlyTrendResult.isFailure || latestTxResult.isFailure || yearResultsResult.isFailure) {
+      return { success: false, message: 'Falha ao recuperar dados da tesouraria', status: 500 };
+    }
+
+    const stats = statsResult.getValue();
+    const monthlyTrend = monthlyTrendResult.getValue();
+    const latestTx = latestTxResult.getValue();
+    const yearResults = yearResultsResult.getValue();
+
     const availableYears = ['Todos', ...yearResults.map((y: any) => y.year)];
 
     const recipientMap: Record<string, number> = {};

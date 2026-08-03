@@ -1,4 +1,5 @@
-import { IdentityProfileSchema, LoginResponseSchema, IdentityProfile } from '../schemas/identity.schema';
+import { IdentityProfileSchema, IdentityProfile } from '../schemas/identity.schema';
+import { Login } from '@asppibra/contracts/http';
 
 const HONO_URL = process.env.NEXT_PUBLIC_API_URL || 'https://staging.app.asppibra.com';
 
@@ -48,7 +49,7 @@ export const identityClient = {
     if (!res.ok) throw new Error('Login falhou');
     
     const json = await res.json();
-    return LoginResponseSchema.parse(json);
+    return json as Login.Response;
   },
 
   /**
@@ -59,5 +60,22 @@ export const identityClient = {
     if (typeof window !== 'undefined') {
       window.location.href = '/login';
     }
+  },
+
+  /**
+   * [CLIENT COMPONENT ONLY]
+   * Dispara para o BFF (Route Handler) que então chama PATCH /me no Hono
+   */
+  async updateProfile(payload: { fullName: string }) {
+    const res = await fetch('/api/auth/me', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!res.ok) throw new Error('Falha ao atualizar perfil');
+    
+    const json = await res.json();
+    return IdentityProfileSchema.parse(json);
   }
 };

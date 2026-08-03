@@ -1,0 +1,68 @@
+import { IUnitOfWork, IRepositoryFactory } from '../../application/ports/output/IUnitOfWork';
+import { IAccountRepository } from '../../application/ports/output/IAccountRepository';
+import { ICitizenRepository } from '../../application/ports/output/ICitizenRepository';
+import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRepository';
+import { Result } from '../../shared/kernel/Result';
+import { DrizzleAccountRepository } from './AccountRepository';
+import { DrizzleCitizenRepository } from './CitizenRepository';
+import { DrizzleTreasuryRepository } from './TreasuryRepository';
+import { IPasswordResetRepository } from '../../application/ports/output/IPasswordResetRepository';
+import { DrizzlePasswordResetRepository } from './DrizzlePasswordResetRepository';
+
+class DrizzleRepositoryFactory implements IRepositoryFactory {
+  constructor(private tx: any) {}
+
+  getAccountRepository(): IAccountRepository {
+    return new DrizzleAccountRepository(this.tx);
+  }
+
+  getCitizenRepository(): ICitizenRepository {
+    return new DrizzleCitizenRepository(this.tx);
+  }
+
+  getTreasuryRepository(): ITreasuryRepository {
+    return new DrizzleTreasuryRepository(this.tx);
+  }
+
+  getPasswordResetRepository(): IPasswordResetRepository {
+    return new DrizzlePasswordResetRepository(this.tx);
+  }
+}
+
+export class DrizzleUnitOfWork implements IUnitOfWork {
+  constructor(private db: any) {}
+
+  async execute<T>(work: (factory: IRepositoryFactory) => Promise<Result<T>>): Promise<Result<T>> {
+    try {
+      // O Drizzle executa transações internamente. 
+      // Se a Promise no callback lançar erro (reject), o Drizzle fará o ROLLBACK automático.
+      // Se retornar sucesso (resolve), o Drizzle fará o COMMIT automático.
+      
+      let result: Result<T>;
+
+      await this.db.transaction(async (tx: any) => {
+        const factory = new DrizzleRepositoryFactory(tx);
+        
+        result = await work(factory);
+
+        // Se a operação falhou na lógica de domínio/uso, nós ativamente lançamos uma exceção
+        // para que o Drizzle ORM force o ROLLBACK no banco de dados.
+        if (result.isFailure) {
+          throw new Error(`TRANSACTION_ROLLED_BACK: ${result.error}`);
+        }
+      });
+
+      // Se passou limpo pelo bloco da transação, temos sucesso e podemos retorná-lo
+      return result!;
+    } catch (error: any) {
+      // Se o erro foi o nosso próprio disparo de ROLLBACK para a falha lógica:
+      if (error.message && error.message.includes('TRANSACTION_ROLLED_BACK')) {
+        const errorMsg = error.message.replace('TRANSACTION_ROLLED_BACK: ', '');
+        return Result.fail(errorMsg);
+      }
+      
+      // Se o erro foi um timeout do Cloudflare, DB indisponível, etc.
+      return Result.fail(error.message || 'Unknown infrastructure error during transaction');
+    }
+  }
+}

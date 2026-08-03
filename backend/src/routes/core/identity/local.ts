@@ -3,15 +3,18 @@ import { zValidator } from '@hono/zod-validator';
 import { eq, and, gt } from 'drizzle-orm';
 import { users, citizens, passwordResets } from '../../../db/schema';
 import {
-  signUpSchema,
-  legacyLoginSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
-} from '../../../validators/auth';
+  Register,
+  Login,
+  ForgotPassword,
+  ResetPassword,
+} from '@asppibra/contracts/http';
 import { Bindings } from '../../../types/bindings';
-import { AccountRepository } from '../../../domains/identity/repositories/AccountRepository';
 import { AuthenticateAccountUseCase } from '../../../domains/identity/usecases/AuthenticateAccountUseCase';
+import { RegisterAccountUseCase } from '../../../domains/identity/usecases/RegisterAccountUseCase';
+import { ChangePasswordUseCase } from '../../../domains/identity/usecases/ChangePasswordUseCase';
+import { ResetPasswordUseCase } from '../../../domains/identity/usecases/ResetPasswordUseCase';
 import { IdentityController } from '../../../domains/identity/controllers/IdentityController';
+import { DrizzleUnitOfWork } from '../../../infrastructure/repositories/DrizzleUnitOfWork';
 
 type AppType = {
   Bindings: Bindings;
@@ -47,164 +50,46 @@ const loginRateLimiter = async (c: any, next: any) => {
   await next();
 };
 
-// ==========================================
-// 🛡️ MOTOR CRIPTOGRÁFICO NATIVO (EDGE V8)
-// Substitui a quebra do lib-bcrypt no Workers
-// Padrão Governamental FIPS: PBKDF2 / SHA-256
-// ==========================================
-
-export async function hashPassword(password: string, existingSaltB64?: string): Promise<string> {
-  const enc = new TextEncoder();
-  let salt: Uint8Array;
-
-  // Usa o Sal existente se for validação, ou sorteia aleatório (CSPRG) se for Cadastro Novo
-  if (existingSaltB64) {
-    const rawString = atob(existingSaltB64);
-    salt = new Uint8Array(rawString.length);
-    for (let i = 0; i < rawString.length; i++) {
-      salt[i] = rawString.charCodeAt(i);
-    }
-  } else {
-    salt = crypto.getRandomValues(new Uint8Array(16));
-  }
-
-  // Importa a string pura da senha para gerar um Material Chave de Base
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    enc.encode(password),
-    { name: 'PBKDF2' },
-    false,
-    ['deriveBits']
-  );
-
-  // Efetua 100.000 Rounds Exponenciais usando SHA-256
-  const derivedBits = await crypto.subtle.deriveBits(
-    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
-    keyMaterial,
-    256 // Comprimento Padrão do Hash
-  );
-
-  const hashArray = Array.from(new Uint8Array(derivedBits));
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-
-  // Exporta a String Final formatada: "SALT(Base64):HASH(Hex)"
-  const finalSaltB64 = btoa(String.fromCharCode(...salt));
-  return `${finalSaltB64}:${hashHex}`;
-}
-
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    let result = 0;
-    for (let i = 0; i < a.length; i++) {
-      result |= a.charCodeAt(i) ^ a.charCodeAt(i);
-    }
-    return false;
-  }
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return result === 0;
-}
-
-export async function verifyPassword(password: string, storedHashText: string): Promise<boolean> {
-  const [saltB64, originalHex] = storedHashText.split(':');
-  if (!saltB64 || !originalHex) return false;
-
-  // Recalculo o Digest usando exatamento a mmesmo tempero do Banco de Dados
-  const newDigest = await hashPassword(password, saltB64);
-  return timingSafeEqual(newDigest, storedHashText);
-}
-
-// ==========================================
+import { PBKDF2PasswordHasher } from '../../../infrastructure/security/crypto/PBKDF2PasswordHasher';
+const hasher = new PBKDF2PasswordHasher();
 // 📝 ROTA 1: CADASTRO TRADICIONAL
 // ==========================================
 
-localAuth.post('/register', zValidator('json', signUpSchema), async (c) => {
-  const data = c.req.valid('json');
-  const db = c.get('db');
-
+localAuth.post('/register', zValidator('json', Register.Schema), async (c) => {
   try {
-    // 1. O e-mail já foi pego (Web3, OAuth ou Local?)
-    const [existingUser] = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, data.email))
-      .limit(1);
+    const db = c.get('db');
+    
+    // Clean Architecture Instantiation
+    const uow = new DrizzleUnitOfWork(db);
+    const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
+    const registerUseCase = new RegisterAccountUseCase(uow, hasher);
+    const changePwdUseCase = new ChangePasswordUseCase(uow, hasher);
+    const resetPwdUseCase = new ResetPasswordUseCase(uow, hasher);
+    const controller = new IdentityController(authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase);
+    
+    const req = { body: c.req.valid('json'), query: {}, params: {}, headers: {} };
+    const httpResponse = await controller.register(req);
 
-    if (existingUser) {
-      return c.json(
-        {
-          success: false,
-          message: 'O e-mail digitado já consta vinculado a uma identificação na DAO.',
-        },
-        409
-      );
-    }
+    if (httpResponse.status === 201 && httpResponse.body.accountData) {
+      const { issueSession } = await import('../../../utils/auth');
+      const { accountData } = httpResponse.body;
+      const { accessToken } = await issueSession(c, accountData);
 
-    // 2. Transforma a Senha Limpa em uma Assinatura Oculta via Edge Crypto
-    const secureHash = await hashPassword(data.password);
-
-    // 3. Salva no D1 de forma transacional (Users + Citizens)
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        email: data.email,
-        password: secureHash,
-        emailVerified: false,
-        role: 'citizen',
-      })
-      .returning();
-
-    // Criar o registro de Cidadão (Identidade Soberana - Nível 1: Pendente Chaves)
-    const username = data.email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
-    const [newCitizen] = await db
-      .insert(citizens)
-      .values({
-        userId: newUser.id,
-        username: username.toLowerCase(),
-        firstName: data.firstName,
-        lastName: data.lastName,
-        did: `did:dao:asppibra:web2:${newUser.id}`, // Provisório
-        publicKey: '', // Será preenchido no Handshake Genesis
-        status: 'pending_genesis',
-      })
-      .returning();
-
-    // 4. Gerar token de sessão imediatamente (UX: usuário já fica logado após cadastro)
-    const { issueSession } = await import('../../../utils/auth');
-    const userRole =
-      newUser.email === 'dev@asppibra.com'
-        ? 'dev'
-        : newUser.role === 'citizen'
-          ? 'user'
-          : newUser.role || 'user';
-
-    const { accessToken } = await issueSession(c, {
-      userId: newUser.id,
-      email: newUser.email,
-      role: userRole,
-      aal: 1,
-      firstName: newCitizen.firstName || '',
-      lastName: newCitizen.lastName || '',
-      username: newCitizen.username || '',
-    });
-
-    return c.json(
-      {
+      return c.json({
         success: true,
-        message: 'Identificação Local cadastrada com sucesso.',
+        message: httpResponse.body.message,
         accessToken,
-        user: {
-          id: newUser.id,
-          email: newUser.email,
-          firstName: newCitizen.firstName,
-          lastName: newCitizen.lastName,
-          role: userRole,
+        user: { 
+          id: accountData.userId, 
+          email: accountData.email,
+          firstName: accountData.firstName,
+          lastName: accountData.lastName,
+          role: accountData.role 
         },
-      },
-      201
-    );
+      }, 201);
+    }
+    
+    return c.json(httpResponse.body, httpResponse.status);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'Falha durante registro local', details: err.message },
@@ -217,16 +102,39 @@ localAuth.post('/register', zValidator('json', signUpSchema), async (c) => {
 // 🔓 ROTA 2: LOGIN TRADICIONAL
 // ==========================================
 
-localAuth.post('/login', loginRateLimiter, zValidator('json', legacyLoginSchema), async (c) => {
+localAuth.post('/login', loginRateLimiter, zValidator('json', Login.Schema), async (c) => {
   try {
     const db = c.get('db');
     
     // Clean Architecture Instantiation (Strangler Bridge)
-    const repository = new AccountRepository(db);
-    const useCase = new AuthenticateAccountUseCase(repository);
-    const controller = new IdentityController(useCase);
+    const uow = new DrizzleUnitOfWork(db);
+    const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
+    const registerUseCase = new RegisterAccountUseCase(uow, hasher);
+    const changePwdUseCase = new ChangePasswordUseCase(uow, hasher);
+    const resetPwdUseCase = new ResetPasswordUseCase(uow, hasher);
+    const controller = new IdentityController(authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase);
     
-    return await controller.login(c);
+    const req = { body: c.req.valid('json'), query: {}, params: {}, headers: {} };
+    const httpResponse = await controller.login(req);
+
+    if (httpResponse.status === 200 && httpResponse.body.accountData) {
+      const { issueSession } = await import('../../../utils/auth');
+      const { accountData } = httpResponse.body;
+      const { accessToken } = await issueSession(c, accountData);
+
+      return c.json({
+        success: true,
+        message: httpResponse.body.message,
+        accessToken,
+        user: { 
+          id: accountData.userId, 
+          email: accountData.email, 
+          role: accountData.role 
+        },
+      }, 200);
+    }
+    
+    return c.json(httpResponse.body, httpResponse.status);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'Falha Mestra na Validação do Cidadão', details: err.message },
@@ -236,10 +144,40 @@ localAuth.post('/login', loginRateLimiter, zValidator('json', legacyLoginSchema)
 });
 
 // ==========================================
+// 🔄 ROTA 2.5: CHANGE PASSWORD
+// ==========================================
+// TODO(Dev): Substituir req.params.userId por uma extração do JWT logado.
+localAuth.post('/change-password/:userId', async (c) => {
+  try {
+    const db = c.get('db');
+    const uow = new DrizzleUnitOfWork(db);
+    const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
+    const registerUseCase = new RegisterAccountUseCase(uow, hasher);
+    const changePwdUseCase = new ChangePasswordUseCase(uow, hasher);
+    const resetPwdUseCase = new ResetPasswordUseCase(uow, hasher);
+    const controller = new IdentityController(authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase);
+
+    const body = await c.req.json();
+    const req = { 
+      body, 
+      query: {}, 
+      params: { userId: c.req.param('userId') }, 
+      headers: {} 
+    };
+    
+    const httpResponse = await controller.changePassword(req);
+    
+    return c.json(httpResponse.body, httpResponse.status);
+  } catch (err: any) {
+    return c.json({ success: false, message: 'Erro interno', details: err.message }, 500);
+  }
+});
+
+// ==========================================
 // 📧 ROTA 3: ESQUECEU A SENHA (FORGOT)
 // ==========================================
 
-localAuth.post('/forgot-password', zValidator('json', forgotPasswordSchema), async (c) => {
+localAuth.post('/forgot-password', zValidator('json', ForgotPassword.Schema), async (c) => {
   const { email } = c.req.valid('json');
   const db = c.get('db');
 
@@ -280,44 +218,22 @@ localAuth.post('/forgot-password', zValidator('json', forgotPasswordSchema), asy
 // 🛡️ ROTA 4: RESET DE SENHA (Ação via Token)
 // ==========================================
 
-localAuth.post('/reset-password', zValidator('json', resetPasswordSchema), async (c) => {
-  const { token, password } = c.req.valid('json');
-  const db = c.get('db');
-
+localAuth.post('/reset-password', zValidator('json', ResetPassword.Schema), async (c) => {
   try {
-    // 1. Acha o token se não foi usado e se ainda não explodiu (Horário)
-    const [validReset] = await db
-      .select()
-      .from(passwordResets)
-      .where(
-        and(
-          eq(passwordResets.token, token),
-          eq(passwordResets.used, false),
-          gt(passwordResets.expiresAt, new Date())
-        )
-      )
-      .limit(1);
+    const db = c.get('db');
+    const uow = new DrizzleUnitOfWork(db);
+    const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
+    const registerUseCase = new RegisterAccountUseCase(uow, hasher);
+    const changePwdUseCase = new ChangePasswordUseCase(uow, hasher);
+    const resetPwdUseCase = new ResetPasswordUseCase(uow, hasher);
+    const controller = new IdentityController(authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase);
 
-    if (!validReset) {
-      return c.json(
-        { success: false, message: 'O Link de Recuperação expirou ou é inválido.' },
-        401
-      );
-    }
-
-    // 2. Transforma FÍSICAMENTE a Nova Senha pro formato PBKDF2
-    const secureHash = await hashPassword(password);
-
-    // 3. Destrói o Token Atual e Atualiza Conta do Usuário num Batch transacional
-    await db.update(passwordResets).set({ used: true }).where(eq(passwordResets.id, validReset.id));
-
-    await db.update(users).set({ password: secureHash }).where(eq(users.id, validReset.userId));
-
-    return c.json({
-      success: true,
-      message:
-        'A senha do Módulo Central Administrativo e Dashboard foi alterada irrevogavelmente com Sucesso.',
-    });
+    const body = c.req.valid('json');
+    const req = { body, query: {}, params: {}, headers: {} };
+    
+    const httpResponse = await controller.resetPassword(req);
+    
+    return c.json(httpResponse.body, httpResponse.status);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'A Mudança de Credencial foi bloqueada.', details: err.message },

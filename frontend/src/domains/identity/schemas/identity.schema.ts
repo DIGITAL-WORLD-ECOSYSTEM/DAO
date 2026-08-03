@@ -21,8 +21,4 @@ export const IdentityProfileSchema = z.object({
 
 export type IdentityProfile = z.infer<typeof IdentityProfileSchema>;
 
-export const LoginResponseSchema = z.object({
-  success: z.boolean(),
-  token: z.string(),
-  user: UserProfileSchema,
-});
+

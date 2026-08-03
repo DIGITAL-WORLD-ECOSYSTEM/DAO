@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { users, auditLogs } from '../../db/schema';
 import { authSignature } from '../../middleware/auth_signature';
 import { timingSafeEqual } from '../../utils/timing_safe';
-import { kycSubmitSchema, kycReviewSchema } from '../../validators/auth';
+import { KycSubmit, KycReview } from '@asppibra/contracts/http';
 import { Bindings } from '../../types/bindings';
 
 type AppType = { Bindings: Bindings; Variables: { db: any } };
@@ -15,7 +15,7 @@ const compliance = new Hono<AppType>();
  * KYC Submission (Stub for R2 Integration)
  * Protegido por Zero-Trust signature. Valida schema de entrada via Zod.
  */
-compliance.post('/kyc/submit', authSignature, zValidator('json', kycSubmitSchema), async (c) => {
+compliance.post('/kyc/submit', authSignature, zValidator('json', KycSubmit.Schema), async (c) => {
   const { userId, documentType } = c.req.valid('json');
   const db = c.get('db');
 
@@ -36,7 +36,7 @@ compliance.post('/kyc/submit', authSignature, zValidator('json', kycSubmitSchema
  * Fix SEC-02: usa timingSafeEqual para prevenir timing attack na comparação da admin key.
  * Valida schema de entrada via Zod.
  */
-compliance.post('/kyc/review', zValidator('json', kycReviewSchema), async (c) => {
+compliance.post('/kyc/review', zValidator('json', KycReview.Schema), async (c) => {
   const { userId, status, reason } = c.req.valid('json');
   const adminKey = c.req.header('x-admin-key') ?? '';
   const db = c.get('db');

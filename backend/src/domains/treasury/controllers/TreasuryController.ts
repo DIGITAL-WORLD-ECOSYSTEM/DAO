@@ -1,23 +1,23 @@
 import { GetFinancialAnalyticsUseCase } from '../usecases/GetFinancialAnalyticsUseCase';
-import { success, error } from '../../../utils/response';
+import { HttpRequest, HttpResponse } from '../../../application/ports/input/IHttp';
 
 export class TreasuryController {
   constructor(private getFinancialAnalyticsUseCase: GetFinancialAnalyticsUseCase) {}
 
-  async getAnalytics(c: any) {
-    const { year } = c.req.query();
+  async getAnalytics(req: HttpRequest): Promise<HttpResponse> {
+    const year = req.query.year;
     try {
       const result = await this.getFinancialAnalyticsUseCase.execute(year);
       
-      // Import success dynamically if the static import path is incorrect, or just use it.
-      // Wait, in treasury.ts it was `import { success, error } from '../../utils/response';`
-      // We will just replicate the response directly if `success` is not easily available, or let the bridge handle it.
-      // We will let the Controller return the payload, and the Strangler bridge will wrap it.
-      // But standard controller should use the Response utility.
-      
-      return result.data;
+      return {
+        status: 200,
+        body: result.data || result
+      };
     } catch (err: any) {
-      throw err;
+      return {
+        status: 500,
+        body: { success: false, message: err.message }
+      };
     }
   }
 }

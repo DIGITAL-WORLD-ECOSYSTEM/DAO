@@ -1,0 +1,26 @@
+=== CLOC ===
+github.com/AlDanial/cloc v 2.06  T=1.93 s (319.1 files/s, 36292.4 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+TypeScript                     592           6491           3972          44102
+JSON                            19            145              0          14961
+Markdown                         1             46              0            175
+CSS                              4              7             15            168
+SQL                              1              8             11             74
+-------------------------------------------------------------------------------
+SUM:                           617           6697           3998          59480
+-------------------------------------------------------------------------------
+=== CIRCULAR DEPENDENCIES ===
+Processed 600 files (4.9s) (74 warnings)
+
+1) backend/src/routes/core/identity/local.ts > backend/src/domains/identity/controllers/IdentityController.ts > backend/src/domains/identity/usecases/AuthenticateAccountUseCase.ts
+2) frontend/src/legacy/components/file-thumbnail/styles.tsx > frontend/src/legacy/components/file-thumbnail/types.ts
+3) frontend/src/legacy/components/hook-form/fields.tsx > frontend/src/legacy/components/hook-form/rhf-code.tsx > frontend/src/legacy/components/hook-form/index.ts
+4) frontend/src/legacy/components/hook-form/rhf-code.tsx > frontend/src/legacy/components/hook-form/index.ts
+5) frontend/src/legacy/components/label/styles.tsx > frontend/src/legacy/components/label/types.ts
+6) frontend/src/legacy/theme/core/palette.ts > frontend/src/legacy/theme/theme-config.ts
+7) frontend/src/legacy/theme/core/palette.ts > frontend/src/legacy/theme/theme-config.ts > frontend/src/legacy/theme/types.ts > frontend/src/legacy/theme/core/custom-shadows.ts
+8) frontend/src/legacy/theme/types.ts > frontend/src/legacy/theme/core/custom-shadows.ts
+
+=== ZOMBIES ===

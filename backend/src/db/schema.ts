@@ -961,6 +961,7 @@ export const treasuryLedger = sqliteTable(
   (table) => ({
     typeIdx: index('idx_treasury_type').on(table.type),
     userIdx: index('idx_treasury_user').on(table.userId),
+    createdIdx: index('idx_treasury_created').on(table.createdAt),
   })
 );
 

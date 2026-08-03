@@ -1,39 +1,48 @@
-import { IAccountRepository } from '../repositories/AccountRepository';
-import { verifyPassword } from '../../../routes/core/identity/local';
+import { IUnitOfWork } from '../../../application/ports/output/IUnitOfWork';
+import { IPasswordHasher } from '../../../application/ports/security/IPasswordHasher';
+import { Result } from '../../../shared/kernel/Result';
 
 export class AuthenticateAccountUseCase {
-  constructor(private accountRepo: IAccountRepository) {}
+  constructor(
+    private uow: IUnitOfWork,
+    private passwordHasher: IPasswordHasher
+  ) {}
 
-  async execute(input: any) {
+  async execute(input: any): Promise<Result<any>> {
     const { email, password } = input;
     
-    const account = await this.accountRepo.findByEmail(email);
+    return await this.uow.execute(async (factory) => {
+      const accountRepo = factory.getAccountRepository();
+      const accountResult = await accountRepo.findByEmail(email);
 
-    if (!account || !account.password) {
-      return { success: false, message: 'Conta Inexistente ou Incompatível com o modelo Manual de Login.', status: 401 };
-    }
+      if (accountResult.isFailure) {
+        return Result.fail('AccountNotFound');
+      }
 
-    if (!account.password.includes(':')) {
-      return { success: false, message: 'Este e-mail está emparelhado a um provedor OAuth ou Web3. Efetue Login por lá.', status: 401 };
-    }
+      const account = accountResult.getValue();
 
-    const isMatched = await verifyPassword(password, account.password);
+      if (!account.active) {
+        return Result.fail('AccountLocked');
+      }
 
-    if (!isMatched) {
-      return { success: false, message: 'As Credenciais de Acesso não batem.', status: 401 };
-    }
+      if (!account.password || !account.password.includes(':')) {
+        return Result.fail('AccountNotFound'); // OAuth/Web3 fallback
+      }
 
-    const userRole =
-      account.email === 'dev@asppibra.com'
-        ? 'dev'
-        : account.role === 'citizen'
-          ? 'user'
-          : account.role || 'user';
+      const isMatched = await this.passwordHasher.verify(password, account.password);
 
-    return {
-      success: true,
-      message: 'Credenciais Manuais Válidas',
-      accountData: {
+      if (!isMatched) {
+        return Result.fail('InvalidCredentials');
+      }
+
+      const userRole =
+        account.email === 'dev@asppibra.com'
+          ? 'dev'
+          : account.role === 'citizen'
+            ? 'user'
+            : account.role || 'user';
+
+      return Result.ok({
         userId: account.id,
         email: account.email,
         role: userRole,
@@ -41,7 +50,7 @@ export class AuthenticateAccountUseCase {
         firstName: account.firstName || '',
         lastName: account.lastName || '',
         username: account.username || '',
-      }
-    };
+      });
+    });
   }
 }

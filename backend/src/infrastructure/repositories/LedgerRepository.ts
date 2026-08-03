@@ -1,12 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { treasuryLedger } from '../../../db/schema';
-
-export interface ILedgerRepository {
-  getSummaryStats(year?: string): Promise<any>;
-  getMonthlyTrend(year?: string): Promise<any>;
-  getLatestTransactions(year?: string): Promise<any[]>;
-  getAvailableYears(): Promise<any[]>;
-}
+import { ILedgerRepository } from '../../../application/ports/output/ILedgerRepository';
 
 export class LedgerRepository implements ILedgerRepository {
   constructor(private db: any) {}

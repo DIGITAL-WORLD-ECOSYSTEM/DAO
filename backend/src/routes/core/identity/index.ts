@@ -9,15 +9,7 @@ import { rateLimit } from '../../../middleware/rate_limit';
 
 import { DIDResolver } from '../../../utils/did_resolver';
 import { authSignature } from '../../../middleware/auth_signature';
-import {
-  ssiRegisterSchema,
-  ssiLoginSchema,
-  passkeyBindSchema,
-  passkeyLoginSchema,
-  totpSetupSchema,
-  totpVerifySchema,
-  revokeSchema,
-} from '../../../validators/auth';
+import { RegisterSsi, LoginSsi, PasskeyBind, PasskeyLogin, TotpSetup, TotpVerify, Revoke } from '@asppibra/contracts/http';
 import { Bindings } from '../../../types/bindings';
 import oauthRouter from './oauth';
 import localRouter from './local';
@@ -86,7 +78,7 @@ identity.get('/challenge/:username', async (c) => {
 });
 
 // 2. Registro de Cidadão (Genesis Completion)
-identity.post('/register', zValidator('json', ssiRegisterSchema), async (c) => {
+identity.post('/register', zValidator('json', RegisterSsi.Schema), async (c) => {
   const { username, publicKey, signature, challenge, firstName, lastName, encryptedVault } =
     c.req.valid('json');
   const db = c.get('db');
@@ -197,7 +189,7 @@ identity.post('/register', zValidator('json', ssiRegisterSchema), async (c) => {
 });
 
 // 3. Handshake de Login (ZK-Proof)
-identity.post('/login', zValidator('json', ssiLoginSchema), async (c) => {
+identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
   const { username, signature, challenge, otpCode } = c.req.valid('json');
   const db = c.get('db');
 
@@ -323,7 +315,7 @@ identity.get('/passkey/challenge/:username', async (c) => {
 });
 
 // 4. Bind Passkey (Biometria) - PROTEGIDO COM ZERO-TRUST
-identity.post('/passkey/bind', authSignature, zValidator('json', passkeyBindSchema), async (c) => {
+identity.post('/passkey/bind', authSignature, zValidator('json', PasskeyBind.Schema), async (c) => {
   const { username, credentialId, publicKey, challenge, signature } = c.req.valid('json');
   const db = c.get('db');
 
@@ -382,7 +374,7 @@ identity.get('/passkey/login/challenge/:username', async (c) => {
 });
 
 // 4.2 Login via Passkey (Handshake Biométrico)
-identity.post('/passkey/login', zValidator('json', passkeyLoginSchema), async (c) => {
+identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (c) => {
   const { username, challenge, signature } = c.req.valid('json');
   const db = c.get('db');
 
@@ -479,7 +471,7 @@ identity.post('/passkey/login', zValidator('json', passkeyLoginSchema), async (c
 });
 
 // 5. Setup TOTP (Google Authenticator) - PROTEGIDO COM ZERO-TRUST
-identity.post('/totp/setup', authSignature, zValidator('json', totpSetupSchema), async (c) => {
+identity.post('/totp/setup', authSignature, zValidator('json', TotpSetup.Schema), async (c) => {
   const { username } = c.req.valid('json');
   const db = c.get('db');
 
@@ -507,7 +499,7 @@ identity.post('/totp/setup', authSignature, zValidator('json', totpSetupSchema),
 });
 
 // 5.1 Verify & Enable TOTP
-identity.post('/totp/verify', authSignature, zValidator('json', totpVerifySchema), async (c) => {
+identity.post('/totp/verify', authSignature, zValidator('json', TotpVerify.Schema), async (c) => {
   const { username, code } = c.req.valid('json');
   const db = c.get('db');
 
@@ -573,7 +565,7 @@ identity.get('/did/:id', async (c) => {
 });
 
 // 7. Revogação de Identidade (Emergência) - PROTEGIDO COM ZERO-TRUST
-identity.post('/revoke', authSignature, zValidator('json', revokeSchema), async (c) => {
+identity.post('/revoke', authSignature, zValidator('json', Revoke.Schema), async (c) => {
   const { username } = c.req.valid('json');
   const db = c.get('db');
 
@@ -805,7 +797,8 @@ identity.patch('/me', profileUpdateRateLimiter, async (c) => {
 identity.post('/change-password', async (c) => {
   try {
     const { getJwtToken, verifySession } = await import('../../../utils/auth');
-    const { verifyPassword, hashPassword } = await import('./local');
+    const { PBKDF2PasswordHasher } = await import('../../../infrastructure/security/crypto/PBKDF2PasswordHasher');
+    const hasher = new PBKDF2PasswordHasher();
     const token = getJwtToken(c);
     if (!token) return c.json({ success: false, message: 'Não autorizado' }, 401);
 
@@ -836,12 +829,12 @@ identity.post('/change-password', async (c) => {
       );
     }
 
-    const isMatched = await verifyPassword(oldPassword, user.password);
+    const isMatched = await hasher.verify(oldPassword, user.password);
     if (!isMatched) {
       return c.json({ success: false, message: 'Senha atual incorreta' }, 401);
     }
 
-    const secureHash = await hashPassword(newPassword);
+    const secureHash = await hasher.hash(newPassword);
     await db.update(users).set({ password: secureHash }).where(eq(users.id, userId));
 
     return c.json({ success: true, message: 'Senha alterada com sucesso' });
@@ -1207,15 +1200,15 @@ identity.post('/developer/verify-ssh', async (c) => {
 
     // 3. Emite um novo token de acesso com aal = 3
     const kid = c.env.JWT_KEY_VERSION || 'v1';
-    const { getJwtSigningKeyForKid, signJwtWithKid } = await import('../../../utils/auth');
-    const jwtKey = await getJwtSigningKeyForKid(kid, c.env);
+    const { JwtService } = await import('../../../infrastructure/security/jwt/JwtService');
+    const jwtService = new JwtService();
 
     const newPayload = {
       ...payload,
       aal: 3,
       exp: Math.floor(Date.now() / 1000) + 15 * 60,
     };
-    const newAccessToken = await signJwtWithKid(newPayload, jwtKey, kid);
+    const newAccessToken = await jwtService.sign(newPayload, c.env.JWT_SECRET, kid);
 
     // 4. Salva no Cookie de sessão do Hono
     const { setCookie } = await import('hono/cookie');

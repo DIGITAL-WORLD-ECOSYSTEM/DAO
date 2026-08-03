@@ -3,73 +3,22 @@ import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 import { eq } from 'drizzle-orm';
 import { users, userSessions } from '../db/schema';
 
-function base64UrlEncode(arr: Uint8Array): string {
-  const binString = String.fromCharCode(...arr);
-  return btoa(binString).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-}
+import { JwtService } from '../infrastructure/security/jwt/JwtService';
 
-function base64UrlDecode(str: string): Uint8Array {
-  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-  while (base64.length % 4) {
-    base64 += '=';
-  }
-  const binString = atob(base64);
-  const bytes = new Uint8Array(binString.length);
-  for (let i = 0; i < binString.length; i++) {
-    bytes[i] = binString.charCodeAt(i);
-  }
-  return bytes;
-}
-
-export async function signJwtWithKid(payload: any, key: CryptoKey, kid: string): Promise<string> {
-  const header = {
-    alg: 'HS256',
-    typ: 'JWT',
-    kid,
-  };
-  const enc = new TextEncoder();
-  const encodedHeader = base64UrlEncode(enc.encode(JSON.stringify(header)));
-  const encodedPayload = base64UrlEncode(enc.encode(JSON.stringify(payload)));
-
-  const signingInput = `${encodedHeader}.${encodedPayload}`;
-  const signatureBuffer = await crypto.subtle.sign({ name: 'HMAC' }, key, enc.encode(signingInput));
-
-  const encodedSignature = base64UrlEncode(new Uint8Array(signatureBuffer));
-  return `${signingInput}.${encodedSignature}`;
-}
+const jwtService = new JwtService();
 
 export function decodeJwt(token: string): any {
   const parts = token.split('.');
   if (parts.length !== 3) {
     throw new Error('Token JWT malformatado.');
   }
-  const payloadStr = new TextDecoder().decode(base64UrlDecode(parts[1]));
-  return JSON.parse(payloadStr);
-}
-
-export async function verifyJwtWithKid(token: string, key: CryptoKey): Promise<any> {
-  const parts = token.split('.');
-  if (parts.length !== 3) {
-    throw new Error('Token JWT malformatado.');
+  let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+  while (base64.length % 4) {
+    base64 += '=';
   }
-  const [headerB64, payloadB64, signatureB64] = parts;
-
-  const enc = new TextEncoder();
-  const signingInput = `${headerB64}.${payloadB64}`;
-  const signatureBytes = base64UrlDecode(signatureB64);
-
-  const isValid = await crypto.subtle.verify(
-    { name: 'HMAC' },
-    key,
-    signatureBytes,
-    enc.encode(signingInput)
+  const payloadStr = new TextDecoder().decode(
+    new Uint8Array(Array.from(atob(base64)).map(c => c.charCodeAt(0)))
   );
-
-  if (!isValid) {
-    throw new Error('Assinatura JWT inválida.');
-  }
-
-  const payloadStr = new TextDecoder().decode(base64UrlDecode(payloadB64));
   return JSON.parse(payloadStr);
 }
 
@@ -132,7 +81,13 @@ export async function verifySession(c: Context, token: string): Promise<any> {
   try {
     const parts = token.split('.');
     if (parts.length > 0) {
-      const headerStr = new TextDecoder().decode(base64UrlDecode(parts[0]));
+  let base64 = parts[0].replace(/-/g, '+').replace(/_/g, '/');
+      while (base64.length % 4) {
+        base64 += '=';
+      }
+      const headerStr = new TextDecoder().decode(
+        new Uint8Array(Array.from(atob(base64)).map(c => c.charCodeAt(0)))
+      );
       const header = JSON.parse(headerStr);
       if (header && header.kid) {
         kid = header.kid;
@@ -142,8 +97,8 @@ export async function verifySession(c: Context, token: string): Promise<any> {
     throw new Error('Token JWT malformatado.');
   }
 
-  const jwtKey = await getJwtSigningKeyForKid(kid, c.env);
-  const payload = await verifyJwtWithKid(token, jwtKey);
+  const secretKey = kid ? c.env[`JWT_SECRET_${kid.toUpperCase()}`] || c.env.JWT_SECRET : c.env.JWT_SECRET;
+  const payload = await jwtService.verify(token, secretKey);
 
   // Validação de claims obrigatórios (SEC-05)
   if (!payload.iss || payload.iss !== 'asppibra-dao') {
@@ -269,10 +224,10 @@ export async function issueSession(
 
   // Determinar a versão da chave (KID) e derivar via HKDF
   const kid = c.env.JWT_KEY_VERSION || 'v1';
-  const jwtKey = await getJwtSigningKeyForKid(kid, c.env);
+  const secretKey = kid ? c.env[`JWT_SECRET_${kid.toUpperCase()}`] || c.env.JWT_SECRET : c.env.JWT_SECRET;
 
   // 4. Assinar Access Token com claims hardened e kid no header
-  const accessToken = await signJwtWithKid(
+  const accessToken = await jwtService.sign(
     {
       iss: 'asppibra-dao',
       aud: 'asppibra-app',
@@ -291,7 +246,7 @@ export async function issueSession(
       nbf: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 15 * 60, // 15 minutos
     },
-    jwtKey,
+    secretKey,
     kid
   );
 
