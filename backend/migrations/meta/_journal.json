@@ -8,6 +8,20 @@
       "when": 1785521943923,
       "tag": "0000_foamy_mathemanic",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1785785927458,
+      "tag": "0001_huge_wiccan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785857197784,
+      "tag": "0002_clumsy_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

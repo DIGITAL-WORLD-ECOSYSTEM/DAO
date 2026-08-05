@@ -14,6 +14,17 @@ import { Bindings } from '../../../types/bindings';
 import oauthRouter from './oauth';
 import localRouter from './local';
 
+import { DrizzleUnitOfWork } from '../../../infrastructure/repositories/DrizzleUnitOfWork';
+import { IdentityController } from '../../../domains/identity/controllers/IdentityController';
+import { AuthenticateAccountUseCase } from '../../../domains/identity/usecases/AuthenticateAccountUseCase';
+import { RegisterAccountUseCase } from '../../../domains/identity/usecases/RegisterAccountUseCase';
+import { ChangePasswordUseCase } from '../../../domains/identity/usecases/ChangePasswordUseCase';
+import { ResetPasswordUseCase } from '../../../domains/identity/usecases/ResetPasswordUseCase';
+import { VerifyExternalIdentityUseCase } from '../../../domains/identity/usecases/VerifyExternalIdentityUseCase';
+import { PBKDF2PasswordHasher } from '../../../infrastructure/security/crypto/PBKDF2PasswordHasher';
+
+const hasher = new PBKDF2PasswordHasher();
+
 /**
  * Identity Registry (SSI Handshake & DID Management)
  */
@@ -899,102 +910,43 @@ identity.post('/web3/verify', async (c) => {
 
   await c.env.KV_AUTH.delete(`web3_nonce:${address}`);
 
-  // Fetch or create shadow user
-  const { users, wallets } = await import('../../../db/schema');
+  const db = c.get('db');
+  const uow = new DrizzleUnitOfWork(db);
+  const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
+  const registerUseCase = new RegisterAccountUseCase(uow, hasher);
+  const changePwdUseCase = new ChangePasswordUseCase(uow, hasher);
+  const resetPwdUseCase = new ResetPasswordUseCase(uow, hasher);
+  const verifyExternalIdentityUseCase = new VerifyExternalIdentityUseCase(uow);
+  
+  const controller = new IdentityController(
+    authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase, verifyExternalIdentityUseCase
+  );
 
-  let wallet = await db.query.wallets.findFirst({
-    where: eq(wallets.address, address),
-  });
+  const req = { body: c.req.valid('json'), query: {}, params: {}, headers: {} };
+  const httpResponse = await controller.verifyWeb3(req);
 
-  let userId: number;
-  let citizenRecord: any;
-
-  if (wallet) {
-    userId = wallet.userId;
-
-    // Check if the user exists
-    const user = await db.query.users.findFirst({ where: eq(users.id, userId) });
-    if (!user) throw new Error('Database integrity failure: Wallet has no associated user.');
-
-    // Ensure citizen record exists
-    let existingCitizen = await db.query.citizens.findFirst({ where: eq(citizens.userId, userId) });
-    if (!existingCitizen) {
-      const username =
-        `web3_${address.slice(2, 8)}_${Math.random().toString(36).substring(2, 5)}`.toLowerCase();
-      [existingCitizen] = await db
-        .insert(citizens)
-        .values({
-          userId,
-          username,
-          firstName: 'Web3',
-          lastName: address.slice(0, 6),
-          did: `did:dao:asppibra:eth:${address.toLowerCase()}`,
-          status: 'active',
-        })
-        .returning();
-    }
-    citizenRecord = existingCitizen;
-
-    // Link citizenId on users
-    await db.update(users).set({ citizenId: existingCitizen.id }).where(eq(users.id, userId));
-  } else {
-    // 💡 Shadow User Concept Implementation
-    const shadowEmail = `${address.toLowerCase()}@web3.local`;
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        email: shadowEmail,
-        password: crypto.randomUUID(), // Uncrackable hash
-        role: 'citizen',
-        active: true,
-        status: 'active',
-      })
-      .returning();
-
-    userId = newUser.id;
-
-    await db.insert(wallets).values({
-      userId,
-      address,
-      chainId: 1,
-    });
-
-    // Create Citizen Profile for the new Web3 User
-    const username =
-      `web3_${address.slice(2, 8)}_${Math.random().toString(36).substring(2, 5)}`.toLowerCase();
-    const [newCitizen] = await db
-      .insert(citizens)
-      .values({
-        userId,
-        username,
-        firstName: 'Web3',
-        lastName: address.slice(0, 6),
-        did: `did:dao:asppibra:eth:${address.toLowerCase()}`,
-        status: 'active',
-      })
-      .returning();
-    citizenRecord = newCitizen;
-
-    // Link citizenId on users
-    await db.update(users).set({ citizenId: newCitizen.id }).where(eq(users.id, userId));
+  if (httpResponse.status !== 200 || !httpResponse.body.accountData) {
+    return c.json(httpResponse.body, httpResponse.status);
   }
 
+  const { accountData } = httpResponse.body;
   const { issueSession } = await import('../../../utils/auth');
+  
   const { accessToken } = await issueSession(c, {
-    userId,
-    email: `${address.toLowerCase()}@web3.local`,
-    role: 'citizen',
+    userId: accountData.userId,
+    email: accountData.email,
+    role: accountData.role,
     aal: 1, // SIWE is factor 1
-    firstName: 'Web3',
-    lastName: address.slice(0, 6),
-    username: citizenRecord.username,
+    firstName: accountData.citizen?.firstName || 'Web3',
+    lastName: accountData.citizen?.lastName || address.slice(0, 6),
+    username: accountData.citizen?.username,
   });
 
   return c.json({
     success: true,
     accessToken,
-    user: { id: userId, address, role: 'citizen' },
-    message: 'Web3 SIWE Assinatura aceita com sucesso!',
+    user: { id: accountData.userId, address, role: accountData.role },
+    message: httpResponse.body.message,
   });
 });
 

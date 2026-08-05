@@ -281,6 +281,7 @@ export const citizens = sqliteTable(
     lastName: text('last_name'),
     did: text('did').unique(), // did:dao:asppibra:<pubkey_hash>
     publicKey: text('public_key'), // Ed25519 (Hex)
+    status: text('status', { enum: ['PENDING', 'VERIFIED', 'SUSPENDED', 'REVOKED'] }).default('PENDING').notNull(),
 
     // 👤 Identidade Civil (Ficha Cadastral)
     rg: text('rg'),
@@ -323,6 +324,7 @@ export const citizens = sqliteTable(
     passkeyPublicKey: text('passkey_public_key'), // WebAuthn Public Key
     totpSecret: text('totp_secret'), // Google Authenticator Secret
     totpEnabled: integer('totp_enabled', { mode: 'boolean' }).default(false),
+    version: integer('version').notNull().default(1),
 
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
     updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
@@ -1380,4 +1382,20 @@ export const chatEvents = sqliteTable('chat_events', {
   userId: integer('user_id').references(() => users.id), // Quem disparou o evento
   metadata: text('metadata', { mode: 'json' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+});
+
+// === 8. INFRAESTRUTURA: OUTBOX PATTERN ===
+export const outboxEvents = sqliteTable('outbox_events', {
+  id: text('id').primaryKey(), // UUID do evento (eventId)
+  aggregateId: integer('aggregate_id').notNull(),
+  aggregateType: text('aggregate_type').notNull(),
+  aggregateVersion: integer('aggregate_version').notNull(),
+  eventName: text('event_name').notNull(),
+  payload: text('payload').notNull(), // JSON
+  metadata: text('metadata'), // JSON
+  attempts: integer('attempts').default(0).notNull(),
+  published: integer('published', { mode: 'boolean' }).default(false).notNull(),
+  publishedAt: integer('published_at', { mode: 'timestamp' }),
+  error: text('error'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`).notNull(),
 });

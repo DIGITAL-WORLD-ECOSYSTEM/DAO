@@ -49,7 +49,7 @@ export const identityClient = {
     if (!res.ok) throw new Error('Login falhou');
     
     const json = await res.json();
-    return json as Login.Response;
+    return json as Login.LoginResponse;
   },
 
   /**

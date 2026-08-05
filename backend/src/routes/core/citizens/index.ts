@@ -1,6 +1,8 @@
 import { Hono } from 'hono';
 import { GetCitizenProfileUseCase } from '../../../domains/citizens/usecases/GetCitizenProfileUseCase';
 import { UpdateCitizenProfileUseCase } from '../../../domains/citizens/usecases/UpdateCitizenProfileUseCase';
+import { VerifyCitizenUseCase } from '../../../domains/citizens/usecases/VerifyCitizenUseCase';
+import { SuspendCitizenUseCase } from '../../../domains/citizens/usecases/SuspendCitizenUseCase';
 import { CitizenController } from '../../../domains/citizens/controllers/CitizenController';
 import { DrizzleUnitOfWork } from '../../../infrastructure/repositories/DrizzleUnitOfWork';
 
@@ -12,7 +14,9 @@ citizens.get('/profile/:accountId', async (c) => {
     const uow = new DrizzleUnitOfWork(db);
     const getProfileUseCase = new GetCitizenProfileUseCase(uow);
     const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
-    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase);
+    const verifyUseCase = new VerifyCitizenUseCase(uow);
+    const suspendUseCase = new SuspendCitizenUseCase(uow);
+    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
 
     const req = { 
       body: {}, 
@@ -35,7 +39,9 @@ citizens.post('/profile/:accountId', async (c) => {
     const uow = new DrizzleUnitOfWork(db);
     const getProfileUseCase = new GetCitizenProfileUseCase(uow);
     const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
-    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase);
+    const verifyUseCase = new VerifyCitizenUseCase(uow);
+    const suspendUseCase = new SuspendCitizenUseCase(uow);
+    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
 
     const body = await c.req.json();
     const req = { 
@@ -47,6 +53,55 @@ citizens.post('/profile/:accountId', async (c) => {
     
     const httpResponse = await controller.updateProfile(req);
     
+    return c.json(httpResponse.body, httpResponse.status as any);
+  } catch (err: any) {
+    return c.json({ success: false, message: 'Erro interno', details: err.message }, 500);
+  }
+});
+
+citizens.post('/:accountId/verify', async (c) => {
+  try {
+    const db = c.get('db' as any);
+    const uow = new DrizzleUnitOfWork(db);
+    const getProfileUseCase = new GetCitizenProfileUseCase(uow);
+    const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
+    const verifyUseCase = new VerifyCitizenUseCase(uow);
+    const suspendUseCase = new SuspendCitizenUseCase(uow);
+    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
+
+    const req = { 
+      body: {}, 
+      query: {}, 
+      params: { accountId: c.req.param('accountId') }, 
+      headers: {} 
+    };
+    
+    const httpResponse = await controller.verify(req);
+    return c.json(httpResponse.body, httpResponse.status as any);
+  } catch (err: any) {
+    return c.json({ success: false, message: 'Erro interno', details: err.message }, 500);
+  }
+});
+
+citizens.post('/:accountId/suspend', async (c) => {
+  try {
+    const db = c.get('db' as any);
+    const uow = new DrizzleUnitOfWork(db);
+    const getProfileUseCase = new GetCitizenProfileUseCase(uow);
+    const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
+    const verifyUseCase = new VerifyCitizenUseCase(uow);
+    const suspendUseCase = new SuspendCitizenUseCase(uow);
+    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
+
+    const body = await c.req.json();
+    const req = { 
+      body, 
+      query: {}, 
+      params: { accountId: c.req.param('accountId') }, 
+      headers: {} 
+    };
+    
+    const httpResponse = await controller.suspend(req);
     return c.json(httpResponse.body, httpResponse.status as any);
   } catch (err: any) {
     return c.json({ success: false, message: 'Erro interno', details: err.message }, 500);

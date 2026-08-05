@@ -5,7 +5,7 @@ import { identityClient } from '@/domains/identity/client/identity.client';
 import { ProfileOverview } from '@/domains/identity/components/ProfileOverview';
 
 export default async function DashboardPage() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('asppibra_session')?.value;
 
   if (!token) {

@@ -36,4 +36,35 @@ export class DrizzleAccountRepository implements IAccountRepository {
       return Result.fail(error.message);
     }
   }
+
+  async save(account: Account): Promise<Result<Account>> {
+    try {
+      if (account.id) {
+        // Update
+        await this.db.update(users).set({
+          email: account.email,
+          password: account.password,
+          role: account.role,
+          active: account.active,
+          status: account.status,
+          updatedAt: new Date(),
+        }).where(eq(users.id, account.id));
+      } else {
+        // Insert
+        const [inserted] = await this.db.insert(users).values({
+          email: account.email,
+          password: account.password,
+          role: account.role,
+          active: account.active,
+          status: account.status,
+        }).returning();
+        
+        // Atribuir o ID gerado pelo banco à entidade de domínio
+        (account as any).id = inserted.id;
+      }
+      return Result.ok(account);
+    } catch (error: any) {
+      return Result.fail(error.message);
+    }
+  }
 }

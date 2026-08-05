@@ -5,9 +5,12 @@ import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRep
 import { Result } from '../../shared/kernel/Result';
 import { DrizzleAccountRepository } from './AccountRepository';
 import { DrizzleCitizenRepository } from './CitizenRepository';
-import { DrizzleTreasuryRepository } from './TreasuryRepository';
 import { IPasswordResetRepository } from '../../application/ports/output/IPasswordResetRepository';
 import { DrizzlePasswordResetRepository } from './DrizzlePasswordResetRepository';
+import { IOutboxRepository } from '../../application/ports/output/IOutboxRepository';
+import { DrizzleOutboxRepository } from './DrizzleOutboxRepository';
+import { IWalletRepository } from '../../application/ports/output/IWalletRepository';
+import { DrizzleWalletRepository } from './WalletRepository';
 
 class DrizzleRepositoryFactory implements IRepositoryFactory {
   constructor(private tx: any) {}
@@ -17,7 +20,7 @@ class DrizzleRepositoryFactory implements IRepositoryFactory {
   }
 
   getCitizenRepository(): ICitizenRepository {
-    return new DrizzleCitizenRepository(this.tx);
+    return new DrizzleCitizenRepository(this.tx, this.getOutboxRepository());
   }
 
   getTreasuryRepository(): ITreasuryRepository {
@@ -27,6 +30,14 @@ class DrizzleRepositoryFactory implements IRepositoryFactory {
   getPasswordResetRepository(): IPasswordResetRepository {
     return new DrizzlePasswordResetRepository(this.tx);
   }
+
+  getOutboxRepository(): IOutboxRepository {
+    return new DrizzleOutboxRepository(this.tx);
+  }
+
+  getWalletRepository(): IWalletRepository {
+    return new DrizzleWalletRepository(this.tx);
+  }
 }
 
 export class DrizzleUnitOfWork implements IUnitOfWork {
@@ -34,10 +45,6 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
 
   async execute<T>(work: (factory: IRepositoryFactory) => Promise<Result<T>>): Promise<Result<T>> {
     try {
-      // O Drizzle executa transações internamente. 
-      // Se a Promise no callback lançar erro (reject), o Drizzle fará o ROLLBACK automático.
-      // Se retornar sucesso (resolve), o Drizzle fará o COMMIT automático.
-      
       let result: Result<T>;
 
       await this.db.transaction(async (tx: any) => {
@@ -52,7 +59,9 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
         }
       });
 
-      // Se passou limpo pelo bloco da transação, temos sucesso e podemos retorná-lo
+      // COMMIT EFETUADO NO BANCO!
+      // OutboxEvents já foram gravados na transação!
+      
       return result!;
     } catch (error: any) {
       // Se o erro foi o nosso próprio disparo de ROLLBACK para a falha lógica:

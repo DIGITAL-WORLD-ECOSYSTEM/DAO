@@ -2,5 +2,6 @@ import { Result } from '../../../shared/kernel/Result';
 import { Citizen } from '../../../domains/citizens/entities/Citizen';
 
 export interface ICitizenRepository {
-  findByAccountId(accountId: number): Promise<Result<Citizen>>;
+  findByUserId(userId: number): Promise<Result<Citizen>>;
+  save(entity: Citizen): Promise<Result<void>>;
 }

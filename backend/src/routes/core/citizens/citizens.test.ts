@@ -94,4 +94,54 @@ describe('API Core - Citizens Domain (/api/core/citizens)', () => {
       expect(res.status).toBeLessThan(500); 
     });
   });
+
+  describe('POST /:accountId/verify', () => {
+    it('Cenário 3: Verifica cidadão via rota (E2E Integration)', async () => {
+      const dbMock = makeD1Mock([{
+        id: 1,
+        user_id: 1,
+        username: 'john_doe',
+        status: 'PENDING'
+      }]);
+
+      const localEnv = { ...baseEnv, DB: dbMock };
+
+      const res = await citizens.fetch(
+        new Request('http://localhost/1/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        }),
+        localEnv as any,
+        { waitUntil: () => {}, passThroughOnException: () => {} } as any
+      );
+
+      expect(res.status).toBeLessThan(500); 
+    });
+  });
+
+  describe('POST /:accountId/suspend', () => {
+    it('Cenário 4: Suspende cidadão via rota (E2E Integration)', async () => {
+      const dbMock = makeD1Mock([{
+        id: 1,
+        user_id: 1,
+        username: 'john_doe',
+        status: 'VERIFIED'
+      }]);
+
+      const localEnv = { ...baseEnv, DB: dbMock };
+
+      const res = await citizens.fetch(
+        new Request('http://localhost/1/suspend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason: 'FRAUD', description: 'Atividade maliciosa' })
+        }),
+        localEnv as any,
+        { waitUntil: () => {}, passThroughOnException: () => {} } as any
+      );
+
+      expect(res.status).toBeLessThan(500); 
+    });
+  });
 });

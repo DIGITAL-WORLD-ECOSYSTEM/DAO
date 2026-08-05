@@ -2,6 +2,7 @@ import { AuthenticateAccountUseCase } from '../usecases/AuthenticateAccountUseCa
 import { RegisterAccountUseCase } from '../usecases/RegisterAccountUseCase';
 import { ChangePasswordUseCase } from '../usecases/ChangePasswordUseCase';
 import { ResetPasswordUseCase } from '../usecases/ResetPasswordUseCase';
+import { VerifyExternalIdentityUseCase } from '../usecases/VerifyExternalIdentityUseCase';
 import { HttpRequest, HttpResponse } from '../../../application/ports/input/IHttp';
 
 export class IdentityController {
@@ -9,7 +10,8 @@ export class IdentityController {
     private authenticateAccountUseCase: AuthenticateAccountUseCase,
     private registerAccountUseCase: RegisterAccountUseCase,
     private changePasswordUseCase: ChangePasswordUseCase,
-    private resetPasswordUseCase: ResetPasswordUseCase
+    private resetPasswordUseCase: ResetPasswordUseCase,
+    private verifyExternalIdentityUseCase?: VerifyExternalIdentityUseCase
   ) {}
 
   async login(req: HttpRequest): Promise<HttpResponse> {
@@ -116,11 +118,48 @@ export class IdentityController {
       };
     }
 
+      return {
+        status: 200,
+        body: {
+          success: true,
+          message: 'A senha do Módulo Central Administrativo e Dashboard foi alterada irrevogavelmente com Sucesso.'
+        }
+      };
+    }
+  }
+
+  async verifyWeb3(req: HttpRequest): Promise<HttpResponse> {
+    if (!this.verifyExternalIdentityUseCase) {
+      return {
+        status: 500,
+        body: { success: false, message: 'VerifyExternalIdentityUseCase not configured' }
+      };
+    }
+
+    const { address, signature, nonce, chainId } = req.body;
+
+    if (!address) {
+      return {
+        status: 400,
+        body: { success: false, message: 'Missing address' }
+      };
+    }
+
+    const result = await this.verifyExternalIdentityUseCase.execute({ address, chainId: chainId || 1 });
+
+    if (result.isFailure) {
+      return {
+        status: 400,
+        body: { success: false, message: result.error }
+      };
+    }
+
     return {
       status: 200,
       body: {
         success: true,
-        message: 'A senha do Módulo Central Administrativo e Dashboard foi alterada irrevogavelmente com Sucesso.'
+        message: 'Identidade Web3 vinculada com sucesso.',
+        accountData: result.getValue(),
       }
     };
   }
