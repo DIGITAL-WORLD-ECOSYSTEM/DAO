@@ -1,10 +1,49 @@
+# ─── Dependencies ────────────────────────────────────────────────────────────
 node_modules/
-.env*
+
+# ─── Environment ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── Build outputs ───────────────────────────────────────────────────────────
 dist/
 .next/
 out/
 build/
+.open-next/
+
+# ─── Caches & runtimes ───────────────────────────────────────────────────────
 .DS_Store
 coverage/
 .turbo/
 .wrangler/
+*.tsbuildinfo
+
+# ─── Logs & diagnostics ──────────────────────────────────────────────────────
+*.log
+test-results.txt
+scratch/
+tsc_errors.txt
+
+# ─── Scratch / automation scripts (never committed) ──────────────────────────
+fix_*.py
+fix_*.cjs
+fix_*.js
+gen_*.js
+gen_*.ts
+auto_*.py
+find_zombies*.py
+inventory.py
+rewrite_*.py
+update_*.py
+sprint*.py
+temp_*.js
+scratch_*.js
+generate-structure.js
+test-d1.js
+test-schema.ts
+hash.js
+**/hash.js
+r2-cors.json
+ai_models.json
