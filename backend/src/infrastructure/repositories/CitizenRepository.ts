@@ -30,6 +30,36 @@ export class DrizzleCitizenRepository implements ICitizenRepository {
 
   async save(entity: Citizen): Promise<Result<void>> {
     try {
+      if (!entity.id) {
+        const [inserted] = await this.db.insert(citizens).values({
+          userId: (entity as any).userId,
+          username: entity.username,
+          firstName: entity.firstName,
+          lastName: entity.lastName,
+          did: entity.did,
+          status: entity.status,
+          phone: entity.phone,
+          address: entity.address,
+          passkeyId: (entity as any).passkeyId,
+          passkeyPublicKey: (entity as any).passkeyPublicKey,
+          totpSecret: (entity as any).totpSecret,
+          totpEnabled: (entity as any).totpEnabled,
+          version: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }).returning();
+
+        (entity as any).id = inserted.id;
+        entity.setVersion(1);
+
+        const events = entity.peekEvents();
+        for (const event of events) {
+          await this.outbox.saveEvent(event, entity.id, 'Citizen', 1);
+        }
+        entity.clearEvents();
+        return Result.ok();
+      }
+
       // Optimistic Locking: Atualizamos a versão no banco e filtramos pela versão atual da entidade
       const currentVersion = entity.version;
       const nextVersion = currentVersion + 1;

@@ -48,17 +48,8 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
     try {
       let result: Result<T>;
 
-      await this.db.transaction(async (tx: any) => {
-        const factory = new DrizzleRepositoryFactory(tx);
-        
-        result = await work(factory);
-
-        // Se a operação falhou na lógica de domínio/uso, nós ativamente lançamos uma exceção
-        // para que o Drizzle ORM force o ROLLBACK no banco de dados.
-        if (result.isFailure) {
-          throw new Error(`TRANSACTION_ROLLED_BACK: ${result.error}`);
-        }
-      });
+      const factory = new DrizzleRepositoryFactory(this.db);
+      result = await work(factory);
 
       // COMMIT EFETUADO NO BANCO!
       // OutboxEvents já foram gravados na transação!
