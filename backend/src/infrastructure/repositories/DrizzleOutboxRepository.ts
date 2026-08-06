@@ -1,6 +1,6 @@
-import { IDomainEvent } from '../../../shared/kernel/DomainEvent';
-import { Result } from '../../../shared/kernel/Result';
-import { IOutboxRepository, OutboxEventRecord } from '../../../application/ports/output/IOutboxRepository';
+import { IDomainEvent } from '../../shared/kernel/DomainEvent';
+import { Result } from '../../shared/kernel/Result';
+import { IOutboxRepository, OutboxEventRecord } from '../../application/ports/output/IOutboxRepository';
 import { outboxEvents } from '../../db/schema';
 import { eq, asc, and } from 'drizzle-orm';
 import crypto from 'crypto';
@@ -18,7 +18,7 @@ export class DrizzleOutboxRepository implements IOutboxRepository {
         aggregateVersion,
         eventName: event.constructor.name,
         payload: JSON.stringify(event),
-        metadata: JSON.stringify({ occurredOn: event.occurredOn }),
+        metadata: JSON.stringify({ occurredOn: event.dateTimeOccurred }),
         attempts: 0,
         published: false,
         createdAt: new Date(),

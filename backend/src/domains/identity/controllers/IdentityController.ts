@@ -19,10 +19,10 @@ export class IdentityController {
     
     const result = await this.authenticateAccountUseCase.execute({ email, password });
     
-    if (!result.success || !result.accountData) {
+    if (result.isFailure) {
       return {
-        status: result.status || 401,
-        body: { success: false, message: result.message }
+        status: 401,
+        body: { success: false, message: result.error }
       };
     }
 
@@ -38,8 +38,8 @@ export class IdentityController {
       status: 200,
       body: {
         success: true,
-        message: result.message,
-        accountData: result.accountData // Route will intercept this and issue token
+        message: 'Login realizado com sucesso',
+        accountData: result.getValue() // Route will intercept this and issue token
       }
     };
   }
@@ -125,7 +125,6 @@ export class IdentityController {
           message: 'A senha do Módulo Central Administrativo e Dashboard foi alterada irrevogavelmente com Sucesso.'
         }
       };
-    }
   }
 
   async verifyWeb3(req: HttpRequest): Promise<HttpResponse> {

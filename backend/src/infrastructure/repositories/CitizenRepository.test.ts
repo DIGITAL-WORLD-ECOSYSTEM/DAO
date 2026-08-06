@@ -11,8 +11,8 @@ describe('DrizzleCitizenRepository', () => {
       limit: vi.fn().mockResolvedValue([]),
     };
 
-    const repo = new DrizzleCitizenRepository(mockDb);
-    const result = await repo.findByAccountId(1);
+    const repo = new DrizzleCitizenRepository(mockDb, {} as any);
+    const result = await repo.findByUserId(1);
 
     expect(result.isFailure).toBe(true);
     expect(result.error).toBe('Citizen not found');
@@ -36,8 +36,8 @@ describe('DrizzleCitizenRepository', () => {
       ]),
     };
 
-    const repo = new DrizzleCitizenRepository(mockDb);
-    const result = await repo.findByAccountId(1);
+    const repo = new DrizzleCitizenRepository(mockDb, {} as any);
+    const result = await repo.findByUserId(1);
 
     expect(result.isSuccess).toBe(true);
     const citizen = result.getValue();

@@ -34,13 +34,14 @@ describe('GetCitizenProfileUseCase (BDD)', () => {
   describe('Cenário 1: Citizen encontrado', () => {
     it('Given accountId válido, When buscar perfil, Then Result.ok(CitizenProfile DTO)', async () => {
       // Given
-      const citizenEntity = new Citizen({
+      const citizenEntity = Citizen.restore({
+        id: 0,
         userId: 1,
         username: 'john_doe',
         firstName: 'John',
         lastName: 'Doe',
         did: 'did:dao:asppibra:web2:1',
-        status: 'pending_genesis',
+        status: 'PENDING',
         publicKey: ''
       });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizenEntity));
@@ -78,7 +79,7 @@ describe('GetCitizenProfileUseCase (BDD)', () => {
   describe('Cenário 3: accountId inválido', () => {
     it('Given accountId nulo, When buscar perfil, Then ValidationError', async () => {
       // When
-      const result = await useCase.execute({ accountId: null });
+      const result = await useCase.execute({ accountId: null as any });
 
       // Then
       expect(result.isFailure).toBe(true);

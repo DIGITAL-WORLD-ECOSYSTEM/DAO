@@ -9,7 +9,9 @@ export class CitizenMapper {
       firstName: raw.firstName,
       lastName: raw.lastName,
       did: raw.did,
-      cpf: raw.cpf
+      cpf: raw.cpf,
+      status: raw.status || 'PENDING',
+      version: raw.version || 1
     });
   }
 }

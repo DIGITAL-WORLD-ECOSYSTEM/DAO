@@ -41,7 +41,7 @@ describe('ChangePasswordUseCase (BDD)', () => {
   describe('Cenário 1: Mudança com sucesso', () => {
     it('Given Conta existente e Senha atual correta, When Trocar senha, Then Nova senha armazenada, Hash atualizado, Commit realizado', async () => {
       // Given
-      const existingAccount = new Account({ email: 'user@dao.com', password: 'old_hash' }, 1);
+      const existingAccount = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
       mockAccountRepo.findById.mockResolvedValue(Result.ok(existingAccount));
       mockHasher.verify.mockResolvedValue(true); // Senha atual bate
       mockHasher.hash.mockResolvedValue('new_hash'); // Nova senha hasheada
@@ -70,7 +70,7 @@ describe('ChangePasswordUseCase (BDD)', () => {
   describe('Cenário 2: Senha atual incorreta', () => {
     it('Given Conta existente e Senha atual incorreta, When Trocar senha, Then Result.fail(InvalidPassword), Nenhuma alteração', async () => {
       // Given
-      const existingAccount = new Account({ email: 'user@dao.com', password: 'old_hash' }, 1);
+      const existingAccount = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
       mockAccountRepo.findById.mockResolvedValue(Result.ok(existingAccount));
       mockHasher.verify.mockResolvedValue(false); // Senha atual NÃO bate
 
@@ -126,7 +126,7 @@ describe('ChangePasswordUseCase (BDD)', () => {
   describe('Cenário 5: Erro inesperado (Rollback)', () => {
     it('Given Erro inesperado no banco, When Trocar senha, Then Rollback e fail', async () => {
       // Given
-      const existingAccount = new Account({ email: 'user@dao.com', password: 'old_hash' }, 1);
+      const existingAccount = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
       mockAccountRepo.findById.mockResolvedValue(Result.ok(existingAccount));
       mockHasher.verify.mockResolvedValue(true);
       mockHasher.hash.mockResolvedValue('new_hash');

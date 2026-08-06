@@ -43,12 +43,13 @@ describe('AuthenticateAccountUseCase (BDD)', () => {
   describe('Cenário 1: Autenticação com Sucesso', () => {
     it('Given Conta existente e Senha correta, When Autenticar, Then Result.ok()', async () => {
       // Given
-      const validAccount = new Account({
+      const validAccount = Account.restore({
+        id: 1,
         email: 'test@dao.com',
         password: 'pbkdf2:hash:salt',
         role: 'citizen',
         active: true,
-      }, 1);
+      });
 
       mockAccountRepo.findByEmail.mockResolvedValue(Result.ok(validAccount));
       mockHasher.verify.mockResolvedValue(true);
@@ -66,12 +67,13 @@ describe('AuthenticateAccountUseCase (BDD)', () => {
   describe('Cenário 2: Credenciais Inválidas', () => {
     it('Given Conta existente e Senha incorreta, When Autenticar, Then InvalidCredentials', async () => {
       // Given
-      const validAccount = new Account({
+      const validAccount = Account.restore({
+        id: 1,
         email: 'test@dao.com',
         password: 'pbkdf2:hash:salt',
         role: 'citizen',
         active: true,
-      }, 1);
+      });
 
       mockAccountRepo.findByEmail.mockResolvedValue(Result.ok(validAccount));
       mockHasher.verify.mockResolvedValue(false); // Senha incorreta
@@ -102,12 +104,13 @@ describe('AuthenticateAccountUseCase (BDD)', () => {
   describe('Cenário 4: Conta Bloqueada', () => {
     it('Given Conta bloqueada, When Autenticar, Then AccountLocked', async () => {
       // Given
-      const lockedAccount = new Account({
+      const lockedAccount = Account.restore({
+        id: 1,
         email: 'test@dao.com',
         password: 'pbkdf2:hash:salt',
         role: 'citizen',
         active: false, // Bloqueada
-      }, 1);
+      });
 
       mockAccountRepo.findByEmail.mockResolvedValue(Result.ok(lockedAccount));
 

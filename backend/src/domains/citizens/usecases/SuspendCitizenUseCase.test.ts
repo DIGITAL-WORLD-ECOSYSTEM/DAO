@@ -34,7 +34,7 @@ describe('SuspendCitizenUseCase (BDD)', () => {
 
   describe('Cenário 1: Suspender Cidadão Verificado', () => {
     it('Given Cidadão Verificado, When Suspend, Then Transição Ocorre e Persiste', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'VERIFIED' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'VERIFIED' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
       mockCitizenRepo.save.mockResolvedValue(Result.ok());
 
@@ -48,7 +48,7 @@ describe('SuspendCitizenUseCase (BDD)', () => {
 
   describe('Cenário 2: Idempotência', () => {
     it('Given Cidadão Suspenso, When Suspend, Then Result.ok(), Repository.save NÃO chamado', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'SUSPENDED' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'SUSPENDED' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       const result = await useCase.execute({ accountId: 1, reason: SuspensionReason.FRAUD });
@@ -61,7 +61,7 @@ describe('SuspendCitizenUseCase (BDD)', () => {
 
   describe('Cenário 3: Cidadão Pendente (Transição Proibida)', () => {
     it('Given Cidadão Pendente, When Suspend, Then Erro de Transição (Proibido)', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       const result = await useCase.execute({ accountId: 1, reason: SuspensionReason.FRAUD });

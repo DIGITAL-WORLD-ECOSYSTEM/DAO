@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { sql, desc, eq } from 'drizzle-orm';
 import { treasuryLedger, citizens, contracts, auditLogs } from '../../db/schema';
 import { verifyRole } from '../../middleware/rbac';
@@ -118,7 +119,7 @@ treasury.get('/analytics', async (c) => {
     const httpResponse = await controller.getAnalytics(req);
     
     if (httpResponse.status !== 200) {
-      return error(c, httpResponse.body.message, null, httpResponse.status);
+      return error(c, httpResponse.body.message, null, httpResponse.status as ContentfulStatusCode);
     }
     
     return success(c, 'Dados de analytics recuperados.', httpResponse.body);

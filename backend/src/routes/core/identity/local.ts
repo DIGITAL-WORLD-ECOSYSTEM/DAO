@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { zValidator } from '@hono/zod-validator';
 import { eq, and, gt } from 'drizzle-orm';
 import { users, citizens, passwordResets } from '../../../db/schema';
@@ -89,7 +90,7 @@ localAuth.post('/register', zValidator('json', Register.Schema), async (c) => {
       }, 201);
     }
     
-    return c.json(httpResponse.body, httpResponse.status);
+    return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'Falha durante registro local', details: err.message },
@@ -134,7 +135,7 @@ localAuth.post('/login', loginRateLimiter, zValidator('json', Login.Schema), asy
       }, 200);
     }
     
-    return c.json(httpResponse.body, httpResponse.status);
+    return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'Falha Mestra na Validação do Cidadão', details: err.message },
@@ -167,7 +168,7 @@ localAuth.post('/change-password/:userId', async (c) => {
     
     const httpResponse = await controller.changePassword(req);
     
-    return c.json(httpResponse.body, httpResponse.status);
+    return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);
   } catch (err: any) {
     return c.json({ success: false, message: 'Erro interno', details: err.message }, 500);
   }
@@ -233,7 +234,7 @@ localAuth.post('/reset-password', zValidator('json', ResetPassword.Schema), asyn
     
     const httpResponse = await controller.resetPassword(req);
     
-    return c.json(httpResponse.body, httpResponse.status);
+    return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);
   } catch (err: any) {
     return c.json(
       { success: false, message: 'A Mudança de Credencial foi bloqueada.', details: err.message },

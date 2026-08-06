@@ -8,6 +8,10 @@ export class CitizenVerifiedEvent implements IDomainEvent {
     this.dateTimeOccurred = new Date();
     this.citizenId = citizenId;
   }
+
+  getAggregateId(): string {
+    return this.citizenId.toString();
+  }
 }
 
 export class CitizenSuspendedEvent implements IDomainEvent {
@@ -22,6 +26,10 @@ export class CitizenSuspendedEvent implements IDomainEvent {
     this.reason = reason;
     this.description = description;
   }
+
+  getAggregateId(): string {
+    return this.citizenId.toString();
+  }
 }
 
 export class CitizenRevokedEvent implements IDomainEvent {
@@ -32,6 +40,10 @@ export class CitizenRevokedEvent implements IDomainEvent {
     this.dateTimeOccurred = new Date();
     this.citizenId = citizenId;
   }
+
+  getAggregateId(): string {
+    return this.citizenId.toString();
+  }
 }
 
 export class CitizenReactivatedEvent implements IDomainEvent {
@@ -41,5 +53,9 @@ export class CitizenReactivatedEvent implements IDomainEvent {
   constructor(citizenId: number) {
     this.dateTimeOccurred = new Date();
     this.citizenId = citizenId;
+  }
+
+  getAggregateId(): string {
+    return this.citizenId.toString();
   }
 }

@@ -48,7 +48,7 @@ describe('RegisterAccountUseCase (BDD)', () => {
       // Given
       mockAccountRepo.findByEmail.mockResolvedValue(Result.fail('AccountNotFound'));
       mockHasher.hash.mockResolvedValue('secure_hash');
-      mockAccountRepo.save.mockResolvedValue(Result.ok(new Account({ email: 'new@dao.com' }, 1)));
+      mockAccountRepo.save.mockResolvedValue(Result.ok(Account.restore({ id: 1, email: 'new@dao.com', role: 'CITIZEN', active: true })));
       mockCitizenRepo.save.mockResolvedValue(Result.ok());
 
       // When
@@ -70,7 +70,7 @@ describe('RegisterAccountUseCase (BDD)', () => {
   describe('Cenário 2: Email já existente', () => {
     it('Given Email já existente, When Registrar, Then Result.fail(EmailAlreadyExists), Nenhuma gravação', async () => {
       // Given
-      const existingAccount = new Account({ email: 'new@dao.com' }, 1);
+      const existingAccount = Account.restore({ id: 1, email: 'new@dao.com', role: 'CITIZEN', active: true });
       mockAccountRepo.findByEmail.mockResolvedValue(Result.ok(existingAccount));
 
       // When
@@ -95,7 +95,7 @@ describe('RegisterAccountUseCase (BDD)', () => {
       mockAccountRepo.findByEmail.mockResolvedValue(Result.fail('AccountNotFound'));
       mockHasher.hash.mockResolvedValue('secure_hash');
       
-      mockAccountRepo.save.mockResolvedValue(Result.ok(new Account({ email: 'new@dao.com' }, 1)));
+      mockAccountRepo.save.mockResolvedValue(Result.ok(Account.restore({ id: 1, email: 'new@dao.com', role: 'CITIZEN', active: true })));
       
       // Simula falha ao salvar o cidadão
       mockCitizenRepo.save.mockResolvedValue(Result.fail('Error saving Citizen'));

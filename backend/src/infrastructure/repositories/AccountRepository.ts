@@ -37,6 +37,35 @@ export class DrizzleAccountRepository implements IAccountRepository {
     }
   }
 
+  async findById(id: number): Promise<Result<Account>> {
+    try {
+      const result = await this.db
+        .select({
+          id: users.id,
+          email: users.email,
+          password: users.password,
+          role: users.role,
+          active: users.active,
+          firstName: citizens.firstName,
+          lastName: citizens.lastName,
+          username: citizens.username,
+        })
+        .from(users)
+        .leftJoin(citizens, eq(users.id, citizens.userId))
+        .where(eq(users.id, id))
+        .limit(1);
+
+      if (!result || result.length === 0) {
+        return Result.fail('Account not found');
+      }
+
+      const domainEntity = AccountMapper.toDomain(result[0]);
+      return Result.ok(domainEntity);
+    } catch (error: any) {
+      return Result.fail(error.message);
+    }
+  }
+
   async save(account: Account): Promise<Result<Account>> {
     try {
       if (account.id) {
@@ -46,7 +75,6 @@ export class DrizzleAccountRepository implements IAccountRepository {
           password: account.password,
           role: account.role,
           active: account.active,
-          status: account.status,
           updatedAt: new Date(),
         }).where(eq(users.id, account.id));
       } else {
@@ -56,7 +84,6 @@ export class DrizzleAccountRepository implements IAccountRepository {
           password: account.password,
           role: account.role,
           active: account.active,
-          status: account.status,
         }).returning();
         
         // Atribuir o ID gerado pelo banco à entidade de domínio

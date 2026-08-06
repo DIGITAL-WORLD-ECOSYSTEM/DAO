@@ -5,6 +5,7 @@ import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRep
 import { Result } from '../../shared/kernel/Result';
 import { DrizzleAccountRepository } from './AccountRepository';
 import { DrizzleCitizenRepository } from './CitizenRepository';
+import { DrizzleTreasuryRepository } from './TreasuryRepository';
 import { IPasswordResetRepository } from '../../application/ports/output/IPasswordResetRepository';
 import { DrizzlePasswordResetRepository } from './DrizzlePasswordResetRepository';
 import { IOutboxRepository } from '../../application/ports/output/IOutboxRepository';

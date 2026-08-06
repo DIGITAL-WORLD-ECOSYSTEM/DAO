@@ -34,7 +34,7 @@ describe('VerifyCitizenUseCase (BDD)', () => {
 
   describe('Cenário 1: Verifica cidadão Pendente', () => {
     it('Given Cidadão Pendente, When Verify, Then Transição Ocorre e Persiste', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
       mockCitizenRepo.save.mockResolvedValue(Result.ok());
 
@@ -48,7 +48,7 @@ describe('VerifyCitizenUseCase (BDD)', () => {
 
   describe('Cenário 2: Idempotência', () => {
     it('Given Cidadão Verificado, When Verify, Then Result.ok(), Repository.save NÃO chamado', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'VERIFIED' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'VERIFIED' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       const result = await useCase.execute({ accountId: 1 });
@@ -61,7 +61,7 @@ describe('VerifyCitizenUseCase (BDD)', () => {
 
   describe('Cenário 3: Cidadão Suspenso (Transição Proibida)', () => {
     it('Given Cidadão Suspenso, When Verify, Then Erro de Transição (Proibido)', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'SUSPENDED' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'SUSPENDED' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       const result = await useCase.execute({ accountId: 1 });
@@ -74,7 +74,7 @@ describe('VerifyCitizenUseCase (BDD)', () => {
 
   describe('Cenário 4: Cidadão Revogado (Transição Proibida)', () => {
     it('Given Cidadão Revogado, When Verify, Then Erro de Transição (Proibido)', async () => {
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', status: 'REVOKED' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'REVOKED' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       const result = await useCase.execute({ accountId: 1 });

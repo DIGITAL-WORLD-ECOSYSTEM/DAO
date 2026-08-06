@@ -36,13 +36,14 @@ export class VerifyExternalIdentityUseCase {
         if (citizenResult.isFailure) {
           // Se não existir, devemos criar o cidadão para esta conta orfã (recuperação)
           const username = `web3_${address.slice(2, 8)}_${Math.random().toString(36).substring(2, 5)}`.toLowerCase();
-          const newCitizen = new Citizen({
+          const newCitizen = Citizen.restore({
+            id: 0,
             userId,
             username,
             firstName: 'Web3',
             lastName: address.slice(0, 6),
             did: `did:dao:asppibra:eth:${address.toLowerCase()}`,
-            status: 'active',
+            status: 'PENDING',
             publicKey: '',
           });
 
@@ -55,12 +56,12 @@ export class VerifyExternalIdentityUseCase {
 
       } else {
         // 2. Criar nova conta shadow
-        const newAccount = new Account({
+        const newAccount = Account.restore({
+          id: 0,
           email: shadowEmail,
           password: crypto.randomUUID(), // Uncrackable fallback hash
           role: 'citizen',
-          active: true,
-          status: 'active',
+          active: true
         });
 
         const accountSaveResult = await accountRepo.save(newAccount);
@@ -81,13 +82,14 @@ export class VerifyExternalIdentityUseCase {
         
         // 4. Criar Cidadão
         const username = `web3_${address.slice(2, 8)}_${Math.random().toString(36).substring(2, 5)}`.toLowerCase();
-        const newCitizen = new Citizen({
+        const newCitizen = Citizen.restore({
+          id: 0,
           userId,
           username,
           firstName: 'Web3',
           lastName: address.slice(0, 6),
           did: `did:dao:asppibra:eth:${address.toLowerCase()}`,
-          status: 'active',
+          status: 'PENDING',
           publicKey: '',
         });
 

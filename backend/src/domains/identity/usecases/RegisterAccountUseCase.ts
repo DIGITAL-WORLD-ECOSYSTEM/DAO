@@ -32,7 +32,8 @@ export class RegisterAccountUseCase {
       const secureHash = await this.passwordHasher.hash(password);
 
       // 3. Criar Account
-      const newAccount = new Account({
+      const newAccount = Account.restore({
+        id: 0,
         email,
         password: secureHash,
         role: 'citizen',
@@ -47,13 +48,14 @@ export class RegisterAccountUseCase {
 
       // 4. Criar Citizen
       const username = email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 7);
-      const newCitizen = new Citizen({
+      const newCitizen = Citizen.restore({
+        id: 0,
         userId: savedAccount.id!,
         username: username.toLowerCase(),
         firstName,
         lastName,
         did: `did:dao:asppibra:web2:${savedAccount.id}`,
-        status: 'pending_genesis',
+        status: 'PENDING',
         publicKey: '',
       });
 

@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { verify } from 'hono/jwt';
 import { zValidator } from '@hono/zod-validator';
 import { authenticator } from 'otplib';
@@ -910,7 +911,6 @@ identity.post('/web3/verify', async (c) => {
 
   await c.env.KV_AUTH.delete(`web3_nonce:${address}`);
 
-  const db = c.get('db');
   const uow = new DrizzleUnitOfWork(db);
   const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
   const registerUseCase = new RegisterAccountUseCase(uow, hasher);
@@ -922,11 +922,11 @@ identity.post('/web3/verify', async (c) => {
     authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase, verifyExternalIdentityUseCase
   );
 
-  const req = { body: c.req.valid('json'), query: {}, params: {}, headers: {} };
+  const req = { body: { message, signature, address: addressRaw }, query: {}, params: {}, headers: {} };
   const httpResponse = await controller.verifyWeb3(req);
 
   if (httpResponse.status !== 200 || !httpResponse.body.accountData) {
-    return c.json(httpResponse.body, httpResponse.status);
+    return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);
   }
 
   const { accountData } = httpResponse.body;

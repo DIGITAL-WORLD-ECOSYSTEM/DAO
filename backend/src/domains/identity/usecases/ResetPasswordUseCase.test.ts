@@ -50,7 +50,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
       const resetEntity = { id: 10, userId: 1, token: 'valid_token', expiresAt: new Date(Date.now() + 10000), used: false };
       mockResetRepo.findByToken.mockResolvedValue(Result.ok(resetEntity));
       
-      const account = new Account({ email: 'user@dao.com', password: 'old_hash' }, 1);
+      const account = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
       mockAccountRepo.findById.mockResolvedValue(Result.ok(account));
       mockHasher.hash.mockResolvedValue('new_hash');
       mockAccountRepo.save.mockResolvedValue(Result.ok());
@@ -118,7 +118,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
       const resetEntity = { id: 10, userId: 1, token: 'valid_token', expiresAt: new Date(Date.now() + 10000), used: false };
       mockResetRepo.findByToken.mockResolvedValue(Result.ok(resetEntity));
       
-      const account = new Account({ email: 'user@dao.com', password: 'old_hash' }, 1);
+      const account = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
       mockAccountRepo.findById.mockResolvedValue(Result.ok(account));
       mockHasher.hash.mockResolvedValue('new_hash');
       mockAccountRepo.save.mockResolvedValue(Result.ok());

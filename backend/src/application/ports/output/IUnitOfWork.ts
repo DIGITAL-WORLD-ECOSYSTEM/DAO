@@ -1,4 +1,4 @@
-import { Result } from '../../shared/kernel/Result';
+import { Result } from '../../../shared/kernel/Result';
 import { IAccountRepository } from './IAccountRepository';
 import { ICitizenRepository } from './ICitizenRepository';
 import { ITreasuryRepository } from './ITreasuryRepository';

@@ -35,7 +35,7 @@ describe('UpdateCitizenProfileUseCase (BDD)', () => {
   describe('Cenário 1: Altera endereço com sucesso', () => {
     it('Given Citizen existente, When altera endereço, Then Commit realizado', async () => {
       // Given
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
       mockCitizenRepo.save.mockResolvedValue(Result.ok());
 
@@ -74,7 +74,7 @@ describe('UpdateCitizenProfileUseCase (BDD)', () => {
   describe('Cenário 3: Telefone inválido', () => {
     it('Given telefone inválido, When updatePhone, Then ValidationError', async () => {
       // Given
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       // When
@@ -93,7 +93,7 @@ describe('UpdateCitizenProfileUseCase (BDD)', () => {
   describe('Cenário 4: Falha na persistência', () => {
     it('Given falha durante persistência, When salvar Aggregate, Then Rollback completo', async () => {
       // Given
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', status: 'PENDING' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
       
       // Simula erro no Drizzle que causará Exception e Rollback
@@ -114,7 +114,7 @@ describe('UpdateCitizenProfileUseCase (BDD)', () => {
   describe('Cenário 5: Endereço igual ao atual', () => {
     it('Given endereço igual ao atual, When changeAddress, Then nenhuma alteração desnecessária é persistida', async () => {
       // Given
-      const citizen = new Citizen({ id: 1, userId: 1, username: 'john', address: 'Rua Atual' });
+      const citizen = Citizen.restore({ id: 1, userId: 1, username: 'john', address: 'Rua Atual', status: 'PENDING' });
       mockCitizenRepo.findByUserId.mockResolvedValue(Result.ok(citizen));
 
       // Simulando que o Repo.save não deve ser chamado
