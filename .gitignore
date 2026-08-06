@@ -1,3 +1,10 @@
+# ─── Documentation (kept local only) ────────────────────────────────────────
+*.md
+!**/src/**/*.md
+docs/
+backend/docs/
+dashboard/architecture/
+
 # ─── Dependencies ────────────────────────────────────────────────────────────
 node_modules/
 
