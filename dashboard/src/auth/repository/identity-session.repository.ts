@@ -40,8 +40,13 @@ export class IdentitySessionRepository {
    * Invalida a sessão atual
    */
   static async logout(): Promise<void> {
-    // Caso o backend possua endpoint de logout
-    // await axiosInstance.post('/api/core/identity/logout');
+    try {
+      await axiosInstance.post('/api/core/identity/logout');
+    } catch (e) {
+      console.warn('Erro ao fazer logout remoto', e);
+    } finally {
+      localStorage.removeItem('dao_access_token');
+    }
   }
 
   /**
