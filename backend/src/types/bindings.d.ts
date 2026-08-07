@@ -62,6 +62,12 @@ export type Bindings = {
 
   // 8. Durable Objects
   CHAT_ROOM: DurableObjectNamespace;
+
+  // 9. Chaos Engineering & Environment
+  ENVIRONMENT?: string;
+  CHAOS_D1_DOWN?: string;
+  CHAOS_KV_DOWN?: string;
+  CHAOS_RESEND_DOWN?: string;
 };
 
 /**

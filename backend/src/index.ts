@@ -135,7 +135,30 @@ app.use('/*', async (c: Context<AppType>, next: Next) => {
   return corsMiddleware(c, next);
 });
 
-// 1.2 Database Injection (Scoped)
+// 1.2 Chaos Engineering Middleware (Somente Testes/Dev)
+app.use('*', async (c: Context<AppType>, next: Next) => {
+  // Ignora rotas estáticas
+  if (c.req.path.match(/\.(css|js|png|jpg|ico|json|map)$/)) {
+    return next();
+  }
+
+  // Ativa apenas se o ambiente não for produção explícita
+  if (c.env.ENVIRONMENT !== 'production') {
+    if (c.env.CHAOS_D1_DOWN === 'true' && !c.req.path.startsWith('/api/core/health')) {
+      return error(c, 'Simulated D1 Outage', null, 503);
+    }
+    if (c.env.CHAOS_KV_DOWN === 'true') {
+      c.set('chaos_kv_down' as any, true);
+    }
+    if (c.env.CHAOS_RESEND_DOWN === 'true') {
+      c.set('chaos_resend_down' as any, true);
+    }
+  }
+
+  await next();
+});
+
+// 1.3 Database Injection (Scoped)
 app.use(async (c: Context<AppType>, next: Next) => {
   if (!c.env.DB) {
     return error(c, 'Binding DB não configurado no wrangler.toml', null, 500);
