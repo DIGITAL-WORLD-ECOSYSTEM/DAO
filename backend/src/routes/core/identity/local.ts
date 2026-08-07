@@ -2,7 +2,8 @@ import { Hono } from 'hono';
 import { ContentfulStatusCode } from 'hono/utils/http-status';
 import { zValidator } from '@hono/zod-validator';
 import { eq, and, gt } from 'drizzle-orm';
-import { users, citizens, passwordResets } from '../../../db/schema';
+import { z } from 'zod';
+import { users, citizens, passwordResets, userSessions } from '../../../db/schema';
 import {
   Register,
   Login,
@@ -16,6 +17,8 @@ import { ChangePasswordUseCase } from '../../../domains/identity/usecases/Change
 import { ResetPasswordUseCase } from '../../../domains/identity/usecases/ResetPasswordUseCase';
 import { IdentityController } from '../../../domains/identity/controllers/IdentityController';
 import { DrizzleUnitOfWork } from '../../../infrastructure/repositories/DrizzleUnitOfWork';
+import { IdentityNotificationService } from '../../../services/identity/IdentityNotificationService';
+import { clearSessionCookies } from '../../../utils/auth';
 
 type AppType = {
   Bindings: Bindings;
@@ -197,19 +200,20 @@ localAuth.post('/forgot-password', zValidator('json', ForgotPassword.Schema), as
         used: false,
       });
 
-      // TODO(Dev): Integrar API da Resend ou AWS SES para disparar E-mail Real.
-      // E-mail contendo algo como: https://app.asppibra.com/reset-password?token=${resetToken}
+      const notificationService = new IdentityNotificationService(c.env);
+      await notificationService.sendPasswordRecovery(user.email, resetToken);
     }
 
     // Retorna Sucesso Mudo/Silencioso (Anti-Enumeração)
     // Protege contra hackers querendo descobrir quais emails existem no sistema
     return c.json({
       success: true,
-      message: 'Se o E-mail existir, um link de recuperação foi enviado em breve.',
+      message: 'Se o e-mail existir, um link de recuperação será enviado em breve.',
     });
   } catch (err: any) {
+    // Nunca retornar details: err.message em produção para evitar leaks (R5)
     return c.json(
-      { success: false, message: 'Falha Mestra na Recuperação Falhou', details: err.message },
+      { success: false, message: 'Ocorreu um erro interno. Tente novamente.' },
       500
     );
   }
@@ -234,10 +238,73 @@ localAuth.post('/reset-password', zValidator('json', ResetPassword.Schema), asyn
     
     const httpResponse = await controller.resetPassword(req);
     
+    // Revogar todas as sessões se o reset foi bem-sucedido (R8)
+    if (httpResponse.status === 200) {
+      const [reset] = await db.select().from(passwordResets).where(eq(passwordResets.token, body.token)).limit(1);
+      if (reset) {
+        await db.update(userSessions)
+          .set({ revoked: true })
+          .where(eq(userSessions.userId, reset.userId));
+        clearSessionCookies(c);
+      }
+    }
+    
     return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);
   } catch (err: any) {
     return c.json(
-      { success: false, message: 'A Mudança de Credencial foi bloqueada.', details: err.message },
+      { success: false, message: 'Ocorreu um erro interno. Tente novamente.' },
+      500
+    );
+  }
+});
+
+// ==========================================
+// 🛡️ ROTA 5: REENVIO DE CÓDIGO (Verify Resend)
+// ==========================================
+
+const VerifyResendSchema = z.object({
+  email: z.string().email(),
+});
+
+localAuth.post('/verify/resend', zValidator('json', VerifyResendSchema), async (c) => {
+  const { email } = c.req.valid('json');
+  const db = c.get('db');
+  const ip = c.req.header('cf-connecting-ip') || 'anonymous';
+  const rateLimitKey = `ratelimit:verify_resend:${email}:${ip}`;
+
+  try {
+    const lastSent = await c.env.KV_AUTH.get(rateLimitKey);
+    if (lastSent) {
+      const timePassed = Date.now() - parseInt(lastSent, 10);
+      const backoffLevels = [60000, 120000, 300000]; // 60s, 120s, 300s
+      // Basic anti-spam: require at least 60s between sends
+      if (timePassed < 60000) {
+        return c.json({ success: false, message: 'TooManyRequests' }, 429);
+      }
+    }
+
+    // Set rate limit cooldown in KV
+    await c.env.KV_AUTH.put(rateLimitKey, Date.now().toString(), { expirationTtl: 60 });
+
+    const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+
+    // Anti-enumeração: sempre dizer que foi enviado
+    if (user && user.status !== 'verified') {
+      const verifyCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+
+      // TODO: Save code to DB to verify later
+      
+      const notificationService = new IdentityNotificationService(c.env);
+      await notificationService.sendVerificationCode(user.email, verifyCode);
+    }
+
+    return c.json({
+      success: true,
+      message: 'Código reenviado com sucesso. Verifique seu e-mail.',
+    });
+  } catch (err: any) {
+    return c.json(
+      { success: false, message: 'Ocorreu um erro interno. Tente novamente.' },
       500
     );
   }

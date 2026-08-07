@@ -26,10 +26,18 @@ export const ResetPasswordSchema = z.object({
 
 // ----------------------------------------------------------------------
 
+import { useRouter } from 'src/routes/hooks';
+
+import { toast } from 'src/components/snackbar';
+
+import { getErrorMessage } from '../../utils/error-message';
+import { IdentitySessionService } from '../../application/identity-session.service';
+
 // ----------------------------------------------------------------------
 
 export function JwtResetPasswordView() {
   const theme = useTheme();
+  const router = useRouter();
 
   const defaultValues: ResetPasswordSchemaType = {
     email: '',
@@ -47,10 +55,12 @@ export function JwtResetPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
+      await IdentitySessionService.forgotPassword(data.email);
+      toast.success('Se o e-mail existir, enviaremos o link.');
+      // O backend não vaza existência, sempre direcionamos
+      router.push(paths.auth.jwt.updatePassword);
     } catch (error) {
-      console.error(error);
+      toast.error(getErrorMessage(error));
     }
   });
 

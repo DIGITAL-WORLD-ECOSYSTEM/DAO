@@ -78,7 +78,7 @@ export function JwtSignUpView() {
         lastName: data.lastName,
       });
       await checkUserSession?.();
-      router.refresh();
+      router.push(`/verify?email=${encodeURIComponent(data.email)}`);
     } catch (error) {
       console.error(error);
       const feedbackMessage = getErrorMessage(error);

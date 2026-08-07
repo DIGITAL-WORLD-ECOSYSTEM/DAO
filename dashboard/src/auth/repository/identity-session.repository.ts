@@ -56,4 +56,18 @@ export class IdentitySessionRepository {
     const res = await axiosInstance.post('/api/core/identity/refresh');
     return res.data;
   }
+
+  static async forgotPassword(email: string): Promise<void> {
+    await axiosInstance.post('/api/core/identity/local/forgot-password', { email });
+  }
+
+  static async resetPassword(token: string, email: string, password: string): Promise<void> {
+    await axiosInstance.post('/api/core/identity/local/reset-password', { 
+      token, email, password, confirmPassword: password 
+    });
+  }
+
+  static async resendVerification(email: string): Promise<void> {
+    await axiosInstance.post('/api/core/identity/local/verify/resend', { email });
+  }
 }

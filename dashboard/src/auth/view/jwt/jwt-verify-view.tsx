@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
@@ -6,12 +8,16 @@ import { alpha, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useSearchParams } from 'src/routes/hooks';
 
 import { EmailInboxIcon } from 'src/assets/icons';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 
+import { getErrorMessage } from '../../utils/error-message';
 import { FormResendCode } from '../../components/form-resend-code';
+import { IdentitySessionService } from '../../application/identity-session.service';
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +25,36 @@ import { FormResendCode } from '../../components/form-resend-code';
 
 export function JwtVerifyView() {
   const theme = useTheme();
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email') || '';
+
+  const [countdown, setCountdown] = useState(0);
+  const [backoffLevel, setBackoffLevel] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const handleResendCode = async () => {
+    if (!email) {
+      toast.error('E-mail não fornecido.');
+      return;
+    }
+    try {
+      await IdentitySessionService.resendVerification(email);
+      toast.success('Código reenviado! Verifique seu e-mail.');
+      
+      const levels = [60, 120, 300];
+      setCountdown(levels[backoffLevel] || 300);
+      if (backoffLevel < 2) setBackoffLevel((prev) => prev + 1);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
 
   return (
     <Box
@@ -102,9 +138,9 @@ export function JwtVerifyView() {
       </Button>
 
       <FormResendCode
-        onResendCode={() => {}}
-        value={0}
-        disabled={false}
+        onResendCode={handleResendCode}
+        value={countdown}
+        disabled={countdown > 0}
         sx={{
           color: 'info.main',
           '& .MuiButton-root': {

@@ -42,4 +42,31 @@ export class IdentitySessionService {
       throw error;
     }
   }
+
+  static async forgotPassword(email: string): Promise<void> {
+    try {
+      await IdentitySessionRepository.forgotPassword(email);
+    } catch (error) {
+      console.error('[IdentitySessionService] Erro em forgotPassword', error);
+      throw error;
+    }
+  }
+
+  static async resetPassword(token: string, email: string, password: string): Promise<void> {
+    try {
+      await IdentitySessionRepository.resetPassword(token, email, password);
+    } catch (error) {
+      console.error('[IdentitySessionService] Erro em resetPassword', error);
+      throw error;
+    }
+  }
+
+  static async resendVerification(email: string): Promise<void> {
+    try {
+      await IdentitySessionRepository.resendVerification(email);
+    } catch (error) {
+      console.error('[IdentitySessionService] Erro em resendVerification', error);
+      throw error;
+    }
+  }
 }

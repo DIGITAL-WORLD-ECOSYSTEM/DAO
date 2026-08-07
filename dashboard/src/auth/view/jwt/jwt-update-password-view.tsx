@@ -13,13 +13,17 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { SentIcon } from 'src/assets/icons';
 
+import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
+import { getErrorMessage } from '../../utils/error-message';
 import { FormResendCode } from '../../components/form-resend-code';
+import { IdentitySessionService } from '../../application/identity-session.service';
 
 // ----------------------------------------------------------------------
 
@@ -49,11 +53,14 @@ export const UpdatePasswordSchema = z
 
 export function JwtUpdatePasswordView() {
   const theme = useTheme();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlToken = searchParams.get('token') || '';
 
   const showPassword = useBoolean();
 
   const defaultValues: UpdatePasswordSchemaType = {
-    code: '',
+    code: urlToken,
     email: '',
     password: '',
     confirmPassword: '',
@@ -71,10 +78,12 @@ export function JwtUpdatePasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
+      const tokenToUse = urlToken || data.code;
+      await IdentitySessionService.resetPassword(tokenToUse, data.email, data.password);
+      toast.success('Senha atualizada! Faça login.');
+      router.push(paths.auth.jwt.signIn);
     } catch (error) {
-      console.error(error);
+      toast.error(getErrorMessage(error));
     }
   });
 
