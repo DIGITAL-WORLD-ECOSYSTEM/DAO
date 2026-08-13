@@ -1,6 +1,7 @@
+import { INotificationPort } from '../../application/ports/output/INotificationPort';
 import { Bindings } from '../../types/bindings';
 
-export class IdentityNotificationService {
+export class ResendNotificationAdapter implements INotificationPort {
   constructor(private env: Bindings) {}
 
   async sendPasswordRecovery(to: string, resetToken: string): Promise<void> {
