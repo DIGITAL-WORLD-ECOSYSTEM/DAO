@@ -1,22 +1,11 @@
 import { Hono } from 'hono';
-import { GetCitizenProfileUseCase } from '../../../domains/citizens/usecases/GetCitizenProfileUseCase';
-import { UpdateCitizenProfileUseCase } from '../../../domains/citizens/usecases/UpdateCitizenProfileUseCase';
-import { VerifyCitizenUseCase } from '../../../domains/citizens/usecases/VerifyCitizenUseCase';
-import { SuspendCitizenUseCase } from '../../../domains/citizens/usecases/SuspendCitizenUseCase';
-import { CitizenController } from '../../../domains/citizens/controllers/CitizenController';
-import { DrizzleUnitOfWork } from '../../../infrastructure/repositories/DrizzleUnitOfWork';
+import { setupCitizensDI } from '../../../infrastructure/di/citizens_container';
 
 const citizens = new Hono<{ Bindings: any }>();
 
 citizens.get('/profile/:accountId', async (c) => {
   try {
-    const db = c.get('db' as any);
-    const uow = new DrizzleUnitOfWork(db);
-    const getProfileUseCase = new GetCitizenProfileUseCase(uow);
-    const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
-    const verifyUseCase = new VerifyCitizenUseCase(uow);
-    const suspendUseCase = new SuspendCitizenUseCase(uow);
-    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
+    const { controller } = await setupCitizensDI(c);
 
     const req = { 
       body: {}, 
@@ -35,13 +24,7 @@ citizens.get('/profile/:accountId', async (c) => {
 
 citizens.post('/profile/:accountId', async (c) => {
   try {
-    const db = c.get('db' as any);
-    const uow = new DrizzleUnitOfWork(db);
-    const getProfileUseCase = new GetCitizenProfileUseCase(uow);
-    const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
-    const verifyUseCase = new VerifyCitizenUseCase(uow);
-    const suspendUseCase = new SuspendCitizenUseCase(uow);
-    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
+    const { controller } = await setupCitizensDI(c);
 
     const body = await c.req.json();
     const req = { 
@@ -61,13 +44,7 @@ citizens.post('/profile/:accountId', async (c) => {
 
 citizens.post('/:accountId/verify', async (c) => {
   try {
-    const db = c.get('db' as any);
-    const uow = new DrizzleUnitOfWork(db);
-    const getProfileUseCase = new GetCitizenProfileUseCase(uow);
-    const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
-    const verifyUseCase = new VerifyCitizenUseCase(uow);
-    const suspendUseCase = new SuspendCitizenUseCase(uow);
-    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
+    const { controller } = await setupCitizensDI(c);
 
     const req = { 
       body: {}, 
@@ -85,13 +62,7 @@ citizens.post('/:accountId/verify', async (c) => {
 
 citizens.post('/:accountId/suspend', async (c) => {
   try {
-    const db = c.get('db' as any);
-    const uow = new DrizzleUnitOfWork(db);
-    const getProfileUseCase = new GetCitizenProfileUseCase(uow);
-    const updateProfileUseCase = new UpdateCitizenProfileUseCase(uow);
-    const verifyUseCase = new VerifyCitizenUseCase(uow);
-    const suspendUseCase = new SuspendCitizenUseCase(uow);
-    const controller = new CitizenController(getProfileUseCase, updateProfileUseCase, verifyUseCase, suspendUseCase);
+    const { controller } = await setupCitizensDI(c);
 
     const body = await c.req.json();
     const req = { 

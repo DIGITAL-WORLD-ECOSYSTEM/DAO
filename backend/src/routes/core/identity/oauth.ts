@@ -263,7 +263,9 @@ async function handleSocialLogin(
     });
   }
 
-  const { issueSession } = await import('../../../utils/auth');
+  const { setupIdentityDI: setupIdentity } = await import('../../../infrastructure/di/identity_container');
+  const { issueSessionUseCase } = await setupIdentity(c);
+  
   const userRole =
     profile.email.toLowerCase() === 'felipe.dev@empresa.com.br'
       ? 'dev'
@@ -273,7 +275,7 @@ async function handleSocialLogin(
   // Devs must start at AAL1, then authenticate SSH signature to escalate to AAL3
   const aal = 1;
 
-  const { accessToken } = await issueSession(c, {
+  const sessionResult = await issueSessionUseCase.execute({
     userId,
     email: profile.email,
     role: userRole,
@@ -281,7 +283,18 @@ async function handleSocialLogin(
     firstName,
     lastName,
     username,
+    tokenVersion: 1,
+    ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
+    userAgent: c.req.header('user-agent') || ''
   });
+
+  if (sessionResult.isFailure) {
+    throw new Error(sessionResult.error || 'Falha ao emitir sessão OAUTH');
+  }
+
+  const { accessToken, refreshToken } = sessionResult.getValue();
+  const { setSessionCookies } = await import('../../../utils/auth');
+  setSessionCookies(c, accessToken, refreshToken);
 
   return accessToken;
 }

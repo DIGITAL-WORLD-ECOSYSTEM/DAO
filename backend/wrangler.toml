@@ -23,6 +23,15 @@ name = "asppibra-api-staging"
 FRONTEND_URL = "https://staging.app.asppibra.com"
 JWT_EXPIRE_IN = "24h"
 
+[[env.staging.kv_namespaces]]
+binding = "KV_AUTH"
+id = "mock-kv-auth-staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "gov-db"
+database_id = "3640ec92-fb3c-4676-b9bc-174735fa3389"
+migrations_dir = "migrations"
 
 [observability]
 enabled = true

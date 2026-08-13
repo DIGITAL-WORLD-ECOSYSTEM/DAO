@@ -6,7 +6,9 @@ const makeD1Mock = (overrides: Record<string, any> = {}) => ({
   prepare: () => ({
     bind: (..._args: any[]) => ({
       first: (_col?: string) => Promise.resolve(overrides.firstResult ?? null),
-      all: () => Promise.resolve({ results: overrides.allResults ?? [], success: true }),
+      all: () => {
+        return Promise.resolve({ results: overrides.allResults ?? [], success: true });
+      },
       run: () => Promise.resolve({ success: true, meta: {} }),
       raw: () => Promise.resolve(overrides.rawResults ?? []),
     }),
@@ -132,11 +134,17 @@ describe('Identity Module — Local Authentication Integration', () => {
     });
 
     it('Cenário 2: Email já existente', async () => {
+      const { DrizzleAccountRepository } = await import('../../../infrastructure/repositories/AccountRepository');
+      const { Result } = await import('../../../shared/kernel/Result');
+      const { Account } = await import('../../../domains/identity/entities/Account');
+
+      vi.spyOn(DrizzleAccountRepository.prototype, 'findByEmail').mockResolvedValue(
+        Result.ok(Account.restore({ id: 1, email: 'conflict@dao.com', role: 'citizen', active: true }))
+      );
+
       const localEnv = {
         ...baseEnv,
-        DB: makeD1Mock({ 
-          allResults: [{ id: 1, email: 'conflict@dao.com' }] // Email existe
-        })
+        DB: makeD1Mock()
       };
 
       const res = await app.fetch(
@@ -154,8 +162,9 @@ describe('Identity Module — Local Authentication Integration', () => {
         { waitUntil: () => {}, passThroughOnException: () => {} } as any
       );
 
-      expect(res.status).toBe(409); // Conflict (Email já existe)
       const body = await res.json() as any;
+      console.log('SCENARIO 2 BODY:', body);
+      expect(res.status).toBe(409); // Conflict (Email já existe)
       expect(body.success).toBe(false);
       expect(body.message).toContain('EmailAlreadyExists');
     });

@@ -167,8 +167,9 @@ identity.post('/register', zValidator('json', RegisterSsi.Schema), async (c) => 
       metadata: { username, did },
     });
 
-    const { issueSession } = await import('../../../utils/auth');
-    const { accessToken } = await issueSession(c, {
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { issueSessionUseCase } = await setupIdentityDI(c);
+    const sessionResult = await issueSessionUseCase.execute({
       userId,
       email: userEmail,
       role: userRole,
@@ -176,7 +177,15 @@ identity.post('/register', zValidator('json', RegisterSsi.Schema), async (c) => 
       firstName: citizen.firstName || '',
       lastName: citizen.lastName || '',
       username: citizen.username || '',
+      tokenVersion: 1,
+      ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
+      userAgent: c.req.header('user-agent') || ''
     });
+
+    if (sessionResult.isFailure) throw new Error(sessionResult.error || 'Falha ao emitir sessão');
+    const { accessToken, refreshToken } = sessionResult.getValue();
+    const { setSessionCookies } = await import('../../../utils/auth');
+    setSessionCookies(c, accessToken, refreshToken);
 
     return c.json({
       success: true,
@@ -291,8 +300,9 @@ identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
           : userRecord.role || 'user';
   }
 
-  const { issueSession } = await import('../../../utils/auth');
-  const { accessToken } = await issueSession(c, {
+  const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+  const { issueSessionUseCase } = await setupIdentityDI(c);
+  const sessionResult = await issueSessionUseCase.execute({
     userId,
     email: userEmail,
     role: userRole,
@@ -300,7 +310,17 @@ identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
     firstName: citizen.firstName || '',
     lastName: citizen.lastName || '',
     username: citizen.username || '',
+    tokenVersion: 1,
+    ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
+    userAgent: c.req.header('user-agent') || ''
   });
+
+  if (sessionResult.isFailure) {
+    return c.json({ success: false, message: sessionResult.error }, 500);
+  }
+  const { accessToken, refreshToken } = sessionResult.getValue();
+  const { setSessionCookies } = await import('../../../utils/auth');
+  setSessionCookies(c, accessToken, refreshToken);
 
   return c.json({
     success: true,
@@ -455,8 +475,9 @@ identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (
           : userRecord.role || 'user';
   }
 
-  const { issueSession } = await import('../../../utils/auth');
-  const { accessToken } = await issueSession(c, {
+  const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+  const { issueSessionUseCase } = await setupIdentityDI(c);
+  const sessionResult = await issueSessionUseCase.execute({
     userId,
     email: userEmail,
     role: userRole,
@@ -464,7 +485,17 @@ identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (
     firstName: citizen.firstName || '',
     lastName: citizen.lastName || '',
     username: citizen.username || '',
+    tokenVersion: 1,
+    ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
+    userAgent: c.req.header('user-agent') || ''
   });
+
+  if (sessionResult.isFailure) {
+    return c.json({ success: false, message: sessionResult.error }, 500);
+  }
+  const { accessToken, refreshToken } = sessionResult.getValue();
+  const { setSessionCookies } = await import('../../../utils/auth');
+  setSessionCookies(c, accessToken, refreshToken);
 
   return c.json({
     success: true,
@@ -607,7 +638,9 @@ identity.get('/me', async (c) => {
     if (!token) {
       return c.json({ success: false, message: 'Usuário não autenticado' }, 401);
     }
-    const payload = await verifySession(c, token);
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+    const payload = await verifySession(c, token, sessionRepo, accountRepo);
 
     const userId = payload.userId || payload.sub;
     if (!userId) {
@@ -710,7 +743,9 @@ identity.patch('/me', profileUpdateRateLimiter, async (c) => {
     const token = getJwtToken(c);
     if (!token) return c.json({ success: false, message: 'Não autorizado' }, 401);
 
-    const payload = await verifySession(c, token);
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+    const payload = await verifySession(c, token, sessionRepo, accountRepo);
     const userId = Number(payload.userId || payload.sub);
 
     const body = await c.req.json();
@@ -814,7 +849,9 @@ identity.post('/change-password', async (c) => {
     const token = getJwtToken(c);
     if (!token) return c.json({ success: false, message: 'Não autorizado' }, 401);
 
-    const payload = await verifySession(c, token);
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+    const payload = await verifySession(c, token, sessionRepo, accountRepo);
     const userId = Number(payload.userId || payload.sub);
 
     const { oldPassword, newPassword } = await c.req.json();
@@ -911,16 +948,8 @@ identity.post('/web3/verify', async (c) => {
 
   await c.env.KV_AUTH.delete(`web3_nonce:${address}`);
 
-  const uow = new DrizzleUnitOfWork(db);
-  const authUseCase = new AuthenticateAccountUseCase(uow, hasher);
-  const registerUseCase = new RegisterAccountUseCase(uow, hasher);
-  const changePwdUseCase = new ChangePasswordUseCase(uow, hasher);
-  const resetPwdUseCase = new ResetPasswordUseCase(uow, hasher);
-  const verifyExternalIdentityUseCase = new VerifyExternalIdentityUseCase(uow);
-  
-  const controller = new IdentityController(
-    authUseCase, registerUseCase, changePwdUseCase, resetPwdUseCase, verifyExternalIdentityUseCase
-  );
+  const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+  const { controller, issueSessionUseCase } = await setupIdentityDI(c);
 
   const req = { body: { message, signature, address: addressRaw }, query: {}, params: {}, headers: {} };
   const httpResponse = await controller.verifyWeb3(req);
@@ -930,17 +959,24 @@ identity.post('/web3/verify', async (c) => {
   }
 
   const { accountData } = httpResponse.body;
-  const { issueSession } = await import('../../../utils/auth');
   
-  const { accessToken } = await issueSession(c, {
+  const sessionResult = await issueSessionUseCase.execute({
     userId: accountData.userId,
     email: accountData.email,
     role: accountData.role,
     aal: 1, // SIWE is factor 1
     firstName: accountData.citizen?.firstName || 'Web3',
     lastName: accountData.citizen?.lastName || address.slice(0, 6),
-    username: accountData.citizen?.username,
+    username: accountData.citizen?.username || address.slice(0, 8),
+    tokenVersion: 1,
+    ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
+    userAgent: c.req.header('user-agent') || ''
   });
+
+  if (sessionResult.isFailure) throw new Error(sessionResult.error || 'Falha ao emitir sessão SSI');
+  const { accessToken, refreshToken: newRefreshToken } = sessionResult.getValue();
+  const { setSessionCookies } = await import('../../../utils/auth');
+  setSessionCookies(c, accessToken, newRefreshToken);
 
   return c.json({
     success: true,
@@ -960,7 +996,9 @@ identity.post('/logout', async (c) => {
 
   if (token) {
     try {
-      const payload = await verifySession(c, token);
+      const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+      const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+      const payload = await verifySession(c, token, sessionRepo, accountRepo);
       if (payload.sessionId) {
         const db = c.get('db');
         const { userSessions } = await import('../../../db/schema');
@@ -996,7 +1034,13 @@ identity.post('/refresh', async (c) => {
   const db = c.get('db');
   const { userSessions, users, citizens } = await import('../../../db/schema');
   const { and, eq } = await import('drizzle-orm');
-  const { hashString, issueSession, clearSessionCookies } = await import('../../../utils/auth');
+  const { clearSessionCookies } = await import('../../../utils/auth');
+  const hashString = async (str: string) => {
+    const utf8 = new TextEncoder().encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  };
 
   try {
     const tokenHash = await hashString(refreshToken);
@@ -1053,7 +1097,9 @@ identity.post('/refresh', async (c) => {
           : user.role || 'user';
     const aal = userRole === 'dev' ? session.aal || 1 : session.aal || 1;
 
-    const { accessToken } = await issueSession(c, {
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { issueSessionUseCase } = await setupIdentityDI(c);
+    const sessionResult = await issueSessionUseCase.execute({
       userId: user.id,
       email: user.email,
       role: userRole,
@@ -1061,7 +1107,15 @@ identity.post('/refresh', async (c) => {
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       username: user.username || '',
+      tokenVersion: 1,
+      ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
+      userAgent: c.req.header('user-agent') || ''
     });
+
+    if (sessionResult.isFailure) throw new Error(sessionResult.error || 'Falha ao emitir sessão');
+    const { accessToken, refreshToken: newRefreshToken } = sessionResult.getValue();
+    const { setSessionCookies } = await import('../../../utils/auth');
+    setSessionCookies(c, accessToken, newRefreshToken);
 
     return c.json({
       success: true,
@@ -1091,7 +1145,9 @@ identity.get('/developer/challenge', async (c) => {
   if (!token) return c.json({ success: false, message: 'Autenticação requerida.' }, 401);
 
   try {
-    const payload = await verifySession(c, token);
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+    const payload = await verifySession(c, token, sessionRepo, accountRepo);
     if (payload.role !== 'dev') {
       return c.json({ success: false, message: 'Acesso negado para esta função.' }, 403);
     }
@@ -1113,7 +1169,9 @@ identity.post('/developer/verify-ssh', async (c) => {
   if (!token) return c.json({ success: false, message: 'Autenticação requerida.' }, 401);
 
   try {
-    const payload = await verifySession(c, token);
+    const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
+    const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+    const payload = await verifySession(c, token, sessionRepo, accountRepo);
     if (payload.role !== 'dev') {
       return c.json({ success: false, message: 'Acesso negado para esta função.' }, 403);
     }

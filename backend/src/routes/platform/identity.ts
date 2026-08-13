@@ -25,7 +25,9 @@ const verifyAuth = async (c: any, next: any) => {
     return c.json({ success: false, message: 'Não autorizado' }, 401);
   }
   try {
-    const payload = await verifySession(c, token);
+    const { setupIdentityDI } = await import('../../infrastructure/di/identity_container');
+    const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+    const payload = await verifySession(c, token, sessionRepo, accountRepo);
     c.set('jwtPayload', payload);
     await next();
   } catch (e) {

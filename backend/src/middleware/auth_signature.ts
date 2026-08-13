@@ -33,7 +33,9 @@ export const authSignature = async (c: Context, next: Next) => {
     const token = getJwtToken(c);
     if (token) {
       try {
-        const payload = await verifySession(c, token);
+        const { setupIdentityDI } = await import('../infrastructure/di/identity_container');
+        const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+        const payload = await verifySession(c, token, sessionRepo, accountRepo);
 
         // Injetar o usuário do JWT no contexto (compatível com o que o blog espera)
         c.set('user', {

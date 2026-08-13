@@ -2,6 +2,7 @@ import { AuthenticateAccountUseCase } from '../usecases/AuthenticateAccountUseCa
 import { RegisterAccountUseCase } from '../usecases/RegisterAccountUseCase';
 import { ChangePasswordUseCase } from '../usecases/ChangePasswordUseCase';
 import { ResetPasswordUseCase } from '../usecases/ResetPasswordUseCase';
+import { RequestPasswordResetUseCase } from '../usecases/RequestPasswordResetUseCase';
 import { VerifyExternalIdentityUseCase } from '../usecases/VerifyExternalIdentityUseCase';
 import { HttpRequest, HttpResponse } from '../../../application/ports/input/IHttp';
 
@@ -11,6 +12,7 @@ export class IdentityController {
     private registerAccountUseCase: RegisterAccountUseCase,
     private changePasswordUseCase: ChangePasswordUseCase,
     private resetPasswordUseCase: ResetPasswordUseCase,
+    private requestPasswordResetUseCase: RequestPasswordResetUseCase,
     private verifyExternalIdentityUseCase?: VerifyExternalIdentityUseCase
   ) {}
 
@@ -26,20 +28,12 @@ export class IdentityController {
       };
     }
 
-    // Token Session issuance should be handled by the route or a separate port, 
-    // but for now we keep the dynamic import to decouple from global imports,
-    // though ideally the UseCase or an Auth Port would handle this.
-    // For pure controller decoupling, we return the data and let the Route handle the cookie,
-    // or we just return the raw payload and let HonoAdapter set cookies (which is hard).
-    // The current architecture expects the route to handle framework details.
-    
-    // We'll return the account data and let the route handle session issuance.
     return {
       status: 200,
       body: {
         success: true,
         message: 'Login realizado com sucesso',
-        accountData: result.getValue() // Route will intercept this and issue token
+        accountData: result.getValue() 
       }
     };
   }
@@ -71,7 +65,7 @@ export class IdentityController {
           aal: 1,
           firstName,
           lastName,
-          username: email.split('@')[0], // Simplified since we don't return the raw username from UseCase yet
+          username: email.split('@')[0], 
         }
       }
     };
@@ -99,6 +93,18 @@ export class IdentityController {
       body: {
         success: true,
         message: 'Senha alterada com sucesso.'
+      }
+    };
+  }
+
+  async forgotPassword(req: HttpRequest): Promise<HttpResponse> {
+    const { email } = req.body;
+    await this.requestPasswordResetUseCase.execute({ email });
+    return {
+      status: 200,
+      body: {
+        success: true,
+        message: 'Se o e-mail existir, um link de recuperação será enviado em breve.'
       }
     };
   }

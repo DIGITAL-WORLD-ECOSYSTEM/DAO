@@ -25,6 +25,7 @@ import citizensRouter from './routes/core/citizens';
 import healthRouter from './routes/core/health';
 import webhooksRouter from './routes/core/webhooks';
 import complianceRouter from './routes/core/compliance';
+import notificationsRouter from './routes/core/notifications';
 import aiRouter from './routes/ai/test';
 import pipelineRouter from './routes/ai/pipeline-test';
 import publishRouter from './routes/ai/publish';
@@ -233,6 +234,7 @@ app.get('/api/stats', async (c) => {
 
 app.route('/api/core/identity', authRouter);
 app.route('/api/core/citizens', citizensRouter);
+app.route('/api/core/notifications', notificationsRouter);
 app.route('/api/core/compliance', complianceRouter);
 app.route('/api/core/health', healthRouter);
 app.route('/api/core/webhooks', webhooksRouter);

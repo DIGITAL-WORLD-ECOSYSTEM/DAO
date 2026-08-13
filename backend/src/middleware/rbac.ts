@@ -14,7 +14,9 @@ export const verifyRole = (allowedRoles: string[]) => {
         return error(c, 'Acesso negado: Token de autorização não fornecido.', null, 401);
       }
 
-      const payload = await verifySession(c, token);
+      const { setupIdentityDI } = await import('../infrastructure/di/identity_container');
+      const { sessionRepo, accountRepo } = await setupIdentityDI(c);
+      const payload = await verifySession(c, token, sessionRepo, accountRepo);
 
       // Extrai o role do payload do JWT
       const userRole = (payload.role as string) || 'citizen';
