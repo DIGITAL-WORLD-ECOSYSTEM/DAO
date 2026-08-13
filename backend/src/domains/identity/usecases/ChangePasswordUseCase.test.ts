@@ -18,6 +18,7 @@ describe('ChangePasswordUseCase (BDD)', () => {
 
     mockFactory = {
       getAccountRepository: vi.fn(() => mockAccountRepo),
+      getSessionRepository: vi.fn(),
     };
 
     mockUow = {

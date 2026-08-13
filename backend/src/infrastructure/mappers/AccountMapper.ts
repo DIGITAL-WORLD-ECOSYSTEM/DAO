@@ -10,7 +10,9 @@ export class AccountMapper {
       active: raw.active,
       firstName: raw.firstName,
       lastName: raw.lastName,
-      username: raw.username
+      username: raw.username,
+      tokenVersion: raw.tokenVersion,
+      status: raw.status
     });
   }
 }

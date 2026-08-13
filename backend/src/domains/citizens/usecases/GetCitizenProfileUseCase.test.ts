@@ -58,7 +58,7 @@ describe('GetCitizenProfileUseCase (BDD)', () => {
       expect(dto).not.toBeInstanceOf(Citizen); // Não deve retornar a Entidade
       expect(dto.username).toBe('john_doe');
       expect(dto.firstName).toBe('John');
-      expect(dto.status).toBe('pending_genesis');
+      expect(dto.status).toBe('PENDING');
     });
   });
 

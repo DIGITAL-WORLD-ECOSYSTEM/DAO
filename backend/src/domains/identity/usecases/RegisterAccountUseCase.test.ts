@@ -24,6 +24,7 @@ describe('RegisterAccountUseCase (BDD)', () => {
     mockFactory = {
       getAccountRepository: vi.fn(() => mockAccountRepo),
       getCitizenRepository: vi.fn(() => mockCitizenRepo),
+      getSessionRepository: vi.fn(),
     };
 
     mockUow = {

@@ -6,6 +6,7 @@ import { Account } from '../entities/Account';
 describe('ResetPasswordUseCase (BDD)', () => {
   let mockAccountRepo: any;
   let mockResetRepo: any;
+  let mockSessionRepo: any;
   let mockFactory: any;
   let mockUow: any;
   let mockHasher: any;
@@ -22,9 +23,14 @@ describe('ResetPasswordUseCase (BDD)', () => {
       invalidate: vi.fn(),
     };
 
+    mockSessionRepo = {
+      revokeAllUserSessions: vi.fn(),
+    };
+
     mockFactory = {
       getAccountRepository: vi.fn(() => mockAccountRepo),
       getPasswordResetRepository: vi.fn(() => mockResetRepo),
+      getSessionRepository: vi.fn(() => mockSessionRepo),
     };
 
     mockUow = {

@@ -9,6 +9,8 @@ export interface AccountProps {
   firstName?: string;
   lastName?: string;
   username?: string;
+  tokenVersion?: number;
+  status?: string;
 }
 
 export class Account extends BaseEntity<number> {
@@ -31,6 +33,8 @@ export class Account extends BaseEntity<number> {
   get firstName(): string | undefined { return this._props.firstName; }
   get lastName(): string | undefined { return this._props.lastName; }
   get username(): string | undefined { return this._props.username; }
+  get tokenVersion(): number { return this._props.tokenVersion ?? 1; }
+  get status(): string { return this._props.status ?? 'active'; }
 
   changePassword(newHash: string): void {
     this._props.password = newHash;

@@ -18,6 +18,7 @@ export class ResetPasswordUseCase {
     return await this.uow.execute(async (factory) => {
       const resetRepo = factory.getPasswordResetRepository();
       const accountRepo = factory.getAccountRepository();
+      const sessionRepo = factory.getSessionRepository();
 
       // 1. Validar token
       const resetResult = await resetRepo.findByToken(token);
@@ -59,8 +60,12 @@ export class ResetPasswordUseCase {
         return Result.fail(`Erro ao invalidar token: ${invalidateResult.error}`);
       }
 
-      // 6. Commit
+      // 6. Revogar todas as sessões anteriores (Anti-hijacking)
+      await sessionRepo.revokeAllUserSessions(account.id);
+
+      // 7. Commit
       return Result.ok();
     });
   }
 }
+
