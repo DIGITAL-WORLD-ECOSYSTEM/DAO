@@ -27,10 +27,10 @@ describe('ASOT-E2E-VALIDATION: Full Onboarding & Platform Workflow', () => {
 
   it('Etapa 1: Registration (Identity)', async () => {
     const { res, durationMs } = await measureResponse(() => 
-      fetch(`${API_URL}/api/core/identity/register`, {
+      fetch(`${API_URL}/api/core/identity/local/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: testUser.email, password: testUser.password }),
+        body: JSON.stringify({ firstName: 'Test', lastName: 'User', email: testUser.email, password: testUser.password }),
       })
     );
 

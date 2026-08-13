@@ -9,6 +9,7 @@ export default defineConfig({
     exclude: ['node_modules/**'],
     alias: {
       '@dao/shared': path.resolve(__dirname, '../packages/shared/src'),
+      'cloudflare:workers': path.resolve(__dirname, 'src/__mocks__/cloudflare-workers.ts'),
     },
   },
 });

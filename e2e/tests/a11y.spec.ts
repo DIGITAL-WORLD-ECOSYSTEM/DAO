@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('Acessibilidade (A11Y) - Identity Domain', () => {
 
   test('A página de Login não deve ter violações de acessibilidade detectáveis automaticamente', async ({ page }) => {
-    await page.goto('/auth/jwt/sign-in');
+    await page.goto('/login');
     
     // Aguarda o formulário principal renderizar
     await page.waitForSelector('form');
@@ -15,7 +15,7 @@ test.describe('Acessibilidade (A11Y) - Identity Domain', () => {
   });
 
   test('A página de Registro não deve ter violações de acessibilidade detectáveis automaticamente', async ({ page }) => {
-    await page.goto('/auth/jwt/sign-up');
+    await page.goto('/register');
     
     await page.waitForSelector('form');
 

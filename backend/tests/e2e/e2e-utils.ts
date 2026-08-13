@@ -5,7 +5,7 @@ const execAsync = promisify(exec);
 
 export const E2E_PREFIX = `e2e_${Date.now()}`;
 export const TARGET_ENV = process.env.TARGET_ENV || 'staging';
-export const API_URL = TARGET_ENV === 'production' ? 'https://api.asppibra.com' : 'http://localhost:8787';
+export const API_URL = TARGET_ENV === 'production' ? 'https://api.asppibra.com' : 'http://localhost:8788';
 
 /**
  * Executa uma query SQL no Cloudflare D1 usando Wrangler

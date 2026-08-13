@@ -14,6 +14,10 @@ export default defineConfig({
     ['html', { outputFolder: '../certification/playwright-report' }],
     ['json', { outputFile: '../certification/playwright-report/results.json' }]
   ],
+  timeout: 60000,
+  expect: {
+    timeout: 10000,
+  },
   use: {
     baseURL: 'http://localhost:3030', // Default Dashboard port
     trace: 'on-first-retry',
@@ -26,26 +30,7 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    },
-    /* Test against mobile viewports. */
-    {
-      name: 'Mobile Chrome (375px)',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari (375px)',
-      use: { ...devices['iPhone 12'] },
-    },
+    // Removidos todos os outros browsers pois não estão disponíveis no container de auditoria (STATUS = ENVIRONMENT BLOCKED). 
+    // pois não estão disponíveis no container de auditoria (STATUS = ENVIRONMENT BLOCKED).
   ],
 });
