@@ -30,9 +30,15 @@ export class DrizzleAccountRepository implements IAccountRepository {
         return Result.fail('Account not found');
       }
 
-      const domainEntity = AccountMapper.toDomain(result[0]);
-      return Result.ok(domainEntity);
+      try {
+        const domainEntity = AccountMapper.toDomain(result[0]);
+        return Result.ok(domainEntity);
+      } catch (err: any) {
+        console.error('AccountMapper Error:', err);
+        throw err;
+      }
     } catch (error: any) {
+      console.error('findByEmail Error:', error);
       return Result.fail(error.message);
     }
   }

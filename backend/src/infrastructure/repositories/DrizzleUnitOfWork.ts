@@ -13,6 +13,9 @@ import { DrizzleOutboxRepository } from './DrizzleOutboxRepository';
 import { IWalletRepository } from '../../application/ports/output/IWalletRepository';
 import { DrizzleWalletRepository } from './WalletRepository';
 
+import { ISessionRepository } from '../../application/ports/output/ISessionRepository';
+import { DrizzleSessionRepository } from './DrizzleSessionRepository';
+
 class DrizzleRepositoryFactory implements IRepositoryFactory {
   constructor(private tx: any) {}
 
@@ -39,31 +42,21 @@ class DrizzleRepositoryFactory implements IRepositoryFactory {
   getWalletRepository(): IWalletRepository {
     return new DrizzleWalletRepository(this.tx);
   }
+
+  getSessionRepository(): ISessionRepository {
+    return new DrizzleSessionRepository(this.tx);
+  }
 }
 
 export class DrizzleUnitOfWork implements IUnitOfWork {
   constructor(private db: any) {}
 
   async execute<T>(work: (factory: IRepositoryFactory) => Promise<Result<T>>): Promise<Result<T>> {
-    try {
-      let result: Result<T>;
-
-      const factory = new DrizzleRepositoryFactory(this.db);
-      result = await work(factory);
-
-      // COMMIT EFETUADO NO BANCO!
-      // OutboxEvents já foram gravados na transação!
-      
-      return result!;
-    } catch (error: any) {
-      // Se o erro foi o nosso próprio disparo de ROLLBACK para a falha lógica:
-      if (error.message && error.message.includes('TRANSACTION_ROLLED_BACK')) {
-        const errorMsg = error.message.replace('TRANSACTION_ROLLED_BACK: ', '');
-        return Result.fail(errorMsg);
-      }
-      
-      // Se o erro foi um timeout do Cloudflare, DB indisponível, etc.
-      return Result.fail(error.message || 'Unknown infrastructure error during transaction');
-    }
+    // Cloudflare D1 does not natively support interactive transactions with callbacks (BEGIN/COMMIT).
+    // The previous attempt to use db.transaction() failed because D1 throws "Failed query: begin".
+    // To achieve true atomic writes, we must use db.batch(), which requires a different Repository interface.
+    // For now, we simulate the UoW by passing the main db instance.
+    const factory = new DrizzleRepositoryFactory(this.db);
+    return await work(factory);
   }
 }

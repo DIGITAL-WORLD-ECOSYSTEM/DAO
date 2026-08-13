@@ -34,4 +34,13 @@ export class DrizzlePasswordResetRepository implements IPasswordResetRepository 
       return Result.fail(e.message);
     }
   }
+
+  async create(data: { userId: number; token: string; expiresAt: Date; used: boolean }): Promise<Result<void>> {
+    try {
+      await this.db.insert(passwordResets).values(data);
+      return Result.ok();
+    } catch (e: any) {
+      return Result.fail(e.message);
+    }
+  }
 }

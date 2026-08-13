@@ -5,6 +5,7 @@ import { ITreasuryRepository } from './ITreasuryRepository';
 import { IPasswordResetRepository } from './IPasswordResetRepository';
 import { IOutboxRepository } from './IOutboxRepository';
 import { IWalletRepository } from './IWalletRepository';
+import { ISessionRepository } from './ISessionRepository';
 
 export interface IRepositoryFactory {
   getAccountRepository(): IAccountRepository;
@@ -13,6 +14,7 @@ export interface IRepositoryFactory {
   getPasswordResetRepository(): IPasswordResetRepository;
   getOutboxRepository(): IOutboxRepository;
   getWalletRepository(): IWalletRepository;
+  getSessionRepository(): ISessionRepository;
 }
 
 export interface IUnitOfWork {

@@ -34,10 +34,16 @@ describe('DrizzleUnitOfWork', () => {
     const mockDb = {
       transaction: async (cb: any) => {
         try {
-          await cb({ isTx: true });
+          await cb({
+            isTx: true,
+            rollback: () => {
+              rollbackTriggered = true;
+              throw new Error('Rollback'); // Drizzle tx.rollback throws 'Rollback'
+            }
+          });
         } catch (e: any) {
-          if (e.message.includes('TRANSACTION_ROLLED_BACK')) {
-            rollbackTriggered = true; // Drizzle pegaria essa exceção e daria rollback
+          if (e.message !== 'Rollback') {
+            throw e;
           }
         }
       }
