@@ -11,55 +11,296 @@ import {
   index,
   uniqueIndex,
   primaryKey,
+  check,
 } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
+import { sql, relations } from 'drizzle-orm';
 import type { EmailEventMetadata } from '../dto/email-event';
 
-// === 1. TABELA DE USUÁRIOS (Sincronizado com AuthGuard do Frontend) ===
+// ======================================================================
+// === CONSTANTES GLOBAIS DE DOMÍNIO                                  ===
+// === Usar nos Schemas Zod para garantir paridade entre DB e API     ===
+// ======================================================================
+export const USER_ROLES    = ['citizen', 'partner', 'admin', 'system', 'dev'] as const;
+export const USER_STATUS   = ['pending_setup', 'active', 'suspended', 'locked', 'disabled'] as const;
+export const AUTH_TYPES    = ['password', 'totp', 'webauthn', 'recovery_code', 'wallet'] as const;
+export const CONSENT_TYPES = ['terms_of_service', 'privacy_policy', 'marketing', 'data_processing', 'cookies'] as const;
+
+// ======================================================================
+// === 1. MASTER IDENTITY RECORD                                       ===
+// ===    users = quem é o ator — nada mais, nada menos               ===
+// ===    users.id = Global Internal Actor ID (âncora de todas as FKs)===
+// ===                                                                 ===
+// ===    REGRA: users responde "o ator existe?"                       ===
+// ===    NÃO responde: como autentica / o que pode / qual KYC        ===
+// ======================================================================
 export const users = sqliteTable(
   'users',
   {
+    // ================================================================
+    // IDENTITY
+    // ================================================================
+
+    // Internal relational identity (eficiente para FKs no D1/SQLite)
     id: integer('id').primaryKey({ autoIncrement: true }),
 
-    // Identidade Web2
-    email: text('email').notNull().unique(),
-    password: text('password').notNull(),
+    // Public non-sequential identifier (CUID/UUID/ULID)
+    publicId: text('public_id').notNull().unique().$defaultFn(() => crypto.randomUUID()),
 
-    // Status de Verificação
-    emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
-    avatarUrl: text('avatar_url'),
+    // Optional classification of the account subject
+    subjectType: text('subject_type', {
+      enum: ['human', 'service', 'system'],
+    }).notNull().default('human'),
 
-    // Segurança (Snake_case para o DB, CamelCase para o código)
-    mfaSecret: text('mfa_secret'),
-    mfaEnabled: integer('mfa_enabled', { mode: 'boolean' }).default(false),
-    tokenVersion: integer('token_version').default(1).notNull(),
+    // ================================================================
+    // PRIMARY CONTACT
+    // ================================================================
 
-    // Compliance & Governança
-    kycStatus: text('kyc_status', { enum: ['none', 'pending', 'approved', 'rejected'] }).default(
-      'none'
-    ),
-    role: text('role', { enum: ['citizen', 'partner', 'admin', 'system', 'dev', 'user'] }).default(
-      'citizen'
-    ),
+    email:           text('email'),
+    emailNormalized: text('email_normalized').unique(),
+    emailVerifiedAt: integer('email_verified_at', { mode: 'timestamp' }),
+    emailChangedAt:  integer('email_changed_at', { mode: 'timestamp' }),
 
-    // Identidade Soberana & Status
-    active: integer('active', { mode: 'boolean' }).default(true).notNull(),
-    status: text('status').default('active').notNull(),
+    // ================================================================
+    // ACCOUNT SECURITY / LIFECYCLE
+    // ================================================================
 
-    // LGPD Compliance
-    consentAccepted: integer('consent_accepted', { mode: 'boolean' }).default(false).notNull(),
-    consentVersion: integer('consent_version').default(0).notNull(),
-    consentTimestamp: integer('consent_timestamp', { mode: 'timestamp' }),
+    // Invalidação global de sessão (incrementar em password reset, etc)
+    authEpoch: integer('auth_epoch').default(1).notNull(),
 
-    // Timestamps em formato Unix (Melhor performance no D1)
-    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
-    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+    status:    text('status', { enum: USER_STATUS }).default('pending_setup').notNull(),
+    statusChangedAt: integer('status_changed_at', { mode: 'timestamp' }),
+    lockedAt:  integer('locked_at', { mode: 'timestamp' }),
+    disabledAt: integer('disabled_at', { mode: 'timestamp' }),
+    deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+
+    // ================================================================
+    // AUDITABLE TIMESTAMPS
+    // ================================================================
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
   },
   (table) => ({
-    emailIdx: index('idx_users_email').on(table.email),
-    roleIdx: index('idx_users_role').on(table.role),
+    // emailNormalized.unique() já cria UNIQUE INDEX — sem índice redundante em email
+    // primaryRoleIdx removido: primaryRole não é autoridade de autorização, queries devem usar user_roles
+    statusIdx:    index('idx_users_status').on(table.status),
+    // Índice composto: a query crítica do AuthGuard é WHERE status='active' AND deleted_at IS NULL
+    activeActorIdx: index('idx_users_active_actor').on(table.status, table.deletedAt),
+    // CHECK constraint: integridade rígida no SQLite para impedir valores inválidos mesmo contornando o ORM
+    statusCheck: check('users_status_check', sql`${table.status} IN ('pending_setup', 'active', 'suspended', 'locked', 'disabled')`),
   })
 );
+
+// ======================================================================
+// ======================================================================
+// === 1.1. AUTENTICADORES (Aggregate Root)                           ===
+// ===    user_authenticators = Aggregate centralizador das credenciais===
+// ======================================================================
+export const userAuthenticators = sqliteTable(
+  'user_authenticators',
+  {
+    id: text('id').primaryKey(), // UUID v4
+
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    type: text('type', { enum: AUTH_TYPES }).notNull(),
+    label: text('label'),
+
+    verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+    lastUsedAt: integer('last_used_at', { mode: 'timestamp' }),
+    
+    revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+    revokedBy: integer('revoked_by').references(() => users.id, { onDelete: 'set null' }),
+    revocationReason: text('revocation_reason'),
+
+    // SECURITY:
+    // metadata is non-secret operational metadata only.
+    // NEVER store:
+    // password hashes, TOTP secrets, private keys,
+    // recovery codes, session tokens, or bearer credentials.
+    metadata: text('metadata', { mode: 'json' }),
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    userTypeRevokedIdx: index('idx_authenticators_user_type_revoked').on(table.userId, table.type, table.revokedAt),
+    typeCheck: check('user_authenticators_type_check', sql`${table.type} IN ('password', 'totp', 'webauthn', 'recovery_code', 'wallet')`),
+  })
+);
+
+// ======================================================================
+// === CREDENCIAIS ESPECIALIZADAS (Satélites 1:1 e 1:N)               ===
+// ======================================================================
+export const passwordCredentials = sqliteTable('password_credentials', {
+  authenticatorId: text('authenticator_id')
+    .primaryKey()
+    .references(() => userAuthenticators.id, { onDelete: 'cascade' }),
+  passwordHash: text('password_hash').notNull(), // Argon2id hash com parâmetros embutidos
+});
+
+export const webauthnCredentials = sqliteTable('webauthn_credentials', {
+  authenticatorId: text('authenticator_id')
+    .primaryKey()
+    .references(() => userAuthenticators.id, { onDelete: 'cascade' }),
+  credentialId: text('credential_id').notNull().unique(),
+  publicKeyCose: text('public_key_cose').notNull(),
+  rpId: text('rp_id').notNull(),
+  userHandle: text('user_handle'), // nullable pois nem todo webauthn é discoverable/resident
+  signCount: integer('sign_count').notNull().default(0),
+  transports: text('transports', { mode: 'json' }),
+  backupEligible: integer('backup_eligible', { mode: 'boolean' }).notNull(),
+  backupState: integer('backup_state', { mode: 'boolean' }).notNull(),
+  uvInitialized: integer('uv_initialized', { mode: 'boolean' }).notNull(),
+  aaguid: text('aaguid'),
+  attestationFormat: text('attestation_format'),
+  attestationObject: text('attestation_object'),
+});
+
+export const totpCredentials = sqliteTable('totp_credentials', {
+  authenticatorId: text('authenticator_id')
+    .primaryKey()
+    .references(() => userAuthenticators.id, { onDelete: 'cascade' }),
+  encryptedTotpSecret: text('encrypted_totp_secret').notNull(),
+  algorithm: text('algorithm').notNull().default('SHA1'),
+  digits: integer('digits').notNull().default(6),
+  period: integer('period').notNull().default(30),
+}, (table) => ({
+  digitsCheck: check('totp_digits_check', sql`${table.digits} IN (6, 8)`),
+  periodCheck: check('totp_period_check', sql`${table.period} IN (30, 60)`),
+  algorithmCheck: check('totp_algorithm_check', sql`${table.algorithm} IN ('SHA1', 'SHA256', 'SHA512')`),
+}));
+
+export const walletAuthenticators = sqliteTable('wallet_authenticators', {
+  authenticatorId: text('authenticator_id')
+    .primaryKey()
+    .references(() => userAuthenticators.id, { onDelete: 'cascade' }),
+  walletId: integer('wallet_id').unique().references(() => wallets.id, { onDelete: 'cascade' }).notNull(),
+});
+
+export const recoverySets = sqliteTable('recovery_sets', {
+  id: text('id').primaryKey(),
+  authenticatorId: text('authenticator_id')
+    .unique()
+    .references(() => userAuthenticators.id, { onDelete: 'cascade' })
+    .notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }),
+  revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+});
+
+export const recoveryCredentials = sqliteTable('recovery_credentials', {
+  id: text('id').primaryKey(),
+  recoverySetId: text('recovery_set_id')
+    .references(() => recoverySets.id, { onDelete: 'cascade' })
+    .notNull(),
+  codeHash: text('code_hash').notNull(), // Argon2id hash
+  consumedAt: integer('consumed_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+}, (table) => ({
+  recoverySetIdx: index('idx_recovery_credentials_set').on(table.recoverySetId),
+}));
+
+// ======================================================================
+// === SECURITY EVENTS (Histórico Imutável)                           ===
+// ======================================================================
+export const SECURITY_EVENT_TYPES = [
+  'authentication_succeeded',
+  'authentication_failed',
+  'credential_created',
+  'credential_verified',
+  'credential_revoked',
+  'password_changed',
+  'password_reset_requested',
+  'passkey_registered',
+  'passkey_used',
+  'totp_enabled',
+  'totp_verified',
+  'wallet_linked',
+  'wallet_authenticated',
+  'recovery_code_consumed',
+  'account_locked',
+  'account_unlocked',
+  'auth_epoch_incremented',
+] as const;
+
+export const securityEvents = sqliteTable('security_events', {
+  id: text('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
+  authenticatorId: text('authenticator_id').references(() => userAuthenticators.id, { onDelete: 'set null' }),
+  sessionId: text('session_id').references(() => userSessions.id, { onDelete: 'set null' }),
+  
+  event: text('event', { enum: SECURITY_EVENT_TYPES }).notNull(),
+  result: text('result', { enum: ['success', 'failure', 'denied'] }).notNull(),
+  source: text('source', { enum: ['web', 'mobile', 'api', 'worker', 'admin'] }),
+  
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  requestId: text('request_id'),
+  correlationId: text('correlation_id'),
+  
+  metadata: text('metadata', { mode: 'json' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+}, (table) => ({
+  userCreatedIdx: index('idx_security_events_user_created').on(table.userId, table.createdAt),
+  authIdx: index('idx_security_events_auth').on(table.authenticatorId),
+  eventCheck: check('security_events_event_check', sql`${table.event} IN ('authentication_succeeded', 'authentication_failed', 'credential_created', 'credential_verified', 'credential_revoked', 'password_changed', 'password_reset_requested', 'passkey_registered', 'passkey_used', 'totp_enabled', 'totp_verified', 'wallet_linked', 'wallet_authenticated', 'recovery_code_consumed', 'account_locked', 'account_unlocked', 'auth_epoch_incremented')`),
+  resultCheck: check('security_events_result_check', sql`${table.result} IN ('success', 'failure', 'denied')`),
+}));
+
+// ======================================================================
+// === 1.2. CONSENTIMENTOS                                            ===
+// ===    Histórico imutável de eventos de consentimento (LGPD/GDPR)  ===
+// ===    Nunca sobrescrever — sempre inserir novo registro            ===
+// ======================================================================
+export const userConsents = sqliteTable(
+  'user_consents',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    consentType:   text('consent_type', { enum: CONSENT_TYPES }).notNull(),
+    policyVersion: text('policy_version').notNull(), // Ex: '2.1.0' ou '2026-08'
+    status:        text('status', { enum: ['accepted', 'declined', 'revoked'] }).notNull(),
+
+    // Rastreabilidade
+    source:    text('source'),    // 'web', 'mobile', 'api', 'admin'
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    metadata:  text('metadata', { mode: 'json' }),
+
+    acceptedAt: integer('accepted_at', { mode: 'timestamp' }),
+    revokedAt:  integer('revoked_at',  { mode: 'timestamp' }),
+    createdAt:  integer('created_at',  { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+  },
+  (table) => ({
+    userIdx:        index('idx_consents_user').on(table.userId),
+    typeVersionIdx: index('idx_consents_type_version').on(table.consentType, table.policyVersion),
+  })
+);
+
+// ======================================================================
+// === 1.3. ROLES & AUTORIZAÇÃO                                       ===
+// ===    A autoridade final de autorização vive aqui — não em        ===
+// ===    users.primaryRole (que é apenas conveniência de UX)         ===
+// ======================================================================
+export const roles = sqliteTable('roles', {
+  id:          integer('id').primaryKey({ autoIncrement: true }),
+  name:        text('name').notNull().unique(), // 'admin', 'citizen', 'partner', 'auditor'...
+  description: text('description'),
+  isSystem:    integer('is_system', { mode: 'boolean' }).default(false).notNull(), // true = não pode ser deletado
+  createdAt:   integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+});
+
+// ======================================================================
+// === RELATIONS — ORM Query Layer (não substitui Foreign Keys)       ===
+// === Habilita: db.query.users.findFirst({ with: { sessions: true }})===
+// ======================================================================
 
 // === 1.1. REDES SOCIAIS (Escalável) ===
 export const userSocialLinks = sqliteTable(
@@ -92,6 +333,31 @@ export const userNotificationSettings = sqliteTable(
   },
   (table) => ({
     userTypeUnique: uniqueIndex('idx_notifications_user_type').on(table.userId, table.type),
+  })
+);
+
+// === 1.3. CENTRAL DE NOTIFICAÇÕES (NOTIFICATIONS CORE) ===
+export const notifications = sqliteTable(
+  'notifications',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    type: text('type').notNull(), // 'system', 'payment', 'social', etc.
+    category: text('category').notNull(), // 'Communication', 'Project UI', etc.
+    title: text('title').notNull(),
+    message: text('message'), // Corpo detalhado em HTML ou Plain
+    data: text('data', { mode: 'json' }), // Referências para outras entidades (metadata)
+    isRead: integer('is_read', { mode: 'boolean' }).default(false).notNull(),
+    readAt: integer('read_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+  },
+  (table) => ({
+    userIdIdx: index('idx_notifications_user_id').on(table.userId),
+    isReadIdx: index('idx_notifications_is_read').on(table.isRead),
+    createdAtIdx: index('idx_notifications_created_at').on(table.createdAt),
   })
 );
 
@@ -145,11 +411,13 @@ export const wallets = sqliteTable('wallets', {
   userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  address: text('address').notNull().unique(),
+  address: text('address').notNull(),
   chainId: integer('chain_id').notNull(),
   isPrimary: integer('is_primary', { mode: 'boolean' }).default(false),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
-});
+}, (table) => ({
+  addressChainUnique: uniqueIndex('uq_wallets_chain_address').on(table.chainId, table.address),
+}));
 
 // ======================================================================
 // === 4. MÓDULO SOCIALFI (POSTS & BLOG) ===
@@ -268,71 +536,425 @@ export const contracts = sqliteTable('contracts', {
 // === 7. IDENTIDADE SOBERANA (SSI & VAULT) ===
 // ======================================================================
 
+// ======================================================================
+// === 2. MASTER CIVIL IDENTITY (Ex-citizens)                         ===
+// === Representação civil/legal de um humano no mundo físico         ===
+// ======================================================================
 export const citizens = sqliteTable(
   'citizens',
+  {
+    userId: integer('user_id')
+      .primaryKey()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    legalFirstName: text('legal_first_name'),
+    legalLastName: text('legal_last_name'),
+    nationalityCode: text('nationality_code'),
+    birthDate: text('birth_date'), // YYYY-MM-DD
+
+    maritalStatus: text('marital_status', {
+      enum: ['single', 'married', 'divorced', 'widowed', 'stable_union', 'separated'],
+    }),
+
+    civilStatus: text('civil_status', {
+      enum: ['pending', 'verified', 'suspended', 'revoked'],
+    })
+      .notNull()
+      .default('pending'),
+
+    statusChangedAt: integer('status_changed_at', { mode: 'timestamp' }),
+    verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+    verifiedBy: integer('verified_by').references(() => users.id, { onDelete: 'set null' }),
+    
+    version: integer('version').notNull().default(1),
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    statusCheck: check('citizens_status_check', sql`${table.civilStatus} IN ('pending', 'verified', 'suspended', 'revoked')`),
+  })
+);
+
+// ======================================================================
+// === 3. USER PROFILES (Apresentação Pública e SocialFi)             ===
+// ======================================================================
+export const userProfiles = sqliteTable(
+  'user_profiles',
+  {
+    userId: integer('user_id')
+      .primaryKey()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    username: text('username').notNull(),
+    usernameNormalized: text('username_normalized').notNull().unique(),
+    displayName: text('display_name'),
+    avatarUrl: text('avatar_url'),
+    website: text('website'),
+    about: text('about'),
+    
+    profileVisibility: text('profile_visibility', { enum: ['public', 'members', 'private'] }).notNull().default('private'),
+    isDiscoverable: integer('is_discoverable', { mode: 'boolean' }).notNull().default(false),
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    usernameCheck: check('username_format_check', sql`length(${table.username}) >= 3`),
+  })
+);
+
+// ======================================================================
+// === 4. IDENTITY DOCUMENTS (Evidências de Identidade e PII)         ===
+// ======================================================================
+export const identityDocuments = sqliteTable(
+  'identity_documents',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
     userId: integer('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
+    
+    documentType: text('document_type', { enum: ['cpf', 'rg', 'passport', 'cnh'] }).notNull(),
+    countryCode: text('country_code').default('BR').notNull(),
+    
+    // HMAC(secret, number) para lookup seguro sem permitir enumeração
+    numberLookupHash: text('number_lookup_hash').notNull(),
+    encryptedNumber: text('encrypted_number').notNull(),
+    last4: text('last4'),
+    documentHash: text('document_hash'), // Hash do PDF/Imagem enviado
 
-    username: text('username').notNull().unique(),
-    firstName: text('first_name'),
-    lastName: text('last_name'),
-    did: text('did').unique(), // did:dao:asppibra:<pubkey_hash>
-    publicKey: text('public_key'), // Ed25519 (Hex)
-    status: text('status', { enum: ['PENDING', 'VERIFIED', 'SUSPENDED', 'REVOKED'] }).default('PENDING').notNull(),
+    issuingAuthority: text('issuing_authority'),
+    issuedAt: text('issued_at'), // YYYY-MM-DD
+    expiresAt: text('expires_at'), // YYYY-MM-DD
+    
+    source: text('source', { enum: ['government', 'manual_upload', 'kyc_provider', 'admin', 'import'] }).notNull(),
+    sourceReference: text('source_reference'),
 
-    // 👤 Identidade Civil (Ficha Cadastral)
-    rg: text('rg'),
-    orgaoEmissor: text('orgao_emissor'),
-    cpf: text('cpf').unique(),
-    nacionalidade: text('nacionalidade'),
-    dataNascimento: text('data_nascimento'),
-    estadoCivil: text('estado_civil'),
-    profissao: text('profissao'),
+    verificationStatus: text('verification_status', { enum: ['pending', 'verified', 'rejected'] }).notNull().default('pending'),
+    verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+    verifiedBy: integer('verified_by').references(() => users.id, { onDelete: 'set null' }),
 
-    // 🏛️ Institucional (Governança & OSC)
-    cargoOsc: text('cargo_osc'),
-    cargoProjetos: text('cargo_projects'),
-    departamento: text('department'),
-    mandato: text('mandate'),
-    seniorityLevel: text('seniority_level'),
-    leadershipStyle: text('leadership_style'),
-
-    // 🎓 Professional & Social
-    academicInfo: text('academic_info'),
-    professionalExperience: text('professional_experience'),
-    profileTags: text('profile_tags', { mode: 'json' }).$type<string[]>(),
-    phoneNumber: text('phone_number'),
-    occupation: text('occupation'),
-    company: text('company'),
-    website: text('website'),
-    about: text('about'),
-    isPublic: integer('is_public', { mode: 'boolean' }).default(false).notNull(),
-
-    // 📍 Localização (Endereço Físico)
-    country: text('country').default('BR'),
-    state: text('state'),
-    city: text('city'),
-    zipCode: text('zip_code'),
-    address: text('address'),
-
-    // 🔐 Fortress Layer (Phase 3)
-    encryptedVault: text('encrypted_vault'), // Mnemonic criptografado localmente
-    passkeyId: text('passkey_id'), // WebAuthn Credential ID
-    passkeyPublicKey: text('passkey_public_key'), // WebAuthn Public Key
-    totpSecret: text('totp_secret'), // Google Authenticator Secret
-    totpEnabled: integer('totp_enabled', { mode: 'boolean' }).default(false),
-    version: integer('version').notNull().default(1),
-
-    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
-    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
   },
   (table) => ({
-    usernameIdx: index('idx_citizens_username').on(table.username),
-    didIdx: uniqueIndex('idx_citizens_did').on(table.did),
-    userIdIdx: index('idx_citizens_user').on(table.userId),
+    userIdx: index('idx_identity_docs_user').on(table.userId),
+    lookupHashIdx: index('idx_identity_docs_hash').on(table.numberLookupHash),
+  })
+);
+
+// ======================================================================
+// === 5. KYC VERIFICATIONS (Processo de Validação)                   ===
+// ======================================================================
+export const kycVerifications = sqliteTable(
+  'kyc_verifications',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    verificationVersion: integer('verification_version').notNull().default(1),
+    verificationLevel: text('verification_level', { enum: ['basic', 'enhanced', 'institutional'] }).notNull(),
+    status: text('status', { enum: ['submitted', 'under_review', 'approved', 'rejected', 'expired'] }).notNull(),
+    provider: text('provider').notNull(),
+
+    riskScore: integer('risk_score'),
+    riskModel: text('risk_model'),
+    riskModelVersion: text('risk_model_version'),
+    
+    rejectionReason: text('rejection_reason'),
+    metadata: text('metadata', { mode: 'json' }),
+
+    reviewedBy: integer('reviewed_by').references(() => users.id, { onDelete: 'set null' }),
+
+    startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
+    completedAt: integer('completed_at', { mode: 'timestamp' }),
+    expiresAt: integer('expires_at', { mode: 'timestamp' }),
+    
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    userIdx: index('idx_kyc_user').on(table.userId),
+    statusIdx: index('idx_kyc_status').on(table.status),
+  })
+);
+
+// ======================================================================
+// === 6. SECURE VAULTS (Material Criptográfico Pessoal)              ===
+// ======================================================================
+export const secureVaults = sqliteTable(
+  'secure_vaults',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    purpose: text('purpose').notNull(), // Ex: 'wallet_mnemonic', 'recovery_material'
+    
+    ciphertext: text('ciphertext').notNull(),
+    nonce: text('nonce').notNull(),
+    authTag: text('auth_tag').notNull(),
+    encryptionAlgorithm: text('encryption_algorithm', { enum: ['AES-256-GCM', 'XChaCha20-Poly1305'] }).notNull(),
+    keyVersion: integer('key_version').notNull().default(1),
+    keyReference: text('key_reference').notNull(), // Aponta para o KMS / Key Management
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    rotatedAt: integer('rotated_at', { mode: 'timestamp' }),
+    revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  },
+  (table) => ({
+    // Índice UNIQUE considerando a versão, permitindo preservar histórico seguro
+    userPurposeVersionUnq: uniqueIndex('uq_secure_vaults_user_purpose_version').on(table.userId, table.purpose, table.keyVersion),
+  })
+);
+
+// ======================================================================
+// === 7. DID IDENTITIES (Identidade Soberana - SSI)                  ===
+// ======================================================================
+export const didIdentities = sqliteTable(
+  'did_identities',
+  {
+    id: text('id').primaryKey(), // UUID
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    did: text('did').notNull().unique(),
+    method: text('method').notNull(),
+    controller: text('controller').notNull(),
+    status: text('status', { enum: ['active', 'suspended', 'revoked'] }).notNull().default('active'),
+    
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+    revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  },
+  (table) => ({
+    userIdx: index('idx_did_identities_user').on(table.userId),
+    statusCheck: check('did_identities_status_check', sql`${table.status} IN ('active', 'suspended', 'revoked')`),
+  })
+);
+
+export const didVerificationMethods = sqliteTable(
+  'did_verification_methods',
+  {
+    id: text('id').primaryKey(), // Normalmente o DID URL da chave: did:example:123#key-1
+    didId: text('did_id')
+      .notNull()
+      .references(() => didIdentities.id, { onDelete: 'cascade' }),
+      
+    type: text('type').notNull(),
+    controllerDid: text('controller_did').notNull(),
+    publicKeyMultibase: text('public_key_multibase').notNull(),
+    purpose: text('purpose', { enum: ['authentication', 'assertionMethod', 'keyAgreement', 'capabilityInvocation', 'capabilityDelegation'] }).notNull(),
+    status: text('status', { enum: ['active', 'suspended', 'revoked'] }).notNull().default('active'),
+    
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  },
+  (table) => ({
+    didIdx: index('idx_did_verification_methods_did').on(table.didId),
+    statusCheck: check('did_verification_methods_status_check', sql`${table.status} IN ('active', 'suspended', 'revoked')`),
+  })
+);
+
+// ======================================================================
+// === 8. USER ADDRESSES & CONTACTS                                   ===
+// ======================================================================
+export const userAddresses = sqliteTable(
+  'user_addresses',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    type: text('type', { enum: ['residential', 'commercial', 'billing', 'shipping'] }).notNull(),
+    
+    country: text('country').default('BR').notNull(),
+    state: text('state').notNull(),
+    city: text('city').notNull(),
+    neighborhood: text('neighborhood'),
+    street: text('street').notNull(),
+    number: text('number'),
+    complement: text('complement'),
+    zipCode: text('zip_code').notNull(),
+    
+    isPrimary: integer('is_primary', { mode: 'boolean' }).notNull().default(false),
+    
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    userIdx: index('idx_user_addresses_user').on(table.userId),
+    // Unicidade parcial garantida (SQLite suporta WHERE em índices únicos)
+    primaryUnq: uniqueIndex('uq_user_addresses_primary').on(table.userId, table.type).where(sql`${table.isPrimary} = true`),
+  })
+);
+
+export const userContacts = sqliteTable(
+  'user_contacts',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    type: text('type', { enum: ['phone', 'mobile', 'whatsapp', 'secondary_email'] }).notNull(),
+    value: text('value').notNull(),
+    normalizedValue: text('normalized_value').notNull(),
+    
+    verificationMethod: text('verification_method', { enum: ['sms', 'whatsapp', 'email', 'admin', 'import'] }),
+    verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+    
+    isPrimary: integer('is_primary', { mode: 'boolean' }).notNull().default(false),
+    
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    userIdx: index('idx_user_contacts_user').on(table.userId),
+    // Impede dois usuários registrarem o mesmo meio de contato, garantindo unicidade real
+    normalizedUnq: uniqueIndex('uq_user_contacts_normalized').on(table.type, table.normalizedValue),
+    // Apenas um contato primário TOTAL (e não por tipo)
+    primaryUnq: uniqueIndex('uq_user_contacts_primary').on(table.userId).where(sql`${table.isPrimary} = true`),
+  })
+);
+
+// ======================================================================
+// === 9. ORGANIZATIONS & INSTITUTIONAL MEMBERSHIPS                   ===
+// ======================================================================
+export const organizations = sqliteTable(
+  'organizations',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    name: text('name').notNull(),
+    slug: text('slug').notNull().unique(),
+    type: text('type', { enum: ['dao', 'ngo', 'company', 'academic', 'government', 'foundation', 'other'] }).notNull(),
+    status: text('status', { enum: ['active', 'suspended', 'revoked'] }).notNull().default('active'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    statusCheck: check('organizations_status_check', sql`${table.status} IN ('active', 'suspended', 'revoked')`),
+  })
+);
+
+export const organizationMemberships = sqliteTable(
+  'organization_memberships',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+      
+    department: text('department'),
+    position: text('position'),
+    seniorityLevel: text('seniority_level'),
+    
+    startsAt: integer('starts_at', { mode: 'timestamp' }),
+    endsAt: integer('ends_at', { mode: 'timestamp' }),
+    status: text('status', { enum: ['active', 'suspended', 'revoked'] }).notNull().default('active'),
+
+    appointedBy: integer('appointed_by').references(() => users.id, { onDelete: 'set null' }),
+    reason: text('reason'),
+
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    userIdx: index('idx_org_memberships_user').on(table.userId),
+    orgIdx: index('idx_org_memberships_org').on(table.organizationId),
+    statusCheck: check('org_memberships_status_check', sql`${table.status} IN ('active', 'suspended', 'revoked')`),
+  })
+);
+
+export const mandates = sqliteTable(
+  'mandates',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    organizationId: integer('organization_id')
+      .notNull()
+      .references(() => organizations.id, { onDelete: 'cascade' }),
+      
+    position: text('position').notNull(),
+    
+    appointmentDocumentId: integer('appointment_document_id')
+      .references(() => identityDocuments.id, { onDelete: 'set null' }),
+      
+    startsAt: integer('starts_at', { mode: 'timestamp' }).notNull(),
+    endsAt: integer('ends_at', { mode: 'timestamp' }),
+    status: text('status', { enum: ['active', 'suspended', 'revoked'] }).notNull().default('active'),
+    
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull().$onUpdateFn(() => new Date()),
+  },
+  (table) => ({
+    userIdx: index('idx_mandates_user').on(table.userId),
+    statusCheck: check('mandates_status_check', sql`${table.status} IN ('active', 'suspended', 'revoked')`),
+  })
+);
+
+// ======================================================================
+// === 10. PROFESSIONAL & EDUCATION PROFILES                          ===
+// ======================================================================
+export const userProfessionalExperience = sqliteTable(
+  'user_professional_experience',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    organizationId: integer('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+    companyName: text('company_name'), // Fallback if not an internal organization
+    
+    role: text('role').notNull(),
+    description: text('description'),
+    
+    startDate: text('start_date'), // YYYY-MM-DD
+    endDate: text('end_date'), // YYYY-MM-DD
+    
+    verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+  },
+  (table) => ({
+    userIdx: index('idx_professional_exp_user').on(table.userId),
+  })
+);
+
+export const userEducation = sqliteTable(
+  'user_education',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+      
+    organizationId: integer('organization_id').references(() => organizations.id, { onDelete: 'set null' }),
+    institutionName: text('institution_name'), // Fallback
+    
+    degree: text('degree').notNull(),
+    field: text('field'),
+    level: text('level'),
+    
+    startDate: text('start_date'), // YYYY-MM-DD
+    endDate: text('end_date'), // YYYY-MM-DD
+    
+    verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+  },
+  (table) => ({
+    userIdx: index('idx_education_user').on(table.userId),
   })
 );
 
@@ -1399,3 +2021,184 @@ export const outboxEvents = sqliteTable('outbox_events', {
   error: text('error'),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`).notNull(),
 });
+export const usersRelations = relations(users, ({ one, many }) => ({
+  citizen: one(citizens, { relationName: 'citizenOwner' }),
+  verifiedCitizens: many(citizens, { relationName: 'verifiedCitizens' }),
+  profile: one(userProfiles),
+
+  authenticators: many(userAuthenticators, { relationName: 'authenticatorOwner' }),
+  revokedAuthenticators: many(userAuthenticators, { relationName: 'revokedAuthenticators' }),
+  sessions: many(userSessions),
+  consents: many(userConsents),
+  
+  roles: many(userRoles, { relationName: 'roleOwner' }),
+  grantedRoles: many(userRoles, { relationName: 'grantedRoles' }),
+
+  identityDocuments: many(identityDocuments, { relationName: 'userIdentityDocuments' }),
+  verifiedDocuments: many(identityDocuments, { relationName: 'verifiedIdentityDocuments' }),
+  
+  kycVerifications: many(kycVerifications, { relationName: 'kycSubject' }),
+  reviewedKycs: many(kycVerifications, { relationName: 'reviewedKycs' }),
+
+  secureVaults: many(secureVaults),
+  didIdentities: many(didIdentities),
+
+  addresses: many(userAddresses),
+  contacts: many(userContacts),
+
+  organizationMemberships: many(organizationMemberships, { relationName: 'membershipOwner' }),
+  appointedMemberships: many(organizationMemberships, { relationName: 'appointedMembers' }),
+  mandates: many(mandates),
+
+  professionalExperience: many(userProfessionalExperience),
+  education: many(userEducation),
+
+  socialLinks: many(userSocialLinks),
+  notificationSettings: many(userNotificationSettings),
+  notifications: many(notifications),
+  securityEvents: many(securityEvents, { relationName: 'userSecurityEvents' }),
+}));
+
+export const userAuthenticatorsRelations = relations(userAuthenticators, ({ one, many }) => ({
+  user: one(users, { fields: [userAuthenticators.userId], references: [users.id], relationName: 'authenticatorOwner' }),
+  revokedByUser: one(users, { fields: [userAuthenticators.revokedBy], references: [users.id], relationName: 'revokedAuthenticators' }),
+  
+  passwordCredential: one(passwordCredentials),
+  webauthnCredential: one(webauthnCredentials),
+  totpCredential: one(totpCredentials),
+  walletAuthenticator: one(walletAuthenticators),
+  
+  recoverySet: one(recoverySets),
+  
+  securityEvents: many(securityEvents),
+}));
+
+export const passwordCredentialsRelations = relations(passwordCredentials, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [passwordCredentials.authenticatorId], references: [userAuthenticators.id] }),
+}));
+
+export const webauthnCredentialsRelations = relations(webauthnCredentials, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [webauthnCredentials.authenticatorId], references: [userAuthenticators.id] }),
+}));
+
+export const totpCredentialsRelations = relations(totpCredentials, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [totpCredentials.authenticatorId], references: [userAuthenticators.id] }),
+}));
+
+export const walletAuthenticatorsRelations = relations(walletAuthenticators, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [walletAuthenticators.authenticatorId], references: [userAuthenticators.id] }),
+  wallet: one(wallets, { fields: [walletAuthenticators.walletId], references: [wallets.id] }),
+}));
+
+export const recoverySetsRelations = relations(recoverySets, ({ one, many }) => ({
+  authenticator: one(userAuthenticators, { fields: [recoverySets.authenticatorId], references: [userAuthenticators.id] }),
+  credentials: many(recoveryCredentials),
+}));
+
+export const recoveryCredentialsRelations = relations(recoveryCredentials, ({ one }) => ({
+  recoverySet: one(recoverySets, { fields: [recoveryCredentials.recoverySetId], references: [recoverySets.id] }),
+}));
+
+export const securityEventsRelations = relations(securityEvents, ({ one }) => ({
+  user: one(users, { fields: [securityEvents.userId], references: [users.id], relationName: 'userSecurityEvents' }),
+  authenticator: one(userAuthenticators, { fields: [securityEvents.authenticatorId], references: [userAuthenticators.id] }),
+  session: one(userSessions, { fields: [securityEvents.sessionId], references: [userSessions.id] }),
+}));
+
+export const citizensRelations = relations(citizens, ({ one }) => ({
+  user: one(users, { fields: [citizens.userId], references: [users.id], relationName: 'citizenOwner' }),
+  verifiedByUser: one(users, { fields: [citizens.verifiedBy], references: [users.id], relationName: 'verifiedCitizens' }),
+}));
+export const userProfilesRelations = relations(userProfiles, ({ one }) => ({
+  user: one(users, { fields: [userProfiles.userId], references: [users.id] }),
+}));
+export const identityDocumentsRelations = relations(identityDocuments, ({ one }) => ({
+  user: one(users, { fields: [identityDocuments.userId], references: [users.id], relationName: 'userIdentityDocuments' }),
+  verifiedByUser: one(users, { fields: [identityDocuments.verifiedBy], references: [users.id], relationName: 'verifiedIdentityDocuments' }),
+}));
+export const kycVerificationsRelations = relations(kycVerifications, ({ one }) => ({
+  user: one(users, { fields: [kycVerifications.userId], references: [users.id], relationName: 'kycSubject' }),
+  reviewedByUser: one(users, { fields: [kycVerifications.reviewedBy], references: [users.id], relationName: 'reviewedKycs' }),
+}));
+export const secureVaultsRelations = relations(secureVaults, ({ one }) => ({
+  user: one(users, { fields: [secureVaults.userId], references: [users.id] }),
+}));
+export const didIdentitiesRelations = relations(didIdentities, ({ one, many }) => ({
+  user: one(users, { fields: [didIdentities.userId], references: [users.id] }),
+  verificationMethods: many(didVerificationMethods),
+}));
+export const didVerificationMethodsRelations = relations(didVerificationMethods, ({ one }) => ({
+  didIdentity: one(didIdentities, { fields: [didVerificationMethods.didId], references: [didIdentities.id] }),
+}));
+export const userAddressesRelations = relations(userAddresses, ({ one }) => ({
+  user: one(users, { fields: [userAddresses.userId], references: [users.id] }),
+}));
+export const userContactsRelations = relations(userContacts, ({ one }) => ({
+  user: one(users, { fields: [userContacts.userId], references: [users.id] }),
+}));
+export const organizationsRelations = relations(organizations, ({ many }) => ({
+  memberships: many(organizationMemberships),
+  mandates: many(mandates),
+}));
+export const organizationMembershipsRelations = relations(organizationMemberships, ({ one }) => ({
+  user: one(users, { fields: [organizationMemberships.userId], references: [users.id], relationName: 'membershipOwner' }),
+  organization: one(organizations, { fields: [organizationMemberships.organizationId], references: [organizations.id] }),
+  appointedByUser: one(users, { fields: [organizationMemberships.appointedBy], references: [users.id], relationName: 'appointedMembers' }),
+}));
+export const mandatesRelations = relations(mandates, ({ one }) => ({
+  user: one(users, { fields: [mandates.userId], references: [users.id] }),
+  organization: one(organizations, { fields: [mandates.organizationId], references: [organizations.id] }),
+}));
+export const userProfessionalExperienceRelations = relations(userProfessionalExperience, ({ one }) => ({
+  user: one(users, { fields: [userProfessionalExperience.userId], references: [users.id] }),
+  organization: one(organizations, { fields: [userProfessionalExperience.organizationId], references: [organizations.id] }),
+}));
+export const userEducationRelations = relations(userEducation, ({ one }) => ({
+  user: one(users, { fields: [userEducation.userId], references: [users.id] }),
+  organization: one(organizations, { fields: [userEducation.organizationId], references: [organizations.id] }),
+}));
+
+export const userRoles = sqliteTable(
+  'user_roles',
+  {
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    roleId: integer('role_id')
+      .notNull()
+      .references(() => roles.id, { onDelete: 'cascade' }),
+
+    // Auditoria da concessão
+    grantedBy: integer('granted_by').references(() => users.id, { onDelete: 'set null' }),
+    grantedAt: integer('granted_at', { mode: 'timestamp' }).default(sql`(unixepoch())`).notNull(),
+
+    // Lifecycle da concessão
+    expiresAt: integer('expires_at', { mode: 'timestamp' }),
+    revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  },
+  (table) => ({
+    pk:      primaryKey({ columns: [table.userId, table.roleId] }),
+    userIdx: index('idx_user_roles_user').on(table.userId),
+  })
+);
+
+export const rolesRelations = relations(roles, ({ many }) => ({
+  userRoles: many(userRoles),
+}));
+
+export const userRolesRelations = relations(userRoles, ({ one }) => ({
+  user: one(users, {
+    fields: [userRoles.userId],
+    references: [users.id],
+    relationName: 'roleOwner',
+  }),
+  role: one(roles, {
+    fields: [userRoles.roleId],
+    references: [roles.id],
+  }),
+  grantedByUser: one(users, {
+    fields: [userRoles.grantedBy],
+    references: [users.id],
+    relationName: 'grantedRoles',
+  }),
+}));
