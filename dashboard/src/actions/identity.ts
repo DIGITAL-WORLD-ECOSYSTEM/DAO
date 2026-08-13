@@ -61,16 +61,15 @@ export function mapCitizenToUserItem(citizen: ICitizenItem): IUserItem {
     zipCode: '',
     country: 'BR',
     isVerified: citizen.kycStatus === 'approved',
-    // Credenciais (Mocks)
-    emailVerified: true,
+    // Segurança e Atividade (Requer integração backend real na v2, setamos false/null para não ter fake success)
+    emailVerified: citizen.kycStatus === 'approved', // Simulação conservadora se for aprovado (mas o ideal seria ter campo db)
     phoneVerified: Boolean(citizen.phoneNumber),
-    mfaEnabled: citizen.kycStatus === 'approved',
-    passkeyCount: citizen.kycStatus === 'approved' ? 1 : 0,
-    biometricVerified: citizen.kycStatus === 'approved',
-    // Atividade e Governança (Mocks)
-    lastActivity: new Date(Date.now() - Math.random() * 10000000000),
-    createdAt: new Date(Date.now() - Math.random() * 20000000000),
-    updatedAt: new Date(Date.now() - Math.random() * 5000000000),
+    mfaEnabled: false,
+    passkeyCount: 0,
+    biometricVerified: false,
+    lastActivity: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     trustLevel: citizen.kycStatus === 'approved' ? 'Alto' : citizen.kycStatus === 'pending' ? 'Médio' : 'Baixo',
   };
 }

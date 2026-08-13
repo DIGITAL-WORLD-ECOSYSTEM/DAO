@@ -219,7 +219,7 @@ export function JwtSignUpView() {
             },
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={showPassword.onToggle} edge="end" sx={{ color: 'info.main' }}>
+                  <IconButton aria-label={showPassword.value ? "Hide password" : "Show password"} onClick={showPassword.onToggle} edge="end" sx={{ color: 'info.main' }}>
                   <Iconify icon={showPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
                 </IconButton>
               </InputAdornment>
@@ -286,6 +286,7 @@ export function JwtSignUpView() {
       <Box sx={{ mb: 2, textAlign: 'center' }}>
         <Typography
           variant="h5"
+          component="h1"
           sx={{
             color: 'info.main',
             mb: 1,

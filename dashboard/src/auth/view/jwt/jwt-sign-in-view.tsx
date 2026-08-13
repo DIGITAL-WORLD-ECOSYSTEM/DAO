@@ -177,6 +177,7 @@ export function JwtSignInView() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    aria-label={showPassword.value ? "Hide password" : "Show password"}
                     onClick={showPassword.onToggle}
                     edge="end"
                     sx={{ color: 'info.main' }}
@@ -265,6 +266,10 @@ export function JwtSignInView() {
         gap: 3,
       }}
     >
+      <Typography variant="h4" component="h1" sx={{ textAlign: 'center', mb: 1, color: 'info.main', fontFamily: 'var(--font-orbitron), sans-serif' }}>
+        Acesso ao Portal
+      </Typography>
+
       {!!errorMessage && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {errorMessage}
@@ -285,101 +290,9 @@ export function JwtSignInView() {
             fontFamily: 'var(--font-orbitron), sans-serif',
           }}
         >
-          OU CONTINUE COM
+          ACESSO RESTRITO
         </Typography>
       </Divider>
-
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => handleSocialLogin('google')}
-          startIcon={<Iconify icon="logos:google-icon" />}
-          sx={{
-            color: 'white',
-            borderColor: alpha(theme.palette.info.main, 0.1),
-            fontFamily: 'var(--font-orbitron), sans-serif',
-            fontWeight: 700,
-            fontSize: 13,
-            '&:hover': {
-              borderColor: 'info.main',
-              bgcolor: alpha(theme.palette.info.main, 0.05),
-              transform: 'translateY(-2px)',
-              boxShadow: `0 5px 15px ${alpha(theme.palette.info.main, 0.2)}`,
-            },
-          }}
-        >
-          Google
-        </Button>
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={() => handleSocialLogin('github')}
-          startIcon={<Iconify icon="logos:github-icon" />}
-          sx={{
-            color: 'white',
-            borderColor: alpha(theme.palette.info.main, 0.1),
-            fontFamily: 'var(--font-orbitron), sans-serif',
-            fontWeight: 700,
-            fontSize: 13,
-            '&:hover': {
-              borderColor: 'info.main',
-              bgcolor: alpha(theme.palette.info.main, 0.05),
-              transform: 'translateY(-2px)',
-              boxShadow: `0 5px 15px ${alpha(theme.palette.info.main, 0.2)}`,
-            },
-          }}
-        >
-          GitHub
-        </Button>
-      </Box>
-
-      <Button
-        fullWidth
-        variant="soft"
-        onClick={handleWeb3Login}
-        startIcon={
-          <Box
-            component="img"
-            src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
-            sx={{ width: 24, height: 24 }}
-          />
-        }
-        sx={{
-          height: 54,
-          fontFamily: 'var(--font-orbitron), sans-serif',
-          fontWeight: 900,
-          letterSpacing: 1.5,
-          color: 'info.main',
-          bgcolor: alpha('#020817', 0.8),
-          border: `1px solid ${alpha(theme.palette.info.main, 0.4)}`,
-          position: 'relative',
-          overflow: 'hidden',
-          '&:hover': {
-            borderColor: 'info.main',
-            backgroundColor: alpha('#020817', 0.9),
-            boxShadow: `0 0 30px ${alpha(theme.palette.info.main, 0.6)}`,
-            transform: 'scale(1.02)',
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: '-50%',
-            left: '-50%',
-            width: '200%',
-            height: '200%',
-            background: `linear-gradient(45deg, transparent, ${alpha(theme.palette.info.main, 0.1)}, transparent)`,
-            transform: 'rotate(45deg)',
-            animation: 'shimmer 3s infinite',
-          },
-          '@keyframes shimmer': {
-            '0%': { transform: 'translateX(-100%) rotate(45deg)' },
-            '100%': { transform: 'translateX(100%) rotate(45deg)' },
-          },
-        }}
-      >
-        WALLET
-      </Button>
     </Box>
   );
 }
