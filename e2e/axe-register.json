@@ -1,0 +1,28 @@
+[
+  {
+    "id": "button-name",
+    "impact": "critical",
+    "description": "Ensure buttons have discernible text",
+    "nodes": [
+      {
+        "html": "<button class=\"MuiButtonBase-root MuiIconButton-root MuiIconButton-edgeEnd MuiIconButton-sizeMedium css-1sqxyg1-MuiButtonBase-root-MuiIconButton-root\" tabindex=\"0\" type=\"button\">",
+        "target": [
+          ".MuiIconButton-edgeEnd"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "color-contrast",
+    "impact": "serious",
+    "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    "nodes": [
+      {
+        "html": "<a class=\"MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineHover css-1yjorhq-MuiTypography-root-MuiLink-root\" href=\"/register\" data-discover=\"true\">Need help?</a>",
+        "target": [
+          ".css-1yjorhq-MuiTypography-root-MuiLink-root"
+        ]
+      }
+    ]
+  }
+]
