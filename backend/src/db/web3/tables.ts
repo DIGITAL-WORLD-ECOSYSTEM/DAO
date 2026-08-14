@@ -3,13 +3,59 @@ import { sql } from 'drizzle-orm';
 import type { EmailEventMetadata } from '../../dto/email-event';
 import { users } from '../user/tables';
 
-
-
-//
-//   Web3 Identity subsystem
-//   USER / ACTOR
-//   N/A
-//   SECURITY / AUDIT events
+/**
+ * ============================================================================
+ * WEB3 / BLOCKCHAIN IDENTITY MODEL
+ * ============================================================================
+ *
+ * Physical owner:
+ *   src/db/web3/
+ *
+ * Responsibility:
+ *   Manages all blockchain wallets (internal and external) associated with
+ *   an account, their statuses, chains, and cryptographic representations.
+ *
+ * ----------------------------------------------------------------------------
+ * INTERNAL vs EXTERNAL WALLETS (PROVENANCE)
+ * ----------------------------------------------------------------------------
+ *
+ * provenance = 'internal'
+ *   - Created and managed by the platform.
+ *   - The ACTIVE internal wallet's normalized address MUST be mapped to
+ *     users.publicId.
+ *   - Represents the public blockchain identity of the account.
+ *
+ * provenance = 'external'
+ *   - Added/linked by the user for external operations (e.g., withdrawal).
+ *   - NEVER maps to users.publicId.
+ *   - Does NOT represent the account's platform identity.
+ *
+ * ----------------------------------------------------------------------------
+ * CANONICALIZATION & PUBLIC ID
+ * ----------------------------------------------------------------------------
+ *
+ * address
+ *   = The raw EVM address.
+ *
+ * addressNormalized
+ *   = The authoritative, lowercase canonical representation of the EVM address.
+ *
+ * INVARIANT:
+ *   users.publicId === active internal wallets.addressNormalized
+ *
+ * ----------------------------------------------------------------------------
+ * HISTORICAL REUSE POLICY
+ * ----------------------------------------------------------------------------
+ *
+ * If an internal wallet is revoked (e.g., compromised), its address becomes a
+ * permanent historical record.
+ * 
+ * INVARIANT:
+ *   An internal wallet's address MUST NEVER be reassigned to another account.
+ *   A revoked internal wallet's address MUST NEVER be reused.
+ *
+ * ============================================================================
+ */
 
 // ----------------------------------------------------------------------
 // Entity: wallets
@@ -22,11 +68,25 @@ export const wallets = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
 
+    /**
+     * Identifies the origin/purpose of the wallet.
+     * internal: managed by the platform, feeds users.publicId.
+     * external: imported/linked by the user for transactions/withdrawals.
+     */
+    provenance: text('provenance', { enum: ['internal', 'external'] })
+      .notNull()
+      .default('external'),
+
     chainNamespace: text('chain_namespace', { enum: ['eip155'] }).notNull().default('eip155'),
     chainId: integer('chain_id').notNull(),
     walletType: text('wallet_type', { enum: ['eoa', 'smart_contract'] }).notNull().default('eoa'),
 
     address: text('address').notNull(),
+    
+    /**
+     * Canonical, lowercased representation of the address.
+     * For internal wallets, this is the exact value mirrored to users.publicId.
+     */
     addressNormalized: text('address_normalized').notNull(),
     label: text('label'),
 
@@ -65,6 +125,9 @@ export const wallets = sqliteTable(
     verifiedAfterLinkedCheck: check('wallets_verified_after_linked', sql`${table.verifiedAt} IS NULL OR ${table.verifiedAt} >= ${table.linkedAt}`),
     suspendedAfterLinkedCheck: check('wallets_suspended_after_linked', sql`${table.suspendedAt} IS NULL OR ${table.suspendedAt} >= ${table.linkedAt}`),
     revokedAfterLinkedCheck: check('wallets_revoked_after_linked', sql`${table.revokedAt} IS NULL OR ${table.revokedAt} >= ${table.linkedAt}`),
+    
+    provenanceCheck: check('wallets_provenance_check', sql`${table.provenance} IN ('internal', 'external')`),
   })
 );
+
 
