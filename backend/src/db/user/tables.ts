@@ -83,7 +83,8 @@ import { organizations } from '../organizations/tables';
  *
  *   users.publicId === active internal wallets.address
  *
- * This invariant is enforced by application/domain lifecycle logic.
+ * This invariant is strictly enforced by application/domain lifecycle logic.
+ * The database cannot physically prevent inconsistencies here.
  * It is intentionally NOT modeled as a direct foreign key because
  * users.id <-> wallets.userId remains the authoritative relational link.
  *
@@ -377,18 +378,22 @@ export const users = sqliteTable(
     statusChangedAt: integer('status_changed_at', { mode: 'timestamp' }),
 
     /**
-     * Timestamp associated with account locking.
+     * Historical timestamp associated with account locking.
      *
      * Application invariant:
-     *   lockedAt != null means the account has been (or is currently) locked.
+     *   lockedAt != null means the account has historically been locked.
+     *   It does NOT necessarily represent the current active state.
+     *   Current state is strictly governed by the `status` column.
      */
     lockedAt: integer('locked_at', { mode: 'timestamp' }),
 
     /**
-     * Timestamp associated with account disabling.
+     * Historical timestamp associated with account disabling.
      *
      * Application invariant:
-     *   disabledAt != null means the account has been (or is currently) disabled.
+     *   disabledAt != null means the account has historically been disabled.
+     *   It does NOT necessarily represent the current active state.
+     *   Current state is strictly governed by the `status` column.
      */
     disabledAt: integer('disabled_at', { mode: 'timestamp' }),
 
@@ -666,7 +671,7 @@ export const userContacts = sqliteTable(
     ),
 
     /**
-     * Exactly one primary contact per user.
+     * INVARIANT: Exactly one primary contact per user, independently of the contact type.
      *
      * This is intentionally global across all contact types.
      */
@@ -749,7 +754,7 @@ export const userAddresses = sqliteTable(
     userIdx: index('idx_user_addresses_user').on(table.userId),
 
     /**
-     * One primary address per user AND address type.
+     * INVARIANT: Exactly ONE primary address per user PER TYPE.
      *
      * Example:
      *   one primary residential
@@ -933,6 +938,11 @@ export const userEducation = sqliteTable(
  * Lifecycle:
  *   A user may retain historical revoked/expired cards.
  *   At most ONE card may be ACTIVE at any moment for a given user.
+ *
+ * Important Invariant:
+ *   `status = 'active'` and `expiryDate < now` can physically coexist in the database.
+ *   The transition to 'expired' belongs strictly to the application lifecycle,
+ *   and is not enforced by a database CHECK constraint.
  */
 export const membershipCards = sqliteTable(
   'membership_cards',

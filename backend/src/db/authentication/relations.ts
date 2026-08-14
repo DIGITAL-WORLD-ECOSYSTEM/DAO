@@ -1,5 +1,5 @@
 import { relations, AnyColumn, RelationConfig } from 'drizzle-orm';
-import { userAuthenticators, passwordCredentials, webauthnCredentials, totpCredentials, walletAuthenticators, recoverySets, recoveryCredentials } from './tables';
+import { userAuthenticators, passwordCredentials, webauthnCredentials, totpCredentials, walletAuthenticators, recoverySets, recoveryCredentials, userSessions, passwordResets, authChallenges } from './tables';
 import { users } from '../user/tables';
 import { securityEvents } from '../security/tables';
 import { wallets } from '../web3/tables';
@@ -57,5 +57,17 @@ export const recoveryCredentialsRelations = relations(recoveryCredentials, ({ on
 export const walletAuthenticatorsRelations = relations(walletAuthenticators, ({ one }) => ({
   authenticator: one(userAuthenticators, { fields: [walletAuthenticators.authenticatorId], references: [userAuthenticators.id] }),
   wallet: one(wallets, { fields: [walletAuthenticators.walletId], references: [wallets.id], relationName: 'walletAuthenticator' }),
+}));
+
+export const userSessionsRelations = relations(userSessions, ({ one }) => ({
+  user: one(users, { fields: [userSessions.userId], references: [users.id] }),
+}));
+
+export const passwordResetsRelations = relations(passwordResets, ({ one }) => ({
+  user: one(users, { fields: [passwordResets.userId], references: [users.id] }),
+}));
+
+export const authChallengesRelations = relations(authChallenges, ({ one }) => ({
+  user: one(users, { fields: [authChallenges.userId], references: [users.id] }),
 }));
 
