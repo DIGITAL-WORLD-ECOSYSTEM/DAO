@@ -1,5 +1,5 @@
 import { eq, and } from 'drizzle-orm';
-import { citizens } from '../../db/schema';
+import { citizens } from '../../db/civil-identity/tables';
 import { ICitizenRepository } from '../../application/ports/output/ICitizenRepository';
 import { CitizenMapper } from '../mappers/CitizenMapper';
 import { Result } from '../../shared/kernel/Result';

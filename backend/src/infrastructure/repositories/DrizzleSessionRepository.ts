@@ -1,6 +1,6 @@
 import { ISessionRepository } from '../../application/ports/output/ISessionRepository';
 import { eq } from 'drizzle-orm';
-import { userSessions } from '../../db/schema';
+import { userSessions } from '../../db/authentication/tables';
 
 export class DrizzleSessionRepository implements ISessionRepository {
   constructor(private db: any) {}

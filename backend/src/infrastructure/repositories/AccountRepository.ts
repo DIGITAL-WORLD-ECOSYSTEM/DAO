@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { users, citizens } from '../../db/schema';
+import { users } from '../../db/user/tables';
+import { citizens } from '../../db/civil-identity/tables';
 import { IAccountRepository } from '../../application/ports/output/IAccountRepository';
 import { AccountMapper } from '../mappers/AccountMapper';
 import { Result } from '../../shared/kernel/Result';

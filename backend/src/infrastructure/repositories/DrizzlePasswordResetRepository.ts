@@ -1,6 +1,6 @@
 import { Result } from '../../shared/kernel/Result';
 import { IPasswordResetRepository, PasswordReset } from '../../application/ports/output/IPasswordResetRepository';
-import { passwordResets } from '../../db/schema';
+import { passwordResets } from '../../db/authentication/tables';
 import { eq } from 'drizzle-orm';
 
 export class DrizzlePasswordResetRepository implements IPasswordResetRepository {

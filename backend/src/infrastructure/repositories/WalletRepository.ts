@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { wallets } from '../../db/schema';
+import { wallets } from '../../db/web3/tables';
 import { IWalletRepository, WalletRecord } from '../../application/ports/output/IWalletRepository';
 import { Result } from '../../shared/kernel/Result';
 

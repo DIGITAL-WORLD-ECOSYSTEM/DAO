@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { treasuryLedger } from '../../db/schema';
+import { treasuryLedger } from '../../db/finance/tables';
 import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRepository';
 import { TreasuryMapper } from '../mappers/TreasuryMapper';
 import { Result } from '../../shared/kernel/Result';

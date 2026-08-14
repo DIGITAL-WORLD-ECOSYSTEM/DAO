@@ -1,7 +1,7 @@
 import { IDomainEvent } from '../../shared/kernel/DomainEvent';
 import { Result } from '../../shared/kernel/Result';
 import { IOutboxRepository, OutboxEventRecord } from '../../application/ports/output/IOutboxRepository';
-import { outboxEvents } from '../../db/schema';
+import { outboxEvents } from '../../db/infrastructure/tables';
 import { eq, asc, and } from 'drizzle-orm';
 import crypto from 'crypto';
 

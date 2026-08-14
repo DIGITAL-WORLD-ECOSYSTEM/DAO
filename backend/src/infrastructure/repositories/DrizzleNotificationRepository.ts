@@ -1,5 +1,5 @@
 import { eq, and, desc, sql } from 'drizzle-orm';
-import { notifications } from '../../db/schema';
+import { notifications } from '../../db/communication/tables';
 import { Notification } from '../../domains/notifications/entities/Notification';
 import { INotificationRepository } from '../../application/ports/output/INotificationRepository';
 import { Result } from '../../shared/kernel/Result';
