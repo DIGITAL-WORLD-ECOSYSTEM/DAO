@@ -1,0 +1,61 @@
+import { relations, AnyColumn, RelationConfig } from 'drizzle-orm';
+import { userAuthenticators, passwordCredentials, webauthnCredentials, totpCredentials, walletAuthenticators, recoverySets, recoveryCredentials } from './tables';
+import { users } from '../user/tables';
+import { securityEvents } from '../security/tables';
+import { wallets } from '../web3/tables';
+
+
+
+
+export const userAuthenticatorsRelations = relations(userAuthenticators, ({ one, many }) => ({
+  user: one(users, { fields: [userAuthenticators.userId], references: [users.id], relationName: 'authenticatorOwner' }),
+  revokedByUser: one(users, { fields: [userAuthenticators.revokedBy], references: [users.id], relationName: 'revokedAuthenticators' }),
+  
+  passwordCredential: one(passwordCredentials),
+  webauthnCredential: one(webauthnCredentials),
+  totpCredential: one(totpCredentials),
+  walletAuthenticator: one(walletAuthenticators),
+  
+  recoverySet: one(recoverySets),
+  
+  securityEvents: many(securityEvents),
+}));
+
+
+
+export const passwordCredentialsRelations = relations(passwordCredentials, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [passwordCredentials.authenticatorId], references: [userAuthenticators.id] }),
+}));
+
+
+
+export const webauthnCredentialsRelations = relations(webauthnCredentials, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [webauthnCredentials.authenticatorId], references: [userAuthenticators.id] }),
+}));
+
+
+
+export const totpCredentialsRelations = relations(totpCredentials, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [totpCredentials.authenticatorId], references: [userAuthenticators.id] }),
+}));
+
+
+
+export const recoverySetsRelations = relations(recoverySets, ({ one, many }) => ({
+  authenticator: one(userAuthenticators, { fields: [recoverySets.authenticatorId], references: [userAuthenticators.id] }),
+  credentials: many(recoveryCredentials),
+}));
+
+
+
+export const recoveryCredentialsRelations = relations(recoveryCredentials, ({ one }) => ({
+  recoverySet: one(recoverySets, { fields: [recoveryCredentials.recoverySetId], references: [recoverySets.id] }),
+}));
+
+
+
+export const walletAuthenticatorsRelations = relations(walletAuthenticators, ({ one }) => ({
+  authenticator: one(userAuthenticators, { fields: [walletAuthenticators.authenticatorId], references: [userAuthenticators.id] }),
+  wallet: one(wallets, { fields: [walletAuthenticators.walletId], references: [wallets.id], relationName: 'walletAuthenticator' }),
+}));
+
