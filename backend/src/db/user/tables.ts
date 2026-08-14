@@ -371,21 +371,24 @@ export const users = sqliteTable(
      * Timestamp when account status last changed.
      *
      * Application invariant:
-     *   statusChangedAt is updated whenever status changes.
+     *   statusChangedAt = NULL only if no transition has occurred since creation.
+     *   It must be updated whenever status changes.
      */
     statusChangedAt: integer('status_changed_at', { mode: 'timestamp' }),
 
     /**
      * Timestamp associated with account locking.
      *
-     * Application lifecycle determines when this is populated.
+     * Application invariant:
+     *   lockedAt != null means the account has been (or is currently) locked.
      */
     lockedAt: integer('locked_at', { mode: 'timestamp' }),
 
     /**
      * Timestamp associated with account disabling.
      *
-     * Application lifecycle determines when this is populated.
+     * Application invariant:
+     *   disabledAt != null means the account has been (or is currently) disabled.
      */
     disabledAt: integer('disabled_at', { mode: 'timestamp' }),
 
@@ -598,8 +601,9 @@ export const userProfiles = sqliteTable(
  * Secondary communication channels.
  *
  * Important:
- *   users.email remains the account's primary email/login identifier.
- *   userContacts is not a replacement for users.email.
+ *   users.email remains the account's primary account/login identity.
+ *   userContacts.isPrimary merely indicates the preferred contact inside the
+ *   secondary contacts collection. It does NOT replace users.email.
  *
  * Secondary email:
  *   A secondary_email must never silently become the account's primary
@@ -678,6 +682,14 @@ export const userContacts = sqliteTable(
     verificationMethodCheck: check(
       'user_contacts_verification_method_check',
       sql`${table.verificationMethod} IS NULL OR ${table.verificationMethod} IN ('sms', 'whatsapp', 'email', 'admin', 'import')`
+    ),
+
+    /**
+     * A contact cannot be marked as verified without a verification method.
+     */
+    verifiedAtCheck: check(
+      'user_contacts_verified_at_check',
+      sql`${table.verifiedAt} IS NULL OR ${table.verificationMethod} IS NOT NULL`
     ),
   })
 );
@@ -820,6 +832,15 @@ export const userProfessionalExperience = sqliteTable(
       'user_professional_experience_date_order_check',
       sql`${table.endDate} IS NULL OR ${table.startDate} IS NULL OR ${table.endDate} >= ${table.startDate}`
     ),
+
+    /**
+     * Ensures that professional experience is linked either to an internal
+     * organization or contains an external snapshot name.
+     */
+    organizationOrNameCheck: check(
+      'user_professional_experience_organization_check',
+      sql`${table.organizationId} IS NOT NULL OR ${table.companyName} IS NOT NULL`
+    ),
   })
 );
 
@@ -881,6 +902,15 @@ export const userEducation = sqliteTable(
     dateOrderCheck: check(
       'user_education_date_order_check',
       sql`${table.endDate} IS NULL OR ${table.startDate} IS NULL OR ${table.endDate} >= ${table.startDate}`
+    ),
+
+    /**
+     * Ensures that education is linked either to an internal
+     * organization or contains an external institution snapshot name.
+     */
+    organizationOrNameCheck: check(
+      'user_education_organization_check',
+      sql`${table.organizationId} IS NOT NULL OR ${table.institutionName} IS NOT NULL`
     ),
   })
 );
