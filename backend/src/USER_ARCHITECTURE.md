@@ -174,6 +174,7 @@ O módulo `user` é a âncora, mas **não deve possuir**:
 - ❌ Autenticadores Wallet ou endereços como chaves primárias de web3 (`web3`, `authentication`)
 - ❌ Regras RBAC, Roles, Permissões (`authorization`)
 - ❌ Auditorias imutáveis (`security`)
+- ❌ Saldos, Ledger, Contas Internas e Métodos de Pagamento Fiat (`finance`): O módulo User cede apenas o seu `users.id`. É responsabilidade exclusiva do banco de dados do `finance` garantir, via chaves estrangeiras compostas e *constraints*, que um usuário não movimente ou possua contas de outro.
 
 ---
 
@@ -198,3 +199,4 @@ Esta tabela diferencia claramente a documentação arquitetural das funcionalida
 | **Resolução de Google/GitHub** | ⏳ Implementação Pendente | `authentication` deve encontrar usuário sem duplicar conta. |
 | **Vinculação de Wallet p/ Login** | ⏳ Implementação Pendente | Apenas após KYC e carteira interna existirem. |
 | **Prevenção de duplicidade (Identidades externas)** | ⏳ Implementação Pendente | Assegurar que nenhum método gera nova conta silenciosamente. |
+| **Propriedade Financeira (Cross-Domain)** | ✅ Existente | `users.id` atua como âncora de `financialAccounts`, `fiatAccounts` e `idempotencyKeys`, com integridade garantida via DB Constraints no domínio Finance. |

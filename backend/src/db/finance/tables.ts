@@ -163,16 +163,7 @@ export const financialAccounts = sqliteTable(
     ).on(table.userId, table.accountType, table.name),
     ownerRuleCheck: check(
       'ck_financial_accounts_owner_rule',
-      sql`
-        (
-          ${table.accountType} = 'user_available'
-          AND ${table.userId} IS NOT NULL
-        )
-        OR
-        (
-          ${table.accountType} != 'user_available'
-        )
-      `,
+      sql`(${table.accountType} = 'user_available' AND ${table.userId} IS NOT NULL) OR (${table.accountType} != 'user_available' AND ${table.userId} IS NULL)`
     ),
   }),
 );
@@ -789,6 +780,10 @@ export const cryptoTransactions = sqliteTable(
       'ck_crypto_transactions_fee_nonnegative',
       sql`${table.feeBaseUnits} <> '' AND ltrim(${table.feeBaseUnits}, '0123456789') = '' AND (${table.feeBaseUnits} = '0' OR ltrim(${table.feeBaseUnits}, '0') = ${table.feeBaseUnits})`,
     ),
+    feeAssetCheck: check(
+      'ck_crypto_transactions_fee_asset',
+      sql`${table.feeBaseUnits} = '0' OR ${table.feeAssetId} IS NOT NULL`
+    ),
   }),
 );
 
@@ -836,6 +831,14 @@ export const exchangeRates = sqliteTable(
     pairDifferentCheck: check(
       'ck_exchange_rates_different_assets',
       sql`${table.baseAssetId} <> ${table.quoteAssetId}`,
+    ),
+    rateCheck: check(
+      'ck_exchange_rates_rate_positive',
+      sql`CAST(${table.rate} AS REAL) > 0`
+    ),
+    expiresCheck: check(
+      'ck_exchange_rates_expires_after_quoted',
+      sql`${table.expiresAt} IS NULL OR ${table.expiresAt} >= ${table.quotedAt}`
     ),
   }),
 );
@@ -911,6 +914,10 @@ export const assetConversions = sqliteTable(
     assetsDifferentCheck: check(
       'ck_asset_conversions_different_assets',
       sql`${table.fromAssetId} <> ${table.toAssetId}`,
+    ),
+    rateCheck: check(
+      'ck_asset_conversions_rate_positive',
+      sql`CAST(${table.rate} AS REAL) > 0`
     ),
   }),
 );

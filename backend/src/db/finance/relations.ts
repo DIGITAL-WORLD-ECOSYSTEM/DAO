@@ -143,6 +143,10 @@ export const fiatAccountsRelations = relations(
       fields: [fiatAccounts.providerId],
       references: [fiatProviders.id],
     }),
+    asset: one(financialAssets, {
+      fields: [fiatAccounts.assetId],
+      references: [financialAssets.id],
+    }),
     paymentMethods: many(fiatPaymentMethods),
   }),
 );
@@ -169,6 +173,14 @@ export const fiatTransactionsRelations = relations(
     transaction: one(financialTransactions, {
       fields: [fiatTransactions.financialTransactionId],
       references: [financialTransactions.id],
+    }),
+    paymentMethod: one(fiatPaymentMethods, {
+      fields: [fiatTransactions.paymentMethodId],
+      references: [fiatPaymentMethods.id],
+    }),
+    asset: one(financialAssets, {
+      fields: [fiatTransactions.assetId],
+      references: [financialAssets.id],
     }),
     provider: one(fiatProviders, {
       fields: [fiatTransactions.providerId],
@@ -259,6 +271,10 @@ export const financialFeesRelations = relations(
 export const fiatExternalTransactionsRelations = relations(
   fiatExternalTransactions,
   ({ one }) => ({
+    transaction: one(financialTransactions, {
+      fields: [fiatExternalTransactions.financialTransactionId],
+      references: [financialTransactions.id],
+    }),
     provider: one(fiatProviders, {
       fields: [fiatExternalTransactions.providerId],
       references: [fiatProviders.id],
