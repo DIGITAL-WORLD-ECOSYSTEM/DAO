@@ -7,9 +7,9 @@ export interface ISessionRepository {
     userAgent: string;
     refreshTokenHash: string;
     aal: number;
+    authEpoch: number;
     createdAt: Date;
     expiresAt: Date;
-    revoked: boolean;
   }): Promise<void>;
 
   revokeAllUserSessions(userId: number): Promise<void>;

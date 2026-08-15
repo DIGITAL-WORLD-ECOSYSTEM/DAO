@@ -1006,7 +1006,7 @@ identity.post('/logout', async (c) => {
         // Marcar sessão como revogada no banco
         await db
           .update(userSessions)
-          .set({ revoked: true })
+          .set({ revokedAt: new Date(), revocationReason: 'User logout' })
           .where(eq(userSessions.id, payload.sessionId));
       }
     } catch (e) {
@@ -1033,7 +1033,7 @@ identity.post('/refresh', async (c) => {
 
   const db = c.get('db');
   const { userSessions, users, citizens } = await import('../../../db/schema');
-  const { and, eq } = await import('drizzle-orm');
+  const { and, eq, isNull } = await import('drizzle-orm');
   const { clearSessionCookies } = await import('../../../utils/auth');
   const hashString = async (str: string) => {
     const utf8 = new TextEncoder().encode(str);
@@ -1049,7 +1049,7 @@ identity.post('/refresh', async (c) => {
     const [session] = await db
       .select()
       .from(userSessions)
-      .where(and(eq(userSessions.refreshTokenHash, tokenHash), eq(userSessions.revoked, false)))
+      .where(and(eq(userSessions.refreshTokenHash, tokenHash), isNull(userSessions.revokedAt)))
       .limit(1);
 
     if (!session) {
@@ -1060,7 +1060,7 @@ identity.post('/refresh', async (c) => {
     // Validar expiração
     if (Date.now() > session.expiresAt.getTime()) {
       // Marcar como revogado se expirou
-      await db.update(userSessions).set({ revoked: true }).where(eq(userSessions.id, session.id));
+      await db.update(userSessions).set({ revokedAt: new Date(), revocationReason: 'Session expired' }).where(eq(userSessions.id, session.id));
       clearSessionCookies(c);
       return c.json({ success: false, message: 'Sessão expirada.' }, 401);
     }
@@ -1086,7 +1086,7 @@ identity.post('/refresh', async (c) => {
     }
 
     // Rotação de Refresh Token (RTR): Revogar sessão antiga
-    await db.update(userSessions).set({ revoked: true }).where(eq(userSessions.id, session.id));
+    await db.update(userSessions).set({ revokedAt: new Date(), revocationReason: 'RTR Rotation' }).where(eq(userSessions.id, session.id));
 
     // Emitir nova sessão
     const userRole =

@@ -3,14 +3,14 @@ import { Result } from '../../../shared/kernel/Result';
 export interface PasswordReset {
   id: number;
   userId: number;
-  token: string;
+  tokenHash: string;
   expiresAt: Date;
-  used: boolean;
+  usedAt: Date | null;
   createdAt: Date;
 }
 
 export interface IPasswordResetRepository {
-  findByToken(token: string): Promise<Result<PasswordReset>>;
+  findByToken(tokenHash: string): Promise<Result<PasswordReset>>;
   invalidate(id: number): Promise<Result<void>>;
-  create(data: { userId: number; token: string; expiresAt: Date; used: boolean }): Promise<Result<void>>;
+  create(data: { userId: number; tokenHash: string; expiresAt: Date }): Promise<Result<void>>;
 }

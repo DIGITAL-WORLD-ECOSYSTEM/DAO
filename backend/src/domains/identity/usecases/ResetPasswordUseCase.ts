@@ -20,15 +20,22 @@ export class ResetPasswordUseCase {
       const accountRepo = factory.getAccountRepository();
       const sessionRepo = factory.getSessionRepository();
 
-      // 1. Validar token
-      const resetResult = await resetRepo.findByToken(token);
+      // 1. Hash do token
+      const tokenHash = await (async (str: string) => {
+        const utf8 = new TextEncoder().encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+      })(token);
+
+      const resetResult = await resetRepo.findByToken(tokenHash);
       if (resetResult.isFailure) {
         return Result.fail('TokenInvalid');
       }
 
       const resetData = resetResult.getValue();
 
-      if (resetData.used) {
+      if (resetData.usedAt !== null) {
         return Result.fail('TokenInvalid: Token já utilizado');
       }
 

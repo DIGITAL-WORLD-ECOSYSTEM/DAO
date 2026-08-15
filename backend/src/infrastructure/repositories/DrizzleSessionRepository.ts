@@ -13,16 +13,16 @@ export class DrizzleSessionRepository implements ISessionRepository {
     userAgent: string;
     refreshTokenHash: string;
     aal: number;
+    authEpoch: number;
     createdAt: Date;
     expiresAt: Date;
-    revoked: boolean;
   }): Promise<void> {
     await this.db.insert(userSessions).values(sessionData);
   }
 
   async revokeAllUserSessions(userId: number): Promise<void> {
     await this.db.update(userSessions)
-      .set({ revoked: true })
+      .set({ revokedAt: new Date(), revocationReason: 'Revoked all user sessions' })
       .where(eq(userSessions.userId, userId));
   }
 

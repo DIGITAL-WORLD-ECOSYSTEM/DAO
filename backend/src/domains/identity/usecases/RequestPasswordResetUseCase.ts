@@ -28,11 +28,17 @@ export class RequestPasswordResetUseCase {
     if (account.password && account.password.includes(':')) {
       const resetToken = crypto.randomUUID();
 
+      const tokenHash = await (async (str: string) => {
+        const utf8 = new TextEncoder().encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', utf8);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+      })(resetToken);
+
       await this.passwordResetRepository.create({
         userId: account.id,
-        token: resetToken,
+        tokenHash,
         expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hora
-        used: false,
       });
 
       await this.notificationPort.sendPasswordRecovery(account.email, resetToken);

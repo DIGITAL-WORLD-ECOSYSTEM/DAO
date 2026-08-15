@@ -6,12 +6,12 @@ import { eq } from 'drizzle-orm';
 export class DrizzlePasswordResetRepository implements IPasswordResetRepository {
   constructor(private db: any) {}
 
-  async findByToken(token: string): Promise<Result<PasswordReset>> {
+  async findByToken(tokenHash: string): Promise<Result<PasswordReset>> {
     try {
       const [reset] = await this.db
         .select()
         .from(passwordResets)
-        .where(eq(passwordResets.token, token))
+        .where(eq(passwordResets.tokenHash, tokenHash))
         .limit(1);
 
       if (!reset) {
@@ -27,7 +27,7 @@ export class DrizzlePasswordResetRepository implements IPasswordResetRepository 
     try {
       await this.db
         .update(passwordResets)
-        .set({ used: true })
+        .set({ usedAt: new Date() })
         .where(eq(passwordResets.id, id));
       return Result.ok();
     } catch (e: any) {
@@ -35,7 +35,7 @@ export class DrizzlePasswordResetRepository implements IPasswordResetRepository 
     }
   }
 
-  async create(data: { userId: number; token: string; expiresAt: Date; used: boolean }): Promise<Result<void>> {
+  async create(data: { userId: number; tokenHash: string; expiresAt: Date }): Promise<Result<void>> {
     try {
       await this.db.insert(passwordResets).values(data);
       return Result.ok();

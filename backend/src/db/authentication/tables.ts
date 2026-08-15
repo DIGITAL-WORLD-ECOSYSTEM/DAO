@@ -85,7 +85,10 @@ export const webauthnCredentials = sqliteTable('webauthn_credentials', {
   aaguid: text('aaguid'),
   attestationFormat: text('attestation_format'),
   attestationObject: text('attestation_object'),
-});
+}, (table) => ({
+  signCountCheck: check('webauthn_sign_count_check', sql`${table.signCount} >= 0`),
+  rpIdCheck: check('webauthn_rpid_check', sql`length(${table.rpId}) > 0`),
+}));
 
 
 
@@ -149,9 +152,9 @@ export const passwordResets = sqliteTable('password_resets', {
   userId: integer('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  token: text('token').notNull().unique(),
+  tokenHash: text('token_hash').notNull().unique(),
   expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-  used: integer('used', { mode: 'boolean' }).default(false),
+  usedAt: integer('used_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
 });
 
@@ -167,17 +170,22 @@ export const userSessions = sqliteTable(
     userId: integer('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    jti: text('jti').notNull(),
+    jti: text('jti').notNull().unique(),
     ip: text('ip'),
     userAgent: text('user_agent'),
     refreshTokenHash: text('refresh_token_hash').notNull(),
-    aal: integer('aal').default(1),
+    aal: integer('aal').notNull().default(1),
+    authEpoch: integer('auth_epoch').notNull().default(1),
+    lastActivityAt: integer('last_activity_at', { mode: 'timestamp' }),
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`),
     expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-    revoked: integer('revoked', { mode: 'boolean' }).default(false),
+    revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+    revocationReason: text('revocation_reason'),
   },
   (table) => ({
     userIdIdx: index('idx_sessions_user').on(table.userId),
+    aalCheck: check('user_sessions_aal_check', sql`${table.aal} IN (1, 2, 3)`),
+    expirationCheck: check('user_sessions_expiration_check', sql`${table.createdAt} < ${table.expiresAt}`),
   })
 );
 
@@ -189,11 +197,21 @@ export const userSessions = sqliteTable(
 export const authChallenges = sqliteTable('auth_challenges', {
   id: text('id').primaryKey(), // UUID do desafio
   userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  challenge: text('challenge').notNull(),
+  challengeHash: text('challenge_hash').notNull(),
   challengeType: text('challenge_type').notNull(), // 'ssh', 'totp', 'webauthn', 'siwe'
-  used: integer('used', { mode: 'boolean' }).default(false),
+  usedAt: integer('used_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(strftime('%s', 'now'))`).notNull(),
   expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-});
+}, (table) => ({
+  typeCheck: check(
+    'auth_challenges_type_check',
+    sql`${table.challengeType} IN ('ssh', 'totp', 'webauthn', 'siwe')`
+  ),
+  expirationCheck: check(
+    'auth_challenges_expiration_check',
+    sql`${table.createdAt} < ${table.expiresAt}`
+  )
+}));
 
 
 

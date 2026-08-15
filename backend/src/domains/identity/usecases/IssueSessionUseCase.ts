@@ -47,9 +47,9 @@ export class IssueSessionUseCase {
       userAgent: userInfo.userAgent,
       refreshTokenHash,
       aal: userInfo.aal,
+      authEpoch: userInfo.tokenVersion || 1,
       createdAt,
       expiresAt,
-      revoked: false,
     });
 
     // 3. Assinar Access Token
