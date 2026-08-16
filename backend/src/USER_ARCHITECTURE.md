@@ -1,6 +1,10 @@
-# Arquitetura Completa do Módulo USER (Contrato Definitivo)
+# Arquitetura Completa de Domínios (Contrato Definitivo do DB)
 
-A documentação abaixo serve como a "Constituição" e o Roadmap oficial para o módulo `user`. Ela separa explicitamente o estado atual da arquitetura-alvo, estabelecendo invariantes rigorosos para evitar alucinações de implementação.
+A documentação abaixo serve como a "Constituição" e o Roadmap oficial para os módulos base (`user`, `web3`, etc). Ela separa explicitamente o estado atual da arquitetura-alvo, estabelecendo invariantes rigorosos para evitar alucinações de implementação.
+
+---
+
+# MÓDULO: USER
 
 **Local físico:** `/home/sandro/DAO/backend/src/db/user/`
 
@@ -161,7 +165,7 @@ address torna-se users.publicId
 - **Membership Cards:** `membershipCards` é a credencial emitida para representar a associação do usuário à DAO. **Não é** credencial de autenticação, role de autorização, wallet ou credencial de KYC.
 - **Notification Settings:** `userNotificationSettings` guarda preferências. Ele **não determina** quais eventos existem, como são gerados, nem como emails/chats são entregues (Isso é responsabilidade de `communication`).
 - **Identidades Externas de Login (Google/GitHub/Wallet como Autenticação):** São puramente mecanismos externos de vinculação (domínio `authentication`). Eles **NÃO substituem `users.id`** e **NÃO criam contas duplicadas silenciosamente**. O módulo de autenticação deve encontrar a conta pré-existente e apenas atestar o vínculo. A wallet, especificamente, nunca pode criar a conta inicial (só pode ser usada para login após a conta existir e KYC/Onboarding estarem concluídos).
-- **Wallet Externa (Destino Financeiro):** Pertence ao domínio `web3`, e operações com ela pertencem ao `finance`. Ela NÃO é a identidade da conta e NÃO pode ser o `publicId`. Fluxo de saque: `USER` solicita saque → escolhe wallet externa → sistema apresenta (rede, valor, taxas, destino) → confirmação explícita → `FINANCE` executa operação com contexto técnico do `WEB3`.
+- **Wallet Externa (Destino Financeiro):** Pertence ao domínio `web3`, e operações com ela pertencem ao `finance`. Ela NÃO é a identidade da conta e NÃO pode ser o `publicId`. Fluxo de saque: `USER` solicita saque → escolhe wallet externa → sistema apresenta (rede, valor, taxas, destino) → confirmação explícita → `FINANCE` executa operação com rigor contábil (Double-Entry, Imutabilidade e Idempotência) usando o contexto técnico do `WEB3`.
 
 ---
 
@@ -200,3 +204,88 @@ Esta tabela diferencia claramente a documentação arquitetural das funcionalida
 | **Vinculação de Wallet p/ Login** | ⏳ Implementação Pendente | Apenas após KYC e carteira interna existirem. |
 | **Prevenção de duplicidade (Identidades externas)** | ⏳ Implementação Pendente | Assegurar que nenhum método gera nova conta silenciosamente. |
 | **Propriedade Financeira (Cross-Domain)** | ✅ Existente | `users.id` atua como âncora de `financialAccounts`, `fiatAccounts` e `idempotencyKeys`, com integridade garantida via DB Constraints no domínio Finance. |
+
+---
+
+# MÓDULO: WEB3
+
+**Local físico:** `/home/sandro/DAO/backend/src/db/web3/`
+
+**Responsabilidade:** O módulo web3 representa a infraestrutura técnica de execução em redes blockchain, a identidade técnica de carteiras (EOA, Smart Contracts, Safes) e o ciclo de vida transacional. Ele não é responsável por contabilidade financeira, saldos ou autenticação web2.
+
+## 1. Visão Geral (Topologia Web3)
+
+```text
+                    WEB3 DOMAIN
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+     wallets      web3Networks     smartContracts
+        │                │                │
+        └───────────────┬┴────────────────┘
+                        │
+                 web3Transactions
+```
+
+### O Modelo de Carteiras (Wallets)
+
+A entidade `wallets` abstrai completamente a infraestrutura de chaves, permitindo suporte híbrido entre carteiras tradicionais (EOAs) e infraestrutura avançada de Account Abstraction e Safes:
+
+- **Provenance (`internal` vs `external`)**: Define o grau de isolamento de custódia.
+- **Wallet Type (`eoa` vs `smart_contract`)**: Diferencia o tipo de infraestrutura on-chain.
+- **Control Mode**: Define quem detém a assinatura (`platform_key`, `external_user`, `contract_controller`). 
+
+```text
+┌───────────────────────┬──────────────────┬─────────────────────────────┐
+│ Provenance            │ Type             │ Control Mode                │
+├───────────────────────┼──────────────────┼─────────────────────────────┤
+│ internal              │ eoa              │ platform_key (KMS)          │
+│ external              │ eoa              │ external_user (Injected)    │
+│ internal / external   │ smart_contract   │ contract_controller         │
+└───────────────────────┴──────────────────┴─────────────────────────────┘
+```
+
+## 2. Invariantes de Custódia e Controle
+
+Para garantir integridade institucional de custódia (`ck_wallets_control_mode`), as seguintes regras são imutáveis no banco de dados:
+
+1. **EOAs Custodiais**: Toda wallet interna e EOA DEVE obrigatoriamente possuir um `keyProvider` e `keyReference` (Ex: AWS KMS, Fireblocks). A chave privada JAMAIS transita ou repousa no banco em texto plano.
+2. **Account Abstraction / Multisigs**: Uma wallet `smart_contract` NÃO possui chave própria vinculada. Ela exige obrigatoriamente um `controllerWalletId` (auto-relacionamento).
+3. **Imutabilidade da Identidade**: Uma vez criada, a identidade estrutural (`address`, `networkId`, `userId`, `provenance`) da wallet é imutável.
+4. **Active Singular Integrity**: Um usuário pode possuir no máximo 1 (uma) carteira interna classificada como principal (`isPrimary = true`), que deve estar com `status = active`.
+
+## 3. Máquina de Estados e Replacement Transacional
+
+A tabela `web3Transactions` mapeia o ciclo de vida da execução on-chain e os vetores de concorrência, implementando **Optimistic Locking** (`version`).
+
+### 3.1. Replacement Lineage (Speed up / Cancel)
+Transações podem ser substituídas na mempool caso sofram dropped ou gas price issues. O modelo suporta `replacementOfTransactionId` com rigorosos invariantes:
+- Uma transação substituta DEVE apontar para o `id` original, sem ciclos circulares restritivos (`fk_web3_transactions_replacement`).
+- Uma transação substituída perde seu state para `replaced`.
+- Um estado de replacement EXIGE a presença simultânea de `nonce` e `replacementOfTransactionId` (Constraint `ck_web3_transactions_replacement_state`).
+
+### 3.2. Receipt Semantics
+- **Failed vs Reverted**: 
+  - `status = failed`: A RPC rejeitou antes mesmo de ir on-chain (ex: nonce gap, dropped mempool).
+  - `status = confirmed` + `receiptStatus = reverted`: O contrato processou on-chain e gastou gás, mas o método sofreu rollback na EVM.
+- **Failure Telemetry**: Presença obrigatória e amarrada de `failureCode` e `failureReason` para falhas rastreáveis.
+
+## 4. O que NÃO PERTENCE ao Web3
+
+- ❌ Saldos, Ledger Contábil e Double-Entry (`finance`).
+- ❌ Detalhes do Usuário Civil, KYC (`user`, `civil-identity`).
+- ❌ Resolução de Sessões ou Google Login (`authentication`).
+- ❌ A transação Web3 armazena `valueBaseUnits` e `gasLimit` estritamente para envio à rede; o débito ou crédito na conta corrente do usuário é competência do Domínio Financeiro que escuta eventos Web3.
+
+## 5. Roadmap: CURRENT STATE vs TARGET ARCHITECTURE
+
+| Componente/Funcionalidade | Estado | Detalhe (Target Architecture) |
+| :--- | :--- | :--- |
+| **`web3Networks`** | ✅ Existente | Schema base com versionamento otimista. |
+| **`smartContracts`** | ✅ Existente | Schema base com canonicalização de endereços. |
+| **`wallets`** | ✅ Existente | Provenance, Control Mode, Hierarquia (Controllers) e Verificação implantados (`9.9/10`). |
+| **`web3Transactions`** | ✅ Existente | Replacement Lineage, Nonce Integrity e Telemetria (Failure Code). |
+| **`relations.ts`** | ✅ Existente | Topologia Drizzle completa com Composite FKs. |
+| **Migrações e Triggers** | ⏳ Pendente | Gatilhos físicos SQLite para impedir UPDATEs em campos imutáveis. |
+| **Ports e Signers** | ⏳ Pendente | `IWalletSigner`, `IKeyProvider`, `INonceManager` (Domain Logic). |
+| **State Machine de Transação** | ⏳ Pendente | Serviço orquestrador de lifecycle on-chain. |

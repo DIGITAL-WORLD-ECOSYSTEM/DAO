@@ -4,7 +4,9 @@ export interface WalletRecord {
   id?: number;
   userId: number;
   address: string;
-  chainId: number;
+  addressNormalized: string;
+  networkId: number;
+  provenance?: 'internal' | 'external';
   isPrimary?: boolean;
 }
 

@@ -28,7 +28,9 @@ export class DrizzleWalletRepository implements IWalletRepository {
         const [inserted] = await this.db.insert(wallets).values({
           userId: wallet.userId,
           address: wallet.address,
-          chainId: wallet.chainId,
+          addressNormalized: wallet.addressNormalized,
+          networkId: wallet.networkId,
+          provenance: wallet.provenance || 'external',
           isPrimary: wallet.isPrimary || false,
         }).returning();
         wallet.id = inserted.id;

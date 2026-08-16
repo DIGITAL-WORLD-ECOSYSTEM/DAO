@@ -150,7 +150,7 @@ export class IdentityController {
       };
     }
 
-    const result = await this.verifyExternalIdentityUseCase.execute({ address, chainId: chainId || 1 });
+    const result = await this.verifyExternalIdentityUseCase.execute({ address, networkId: chainId || 1 });
 
     if (result.isFailure) {
       return {

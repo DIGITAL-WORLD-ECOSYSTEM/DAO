@@ -11,8 +11,8 @@ export class VerifyExternalIdentityUseCase {
    * Executa a verificação/criação de uma Identidade Externa (ex: Web3 Wallet).
    * Supõe-se que a assinatura criptográfica já foi validada na camada HTTP/Middleware.
    */
-  async execute(input: { address: string; chainId: number }): Promise<Result<any>> {
-    const { address, chainId } = input;
+  async execute(input: { address: string; networkId: number }): Promise<Result<any>> {
+    const { address, networkId } = input;
     const shadowEmail = `${address.toLowerCase()}@web3.local`;
 
     return await this.uow.execute(async (factory) => {
@@ -74,8 +74,10 @@ export class VerifyExternalIdentityUseCase {
         const walletSaveResult = await walletRepo.save({
           userId,
           address,
-          chainId,
-          isPrimary: true
+          addressNormalized: address.toLowerCase(),
+          networkId,
+          provenance: 'external',
+          isPrimary: false // external wallets cannot be primary
         });
         
         if (walletSaveResult.isFailure) return Result.fail(walletSaveResult.error!);
