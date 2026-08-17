@@ -63,10 +63,11 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
           }
         });
       } catch (err: any) {
-        if (result && result.isFailure) {
-          return result;
+        const failureResult = result as Result<T> | null;
+        if (failureResult && failureResult.isFailure) {
+          return failureResult;
         }
-        return Result.fail(err.message || err.toString() || 'Transaction aborted');
+        return Result.fail(err?.message || err?.toString() || 'Transaction aborted');
       }
       if (!result) {
         return Result.fail('Transaction finished without result');
