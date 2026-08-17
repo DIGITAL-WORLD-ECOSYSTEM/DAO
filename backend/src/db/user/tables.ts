@@ -1105,7 +1105,7 @@ export const userNotificationSettings = sqliteTable(
       .$onUpdateFn(() => new Date()),
   },
   (table) => ({
-    userTypeUnique: uniqueIndex('idx_notifications_user_type').on(
+    userTypeUnique: uniqueIndex('uq_user_notification_settings_type').on(
       table.userId,
       table.type
     ),
