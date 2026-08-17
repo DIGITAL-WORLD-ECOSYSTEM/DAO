@@ -323,7 +323,7 @@ export const users = sqliteTable(
      *
      * The normalization algorithm itself belongs to the application layer.
      */
-    emailNormalized: text('email_normalized').unique(),
+    emailNormalized: text('email_normalized'),
 
     /**
      * Timestamp at which the current primary email was verified.
@@ -434,6 +434,13 @@ export const users = sqliteTable(
       table.status,
       table.deletedAt
     ),
+
+    /**
+     * Prevents duplicate active account emails while allowing soft-deleted account email reuse.
+     */
+    activeEmailNormalizedUnq: uniqueIndex('uq_users_active_email_normalized')
+      .on(table.emailNormalized)
+      .where(sql`${table.deletedAt} IS NULL`),
 
     // ----------------------------------------------------------------------
     // DOMAIN / DATA-INTEGRITY CHECKS
@@ -550,7 +557,7 @@ export const userProfiles = sqliteTable(
     /**
      * Canonical username used for lookup/uniqueness.
      */
-    usernameNormalized: text('username_normalized').notNull().unique(),
+    usernameNormalized: text('username_normalized').notNull(),
 
     displayName: text('display_name'),
     avatarUrl: text('avatar_url'),
@@ -569,6 +576,15 @@ export const userProfiles = sqliteTable(
       .notNull()
       .default(false),
 
+    /**
+     * Soft-delete timestamp.
+     *
+     * APPLICATION INVARIANT:
+     *   Must be updated atomically in the same transaction/use-case as parent
+     *   `users.deletedAt` to ensure username release and active profile index alignment.
+     */
+    deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+
     createdAt: integer('created_at', { mode: 'timestamp' })
       .default(sql`(unixepoch())`)
       .notNull(),
@@ -579,6 +595,15 @@ export const userProfiles = sqliteTable(
       .$onUpdateFn(() => new Date()),
   },
   (table) => ({
+    /**
+     * Prevents duplicate active usernames while allowing soft-deleted account username reuse.
+     */
+    activeUsernameNormalizedUnq: uniqueIndex(
+      'uq_user_profiles_active_username_normalized'
+    )
+      .on(table.usernameNormalized)
+      .where(sql`${table.deletedAt} IS NULL`),
+
     /**
      * Basic database-level structural constraint.
      *
@@ -968,7 +993,7 @@ export const membershipCards = sqliteTable(
       .default('citizen'),
 
     issueDate: integer('issue_date', { mode: 'timestamp' })
-      .default(sql`(strftime('%s', 'now'))`)
+      .default(sql`(unixepoch())`)
       .notNull(),
 
     expiryDate: integer('expiry_date', { mode: 'timestamp' }),
@@ -982,8 +1007,13 @@ export const membershipCards = sqliteTable(
       .default('active'),
 
     createdAt: integer('created_at', { mode: 'timestamp' })
-      .default(sql`(strftime('%s', 'now'))`)
+      .default(sql`(unixepoch())`)
       .notNull(),
+
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .default(sql`(unixepoch())`)
+      .notNull()
+      .$onUpdateFn(() => new Date()),
   },
   (table) => ({
     userIdx: index('idx_cards_user').on(table.userId),
@@ -1060,7 +1090,7 @@ export const userNotificationSettings = sqliteTable(
       .notNull(),
 
     createdAt: integer('created_at', { mode: 'timestamp' })
-      .default(sql`(strftime('%s', 'now'))`)
+      .default(sql`(unixepoch())`)
       .notNull(),
 
     /**
