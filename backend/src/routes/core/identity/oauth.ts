@@ -232,7 +232,7 @@ async function handleSocialLogin(
       .values({
         email: profile.email,
         status: 'active',
-        subjectType: 'citizen',
+        subjectType: 'human',
       })
       .returning();
 
