@@ -110,6 +110,13 @@
  *
  * Depends on:
  *   - None at persistence FK level for the aggregate root "users".
+ *   - organizations (optional reference via userProfessionalExperience.organizationId and userEducation.organizationId).
+ *
+ * Prohibited Dependencies (Section 05 Boundary Matrix):
+ *   - web3
+ *   - civil-identity
+ *   - ssi
+ *   - finance
  *
  * Referenced by:
  *   - authentication
@@ -287,6 +294,9 @@
  * Depends on:
  *   - USER / ACTOR
  *   - CIVIL IDENTITY / KYC through mandates.appointmentDocumentId
+ *
+ * Referenced by:
+ *   - USER / ACTOR (optional reference via userProfessionalExperience.organizationId and userEducation.organizationId)
  *
  * References:
  *   - identityDocuments through the appointment document relationship.
