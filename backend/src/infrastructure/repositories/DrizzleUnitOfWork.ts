@@ -3,16 +3,15 @@ import { IAccountRepository } from '../../application/ports/output/IAccountRepos
 import { ICitizenRepository } from '../../application/ports/output/ICitizenRepository';
 import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRepository';
 import { Result } from '../../shared/kernel/Result';
-import { DrizzleAccountRepository } from './AccountRepository';
-import { DrizzleCitizenRepository } from './CitizenRepository';
-import { DrizzleTreasuryRepository } from './TreasuryRepository';
+import { DrizzleAccountRepository } from './DrizzleAccountRepository';
+import { DrizzleCitizenRepository } from './DrizzleCitizenRepository';
+import { DrizzleTreasuryRepository } from './DrizzleTreasuryRepository';
 import { IPasswordResetRepository } from '../../application/ports/output/IPasswordResetRepository';
 import { DrizzlePasswordResetRepository } from './DrizzlePasswordResetRepository';
 import { IOutboxRepository } from '../../application/ports/output/IOutboxRepository';
 import { DrizzleOutboxRepository } from './DrizzleOutboxRepository';
 import { IWalletRepository } from '../../application/ports/output/IWalletRepository';
-import { DrizzleWalletRepository } from './WalletRepository';
-
+import { DrizzleWalletRepository } from './DrizzleWalletRepository';
 import { ISessionRepository } from '../../application/ports/output/ISessionRepository';
 import { DrizzleSessionRepository } from './DrizzleSessionRepository';
 
@@ -52,10 +51,26 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
   constructor(private db: any) {}
 
   async execute<T>(work: (factory: IRepositoryFactory) => Promise<Result<T>>): Promise<Result<T>> {
-    // Cloudflare D1 does not natively support interactive transactions with callbacks (BEGIN/COMMIT).
-    // The previous attempt to use db.transaction() failed because D1 throws "Failed query: begin".
-    // To achieve true atomic writes, we must use db.batch(), which requires a different Repository interface.
-    // For now, we simulate the UoW by passing the main db instance.
+    if (typeof this.db?.transaction === 'function') {
+      let result: Result<T> = Result.fail('Uninitialized');
+      try {
+        await this.db.transaction(async (tx: any) => {
+          const factory = new DrizzleRepositoryFactory(tx);
+          result = await work(factory);
+
+          if (result.isFailure && typeof tx.rollback === 'function') {
+            tx.rollback();
+          }
+        });
+      } catch (err: any) {
+        if (result && result.isFailure) {
+          return result;
+        }
+        return Result.fail(err.message || 'Transaction aborted');
+      }
+      return result;
+    }
+
     const factory = new DrizzleRepositoryFactory(this.db);
     return await work(factory);
   }

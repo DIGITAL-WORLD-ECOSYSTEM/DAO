@@ -38,6 +38,12 @@ import { users } from '../user/tables';
  * - Blockchain technical infrastructure is owned by web3/
  * - Wallet identity is NOT represented here as a user identity
  *
+ * Retention & Regulatory Policy:
+ * - Double-Entry Ledger entries (financialLedgerEntries) and fees (financialFees)
+ *   are APPEND-ONLY tables and MUST NEVER be deleted or updated.
+ * - All foreign keys referencing users.id use onDelete: 'restrict' to ensure
+ *   financial audit trails and accounting records survive user soft-deletion.
+ *
  * Monetary values (Web3 Compatible):
  * - All amounts are stored as TEXT in the asset's smallest unit to support
  *   EVM precision (up to 18 decimals) which exceeds SQLite's 64-bit integer limit.
@@ -56,20 +62,6 @@ import { users } from '../user/tables';
 /* ============================================================================
  * 1. FINANCIAL ASSETS
  * ============================================================================
- *
- * Source of truth for the assets supported by the financial domain.
- *
- * V1:
- * - BRL / fiat / 2 decimals
- * - USD / fiat / 2 decimals
- * - BTC / crypto / 8 decimals
- *
- * This table does NOT contain:
- * - balances
- * - wallets
- * - blockchain addresses
- * - network/chain details
- * - transactions
  */
 export const financialAssets = sqliteTable(
   'financial_assets',
@@ -99,6 +91,14 @@ export const financialAssets = sqliteTable(
     codeUq: uniqueIndex('uq_financial_assets_code').on(table.code),
     typeIdx: index('idx_financial_assets_type').on(table.type),
     statusIdx: index('idx_financial_assets_status').on(table.status),
+    typeCheck: check(
+      'ck_financial_assets_type',
+      sql`${table.type} IN ('fiat', 'crypto')`
+    ),
+    statusCheck: check(
+      'ck_financial_assets_status',
+      sql`${table.status} IN ('active', 'inactive')`
+    ),
     decimalsCheck: check(
       'ck_financial_assets_decimals',
       sql`${table.decimals} >= 0 AND ${table.decimals} <= 18`,
@@ -109,19 +109,6 @@ export const financialAssets = sqliteTable(
 /* ============================================================================
  * 2. FINANCIAL ACCOUNTS
  * ============================================================================
- *
- * Logical financial accounts.
- *
- * Examples:
- * - user_available
- * - treasury
- * - operating
- * - reserve
- * - fees
- * - escrow
- *
- * A financial account is not a blockchain wallet.
- * It is an internal accounting/balance container.
  */
 export const financialAccounts = sqliteTable(
   'financial_accounts',
@@ -158,6 +145,14 @@ export const financialAccounts = sqliteTable(
     userIdx: index('idx_financial_accounts_user').on(table.userId),
     typeIdx: index('idx_financial_accounts_type').on(table.accountType),
     statusIdx: index('idx_financial_accounts_status').on(table.status),
+    accountTypeCheck: check(
+      'ck_financial_accounts_type',
+      sql`${table.accountType} IN ('user_available', 'treasury', 'operating', 'reserve', 'fees', 'escrow')`
+    ),
+    statusCheck: check(
+      'ck_financial_accounts_status',
+      sql`${table.status} IN ('active', 'inactive', 'suspended')`
+    ),
     userAccountTypeUq: uniqueIndex(
       'uq_financial_accounts_user_type_name',
     ).on(table.userId, table.accountType, table.name),
@@ -171,29 +166,11 @@ export const financialAccounts = sqliteTable(
 /* ============================================================================
  * 3. FINANCIAL TRANSACTIONS
  * ============================================================================
- *
- * Business-level financial operation.
- *
- * Examples:
- * - deposit
- * - withdrawal
- * - transfer
- * - payment
- * - refund
- * - fee
- * - reward
- * - yield
- * - conversion
- * - adjustment
- *
- * This is NOT the ledger itself.
- * Ledger entries are stored in financialLedgerEntries.
  */
 export const financialTransactions = sqliteTable(
   'financial_transactions',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
-    // Nullable for system-level transactions
     userId: integer('user_id').references(() => users.id, {
       onDelete: 'restrict',
     }),
@@ -256,7 +233,7 @@ export const financialTransactions = sqliteTable(
     sourceId: text('source_id'),
     correlationId: text('correlation_id'),
     description: text('description').notNull(),
-    version: integer('version').notNull().default(0),
+    version: integer('version').notNull().default(1),
     createdAt: integer('created_at', { mode: 'timestamp' })
       .notNull()
       .$defaultFn(() => new Date()),
@@ -276,28 +253,40 @@ export const financialTransactions = sqliteTable(
     correlationIdx: index(
       'idx_financial_transactions_correlation',
     ).on(table.correlationId),
+    typeCheck: check(
+      'ck_financial_tx_type',
+      sql`${table.type} IN ('deposit', 'withdrawal', 'transfer', 'payment', 'refund', 'fee', 'reward', 'yield', 'conversion', 'adjustment')`
+    ),
+    categoryCheck: check(
+      'ck_financial_tx_category',
+      sql`${table.category} IN ('membership', 'rwa_yield', 'grant', 'operational', 'payment', 'trading', 'withdrawal', 'deposit', 'fee', 'other')`
+    ),
+    statusCheck: check(
+      'ck_financial_tx_status',
+      sql`${table.status} IN ('pending', 'processing', 'completed', 'failed', 'cancelled', 'reversed', 'refunded')`
+    ),
+    sourceTypeCheck: check(
+      'ck_financial_tx_source_type',
+      sql`${table.sourceType} IS NULL OR ${table.sourceType} IN ('contribution', 'grant', 'membership', 'payroll', 'withdrawal', 'payment', 'conversion', 'system', 'other')`
+    ),
+    completedStateCheck: check(
+      'ck_financial_tx_completed_state',
+      sql`${table.status} != 'completed' OR ${table.completedAt} IS NOT NULL`
+    ),
+    temporalOrderCheck: check(
+      'ck_financial_tx_dates',
+      sql`${table.completedAt} IS NULL OR ${table.completedAt} >= ${table.createdAt}`
+    ),
+    versionCheck: check(
+      'ck_financial_tx_version',
+      sql`${table.version} > 0`
+    ),
   }),
 );
 
 /* ============================================================================
  * 4. FINANCIAL LEDGER ENTRIES
  * ============================================================================
- *
- * APPEND-ONLY TABLE. MUST NEVER BE UPDATED OR DELETED.
- * Double-entry accounting records.
- *
- * INVARIANTS (Enforced by domain services):
- * 1. SUM(debits) = SUM(credits) exactly per transaction and asset.
- * 2. transaction.status = 'completed' strictly requires a balanced ledger.
- * 3. Never update or delete. Corrections require reversal transactions.
- * 
- * Every completed financial transaction should result in balanced entries:
- *
- *   DEBIT   account A   100 BRL
- *   CREDIT  account B   100 BRL
- *
- * Amount is always positive.
- * Direction determines debit/credit.
  */
 export const financialLedgerEntries = sqliteTable(
   'financial_ledger_entries',
@@ -339,7 +328,10 @@ export const financialLedgerEntries = sqliteTable(
     createdIdx: index('idx_financial_ledger_entries_created').on(
       table.createdAt,
     ),
-    // Using LTRIM to validate canonical positive integer strings (Web3 EVM strings)
+    directionCheck: check(
+      'ck_financial_ledger_direction',
+      sql`${table.direction} IN ('debit', 'credit')`
+    ),
     amountCheck: check(
       'ck_financial_ledger_entries_amount_positive',
       sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
@@ -350,20 +342,6 @@ export const financialLedgerEntries = sqliteTable(
 /* ============================================================================
  * 5. ACCOUNT BALANCES
  * ============================================================================
- *
- * Materialized balance per financial account and asset.
- *
- * availableBaseUnits:
- *   Immediately spendable amount.
- *
- * lockedBaseUnits:
- *   Amount temporarily reserved.
- *
- * Total balance is:
- *
- *   available + locked
- *
- * We intentionally do NOT store a duplicated "total" field here.
  */
 export const accountBalances = sqliteTable(
   'account_balances',
@@ -385,7 +363,7 @@ export const accountBalances = sqliteTable(
     lockedBaseUnits: text('locked_base_units')
       .notNull()
       .default('0'),
-    version: integer('version').notNull().default(0),
+    version: integer('version').notNull().default(1),
     updatedAt: integer('updated_at', { mode: 'timestamp' })
       .notNull()
       .$defaultFn(() => new Date())
@@ -407,20 +385,16 @@ export const accountBalances = sqliteTable(
       'ck_account_balances_locked_nonnegative',
       sql`${table.lockedBaseUnits} <> '' AND ltrim(${table.lockedBaseUnits}, '0123456789') = '' AND (${table.lockedBaseUnits} = '0' OR ltrim(${table.lockedBaseUnits}, '0') = ${table.lockedBaseUnits})`,
     ),
+    versionCheck: check(
+      'ck_account_balances_version',
+      sql`${table.version} > 0`
+    ),
   }),
 );
 
 /* ============================================================================
  * 6. BALANCE HOLDS
  * ============================================================================
- *
- * Reserves an amount without destroying the account balance.
- *
- * Examples:
- * - withdrawal being processed
- * - payment pending
- * - escrow
- * - compliance/security hold
  */
 export const balanceHolds = sqliteTable(
   'balance_holds',
@@ -445,7 +419,7 @@ export const balanceHolds = sqliteTable(
     })
       .notNull()
       .default('active'),
-    version: integer('version').notNull().default(0),
+    version: integer('version').notNull().default(1),
     expiresAt: integer('expires_at', { mode: 'timestamp' }),
     createdAt: integer('created_at', { mode: 'timestamp' })
       .notNull()
@@ -464,9 +438,21 @@ export const balanceHolds = sqliteTable(
       table.referenceType,
       table.referenceId,
     ),
+    statusCheck: check(
+      'ck_balance_holds_status',
+      sql`${table.status} IN ('active', 'released', 'expired', 'consumed')`
+    ),
     amountCheck: check(
       'ck_balance_holds_amount_positive',
       sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+    ),
+    releasedStateCheck: check(
+      'ck_balance_holds_released_state',
+      sql`${table.status} != 'released' OR ${table.releasedAt} IS NOT NULL`
+    ),
+    versionCheck: check(
+      'ck_balance_holds_version',
+      sql`${table.version} > 0`
     ),
   }),
 );
@@ -474,15 +460,6 @@ export const balanceHolds = sqliteTable(
 /* ============================================================================
  * 7. FIAT PROVIDERS
  * ============================================================================
- *
- * Financial institutions / PSPs / payment providers.
- *
- * Examples:
- * - bank
- * - Pix provider
- * - payment gateway
- *
- * Sensitive credentials/secrets should NOT be stored directly here.
  */
 export const fiatProviders = sqliteTable(
   'fiat_providers',
@@ -510,17 +487,20 @@ export const fiatProviders = sqliteTable(
     codeUq: uniqueIndex('uq_fiat_providers_code').on(table.code),
     typeIdx: index('idx_fiat_providers_type').on(table.type),
     statusIdx: index('idx_fiat_providers_status').on(table.status),
+    typeCheck: check(
+      'ck_fiat_providers_type',
+      sql`${table.type} IN ('bank', 'payment_provider', 'pix_provider', 'gateway')`
+    ),
+    statusCheck: check(
+      'ck_fiat_providers_status',
+      sql`${table.status} IN ('active', 'inactive', 'suspended')`
+    ),
   }),
 );
 
 /* ============================================================================
  * 8. FIAT ACCOUNTS
  * ============================================================================
- *
- * External fiat account references.
- *
- * This table stores references to external financial accounts.
- * Sensitive banking secrets are not stored here.
  */
 export const fiatAccounts = sqliteTable(
   'fiat_accounts',
@@ -567,6 +547,14 @@ export const fiatAccounts = sqliteTable(
       table.providerId,
     ),
     statusIdx: index('idx_fiat_accounts_status').on(table.status),
+    typeCheck: check(
+      'ck_fiat_accounts_type',
+      sql`${table.type} IN ('bank_account', 'payment_account', 'pix_account')`
+    ),
+    statusCheck: check(
+      'ck_fiat_accounts_status',
+      sql`${table.status} IN ('active', 'inactive', 'blocked')`
+    ),
     externalUq: uniqueIndex(
       'uq_fiat_accounts_provider_external',
     ).on(table.providerId, table.externalAccountId),
@@ -579,8 +567,6 @@ export const fiatAccounts = sqliteTable(
 /* ============================================================================
  * 9. FIAT PAYMENT METHODS
  * ============================================================================
- *
- * Payment methods available to the user.
  */
 export const fiatPaymentMethods = sqliteTable(
   'fiat_payment_methods',
@@ -625,17 +611,20 @@ export const fiatPaymentMethods = sqliteTable(
     statusIdx: index('idx_fiat_payment_methods_status').on(
       table.status,
     ),
+    typeCheck: check(
+      'ck_fiat_pm_type',
+      sql`${table.type} IN ('pix', 'bank_transfer', 'boleto', 'card')`
+    ),
+    statusCheck: check(
+      'ck_fiat_pm_status',
+      sql`${table.status} IN ('active', 'inactive', 'blocked')`
+    ),
   }),
 );
 
 /* ============================================================================
  * 10. FIAT TRANSACTIONS
  * ============================================================================
- *
- * Fiat-specific settlement/provider information.
- *
- * Financial transaction remains the business transaction.
- * This table stores fiat execution details.
  */
 export const fiatTransactions = sqliteTable(
   'fiat_transactions',
@@ -679,7 +668,7 @@ export const fiatTransactions = sqliteTable(
     })
       .notNull()
       .default('pending'),
-    version: integer('version').notNull().default(0),
+    version: integer('version').notNull().default(1),
     requestedAt: integer('requested_at', { mode: 'timestamp' })
       .notNull()
       .$defaultFn(() => new Date()),
@@ -698,9 +687,25 @@ export const fiatTransactions = sqliteTable(
     ).on(table.paymentMethodId),
     assetIdx: index('idx_fiat_transactions_asset').on(table.assetId),
     statusIdx: index('idx_fiat_transactions_status').on(table.status),
+    directionCheck: check(
+      'ck_fiat_tx_direction',
+      sql`${table.direction} IN ('inbound', 'outbound')`
+    ),
+    statusCheck: check(
+      'ck_fiat_tx_status',
+      sql`${table.status} IN ('pending', 'processing', 'completed', 'failed', 'cancelled', 'reversed')`
+    ),
     amountCheck: check(
       'ck_fiat_transactions_amount_positive',
       sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+    ),
+    temporalOrderCheck: check(
+      'ck_fiat_tx_dates',
+      sql`${table.settledAt} IS NULL OR ${table.settledAt} >= ${table.requestedAt}`
+    ),
+    versionCheck: check(
+      'ck_fiat_tx_version',
+      sql`${table.version} > 0`
     ),
   }),
 );
@@ -708,18 +713,6 @@ export const fiatTransactions = sqliteTable(
 /* ============================================================================
  * 11. CRYPTO TRANSACTIONS
  * ============================================================================
- *
- * Finance-side representation of crypto settlement.
- *
- * Blockchain technical details remain in web3.
- *
- * The field web3TransactionId is a reference to the technical Web3 record.
- * Finance does NOT own:
- * - wallet private keys
- * - chain metadata
- * - gas mechanics
- * - blockchain identity
- * - wallet authentication
  */
 export const cryptoTransactions = sqliteTable(
   'crypto_transactions',
@@ -755,7 +748,7 @@ export const cryptoTransactions = sqliteTable(
     })
       .notNull()
       .default('pending'),
-    version: integer('version').notNull().default(0),
+    version: integer('version').notNull().default(1),
     requestedAt: integer('requested_at', { mode: 'timestamp' })
       .notNull()
       .$defaultFn(() => new Date()),
@@ -772,6 +765,14 @@ export const cryptoTransactions = sqliteTable(
     statusIdx: index('idx_crypto_transactions_status').on(
       table.status,
     ),
+    directionCheck: check(
+      'ck_crypto_tx_direction',
+      sql`${table.direction} IN ('inbound', 'outbound')`
+    ),
+    statusCheck: check(
+      'ck_crypto_tx_status',
+      sql`${table.status} IN ('pending', 'processing', 'confirmed', 'failed', 'reversed')`
+    ),
     amountCheck: check(
       'ck_crypto_transactions_amount_positive',
       sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
@@ -784,22 +785,20 @@ export const cryptoTransactions = sqliteTable(
       'ck_crypto_transactions_fee_asset',
       sql`${table.feeBaseUnits} = '0' OR ${table.feeAssetId} IS NOT NULL`
     ),
+    temporalOrderCheck: check(
+      'ck_crypto_tx_dates',
+      sql`${table.settledAt} IS NULL OR ${table.settledAt} >= ${table.requestedAt}`
+    ),
+    versionCheck: check(
+      'ck_crypto_tx_version',
+      sql`${table.version} > 0`
+    ),
   }),
 );
 
 /* ============================================================================
  * 12. EXCHANGE RATES
  * ============================================================================
- *
- * Rates between supported assets.
- *
- * Rates are intentionally stored as TEXT to avoid floating point precision
- * problems. The application layer must parse/validate them as decimal values.
- *
- * Examples:
- * - BTC -> BRL
- * - USD -> BRL
- * - BRL -> USD
  */
 export const exchangeRates = sqliteTable(
   'exchange_rates',
@@ -846,11 +845,6 @@ export const exchangeRates = sqliteTable(
 /* ============================================================================
  * 13. ASSET CONVERSIONS
  * ============================================================================
- *
- * Example:
- * - BRL -> BTC
- * - BTC -> USD
- * - USD -> BRL
  */
 export const assetConversions = sqliteTable(
   'asset_conversions',
@@ -899,6 +893,10 @@ export const assetConversions = sqliteTable(
     toAssetIdx: index('idx_asset_conversions_to_asset').on(
       table.toAssetId,
     ),
+    statusCheck: check(
+      'ck_asset_conversions_status',
+      sql`${table.status} IN ('pending', 'processing', 'completed', 'failed', 'cancelled')`
+    ),
     fromAmountCheck: check(
       'ck_asset_conversions_from_amount_positive',
       sql`${table.fromAmountBaseUnits} <> '' AND ltrim(${table.fromAmountBaseUnits}, '0123456789') = '' AND ${table.fromAmountBaseUnits} <> '0' AND ltrim(${table.fromAmountBaseUnits}, '0') = ${table.fromAmountBaseUnits}`,
@@ -925,16 +923,6 @@ export const assetConversions = sqliteTable(
 /* ============================================================================
  * 14. FINANCIAL FEES
  * ============================================================================
- *
- * APPEND-ONLY TABLE. MUST NEVER BE UPDATED OR DELETED.
- * Explicit fee records.
- *
- * Examples:
- * - withdrawal fee
- * - payment fee
- * - conversion fee
- * - network fee
- * - platform fee
  */
 export const financialFees = sqliteTable(
   'financial_fees',
@@ -979,6 +967,10 @@ export const financialFees = sqliteTable(
     recipientIdx: index(
       'idx_financial_fees_recipient_account',
     ).on(table.recipientAccountId),
+    feeTypeCheck: check(
+      'ck_financial_fees_type',
+      sql`${table.feeType} IN ('platform', 'withdrawal', 'payment', 'conversion', 'network', 'other')`
+    ),
     amountCheck: check(
       'ck_financial_fees_amount_positive',
       sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
@@ -989,11 +981,6 @@ export const financialFees = sqliteTable(
 /* ============================================================================
  * 15. EXTERNAL TRANSACTIONS
  * ============================================================================
- *
- * External provider references.
- *
- * This avoids putting provider-specific identifiers directly on the core
- * financial transaction.
  */
 export const fiatExternalTransactions = sqliteTable(
   'fiat_external_transactions',
@@ -1042,8 +1029,6 @@ export const fiatExternalTransactions = sqliteTable(
 /* ============================================================================
  * 16. IDEMPOTENCY KEYS
  * ============================================================================
- *
- * Protects money-moving APIs from duplicate execution.
  */
 export const idempotencyKeys = sqliteTable(
   'idempotency_keys',
@@ -1082,6 +1067,10 @@ export const idempotencyKeys = sqliteTable(
     statusIdx: index('idx_idempotency_keys_status').on(
       table.status,
     ),
+    statusCheck: check(
+      'ck_idempotency_keys_status',
+      sql`${table.status} IN ('processing', 'completed', 'failed')`
+    ),
     expiresCheck: check(
       'ck_idempotency_keys_expires',
       sql`${table.expiresAt} IS NULL OR ${table.createdAt} < ${table.expiresAt}`
@@ -1092,12 +1081,6 @@ export const idempotencyKeys = sqliteTable(
 /* ============================================================================
  * 17. RECONCILIATION RECORDS
  * ============================================================================
- *
- * Compares internal financial state against an external source.
- *
- * Examples:
- * - internal BRL balance vs bank/PSP balance
- * - internal crypto balance vs Web3/custody balance
  */
 export const reconciliationRecords = sqliteTable(
   'reconciliation_records',
@@ -1149,6 +1132,10 @@ export const reconciliationRecords = sqliteTable(
     statusIdx: index(
       'idx_reconciliation_records_status',
     ).on(table.status),
+    statusCheck: check(
+      'ck_reconciliation_status',
+      sql`${table.status} IN ('matched', 'mismatch', 'resolved')`
+    ),
     expectedCheck: check(
       'ck_reconciliation_expected_nonnegative',
       sql`${table.expectedBalanceBaseUnits} <> '' AND ltrim(${table.expectedBalanceBaseUnits}, '0123456789') = '' AND (${table.expectedBalanceBaseUnits} = '0' OR ltrim(${table.expectedBalanceBaseUnits}, '0') = ${table.expectedBalanceBaseUnits})`,

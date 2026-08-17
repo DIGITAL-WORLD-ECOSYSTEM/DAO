@@ -7,12 +7,12 @@ export class AccountMapper {
       email: raw.email,
       password: raw.password,
       role: raw.role,
-      active: raw.active,
+      active: raw.active !== undefined ? Boolean(raw.active) : raw.status === 'active',
       firstName: raw.firstName,
       lastName: raw.lastName,
       username: raw.username,
       tokenVersion: raw.tokenVersion,
-      status: raw.status
+      status: raw.status,
     });
   }
 }

@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { treasuryLedger } from '../../db/finance/tables';
+import { financialLedgerEntries } from '../../db/finance/tables';
 import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRepository';
 import { TreasuryMapper } from '../mappers/TreasuryMapper';
 import { Result } from '../../shared/kernel/Result';
@@ -10,7 +10,7 @@ export class DrizzleTreasuryRepository implements ITreasuryRepository {
 
   private getDateFilter(year?: string) {
     return year && year !== 'Todos'
-      ? sql`strftime('%Y', datetime(${treasuryLedger.createdAt}, 'unixepoch')) = ${year}`
+      ? sql`strftime('%Y', datetime(${financialLedgerEntries.createdAt}, 'unixepoch')) = ${year}`
       : sql`1=1`;
   }
 
@@ -18,12 +18,12 @@ export class DrizzleTreasuryRepository implements ITreasuryRepository {
     try {
       const statsResult = await this.db
         .select({
-          totalInflow: sql<number>`SUM(${treasuryLedger.amountCents})`,
-          avgTicket: sql<number>`AVG(${treasuryLedger.amountCents})`,
+          totalInflow: sql<number>`SUM(CAST(${financialLedgerEntries.amountBaseUnits} AS INTEGER))`,
+          avgTicket: sql<number>`AVG(CAST(${financialLedgerEntries.amountBaseUnits} AS INTEGER))`,
           count: sql<number>`COUNT(*)`,
         })
-        .from(treasuryLedger)
-        .where(sql`${treasuryLedger.type} = 'inbound' AND ${this.getDateFilter(year)}`);
+        .from(financialLedgerEntries)
+        .where(sql`${financialLedgerEntries.direction} = 'credit' AND ${this.getDateFilter(year)}`);
       
       return Result.ok(statsResult[0] || { totalInflow: 0, avgTicket: 0, count: 0 });
     } catch (error: any) {
@@ -33,11 +33,11 @@ export class DrizzleTreasuryRepository implements ITreasuryRepository {
 
   async getMonthlyTrend(year?: string): Promise<Result<any>> {
     try {
-      const monthExpr = sql`strftime('%m', datetime(${treasuryLedger.createdAt}, 'unixepoch'))`;
+      const monthExpr = sql`strftime('%m', datetime(${financialLedgerEntries.createdAt}, 'unixepoch'))`;
       const result = await this.db
-        .select({ month: monthExpr, total: sql<number>`SUM(${treasuryLedger.amountCents})` })
-        .from(treasuryLedger)
-        .where(sql`${treasuryLedger.type} = 'inbound' AND ${this.getDateFilter(year)}`)
+        .select({ month: monthExpr, total: sql<number>`SUM(CAST(${financialLedgerEntries.amountBaseUnits} AS INTEGER))` })
+        .from(financialLedgerEntries)
+        .where(sql`${financialLedgerEntries.direction} = 'credit' AND ${this.getDateFilter(year)}`)
         .groupBy(monthExpr)
         .orderBy(monthExpr);
       return Result.ok(result);
@@ -50,9 +50,9 @@ export class DrizzleTreasuryRepository implements ITreasuryRepository {
     try {
       const result = await this.db
         .select()
-        .from(treasuryLedger)
+        .from(financialLedgerEntries)
         .where(this.getDateFilter(year))
-        .orderBy(sql`${treasuryLedger.createdAt} ASC`);
+        .orderBy(sql`${financialLedgerEntries.createdAt} ASC`);
       
       const mapped = result.map((row: any) => TreasuryMapper.toDomain(row));
       return Result.ok(mapped);
@@ -64,10 +64,10 @@ export class DrizzleTreasuryRepository implements ITreasuryRepository {
   async getAvailableYears(): Promise<Result<any[]>> {
     try {
       const result = await this.db
-        .select({ year: sql`strftime('%Y', datetime(${treasuryLedger.createdAt}, 'unixepoch'))` })
-        .from(treasuryLedger)
-        .groupBy(sql`strftime('%Y', datetime(${treasuryLedger.createdAt}, 'unixepoch'))`)
-        .orderBy(sql`strftime('%Y', datetime(${treasuryLedger.createdAt}, 'unixepoch')) DESC`);
+        .select({ year: sql`strftime('%Y', datetime(${financialLedgerEntries.createdAt}, 'unixepoch'))` })
+        .from(financialLedgerEntries)
+        .groupBy(sql`strftime('%Y', datetime(${financialLedgerEntries.createdAt}, 'unixepoch'))`)
+        .orderBy(sql`strftime('%Y', datetime(${financialLedgerEntries.createdAt}, 'unixepoch')) DESC`);
       return Result.ok(result);
     } catch (error: any) {
       return Result.fail(error.message);

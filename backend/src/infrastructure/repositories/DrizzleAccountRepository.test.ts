@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { DrizzleAccountRepository } from './AccountRepository';
+import { DrizzleAccountRepository } from './DrizzleAccountRepository';
 import { Account } from '../../domains/identity/entities/Account';
 
 describe('DrizzleAccountRepository', () => {
@@ -9,7 +9,7 @@ describe('DrizzleAccountRepository', () => {
       from: vi.fn().mockReturnThis(),
       leftJoin: vi.fn().mockReturnThis(),
       where: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockResolvedValue([]), // Return empty array
+      limit: vi.fn().mockResolvedValue([]),
     };
 
     const repo = new DrizzleAccountRepository(mockDb);
@@ -31,20 +31,19 @@ describe('DrizzleAccountRepository', () => {
           email: 'test@test.com',
           password: 'hashedpassword',
           role: 'citizen',
-          active: true,
+          active: 'active',
           firstName: 'John',
           lastName: 'Doe',
-          username: 'johndoe'
-        }
+          username: 'johndoe',
+        },
       ]),
     };
 
     const repo = new DrizzleAccountRepository(mockDb);
     const result = await repo.findByEmail('test@test.com');
-    if (result.isFailure) console.log(result.error);
     expect(result.isSuccess).toBe(true);
     const account = result.getValue();
-    
+
     expect(account).toBeInstanceOf(Account);
     expect(account.email).toBe('test@test.com');
     expect(account.role).toBe('citizen');
@@ -53,9 +52,6 @@ describe('DrizzleAccountRepository', () => {
   });
 
   it('Performance Check: Ensure email query relies on indexed column without N+1', () => {
-    // We statically verify the index exists in schema.ts 
-    // export const users = sqliteTable(..., (table) => ({ emailIdx: index('idx_users_email').on(table.email) }));
-    // The query is a single JOIN + WHERE, avoiding N+1.
     expect(true).toBe(true);
   });
 });

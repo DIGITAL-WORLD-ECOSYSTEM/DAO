@@ -134,7 +134,7 @@ describe('Identity Module — Local Authentication Integration', () => {
     });
 
     it('Cenário 2: Email já existente', async () => {
-      const { DrizzleAccountRepository } = await import('../../../infrastructure/repositories/AccountRepository');
+      const { DrizzleAccountRepository } = await import('../../../infrastructure/repositories/DrizzleAccountRepository');
       const { Result } = await import('../../../shared/kernel/Result');
       const { Account } = await import('../../../domains/identity/entities/Account');
 

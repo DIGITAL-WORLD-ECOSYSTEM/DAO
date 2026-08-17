@@ -1,7 +1,7 @@
 import { DrizzleUnitOfWork } from '../repositories/DrizzleUnitOfWork';
 import { DrizzleSessionRepository } from '../repositories/DrizzleSessionRepository';
 import { DrizzlePasswordResetRepository } from '../repositories/DrizzlePasswordResetRepository';
-import { DrizzleAccountRepository as AccountRepository } from '../repositories/AccountRepository';
+import { DrizzleAccountRepository as AccountRepository } from '../repositories/DrizzleAccountRepository';
 import { ResendNotificationAdapter } from '../notifications/ResendNotificationAdapter';
 import { JwtService } from '../security/jwt/JwtService';
 import { PBKDF2PasswordHasher } from '../security/crypto/PBKDF2PasswordHasher';

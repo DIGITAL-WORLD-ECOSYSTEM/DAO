@@ -21,7 +21,7 @@ import { DrizzleSessionRepository } from '../../../infrastructure/repositories/D
 import { DrizzlePasswordResetRepository } from '../../../infrastructure/repositories/DrizzlePasswordResetRepository';
 import { ResendNotificationAdapter } from '../../../infrastructure/notifications/ResendNotificationAdapter';
 import { JwtService } from '../../../infrastructure/security/jwt/JwtService';
-import { DrizzleAccountRepository as AccountRepository } from '../../../infrastructure/repositories/AccountRepository';
+import { DrizzleAccountRepository as AccountRepository } from '../../../infrastructure/repositories/DrizzleAccountRepository';
 import { clearSessionCookies, setSessionCookies, getJwtSigningKeyForKid } from '../../../utils/auth';
 
 type AppType = {

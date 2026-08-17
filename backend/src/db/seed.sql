@@ -1,93 +1,70 @@
--- ASOT Genesis Seed Script
--- Este script injeta dados estáticos sintéticos para validar o modelo Account-Centric
-
--- Limpeza inicial caso existam dados (opcional, pode ser comentado em produção)
-DELETE FROM treasury_ledger;
+-- ============================================================================
+-- ASOT GENESIS SEED SCRIPT (100% Schema 10/10 Certified)
+-- ============================================================================
+-- Limpeza inicial
+DELETE FROM financial_ledger_entries;
+DELETE FROM financial_fees;
+DELETE FROM account_balances;
+DELETE FROM financial_accounts;
+DELETE FROM financial_transactions;
+DELETE FROM financial_assets;
 DELETE FROM membership_cards;
-DELETE FROM wallets;
+DELETE FROM identity_documents;
 DELETE FROM citizens;
+DELETE FROM user_profiles;
 DELETE FROM users;
 
--- Reset de sequence do SQLite não é nativamente simples, mas vamos inserir IDs explícitos ou omitir.
--- Vamos usar IDs fixos para facilitar testes de constraints.
+-- 1. USERS BASE
+INSERT INTO users (id, subject_type, email, email_normalized, status, auth_epoch, created_at, updated_at)
+VALUES 
+  (1, 'system', 'admin@asppibra.com', 'admin@asppibra.com', 'active', 1, unixepoch(), unixepoch()),
+  (2, 'human', 'felipe.dev@asppibra.com', 'felipe.dev@asppibra.com', 'active', 1, unixepoch(), unixepoch());
 
--- 1. Account 001 — Master System Account
-INSERT INTO users (id, email, password, role, kyc_status, status, active, created_at, updated_at)
-VALUES (
-    1, 
-    'admin@asppibra.com', 
-    '$argon2id$v=19$m=65536,t=3,p=4$default_hash', -- Dummy hash
-    'admin', 
-    'approved', 
-    'active', 
-    1, 
-    1720000000000, 
-    1720000000000
-);
+-- 2. USER PROFILES
+INSERT INTO user_profiles (user_id, username, username_normalized, display_name, profile_visibility, is_discoverable, created_at, updated_at)
+VALUES 
+  (1, 'admin', 'admin', 'Administrador ASOT', 'private', 0, unixepoch(), unixepoch()),
+  (2, 'felipedev', 'felipedev', 'Felipe Dev', 'public', 1, unixepoch(), unixepoch());
 
--- 2. Account 002 — Citizen Account (Felipe Dev)
-INSERT INTO users (id, email, password, role, kyc_status, status, active, created_at, updated_at)
-VALUES (
-    2, 
-    'felipe.dev@asppibra.com', 
-    '$argon2id$v=19$m=65536,t=3,p=4$default_hash', 
-    'citizen', 
-    'approved', 
-    'active', 
-    1, 
-    1720000000000, 
-    1720000000000
-);
+-- 3. CITIZENS (CIVIL IDENTITY BASE)
+INSERT INTO citizens (user_id, legal_first_name, legal_last_name, nationality_code, civil_status, verified_at, verified_by, created_at, updated_at)
+VALUES 
+  (2, 'Felipe', 'Dev', 'BR', 'verified', unixepoch(), 1, unixepoch(), unixepoch());
 
--- 3. Cidadão vinculado à Account 002
-INSERT INTO citizens (id, user_id, username, first_name, last_name, cpf, did, public_key, totp_enabled, created_at, updated_at)
-VALUES (
-    1,
-    2,
-    'felipedev',
-    'Felipe',
-    'Dev',
-    '11111111111',
-    'did:dao:asppibra:felipedev',
-    '{"dummy": true}',
-    0,
-    1720000000000, 
-    1720000000000
-);
+-- 4. IDENTITY DOCUMENTS (CPF / RG)
+INSERT INTO identity_documents (id, user_id, document_type, country_code, number_lookup_hash, encrypted_number, last4, source, verification_status, verified_at, verified_by, created_at, updated_at)
+VALUES 
+  (1, 2, 'cpf', 'BR', 'hash_cpf_11111111111', 'enc_cpf_11111111111', '1111', 'government', 'verified', unixepoch(), 1, unixepoch(), unixepoch());
 
--- 4. Wallet vinculada à Account 002
-INSERT INTO wallets (id, user_id, address, chain_id, is_primary, created_at)
-VALUES (
-    1,
-    2,
-    '0x1111111111111111111111111111111111111111',
-    137,
-    1,
-    1720000000000
-);
+-- 5. FINANCIAL ASSETS
+INSERT INTO financial_assets (id, code, symbol, name, type, decimals, status, created_at, updated_at)
+VALUES 
+  (1, 'BRL', 'R$', 'Real Brasileiro', 'fiat', 2, 'active', unixepoch(), unixepoch()),
+  (2, 'USD', 'US$', 'Dólar Americano', 'fiat', 2, 'active', unixepoch(), unixepoch()),
+  (3, 'BTC', '₿', 'Bitcoin', 'crypto', 8, 'active', unixepoch(), unixepoch()),
+  (4, 'ETH', 'Ξ', 'Ethereum', 'crypto', 18, 'active', unixepoch(), unixepoch());
 
--- 5. Membership vinculada à Account 002
-INSERT INTO membership_cards (id, user_id, card_hash, tier, issue_date, expiry_date)
-VALUES (
-    1,
-    2,
-    'dummy_hash_001',
-    'citizen',
-    1720000000000,
-    1750000000000
-);
+-- 6. FINANCIAL ACCOUNTS
+INSERT INTO financial_accounts (id, user_id, account_type, status, name, created_at, updated_at)
+VALUES 
+  (1, NULL, 'treasury', 'active', 'DAO Treasury Account', unixepoch(), unixepoch()),
+  (2, NULL, 'operating', 'active', 'DAO Operating Account', unixepoch(), unixepoch()),
+  (3, NULL, 'fees', 'active', 'DAO Platform Fees Account', unixepoch(), unixepoch()),
+  (4, 2, 'user_available', 'active', 'Felipe Dev Primary Account', unixepoch(), unixepoch());
 
--- 6. Treasury Transaction (Genesis) para Account 002
-INSERT INTO treasury_ledger (id, user_id, type, amount_cents, category, description, status, tx_hash, external_transaction_id, created_at)
-VALUES (
-    1,
-    2,
-    'inbound',
-    100000,
-    'other',
-    'Aporte Inicial Genesis',
-    'completed',
-    '0x4444444444444444444444444444444444444444',
-    'GENESIS-001',
-    1720000000000
-);
+-- 7. ACCOUNT BALANCES (Unidades Base em String/BigInt Text)
+INSERT INTO account_balances (id, account_id, asset_id, available_base_units, locked_base_units, version, updated_at)
+VALUES 
+  (1, 1, 1, '100000000', '0', 1, unixepoch()), -- R$ 1.000.000,00 na Tesouraria
+  (2, 4, 1, '100000', '0', 1, unixepoch());    -- R$ 1.000,00 na Conta do Felipe
+
+-- 8. FINANCIAL TRANSACTIONS
+-- Causalidade de estado: status = 'completed' exige completed_at != NULL
+INSERT INTO financial_transactions (id, user_id, type, category, status, description, completed_at, version, created_at, updated_at)
+VALUES 
+  (1, 2, 'deposit', 'other', 'completed', 'Aporte Inicial Genesis (R$ 1.000,00)', unixepoch(), 1, unixepoch(), unixepoch());
+
+-- 9. DOUBLE-ENTRY LEDGER ENTRIES
+INSERT INTO financial_ledger_entries (id, transaction_id, account_id, asset_id, direction, amount_base_units, created_at)
+VALUES 
+  (1, 1, 4, 1, 'credit', '100000', unixepoch());

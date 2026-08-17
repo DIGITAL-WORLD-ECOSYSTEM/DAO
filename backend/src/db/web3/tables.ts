@@ -603,8 +603,8 @@ export const wallets = sqliteTable(
   },
   (table) => ({
     controllerFk: foreignKey({
-      columns: [table.controllerWalletId, table.networkId],
-      foreignColumns: [table.id, table.networkId],
+      columns: [table.controllerWalletId],
+      foreignColumns: [table.id],
       name: 'fk_wallets_controller',
     }).onDelete('restrict'),
 
@@ -898,6 +898,7 @@ export const wallets = sqliteTable(
       `,
     ),
 
+
     provenanceCheck: check(
       'ck_wallets_provenance',
       sql`
@@ -1150,20 +1151,6 @@ export const web3Transactions = sqliteTable(
       name: 'fk_web3_transactions_replacement',
     }).onDelete('restrict'),
 
-    /**
-     * Transaction wallet MUST belong to the same network.
-     */
-    walletNetworkFk: foreignKey({
-      columns: [
-        table.walletId,
-        table.networkId,
-      ],
-      foreignColumns: [
-        wallets.id,
-        wallets.networkId,
-      ],
-      name: 'fk_web3_transactions_wallet_network',
-    }).onDelete('restrict'),
 
     walletIdx: index(
       'idx_web3_transactions_wallet',

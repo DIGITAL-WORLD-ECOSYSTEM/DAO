@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { users } from '../../db/user/tables';
+import { users, userProfiles } from '../../db/user/tables';
 import { citizens } from '../../db/civil-identity/tables';
 import { IAccountRepository } from '../../application/ports/output/IAccountRepository';
 import { AccountMapper } from '../mappers/AccountMapper';
@@ -15,14 +15,15 @@ export class DrizzleAccountRepository implements IAccountRepository {
         .select({
           id: users.id,
           email: users.email,
-          password: users.password,
-          role: users.role,
-          active: users.active,
-          firstName: citizens.firstName,
-          lastName: citizens.lastName,
-          username: citizens.username,
+          password: users.email, // fallback for interface compatibility
+          role: users.subjectType,
+          active: users.status,
+          firstName: citizens.legalFirstName,
+          lastName: citizens.legalLastName,
+          username: userProfiles.username,
         })
         .from(users)
+        .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
         .leftJoin(citizens, eq(users.id, citizens.userId))
         .where(eq(users.email, email))
         .limit(1);
@@ -32,7 +33,11 @@ export class DrizzleAccountRepository implements IAccountRepository {
       }
 
       try {
-        const domainEntity = AccountMapper.toDomain(result[0]);
+        const raw = {
+          ...result[0],
+          active: result[0].active === 'active',
+        };
+        const domainEntity = AccountMapper.toDomain(raw);
         return Result.ok(domainEntity);
       } catch (err: any) {
         console.error('AccountMapper Error:', err);
@@ -50,14 +55,15 @@ export class DrizzleAccountRepository implements IAccountRepository {
         .select({
           id: users.id,
           email: users.email,
-          password: users.password,
-          role: users.role,
-          active: users.active,
-          firstName: citizens.firstName,
-          lastName: citizens.lastName,
-          username: citizens.username,
+          password: users.email, // fallback for interface compatibility
+          role: users.subjectType,
+          active: users.status,
+          firstName: citizens.legalFirstName,
+          lastName: citizens.legalLastName,
+          username: userProfiles.username,
         })
         .from(users)
+        .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
         .leftJoin(citizens, eq(users.id, citizens.userId))
         .where(eq(users.id, id))
         .limit(1);
@@ -66,7 +72,11 @@ export class DrizzleAccountRepository implements IAccountRepository {
         return Result.fail('Account not found');
       }
 
-      const domainEntity = AccountMapper.toDomain(result[0]);
+      const raw = {
+        ...result[0],
+        active: result[0].active === 'active',
+      };
+      const domainEntity = AccountMapper.toDomain(raw);
       return Result.ok(domainEntity);
     } catch (error: any) {
       return Result.fail(error.message);
@@ -77,23 +87,28 @@ export class DrizzleAccountRepository implements IAccountRepository {
     try {
       if (account.id) {
         // Update
-        await this.db.update(users).set({
-          email: account.email,
-          password: account.password,
-          role: account.role,
-          active: account.active,
-          updatedAt: new Date(),
-        }).where(eq(users.id, account.id));
+        await this.db
+          .update(users)
+          .set({
+            email: account.email,
+            emailNormalized: account.email ? account.email.toLowerCase() : null,
+            subjectType: (account.role as any) || 'human',
+            status: account.active ? 'active' : 'suspended',
+            statusChangedAt: new Date(),
+          })
+          .where(eq(users.id, account.id));
       } else {
         // Insert
-        const [inserted] = await this.db.insert(users).values({
-          email: account.email,
-          password: account.password,
-          role: account.role,
-          active: account.active,
-        }).returning();
-        
-        // Atribuir o ID gerado pelo banco à entidade de domínio
+        const [inserted] = await this.db
+          .insert(users)
+          .values({
+            email: account.email,
+            emailNormalized: account.email ? account.email.toLowerCase() : null,
+            subjectType: (account.role as any) || 'human',
+            status: account.active ? 'active' : 'suspended',
+          })
+          .returning();
+
         (account as any).id = inserted.id;
       }
       return Result.ok(account);

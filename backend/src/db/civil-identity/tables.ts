@@ -195,6 +195,15 @@ export const identityDocuments = sqliteTable(
       `
     ),
 
+    documentDatesCheck: check(
+      'ck_identity_docs_dates',
+      sql`
+        ${table.issuedAt} IS NULL
+        OR ${table.expiresAt} IS NULL
+        OR ${table.expiresAt} > ${table.issuedAt}
+      `
+    ),
+
     versionCheck: check(
       'ck_identity_docs_version',
       sql`${table.version} > 0`
