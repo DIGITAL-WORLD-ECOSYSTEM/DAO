@@ -52,13 +52,13 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
 
   async execute<T>(work: (factory: IRepositoryFactory) => Promise<Result<T>>): Promise<Result<T>> {
     if (typeof this.db?.transaction === 'function') {
-      let result: Result<T> = Result.fail('Uninitialized');
+      let result: Result<T> | null = null;
       try {
         await this.db.transaction(async (tx: any) => {
           const factory = new DrizzleRepositoryFactory(tx);
           result = await work(factory);
 
-          if (result.isFailure && typeof tx.rollback === 'function') {
+          if (result && result.isFailure && typeof tx.rollback === 'function') {
             tx.rollback();
           }
         });
@@ -66,7 +66,10 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
         if (result && result.isFailure) {
           return result;
         }
-        return Result.fail(err.message || 'Transaction aborted');
+        return Result.fail(err.message || err.toString() || 'Transaction aborted');
+      }
+      if (!result) {
+        return Result.fail('Transaction finished without result');
       }
       return result;
     }

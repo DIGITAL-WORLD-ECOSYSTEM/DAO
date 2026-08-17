@@ -98,6 +98,8 @@ export class DrizzleAccountRepository implements IAccountRepository {
 
   async save(account: Account): Promise<Result<Account>> {
     try {
+      const subjectType = account.role === 'service' || account.role === 'system' ? account.role : 'human';
+
       if (account.id) {
         // Update
         await this.db
@@ -105,7 +107,7 @@ export class DrizzleAccountRepository implements IAccountRepository {
           .set({
             email: account.email,
             emailNormalized: account.email ? account.email.toLowerCase() : null,
-            subjectType: (account.role as any) || 'human',
+            subjectType,
             status: account.active ? 'active' : 'suspended',
             statusChangedAt: new Date(),
           })
@@ -117,7 +119,7 @@ export class DrizzleAccountRepository implements IAccountRepository {
           .values({
             email: account.email,
             emailNormalized: account.email ? account.email.toLowerCase() : null,
-            subjectType: (account.role as any) || 'human',
+            subjectType,
             status: account.active ? 'active' : 'suspended',
           })
           .returning();

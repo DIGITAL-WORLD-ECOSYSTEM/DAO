@@ -8,7 +8,6 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { alpha, useTheme } from '@mui/material/styles';
@@ -25,6 +24,7 @@ import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { useAuthContext } from '../../hooks';
 import { getErrorMessage } from '../../utils';
+import { FormSocials, FormDivider } from '../../components';
 import { signInWithWeb3, signInWithPassword } from '../../context/jwt';
 
 // ----------------------------------------------------------------------
@@ -280,19 +280,13 @@ export function JwtSignInView() {
         {renderForm()}
       </Form>
 
-      <Divider sx={{ my: 2, '&::before, &::after': { borderTopStyle: 'dashed', opacity: 0.15 } }}>
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'grey.500',
-            letterSpacing: 2.5,
-            fontWeight: 700,
-            fontFamily: 'var(--font-orbitron), sans-serif',
-          }}
-        >
-          ACESSO RESTRITO
-        </Typography>
-      </Divider>
+      <FormDivider label="OU ENTRE COM" />
+
+      <FormSocials
+        signInWithGoogle={() => handleSocialLogin('google')}
+        singInWithGithub={() => handleSocialLogin('github')}
+        signInWithWeb3={handleWeb3Login}
+      />
     </Box>
   );
 }

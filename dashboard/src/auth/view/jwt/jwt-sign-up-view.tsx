@@ -17,13 +17,15 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
+import { CONFIG } from 'src/global-config';
+
 import { Iconify } from 'src/components/iconify';
 import { Form, Field, schemaUtils } from 'src/components/hook-form';
 
 import { signUp } from '../../context/jwt';
 import { useAuthContext } from '../../hooks';
 import { getErrorMessage } from '../../utils';
-import { SignUpTerms } from '../../components/sign-up-terms';
+import { FormSocials, FormDivider, SignUpTerms } from '../../components';
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +70,11 @@ export function JwtSignUpView() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
+  const handleSocialLogin = (provider: 'google' | 'github') => {
+    const { serverUrl } = CONFIG;
+    window.location.href = `${serverUrl}/api/core/identity/oauth/${provider}/login`;
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -322,6 +329,13 @@ export function JwtSignUpView() {
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
+
+      <FormDivider label="OU CADASTRE-SE COM" />
+
+      <FormSocials
+        signInWithGoogle={() => handleSocialLogin('google')}
+        singInWithGithub={() => handleSocialLogin('github')}
+      />
 
       <SignUpTerms sx={{ color: 'grey.600', mt: 2 }} />
     </Box>
