@@ -207,11 +207,8 @@ async function handleSocialLogin(
     .select({
       id: users.id,
       email: users.email,
-      role: users.role,
-      avatarUrl: users.avatarUrl,
-      firstName: citizens.firstName,
-      lastName: citizens.lastName,
-      username: citizens.username,
+      legalFirstName: citizens.legalFirstName,
+      legalLastName: citizens.legalLastName,
     })
     .from(users)
     .leftJoin(citizens, eq(users.id, citizens.userId))
@@ -222,44 +219,32 @@ async function handleSocialLogin(
   let role = 'citizen';
   let firstName = profile.firstName;
   let lastName = profile.lastName;
-  let username = '';
+  let username = profile.email.split('@')[0];
 
   if (existingUser) {
     userId = existingUser.id;
-    role = existingUser.role || 'citizen';
-    firstName = existingUser.firstName || profile.firstName;
-    lastName = existingUser.lastName || profile.lastName;
-    username = existingUser.username || '';
-    if (!existingUser.avatarUrl && profile.avatarUrl) {
-      await db.update(users).set({ avatarUrl: profile.avatarUrl }).where(eq(users.id, userId));
-    }
+    firstName = existingUser.legalFirstName || profile.firstName;
+    lastName = existingUser.legalLastName || profile.lastName;
   } else {
     // 1. Criar Usuário (Auth)
     const [newUser] = await db
       .insert(users)
       .values({
         email: profile.email,
-        avatarUrl: profile.avatarUrl,
-        emailVerified: true,
-        role: 'citizen',
-        password: crypto.randomUUID(), // Inacessível
+        status: 'active',
+        subjectType: 'citizen',
       })
       .returning();
 
     userId = newUser.id;
 
     // 2. Criar Cidadão (Identidade)
-    const calculatedUsername =
-      profile.email.split('@')[0] + '_' + Math.random().toString(36).substring(2, 5);
-    username = calculatedUsername.toLowerCase();
     await db.insert(citizens).values({
       userId,
-      username,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
+      legalFirstName: profile.firstName,
+      legalLastName: profile.lastName,
       did: `did:dao:asppibra:social:${userId}`, // DID Social Provisório
-      publicKey: '',
-      status: 'active',
+      civilStatus: 'verified',
     });
   }
 

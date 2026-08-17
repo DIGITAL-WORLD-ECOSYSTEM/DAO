@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { Bindings, Variables } from '../../types/bindings';
-import { CryptoVault } from '../../utils/crypto-vault';
+import { CryptoVault } from '../../utils/crypto';
 import { integrationConfigs, integrationSecrets, auditLogsImmutable } from '../../db/schema';
 import { error, success } from '../../utils/response';
 import { AuditService } from '../../services/audit';

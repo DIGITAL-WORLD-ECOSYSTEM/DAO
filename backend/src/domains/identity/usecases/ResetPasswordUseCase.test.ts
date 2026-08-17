@@ -53,7 +53,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
   describe('Cenário 1: Token válido', () => {
     it('Given Token válido, When Resetar, Then Senha redefinida, Token invalidado', async () => {
       // Given
-      const resetEntity = { id: 10, userId: 1, token: 'valid_token', expiresAt: new Date(Date.now() + 10000), used: false };
+      const resetEntity = { id: 10, userId: 1, token: 'valid_token', expiresAt: new Date(Date.now() + 100000), usedAt: null };
       mockResetRepo.findByToken.mockResolvedValue(Result.ok(resetEntity));
       
       const account = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
@@ -77,7 +77,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
   describe('Cenário 2: Token expirado', () => {
     it('Given Token expirado, When Resetar, Then Result.fail(TokenExpired)', async () => {
       // Given
-      const resetEntity = { id: 10, userId: 1, token: 'expired_token', expiresAt: new Date(Date.now() - 10000), used: false };
+      const resetEntity = { id: 10, userId: 1, token: 'expired_token', expiresAt: new Date(Date.now() - 100000), usedAt: null };
       mockResetRepo.findByToken.mockResolvedValue(Result.ok(resetEntity));
 
       // When
@@ -106,7 +106,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
     
     it('Given Token já usado, When Resetar, Then Result.fail(TokenInvalid)', async () => {
       // Given
-      const resetEntity = { id: 10, userId: 1, token: 'used_token', expiresAt: new Date(Date.now() + 10000), used: true };
+      const resetEntity = { id: 10, userId: 1, token: 'used_token', expiresAt: new Date(Date.now() + 100000), usedAt: new Date() };
       mockResetRepo.findByToken.mockResolvedValue(Result.ok(resetEntity));
 
       // When
@@ -121,7 +121,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
   describe('Cenário 4: Erro durante invalidação (Rollback)', () => {
     it('Given Erro ao invalidar token, When Resetar, Then Rollback (fail)', async () => {
       // Given
-      const resetEntity = { id: 10, userId: 1, token: 'valid_token', expiresAt: new Date(Date.now() + 10000), used: false };
+      const resetEntity = { id: 10, userId: 1, token: 'valid_token', expiresAt: new Date(Date.now() + 100000), usedAt: null };
       mockResetRepo.findByToken.mockResolvedValue(Result.ok(resetEntity));
       
       const account = Account.restore({ id: 1, email: 'user@dao.com', password: 'old_hash', role: 'CITIZEN', active: true });
@@ -130,7 +130,7 @@ describe('ResetPasswordUseCase (BDD)', () => {
       mockAccountRepo.save.mockResolvedValue(Result.ok());
       
       // Simula falha catastrófica ao tentar invalidar
-      mockResetRepo.invalidate.mockRejectedValue(new Error('Invalidação explodiu'));
+      mockResetRepo.invalidate.mockResolvedValue(Result.fail('Invalidação explodiu'));
 
       // When
       const result = await useCase.execute({ token: 'valid_token', newPassword: 'new_password' });

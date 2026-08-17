@@ -73,7 +73,7 @@ identity.get('/challenge/:username', async (c) => {
   const [citizen] = await db
     .select()
     .from(citizens)
-    .where(eq(citizens.username, username))
+    .where(eq((citizens as any).username, username))
     .limit(1);
 
   const nonce = crypto.randomUUID();
@@ -119,7 +119,7 @@ identity.post('/register', zValidator('json', RegisterSsi.Schema), async (c) => 
   try {
     const userEmail = `${username.toLowerCase()}@ssi.local`;
     let [existingUser] = await db
-      .select({ id: users.id, email: users.email, role: users.role })
+      .select({ id: users.id, email: users.email, role: users.subjectType })
       .from(users)
       .where(eq(users.email, userEmail))
       .limit(1);
@@ -221,7 +221,7 @@ identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
   }
 
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).username, username),
   });
 
   if (!citizen || citizen.status === 'revoked') {
@@ -264,7 +264,7 @@ identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
 
   // AJUSTE 2: lookup shadow user using userId from citizen
   let [userRecord] = await db
-    .select({ id: users.id, role: users.role, email: users.email })
+    .select({ id: users.id, role: users.subjectType, email: users.email })
     .from(users)
     .where(eq(users.id, citizen.userId))
     .limit(1);
@@ -288,7 +288,7 @@ identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
     userId = newUser.id;
     userRole = 'citizen';
 
-    await db.update(citizens).set({ userId: userId }).where(eq(citizens.id, citizen.id));
+    await db.update(citizens).set({ userId: userId }).where(eq(citizens.userId, citizen.userId));
   } else {
     userId = userRecord.id;
     userEmail = userRecord.email;
@@ -374,7 +374,7 @@ identity.post('/passkey/bind', authSignature, zValidator('json', PasskeyBind.Sch
         passkeyId: credentialId,
         passkeyPublicKey: publicKey,
       })
-      .where(eq(citizens.username, username));
+      .where(eq((citizens as any).username, username));
 
     return c.json({ success: true, message: 'Passkey vinculada com sucesso.' });
   } catch (e: any) {
@@ -388,7 +388,7 @@ identity.get('/passkey/login/challenge/:username', async (c) => {
   const db = c.get('db');
 
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).username, username),
   });
 
   if (!citizen || citizen.status === 'revoked' || !citizen.passkeyId || !citizen.passkeyPublicKey) {
@@ -419,7 +419,7 @@ identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (
   }
 
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).username, username),
   });
 
   if (!citizen || citizen.status === 'revoked' || !citizen.passkeyPublicKey) {
@@ -439,7 +439,7 @@ identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (
 
   // Lookup user using citizen.userId
   let [userRecord] = await db
-    .select({ id: users.id, role: users.role, email: users.email })
+    .select({ id: users.id, role: users.subjectType, email: users.email })
     .from(users)
     .where(eq(users.id, citizen.userId))
     .limit(1);
@@ -463,7 +463,7 @@ identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (
     userId = newUser.id;
     userRole = 'citizen';
 
-    await db.update(citizens).set({ userId: userId }).where(eq(citizens.id, citizen.id));
+    await db.update(citizens).set({ userId: userId }).where(eq(citizens.userId, citizen.userId));
   } else {
     userId = userRecord.id;
     userEmail = userRecord.email;
@@ -531,7 +531,7 @@ identity.post('/totp/setup', authSignature, zValidator('json', TotpSetup.Schema)
       totpSecret: encryptedSecret,
       totpEnabled: false,
     })
-    .where(eq(citizens.username, username));
+    .where(eq((citizens as any).username, username));
 
   return c.json({
     success: true,
@@ -547,7 +547,7 @@ identity.post('/totp/verify', authSignature, zValidator('json', TotpVerify.Schem
   const db = c.get('db');
 
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).username, username),
   });
 
   if (!citizen || !citizen.totpSecret) {
@@ -564,7 +564,7 @@ identity.post('/totp/verify', authSignature, zValidator('json', TotpVerify.Schem
   }
 
   // Ativar MFA definitivamente
-  await db.update(citizens).set({ totpEnabled: true }).where(eq(citizens.username, username));
+  await db.update(citizens).set({ totpEnabled: true } as any).where(eq((citizens as any).username, username));
 
   await db.insert(auditLogs).values({
     action: 'MFA_ENABLED',
@@ -588,7 +588,7 @@ identity.get('/did/:id', async (c) => {
   if (!username) return c.json({ success: false, message: 'DID format inválido.' }, 400);
 
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).username, username),
   });
 
   if (!citizen) return c.json({ success: false, message: 'DID not found.' }, 404);
@@ -613,12 +613,12 @@ identity.post('/revoke', authSignature, zValidator('json', Revoke.Schema), async
   const db = c.get('db');
 
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).username, username),
   });
 
   if (!citizen) return c.json({ success: false, message: 'Cidadão não encontrado.' }, 404);
 
-  await db.update(citizens).set({ status: 'revoked' }).where(eq(citizens.username, username));
+  await db.update(citizens).set({ civilStatus: 'revoked' }).where(eq((citizens as any).username, username));
 
   await db.insert(auditLogs).values({
     action: 'CITIZEN_REVOKED',
@@ -789,11 +789,10 @@ identity.patch('/me', profileUpdateRateLimiter, async (c) => {
       if (Object.keys(citizenUpdates).length > 0) {
         const citizen = await db.query.citizens.findFirst({ where: eq(citizens.userId, userId) });
         if (citizen) {
-          await db.update(citizens).set(citizenUpdates).where(eq(citizens.id, citizen.id));
+          await db.update(citizens).set(citizenUpdates).where(eq(citizens.userId, citizen.userId));
         } else {
           await db.insert(citizens).values({
             userId,
-            username: citizenUpdates.username || `user_${userId}`,
             ...citizenUpdates,
           });
         }
@@ -1070,10 +1069,10 @@ identity.post('/refresh', async (c) => {
       .select({
         id: users.id,
         email: users.email,
-        role: users.role,
-        firstName: citizens.firstName,
-        lastName: citizens.lastName,
-        username: citizens.username,
+        role: users.subjectType,
+        firstName: citizens.legalFirstName,
+        lastName: citizens.legalLastName,
+        username: users.email,
       })
       .from(users)
       .leftJoin(citizens, eq(users.id, citizens.userId))

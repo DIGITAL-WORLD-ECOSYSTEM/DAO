@@ -22,7 +22,7 @@ governance.get('/proposals', async (c) => {
         status: govProposals.status,
         type: govProposals.type,
         createdAt: govProposals.createdAt,
-        creatorName: sql<string>`COALESCE(${citizens.firstName}, ${users.email})`,
+        creatorName: sql<string>`COALESCE(${citizens.legalFirstName}, ${users.email})`,
       })
       .from(govProposals)
       .leftJoin(users, eq(govProposals.creatorId, users.id))

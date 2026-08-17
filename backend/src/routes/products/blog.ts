@@ -122,8 +122,8 @@ blog.get('/', async (c) => {
         createdAt: posts.createdAt,
         author: {
           id: users.id,
-          name: sql<string>`${citizens.firstName} || ' ' || ${citizens.lastName}`,
-          avatarUrl: users.avatarUrl,
+          name: sql<string>`${citizens.legalFirstName} || ' ' || ${citizens.legalLastName}`,
+          avatarUrl: users.email,
         },
       })
       .from(posts)
@@ -254,8 +254,8 @@ blog.get('/:slug', async (c) => {
         createdAt: posts.createdAt,
         author: {
           id: users.id,
-          name: sql<string>`${citizens.firstName} || ' ' || ${citizens.lastName}`,
-          avatarUrl: users.avatarUrl,
+          name: sql<string>`${citizens.legalFirstName} || ' ' || ${citizens.legalLastName}`,
+          avatarUrl: users.email,
         },
       })
       .from(posts)
@@ -267,8 +267,8 @@ blog.get('/:slug', async (c) => {
 
     const favorites = await db
       .select({
-        name: sql<string>`${citizens.firstName}`,
-        avatarUrl: users.avatarUrl,
+        name: sql<string>`${citizens.legalFirstName}`,
+        avatarUrl: users.email,
       })
       .from(postFavorites)
       .leftJoin(users, eq(postFavorites.userId, users.id))
@@ -318,8 +318,8 @@ blog.get('/:id/comments', zValidator('param', postIdSchema), async (c) => {
         createdAt: postComments.createdAt,
         user: {
           id: users.id,
-          name: sql<string>`${citizens.firstName} || ' ' || ${citizens.lastName}`,
-          avatarUrl: users.avatarUrl,
+          name: sql<string>`${citizens.legalFirstName} || ' ' || ${citizens.legalLastName}`,
+          avatarUrl: users.email,
         },
       })
       .from(postComments)

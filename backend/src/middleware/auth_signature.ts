@@ -65,7 +65,7 @@ export const authSignature = async (c: Context, next: Next) => {
 
   const db = c.get('db');
   const citizen = await db.query.citizens.findFirst({
-    where: eq(citizens.username, username),
+    where: eq((citizens as any).did, did),
   });
 
   if (!citizen || citizen.status === 'revoked') {

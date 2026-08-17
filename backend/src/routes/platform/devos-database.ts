@@ -5,7 +5,7 @@ import { Bindings, Variables } from '../../types/bindings';
 import { error, success } from '../../utils/response';
 import { auditLogsImmutable } from '../../db/schema';
 import * as schema from '../../db/schema';
-import { CryptoVault } from '../../utils/crypto-vault';
+import { CryptoVault } from '../../utils/crypto';
 
 const router = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 

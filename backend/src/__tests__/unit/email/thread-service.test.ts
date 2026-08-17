@@ -42,7 +42,7 @@ describe('ThreadService (RFC 5322)', () => {
 
     expect(threadId).toBe('thread-123');
     expect(threadRepoMock.findThreadByReferences).toHaveBeenCalledWith([]);
-    expect(threadRepoMock.createThread).toHaveBeenCalledWith('Hello World');
+    expect(threadRepoMock.createThread).toHaveBeenCalledWith('Hello World', 'system');
   });
 
   it('should sanitize subjects (remove Re:, Fwd:) before hashing thread', async () => {

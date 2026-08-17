@@ -58,10 +58,12 @@ describe('DrizzleCitizenRepository', () => {
 
     const repo = new DrizzleCitizenRepository(mockDb, {} as any);
     const mockCitizen = Citizen.restore({
+      id: 1,
       userId: 1,
+      username: 'felipe',
       firstName: 'Felipe',
       lastName: 'Dev',
-      status: 'pending',
+      status: 'PENDING',
       version: 1,
     });
 

@@ -18,6 +18,8 @@ export class DrizzleAccountRepository implements IAccountRepository {
           password: users.email, // fallback for interface compatibility
           role: users.subjectType,
           active: users.status,
+          status: users.status,
+          tokenVersion: users.authEpoch,
           firstName: citizens.legalFirstName,
           lastName: citizens.legalLastName,
           username: userProfiles.username,
@@ -58,6 +60,8 @@ export class DrizzleAccountRepository implements IAccountRepository {
           password: users.email, // fallback for interface compatibility
           role: users.subjectType,
           active: users.status,
+          status: users.status,
+          tokenVersion: users.authEpoch,
           firstName: citizens.legalFirstName,
           lastName: citizens.legalLastName,
           username: userProfiles.username,
@@ -72,14 +76,23 @@ export class DrizzleAccountRepository implements IAccountRepository {
         return Result.fail('Account not found');
       }
 
+      const row = result[0] || {};
       const raw = {
-        ...result[0],
-        active: result[0].active === 'active',
+        id: row.id ?? id,
+        email: row.email ?? '',
+        role: row.role ?? 'human',
+        active: row.active === 'active' || row.status === 'active' || row.active === true,
+        status: row.status ?? 'active',
+        tokenVersion: row.tokenVersion ?? 1,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        username: row.username,
       };
       const domainEntity = AccountMapper.toDomain(raw);
       return Result.ok(domainEntity);
     } catch (error: any) {
-      return Result.fail(error.message);
+      console.error('FINDBYID ERROR:', error);
+      return Result.fail(error.stack || error.message);
     }
   }
 

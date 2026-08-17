@@ -34,6 +34,7 @@ const makeD1Mock = () => {
                 refresh_token_hash: isNormalUser ? 'hash-user' : 'hash',
                 aal: 1,
                 revoked: 0,
+                revoked_at: null,
                 expires_at: Date.now() + 3600000,
               },
             ];
@@ -43,17 +44,19 @@ const makeD1Mock = () => {
                 id: 99,
                 email: 'felipe.dev@empresa.com.br',
                 token_version: 1,
-                active: 1,
+                active: 'active',
                 status: 'active',
                 role: 'dev',
+                subject_type: 'dev',
               },
               {
                 id: 100,
                 email: 'citizen@asppibra.org',
                 token_version: 1,
-                active: 1,
+                active: 'active',
                 status: 'active',
                 role: 'citizen',
+                subject_type: 'citizen',
               },
             ];
             const userIdBind = bindArgs.find((arg) => typeof arg === 'number');
@@ -77,6 +80,8 @@ const makeD1Mock = () => {
             for (const key of Object.keys(row)) {
               const snakeKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
               snakeRow[snakeKey] = row[key];
+              snakeRow[`users_${snakeKey}`] = row[key];
+              snakeRow[`users.${snakeKey}`] = row[key];
             }
             return snakeRow;
           });
@@ -97,6 +102,7 @@ const makeD1Mock = () => {
                 refresh_token_hash: isNormalUser ? 'hash-user' : 'hash',
                 aal: 1,
                 revoked: 0,
+                revoked_at: null,
                 expires_at: Date.now() + 3600000,
               },
             ];
@@ -106,17 +112,19 @@ const makeD1Mock = () => {
                 id: 99,
                 email: 'felipe.dev@empresa.com.br',
                 token_version: 1,
-                active: 1,
+                active: 'active',
                 status: 'active',
                 role: 'dev',
+                subject_type: 'dev',
               },
               {
                 id: 100,
                 email: 'citizen@asppibra.org',
                 token_version: 1,
-                active: 1,
+                active: 'active',
                 status: 'active',
                 role: 'citizen',
+                subject_type: 'citizen',
               },
             ];
             const userIdBind = bindArgs.find((arg) => typeof arg === 'number');
@@ -137,7 +145,10 @@ const makeD1Mock = () => {
 
           const match = sql.match(/select\s+(.+?)\s+from/i);
           if (match) {
-            const cols = match[1].split(',').map((c) => c.replace(/"/g, '').trim());
+            const cols = match[1].split(',').map((c) => {
+              const clean = c.replace(/"/g, '').trim();
+              return clean.includes('.') ? clean.split('.')[1] : clean;
+            });
             const mapped = mockRows.map((row) => {
               return cols.map((col) => {
                 if (col in row) return row[col];
@@ -316,6 +327,7 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
       new Request('http://localhost/api/core/identity/developer/challenge', {
         headers: {
           Authorization: `Bearer ${userToken}`,
+          Cookie: `access_token=${userToken}`,
         },
       }),
       {
@@ -327,8 +339,8 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
       } as any,
       mockCtx as any
     );
-    expect(res.status).toBe(403);
     const body = (await res.json()) as any;
+    expect(res.status).toBe(403);
     expect(body.message).toContain('Acesso negado');
   });
 
@@ -337,6 +349,7 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
       new Request('http://localhost/api/core/identity/developer/challenge', {
         headers: {
           Authorization: `Bearer ${devToken}`,
+          Cookie: `access_token=${devToken}`,
         },
       }),
       {
@@ -374,6 +387,7 @@ describe('Developer SSH Verification Flow & Secure Headers', () => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${devToken}`,
+          Cookie: `access_token=${devToken}`,
         },
         body: JSON.stringify({
           signature: signatureBase64,
