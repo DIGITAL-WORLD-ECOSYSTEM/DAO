@@ -609,6 +609,17 @@ export const wallets = sqliteTable(
     }).onDelete('restrict'),
 
     /**
+     * A wallet cannot be its own controller.
+     */
+    controllerSelfCheck: check(
+      'ck_wallets_controller_self',
+      sql`
+        ${table.controllerWalletId} IS NULL
+        OR ${table.controllerWalletId} != ${table.id}
+      `,
+    ),
+
+    /**
      * Global blockchain identity:
      *
      * network + addressNormalized

@@ -1,7 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { web3Networks, smartContracts, wallets, web3Transactions } from './tables';
 import { users } from '../user/tables';
-import { walletAuthenticators } from '../authentication/tables';
 
 /**
  * ============================================================================
@@ -47,11 +46,6 @@ export const walletsRelations = relations(wallets, ({ one, many }) => ({
     fields: [wallets.networkId],
     references: [web3Networks.id],
     relationName: 'networkWallets',
-  }),
-  authenticator: one(walletAuthenticators, {
-    fields: [wallets.id],
-    references: [walletAuthenticators.walletId],
-    relationName: 'walletAuthenticator',
   }),
   
   /**
