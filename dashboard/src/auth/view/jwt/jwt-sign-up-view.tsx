@@ -332,10 +332,50 @@ export function JwtSignUpView() {
 
       <FormDivider label="OU CADASTRE-SE COM" />
 
-      <FormSocials
-        signInWithGoogle={() => handleSocialLogin('google')}
-        singInWithGithub={() => handleSocialLogin('github')}
-      />
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => handleSocialLogin('google')}
+          startIcon={<Iconify icon="logos:google-icon" />}
+          sx={{
+            color: 'white',
+            borderColor: alpha(theme.palette.info.main, 0.2),
+            fontFamily: 'var(--font-orbitron), sans-serif',
+            fontWeight: 700,
+            fontSize: 13,
+            '&:hover': {
+              borderColor: 'info.main',
+              bgcolor: alpha(theme.palette.info.main, 0.05),
+              transform: 'translateY(-2px)',
+              boxShadow: `0 5px 15px ${alpha(theme.palette.info.main, 0.2)}`,
+            },
+          }}
+        >
+          Google
+        </Button>
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={() => handleSocialLogin('github')}
+          startIcon={<Iconify icon="logos:github-icon" />}
+          sx={{
+            color: 'white',
+            borderColor: alpha(theme.palette.info.main, 0.2),
+            fontFamily: 'var(--font-orbitron), sans-serif',
+            fontWeight: 700,
+            fontSize: 13,
+            '&:hover': {
+              borderColor: 'info.main',
+              bgcolor: alpha(theme.palette.info.main, 0.05),
+              transform: 'translateY(-2px)',
+              boxShadow: `0 5px 15px ${alpha(theme.palette.info.main, 0.2)}`,
+            },
+          }}
+        >
+          GitHub
+        </Button>
+      </Box>
 
       <SignUpTerms sx={{ color: 'grey.600', mt: 2 }} />
     </Box>
