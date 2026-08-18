@@ -91,19 +91,16 @@ export const financialAssets = sqliteTable(
     codeUq: uniqueIndex('uq_financial_assets_code').on(table.code),
     typeIdx: index('idx_financial_assets_type').on(table.type),
     statusIdx: index('idx_financial_assets_status').on(table.status),
-    typeCheck: check(
-      'ck_financial_assets_type',
-      sql`${table.type} IN ('fiat', 'crypto')`
-    ),
+    typeCheck: check('ck_financial_assets_type', sql`${table.type} IN ('fiat', 'crypto')`),
     statusCheck: check(
       'ck_financial_assets_status',
       sql`${table.status} IN ('active', 'inactive')`
     ),
     decimalsCheck: check(
       'ck_financial_assets_decimals',
-      sql`${table.decimals} >= 0 AND ${table.decimals} <= 18`,
+      sql`${table.decimals} >= 0 AND ${table.decimals} <= 18`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -118,14 +115,7 @@ export const financialAccounts = sqliteTable(
       onDelete: 'restrict',
     }),
     accountType: text('account_type', {
-      enum: [
-        'user_available',
-        'treasury',
-        'operating',
-        'reserve',
-        'fees',
-        'escrow',
-      ],
+      enum: ['user_available', 'treasury', 'operating', 'reserve', 'fees', 'escrow'],
     }).notNull(),
     status: text('status', {
       enum: ['active', 'inactive', 'suspended'],
@@ -133,6 +123,7 @@ export const financialAccounts = sqliteTable(
       .notNull()
       .default('active'),
     name: text('name').notNull(),
+    version: integer('version').notNull().default(1),
     createdAt: integer('created_at', { mode: 'timestamp' })
       .notNull()
       .$defaultFn(() => new Date()),
@@ -153,14 +144,17 @@ export const financialAccounts = sqliteTable(
       'ck_financial_accounts_status',
       sql`${table.status} IN ('active', 'inactive', 'suspended')`
     ),
-    userAccountTypeUq: uniqueIndex(
-      'uq_financial_accounts_user_type_name',
-    ).on(table.userId, table.accountType, table.name),
+    userAccountTypeUq: uniqueIndex('uq_financial_accounts_user_type_name').on(
+      table.userId,
+      table.accountType,
+      table.name
+    ),
     ownerRuleCheck: check(
       'ck_financial_accounts_owner_rule',
       sql`(${table.accountType} = 'user_available' AND ${table.userId} IS NOT NULL) OR (${table.accountType} != 'user_available' AND ${table.userId} IS NULL)`
     ),
-  }),
+    versionCheck: check('ck_financial_accounts_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -205,15 +199,7 @@ export const financialTransactions = sqliteTable(
       .notNull()
       .default('other'),
     status: text('status', {
-      enum: [
-        'pending',
-        'processing',
-        'completed',
-        'failed',
-        'cancelled',
-        'reversed',
-        'refunded',
-      ],
+      enum: ['pending', 'processing', 'completed', 'failed', 'cancelled', 'reversed', 'refunded'],
     })
       .notNull()
       .default('pending'),
@@ -247,12 +233,8 @@ export const financialTransactions = sqliteTable(
     userIdx: index('idx_financial_transactions_user').on(table.userId),
     typeIdx: index('idx_financial_transactions_type').on(table.type),
     statusIdx: index('idx_financial_transactions_status').on(table.status),
-    createdIdx: index('idx_financial_transactions_created').on(
-      table.createdAt,
-    ),
-    correlationIdx: index(
-      'idx_financial_transactions_correlation',
-    ).on(table.correlationId),
+    createdIdx: index('idx_financial_transactions_created').on(table.createdAt),
+    correlationIdx: index('idx_financial_transactions_correlation').on(table.correlationId),
     typeCheck: check(
       'ck_financial_tx_type',
       sql`${table.type} IN ('deposit', 'withdrawal', 'transfer', 'payment', 'refund', 'fee', 'reward', 'yield', 'conversion', 'adjustment')`
@@ -277,11 +259,8 @@ export const financialTransactions = sqliteTable(
       'ck_financial_tx_dates',
       sql`${table.completedAt} IS NULL OR ${table.completedAt} >= ${table.createdAt}`
     ),
-    versionCheck: check(
-      'ck_financial_tx_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_financial_tx_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -316,27 +295,19 @@ export const financialLedgerEntries = sqliteTable(
       .$defaultFn(() => new Date()),
   },
   (table) => ({
-    transactionIdx: index(
-      'idx_financial_ledger_entries_transaction',
-    ).on(table.transactionId),
-    accountIdx: index('idx_financial_ledger_entries_account').on(
-      table.accountId,
-    ),
-    assetIdx: index('idx_financial_ledger_entries_asset').on(
-      table.assetId,
-    ),
-    createdIdx: index('idx_financial_ledger_entries_created').on(
-      table.createdAt,
-    ),
+    transactionIdx: index('idx_financial_ledger_entries_transaction').on(table.transactionId),
+    accountIdx: index('idx_financial_ledger_entries_account').on(table.accountId),
+    assetIdx: index('idx_financial_ledger_entries_asset').on(table.assetId),
+    createdIdx: index('idx_financial_ledger_entries_created').on(table.createdAt),
     directionCheck: check(
       'ck_financial_ledger_direction',
       sql`${table.direction} IN ('debit', 'credit')`
     ),
     amountCheck: check(
       'ck_financial_ledger_entries_amount_positive',
-      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -357,12 +328,8 @@ export const accountBalances = sqliteTable(
       .references(() => financialAssets.id, {
         onDelete: 'restrict',
       }),
-    availableBaseUnits: text('available_base_units')
-      .notNull()
-      .default('0'),
-    lockedBaseUnits: text('locked_base_units')
-      .notNull()
-      .default('0'),
+    availableBaseUnits: text('available_base_units').notNull().default('0'),
+    lockedBaseUnits: text('locked_base_units').notNull().default('0'),
     version: integer('version').notNull().default(1),
     updatedAt: integer('updated_at', { mode: 'timestamp' })
       .notNull()
@@ -370,26 +337,22 @@ export const accountBalances = sqliteTable(
       .$onUpdateFn(() => new Date()),
   },
   (table) => ({
-    accountAssetUq: uniqueIndex(
-      'uq_account_balances_account_asset',
-    ).on(table.accountId, table.assetId),
-    accountIdx: index('idx_account_balances_account').on(
+    accountAssetUq: uniqueIndex('uq_account_balances_account_asset').on(
       table.accountId,
+      table.assetId
     ),
+    accountIdx: index('idx_account_balances_account').on(table.accountId),
     assetIdx: index('idx_account_balances_asset').on(table.assetId),
     availableCheck: check(
       'ck_account_balances_available_nonnegative',
-      sql`${table.availableBaseUnits} <> '' AND ltrim(${table.availableBaseUnits}, '0123456789') = '' AND (${table.availableBaseUnits} = '0' OR ltrim(${table.availableBaseUnits}, '0') = ${table.availableBaseUnits})`,
+      sql`${table.availableBaseUnits} <> '' AND ltrim(${table.availableBaseUnits}, '0123456789') = '' AND (${table.availableBaseUnits} = '0' OR ltrim(${table.availableBaseUnits}, '0') = ${table.availableBaseUnits})`
     ),
     lockedCheck: check(
       'ck_account_balances_locked_nonnegative',
-      sql`${table.lockedBaseUnits} <> '' AND ltrim(${table.lockedBaseUnits}, '0123456789') = '' AND (${table.lockedBaseUnits} = '0' OR ltrim(${table.lockedBaseUnits}, '0') = ${table.lockedBaseUnits})`,
+      sql`${table.lockedBaseUnits} <> '' AND ltrim(${table.lockedBaseUnits}, '0123456789') = '' AND (${table.lockedBaseUnits} = '0' OR ltrim(${table.lockedBaseUnits}, '0') = ${table.lockedBaseUnits})`
     ),
-    versionCheck: check(
-      'ck_account_balances_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_account_balances_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -434,27 +397,25 @@ export const balanceHolds = sqliteTable(
     accountIdx: index('idx_balance_holds_account').on(table.accountId),
     assetIdx: index('idx_balance_holds_asset').on(table.assetId),
     statusIdx: index('idx_balance_holds_status').on(table.status),
-    referenceIdx: index('idx_balance_holds_reference').on(
-      table.referenceType,
-      table.referenceId,
-    ),
+    referenceIdx: index('idx_balance_holds_reference').on(table.referenceType, table.referenceId),
     statusCheck: check(
       'ck_balance_holds_status',
       sql`${table.status} IN ('active', 'released', 'expired', 'consumed')`
     ),
     amountCheck: check(
       'ck_balance_holds_amount_positive',
-      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`
     ),
     releasedStateCheck: check(
       'ck_balance_holds_released_state',
       sql`${table.status} != 'released' OR ${table.releasedAt} IS NOT NULL`
     ),
-    versionCheck: check(
-      'ck_balance_holds_version',
-      sql`${table.version} > 0`
+    expiredStateCheck: check(
+      'ck_balance_holds_expired_state',
+      sql`${table.status} != 'expired' OR ${table.expiresAt} IS NOT NULL`
     ),
-  }),
+    versionCheck: check('ck_balance_holds_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -495,7 +456,7 @@ export const fiatProviders = sqliteTable(
       'ck_fiat_providers_status',
       sql`${table.status} IN ('active', 'inactive', 'suspended')`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -516,12 +477,9 @@ export const fiatAccounts = sqliteTable(
       .references(() => financialAssets.id, {
         onDelete: 'restrict',
       }),
-    providerId: integer('provider_id').references(
-      () => fiatProviders.id,
-      {
-        onDelete: 'restrict',
-      },
-    ),
+    providerId: integer('provider_id').references(() => fiatProviders.id, {
+      onDelete: 'restrict',
+    }),
     type: text('type', {
       enum: ['bank_account', 'payment_account', 'pix_account'],
     }).notNull(),
@@ -540,12 +498,11 @@ export const fiatAccounts = sqliteTable(
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdateFn(() => new Date()),
+    blockedAt: integer('blocked_at', { mode: 'timestamp' }),
   },
   (table) => ({
     userIdx: index('idx_fiat_accounts_user').on(table.userId),
-    providerIdx: index('idx_fiat_accounts_provider').on(
-      table.providerId,
-    ),
+    providerIdx: index('idx_fiat_accounts_provider').on(table.providerId),
     statusIdx: index('idx_fiat_accounts_status').on(table.status),
     typeCheck: check(
       'ck_fiat_accounts_type',
@@ -555,13 +512,16 @@ export const fiatAccounts = sqliteTable(
       'ck_fiat_accounts_status',
       sql`${table.status} IN ('active', 'inactive', 'blocked')`
     ),
-    externalUq: uniqueIndex(
-      'uq_fiat_accounts_provider_external',
-    ).on(table.providerId, table.externalAccountId),
-    userAccountUq: uniqueIndex(
-      'uq_fiat_accounts_user_account',
-    ).on(table.userId, table.id),
-  }),
+    blockedStateCheck: check(
+      'ck_fiat_accounts_blocked_state',
+      sql`${table.status} != 'blocked' OR ${table.blockedAt} IS NOT NULL`
+    ),
+    externalUq: uniqueIndex('uq_fiat_accounts_provider_external').on(
+      table.providerId,
+      table.externalAccountId
+    ),
+    userAccountUq: uniqueIndex('uq_fiat_accounts_user_account').on(table.userId, table.id),
+  })
 );
 
 /* ============================================================================
@@ -594,23 +554,18 @@ export const fiatPaymentMethods = sqliteTable(
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdateFn(() => new Date()),
+    blockedAt: integer('blocked_at', { mode: 'timestamp' }),
   },
   (table) => ({
     fiatAccountFk: foreignKey({
       columns: [table.userId, table.fiatAccountId],
       foreignColumns: [fiatAccounts.userId, fiatAccounts.id],
-      name: 'fk_fiat_payment_methods_user_account'
+      name: 'fk_fiat_payment_methods_user_account',
     }).onDelete('restrict'),
-    userIdx: index('idx_fiat_payment_methods_user').on(
-      table.userId,
-    ),
-    accountIdx: index('idx_fiat_payment_methods_account').on(
-      table.fiatAccountId,
-    ),
+    userIdx: index('idx_fiat_payment_methods_user').on(table.userId),
+    accountIdx: index('idx_fiat_payment_methods_account').on(table.fiatAccountId),
     typeIdx: index('idx_fiat_payment_methods_type').on(table.type),
-    statusIdx: index('idx_fiat_payment_methods_status').on(
-      table.status,
-    ),
+    statusIdx: index('idx_fiat_payment_methods_status').on(table.status),
     typeCheck: check(
       'ck_fiat_pm_type',
       sql`${table.type} IN ('pix', 'bank_transfer', 'boleto', 'card')`
@@ -619,7 +574,11 @@ export const fiatPaymentMethods = sqliteTable(
       'ck_fiat_pm_status',
       sql`${table.status} IN ('active', 'inactive', 'blocked')`
     ),
-  }),
+    blockedStateCheck: check(
+      'ck_fiat_pm_blocked_state',
+      sql`${table.status} != 'blocked' OR ${table.blockedAt} IS NOT NULL`
+    ),
+  })
 );
 
 /* ============================================================================
@@ -635,18 +594,12 @@ export const fiatTransactions = sqliteTable(
       .references(() => financialTransactions.id, {
         onDelete: 'restrict',
       }),
-    providerId: integer('provider_id').references(
-      () => fiatProviders.id,
-      {
-        onDelete: 'restrict',
-      },
-    ),
-    paymentMethodId: integer('payment_method_id').references(
-      () => fiatPaymentMethods.id,
-      {
-        onDelete: 'restrict',
-      },
-    ),
+    providerId: integer('provider_id').references(() => fiatProviders.id, {
+      onDelete: 'restrict',
+    }),
+    paymentMethodId: integer('payment_method_id').references(() => fiatPaymentMethods.id, {
+      onDelete: 'restrict',
+    }),
     assetId: integer('asset_id')
       .notNull()
       .references(() => financialAssets.id, {
@@ -657,14 +610,7 @@ export const fiatTransactions = sqliteTable(
     }).notNull(),
     amountBaseUnits: text('amount_base_units').notNull(),
     status: text('status', {
-      enum: [
-        'pending',
-        'processing',
-        'completed',
-        'failed',
-        'cancelled',
-        'reversed',
-      ],
+      enum: ['pending', 'processing', 'completed', 'failed', 'cancelled', 'reversed'],
     })
       .notNull()
       .default('pending'),
@@ -676,15 +622,11 @@ export const fiatTransactions = sqliteTable(
     settledAt: integer('settled_at', { mode: 'timestamp' }),
   },
   (table) => ({
-    transactionUq: uniqueIndex(
-      'uq_fiat_transactions_financial_transaction',
-    ).on(table.financialTransactionId),
-    providerIdx: index('idx_fiat_transactions_provider').on(
-      table.providerId,
+    transactionUq: uniqueIndex('uq_fiat_transactions_financial_transaction').on(
+      table.financialTransactionId
     ),
-    paymentMethodIdx: index(
-      'idx_fiat_transactions_payment_method',
-    ).on(table.paymentMethodId),
+    providerIdx: index('idx_fiat_transactions_provider').on(table.providerId),
+    paymentMethodIdx: index('idx_fiat_transactions_payment_method').on(table.paymentMethodId),
     assetIdx: index('idx_fiat_transactions_asset').on(table.assetId),
     statusIdx: index('idx_fiat_transactions_status').on(table.status),
     directionCheck: check(
@@ -697,17 +639,14 @@ export const fiatTransactions = sqliteTable(
     ),
     amountCheck: check(
       'ck_fiat_transactions_amount_positive',
-      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`
     ),
     temporalOrderCheck: check(
       'ck_fiat_tx_dates',
       sql`${table.settledAt} IS NULL OR ${table.settledAt} >= ${table.requestedAt}`
     ),
-    versionCheck: check(
-      'ck_fiat_tx_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_fiat_tx_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -738,13 +677,7 @@ export const cryptoTransactions = sqliteTable(
     }),
     feeBaseUnits: text('fee_base_units').notNull().default('0'),
     status: text('status', {
-      enum: [
-        'pending',
-        'processing',
-        'confirmed',
-        'failed',
-        'reversed',
-      ],
+      enum: ['pending', 'processing', 'confirmed', 'failed', 'reversed'],
     })
       .notNull()
       .default('pending'),
@@ -755,16 +688,14 @@ export const cryptoTransactions = sqliteTable(
     settledAt: integer('settled_at', { mode: 'timestamp' }),
   },
   (table) => ({
-    transactionUq: uniqueIndex(
-      'uq_crypto_transactions_financial_transaction',
-    ).on(table.financialTransactionId),
-    web3TransactionUq: uniqueIndex(
-      'uq_crypto_transactions_web3_transaction',
-    ).on(table.web3TransactionId),
-    assetIdx: index('idx_crypto_transactions_asset').on(table.assetId),
-    statusIdx: index('idx_crypto_transactions_status').on(
-      table.status,
+    transactionUq: uniqueIndex('uq_crypto_transactions_financial_transaction').on(
+      table.financialTransactionId
     ),
+    web3TransactionUq: uniqueIndex('uq_crypto_transactions_web3_transaction').on(
+      table.web3TransactionId
+    ),
+    assetIdx: index('idx_crypto_transactions_asset').on(table.assetId),
+    statusIdx: index('idx_crypto_transactions_status').on(table.status),
     directionCheck: check(
       'ck_crypto_tx_direction',
       sql`${table.direction} IN ('inbound', 'outbound')`
@@ -775,11 +706,11 @@ export const cryptoTransactions = sqliteTable(
     ),
     amountCheck: check(
       'ck_crypto_transactions_amount_positive',
-      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`
     ),
     feeCheck: check(
       'ck_crypto_transactions_fee_nonnegative',
-      sql`${table.feeBaseUnits} <> '' AND ltrim(${table.feeBaseUnits}, '0123456789') = '' AND (${table.feeBaseUnits} = '0' OR ltrim(${table.feeBaseUnits}, '0') = ${table.feeBaseUnits})`,
+      sql`${table.feeBaseUnits} <> '' AND ltrim(${table.feeBaseUnits}, '0123456789') = '' AND (${table.feeBaseUnits} = '0' OR ltrim(${table.feeBaseUnits}, '0') = ${table.feeBaseUnits})`
     ),
     feeAssetCheck: check(
       'ck_crypto_transactions_fee_asset',
@@ -789,11 +720,8 @@ export const cryptoTransactions = sqliteTable(
       'ck_crypto_tx_dates',
       sql`${table.settledAt} IS NULL OR ${table.settledAt} >= ${table.requestedAt}`
     ),
-    versionCheck: check(
-      'ck_crypto_tx_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_crypto_tx_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -822,24 +750,18 @@ export const exchangeRates = sqliteTable(
     expiresAt: integer('expires_at', { mode: 'timestamp' }),
   },
   (table) => ({
-    pairIdx: index('idx_exchange_rates_pair').on(
-      table.baseAssetId,
-      table.quoteAssetId,
-    ),
+    pairIdx: index('idx_exchange_rates_pair').on(table.baseAssetId, table.quoteAssetId),
     quotedIdx: index('idx_exchange_rates_quoted').on(table.quotedAt),
     pairDifferentCheck: check(
       'ck_exchange_rates_different_assets',
-      sql`${table.baseAssetId} <> ${table.quoteAssetId}`,
+      sql`${table.baseAssetId} <> ${table.quoteAssetId}`
     ),
-    rateCheck: check(
-      'ck_exchange_rates_rate_positive',
-      sql`CAST(${table.rate} AS REAL) > 0`
-    ),
+    rateCheck: check('ck_exchange_rates_rate_positive', sql`CAST(${table.rate} AS REAL) > 0`),
     expiresCheck: check(
       'ck_exchange_rates_expires_after_quoted',
       sql`${table.expiresAt} IS NULL OR ${table.expiresAt} >= ${table.quotedAt}`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -870,9 +792,7 @@ export const assetConversions = sqliteTable(
     rate: text('rate').notNull(),
     rateSource: text('rate_source'),
     quotedAt: integer('quoted_at', { mode: 'timestamp' }),
-    feeAmountBaseUnits: text('fee_amount_base_units')
-      .notNull()
-      .default('0'),
+    feeAmountBaseUnits: text('fee_amount_base_units').notNull().default('0'),
     status: text('status', {
       enum: ['pending', 'processing', 'completed', 'failed', 'cancelled'],
     })
@@ -884,40 +804,31 @@ export const assetConversions = sqliteTable(
     completedAt: integer('completed_at', { mode: 'timestamp' }),
   },
   (table) => ({
-    transactionUq: uniqueIndex(
-      'uq_asset_conversions_transaction',
-    ).on(table.financialTransactionId),
-    fromAssetIdx: index(
-      'idx_asset_conversions_from_asset',
-    ).on(table.fromAssetId),
-    toAssetIdx: index('idx_asset_conversions_to_asset').on(
-      table.toAssetId,
-    ),
+    transactionUq: uniqueIndex('uq_asset_conversions_transaction').on(table.financialTransactionId),
+    fromAssetIdx: index('idx_asset_conversions_from_asset').on(table.fromAssetId),
+    toAssetIdx: index('idx_asset_conversions_to_asset').on(table.toAssetId),
     statusCheck: check(
       'ck_asset_conversions_status',
       sql`${table.status} IN ('pending', 'processing', 'completed', 'failed', 'cancelled')`
     ),
     fromAmountCheck: check(
       'ck_asset_conversions_from_amount_positive',
-      sql`${table.fromAmountBaseUnits} <> '' AND ltrim(${table.fromAmountBaseUnits}, '0123456789') = '' AND ${table.fromAmountBaseUnits} <> '0' AND ltrim(${table.fromAmountBaseUnits}, '0') = ${table.fromAmountBaseUnits}`,
+      sql`${table.fromAmountBaseUnits} <> '' AND ltrim(${table.fromAmountBaseUnits}, '0123456789') = '' AND ${table.fromAmountBaseUnits} <> '0' AND ltrim(${table.fromAmountBaseUnits}, '0') = ${table.fromAmountBaseUnits}`
     ),
     toAmountCheck: check(
       'ck_asset_conversions_to_amount_positive',
-      sql`${table.toAmountBaseUnits} <> '' AND ltrim(${table.toAmountBaseUnits}, '0123456789') = '' AND ${table.toAmountBaseUnits} <> '0' AND ltrim(${table.toAmountBaseUnits}, '0') = ${table.toAmountBaseUnits}`,
+      sql`${table.toAmountBaseUnits} <> '' AND ltrim(${table.toAmountBaseUnits}, '0123456789') = '' AND ${table.toAmountBaseUnits} <> '0' AND ltrim(${table.toAmountBaseUnits}, '0') = ${table.toAmountBaseUnits}`
     ),
     feeCheck: check(
       'ck_asset_conversions_fee_nonnegative',
-      sql`${table.feeAmountBaseUnits} <> '' AND ltrim(${table.feeAmountBaseUnits}, '0123456789') = '' AND (${table.feeAmountBaseUnits} = '0' OR ltrim(${table.feeAmountBaseUnits}, '0') = ${table.feeAmountBaseUnits})`,
+      sql`${table.feeAmountBaseUnits} <> '' AND ltrim(${table.feeAmountBaseUnits}, '0123456789') = '' AND (${table.feeAmountBaseUnits} = '0' OR ltrim(${table.feeAmountBaseUnits}, '0') = ${table.feeAmountBaseUnits})`
     ),
     assetsDifferentCheck: check(
       'ck_asset_conversions_different_assets',
-      sql`${table.fromAssetId} <> ${table.toAssetId}`,
+      sql`${table.fromAssetId} <> ${table.toAssetId}`
     ),
-    rateCheck: check(
-      'ck_asset_conversions_rate_positive',
-      sql`CAST(${table.rate} AS REAL) > 0`
-    ),
-  }),
+    rateCheck: check('ck_asset_conversions_rate_positive', sql`CAST(${table.rate} AS REAL) > 0`),
+  })
 );
 
 /* ============================================================================
@@ -938,21 +849,11 @@ export const financialFees = sqliteTable(
       .references(() => financialAssets.id, {
         onDelete: 'restrict',
       }),
-    recipientAccountId: integer('recipient_account_id').references(
-      () => financialAccounts.id,
-      {
-        onDelete: 'restrict',
-      },
-    ),
+    recipientAccountId: integer('recipient_account_id').references(() => financialAccounts.id, {
+      onDelete: 'restrict',
+    }),
     feeType: text('fee_type', {
-      enum: [
-        'platform',
-        'withdrawal',
-        'payment',
-        'conversion',
-        'network',
-        'other',
-      ],
+      enum: ['platform', 'withdrawal', 'payment', 'conversion', 'network', 'other'],
     }).notNull(),
     amountBaseUnits: text('amount_base_units').notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' })
@@ -960,22 +861,18 @@ export const financialFees = sqliteTable(
       .$defaultFn(() => new Date()),
   },
   (table) => ({
-    transactionIdx: index('idx_financial_fees_transaction').on(
-      table.transactionId,
-    ),
+    transactionIdx: index('idx_financial_fees_transaction').on(table.transactionId),
     assetIdx: index('idx_financial_fees_asset').on(table.assetId),
-    recipientIdx: index(
-      'idx_financial_fees_recipient_account',
-    ).on(table.recipientAccountId),
+    recipientIdx: index('idx_financial_fees_recipient_account').on(table.recipientAccountId),
     feeTypeCheck: check(
       'ck_financial_fees_type',
       sql`${table.feeType} IN ('platform', 'withdrawal', 'payment', 'conversion', 'network', 'other')`
     ),
     amountCheck: check(
       'ck_financial_fees_amount_positive',
-      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`,
+      sql`${table.amountBaseUnits} <> '' AND ltrim(${table.amountBaseUnits}, '0123456789') = '' AND ${table.amountBaseUnits} <> '0' AND ltrim(${table.amountBaseUnits}, '0') = ${table.amountBaseUnits}`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -991,15 +888,10 @@ export const fiatExternalTransactions = sqliteTable(
       .references(() => financialTransactions.id, {
         onDelete: 'restrict',
       }),
-    providerId: integer('provider_id').references(
-      () => fiatProviders.id,
-      {
-        onDelete: 'restrict',
-      },
-    ),
-    externalTransactionId: text(
-      'external_transaction_id',
-    ).notNull(),
+    providerId: integer('provider_id').references(() => fiatProviders.id, {
+      onDelete: 'restrict',
+    }),
+    externalTransactionId: text('external_transaction_id').notNull(),
     type: text('type').notNull(),
     status: text('status').notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' })
@@ -1011,19 +903,16 @@ export const fiatExternalTransactions = sqliteTable(
       .$onUpdateFn(() => new Date()),
   },
   (table) => ({
-    providerExternalUq: uniqueIndex(
-      'uq_fiat_external_transactions_provider_external',
-    ).on(table.providerId, table.externalTransactionId),
-    transactionIdx: index(
-      'idx_fiat_external_transactions_transaction',
-    ).on(table.financialTransactionId),
-    providerIdx: index(
-      'idx_fiat_external_transactions_provider',
-    ).on(table.providerId),
-    statusIdx: index('idx_fiat_external_transactions_status').on(
-      table.status,
+    providerExternalUq: uniqueIndex('uq_fiat_external_transactions_provider_external').on(
+      table.providerId,
+      table.externalTransactionId
     ),
-  }),
+    transactionIdx: index('idx_fiat_external_transactions_transaction').on(
+      table.financialTransactionId
+    ),
+    providerIdx: index('idx_fiat_external_transactions_provider').on(table.providerId),
+    statusIdx: index('idx_fiat_external_transactions_status').on(table.status),
+  })
 );
 
 /* ============================================================================
@@ -1040,11 +929,12 @@ export const idempotencyKeys = sqliteTable(
     scope: text('scope').notNull(),
     key: text('key').notNull(),
     requestHash: text('request_hash').notNull(),
-    financialTransactionId: integer(
-      'financial_transaction_id',
-    ).references(() => financialTransactions.id, {
-      onDelete: 'restrict',
-    }),
+    financialTransactionId: integer('financial_transaction_id').references(
+      () => financialTransactions.id,
+      {
+        onDelete: 'restrict',
+      }
+    ),
     status: text('status', {
       enum: ['processing', 'completed', 'failed'],
     })
@@ -1056,17 +946,10 @@ export const idempotencyKeys = sqliteTable(
     expiresAt: integer('expires_at', { mode: 'timestamp' }),
   },
   (table) => ({
-    scopeKeyUq: uniqueIndex('uq_idempotency_scope_key').on(
-      table.scope,
-      table.key,
-    ),
+    scopeKeyUq: uniqueIndex('uq_idempotency_scope_key').on(table.scope, table.key),
     userIdx: index('idx_idempotency_keys_user').on(table.userId),
-    transactionIdx: index(
-      'idx_idempotency_keys_transaction',
-    ).on(table.financialTransactionId),
-    statusIdx: index('idx_idempotency_keys_status').on(
-      table.status,
-    ),
+    transactionIdx: index('idx_idempotency_keys_transaction').on(table.financialTransactionId),
+    statusIdx: index('idx_idempotency_keys_status').on(table.status),
     statusCheck: check(
       'ck_idempotency_keys_status',
       sql`${table.status} IN ('processing', 'completed', 'failed')`
@@ -1075,7 +958,7 @@ export const idempotencyKeys = sqliteTable(
       'ck_idempotency_keys_expires',
       sql`${table.expiresAt} IS NULL OR ${table.createdAt} < ${table.expiresAt}`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -1086,12 +969,9 @@ export const reconciliationRecords = sqliteTable(
   'reconciliation_records',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
-    providerId: integer('provider_id').references(
-      () => fiatProviders.id,
-      {
-        onDelete: 'restrict',
-      },
-    ),
+    providerId: integer('provider_id').references(() => fiatProviders.id, {
+      onDelete: 'restrict',
+    }),
     accountId: integer('account_id')
       .notNull()
       .references(() => financialAccounts.id, {
@@ -1111,38 +991,33 @@ export const reconciliationRecords = sqliteTable(
       .notNull()
       .default('matched'),
     reconciliationRunId: text('reconciliation_run_id').notNull(),
-    reconciliationDate: integer(
-      'reconciliation_date',
-      { mode: 'timestamp' },
-    )
+    version: integer('version').notNull().default(1),
+    reconciliationDate: integer('reconciliation_date', { mode: 'timestamp' })
       .notNull()
       .$defaultFn(() => new Date()),
     resolvedAt: integer('resolved_at', { mode: 'timestamp' }),
   },
   (table) => ({
-    accountIdx: index(
-      'idx_reconciliation_records_account',
-    ).on(table.accountId),
-    assetIdx: index(
-      'idx_reconciliation_records_asset',
-    ).on(table.assetId),
-    providerIdx: index(
-      'idx_reconciliation_records_provider',
-    ).on(table.providerId),
-    statusIdx: index(
-      'idx_reconciliation_records_status',
-    ).on(table.status),
+    accountIdx: index('idx_reconciliation_records_account').on(table.accountId),
+    assetIdx: index('idx_reconciliation_records_asset').on(table.assetId),
+    providerIdx: index('idx_reconciliation_records_provider').on(table.providerId),
+    statusIdx: index('idx_reconciliation_records_status').on(table.status),
     statusCheck: check(
       'ck_reconciliation_status',
       sql`${table.status} IN ('matched', 'mismatch', 'resolved')`
     ),
+    resolvedStateCheck: check(
+      'ck_reconciliation_resolved_state',
+      sql`${table.status} != 'resolved' OR ${table.resolvedAt} IS NOT NULL`
+    ),
+    versionCheck: check('ck_reconciliation_records_version', sql`${table.version} > 0`),
     expectedCheck: check(
       'ck_reconciliation_expected_nonnegative',
-      sql`${table.expectedBalanceBaseUnits} <> '' AND ltrim(${table.expectedBalanceBaseUnits}, '0123456789') = '' AND (${table.expectedBalanceBaseUnits} = '0' OR ltrim(${table.expectedBalanceBaseUnits}, '0') = ${table.expectedBalanceBaseUnits})`,
+      sql`${table.expectedBalanceBaseUnits} <> '' AND ltrim(${table.expectedBalanceBaseUnits}, '0123456789') = '' AND (${table.expectedBalanceBaseUnits} = '0' OR ltrim(${table.expectedBalanceBaseUnits}, '0') = ${table.expectedBalanceBaseUnits})`
     ),
     actualCheck: check(
       'ck_reconciliation_actual_nonnegative',
-      sql`${table.actualBalanceBaseUnits} <> '' AND ltrim(${table.actualBalanceBaseUnits}, '0123456789') = '' AND (${table.actualBalanceBaseUnits} = '0' OR ltrim(${table.actualBalanceBaseUnits}, '0') = ${table.actualBalanceBaseUnits})`,
+      sql`${table.actualBalanceBaseUnits} <> '' AND ltrim(${table.actualBalanceBaseUnits}, '0123456789') = '' AND (${table.actualBalanceBaseUnits} = '0' OR ltrim(${table.actualBalanceBaseUnits}, '0') = ${table.actualBalanceBaseUnits})`
     ),
-  }),
+  })
 );

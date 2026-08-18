@@ -1,11 +1,4 @@
-import {
-  sqliteTable,
-  text,
-  integer,
-  index,
-  uniqueIndex,
-  check,
-} from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index, uniqueIndex, check } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 import { users } from '../user/tables';
 
@@ -47,7 +40,9 @@ export const secureVaults = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: 'restrict' }),
 
-    purpose: text('purpose').notNull(), // Ex: 'wallet_mnemonic', 'recovery_material', 'private_key', 'identity_seed'
+    purpose: text('purpose', {
+      enum: ['wallet_mnemonic', 'recovery_material', 'private_key', 'identity_seed'],
+    }).notNull(),
     ciphertext: text('ciphertext').notNull(),
     nonce: text('nonce').notNull(),
     authTag: text('auth_tag').notNull(),
@@ -66,18 +61,35 @@ export const secureVaults = sqliteTable(
   },
   (table) => ({
     userIdx: index('idx_secure_vaults_user').on(table.userId),
-    userPurposeVersionUnq: uniqueIndex(
-      'uq_secure_vaults_user_purpose_version',
-    ).on(table.userId, table.purpose, table.keyVersion),
+    userPurposeVersionUnq: uniqueIndex('uq_secure_vaults_user_purpose_version').on(
+      table.userId,
+      table.purpose,
+      table.keyVersion
+    ),
+    activePurposeUnq: uniqueIndex('uq_secure_vaults_active_purpose')
+      .on(table.userId, table.purpose)
+      .where(sql`${table.revokedAt} IS NULL`),
+    purposeCheck: check(
+      'ck_secure_vaults_purpose',
+      sql`${table.purpose} IN ('wallet_mnemonic', 'recovery_material', 'private_key', 'identity_seed')`
+    ),
     algorithmCheck: check(
       'ck_secure_vaults_algorithm',
       sql`${table.encryptionAlgorithm} IN ('AES-256-GCM', 'XChaCha20-Poly1305')`
+    ),
+    rotatedAfterCreatedCheck: check(
+      'ck_secure_vaults_rotated_after_created',
+      sql`${table.rotatedAt} IS NULL OR ${table.rotatedAt} >= ${table.createdAt}`
+    ),
+    revokedAfterCreatedCheck: check(
+      'ck_secure_vaults_revoked_after_created',
+      sql`${table.revokedAt} IS NULL OR ${table.revokedAt} >= ${table.createdAt}`
     ),
     versionCheck: check(
       'ck_secure_vaults_version',
       sql`${table.version} > 0 AND ${table.keyVersion} > 0`
     ),
-  }),
+  })
 );
 
 /* ============================================================================
@@ -119,6 +131,7 @@ export const didIdentities = sqliteTable(
     userIdx: index('idx_did_identities_user').on(table.userId),
     didIdx: index('idx_did_identities_did').on(table.did),
     statusIdx: index('idx_did_identities_status').on(table.status),
+    didFormatCheck: check('ck_did_identities_did_format', sql`${table.did} LIKE 'did:%'`),
     statusCheck: check(
       'ck_did_identities_status',
       sql`${table.status} IN ('active', 'suspended', 'revoked')`
@@ -131,11 +144,8 @@ export const didIdentities = sqliteTable(
       'ck_did_identities_revoked_state',
       sql`${table.status} != 'revoked' OR ${table.revokedAt} IS NOT NULL`
     ),
-    versionCheck: check(
-      'ck_did_identities_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_did_identities_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -187,6 +197,10 @@ export const didVerificationMethods = sqliteTable(
     didIdx: index('idx_did_verification_methods_did').on(table.didId),
     purposeIdx: index('idx_did_verification_methods_purpose').on(table.purpose),
     statusIdx: index('idx_did_verification_methods_status').on(table.status),
+    controllerDidFormatCheck: check(
+      'ck_did_vm_controller_did_format',
+      sql`${table.controllerDid} LIKE 'did:%'`
+    ),
     statusCheck: check(
       'ck_did_vm_status',
       sql`${table.status} IN ('active', 'suspended', 'revoked')`
@@ -203,11 +217,8 @@ export const didVerificationMethods = sqliteTable(
       'ck_did_vm_revoked_state',
       sql`${table.status} != 'revoked' OR ${table.revokedAt} IS NOT NULL`
     ),
-    versionCheck: check(
-      'ck_did_vm_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_did_vm_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -237,11 +248,7 @@ export const verifiableCredentials = sqliteTable(
     credentialHash: text('credential_hash').notNull().unique(),
     encryptedClaims: text('encrypted_claims').notNull(),
     proofType: text('proof_type', {
-      enum: [
-        'Ed25519Signature2020',
-        'BbsBlsSignature2020',
-        'JsonWebSignature2020',
-      ],
+      enum: ['Ed25519Signature2020', 'BbsBlsSignature2020', 'JsonWebSignature2020'],
     }).notNull(),
     status: text('status', {
       enum: ['active', 'suspended', 'revoked', 'expired'],
@@ -261,6 +268,8 @@ export const verifiableCredentials = sqliteTable(
     subjectIdx: index('idx_vc_subject_did').on(table.subjectDid),
     issuerIdx: index('idx_vc_issuer_did').on(table.issuerDid),
     statusIdx: index('idx_vc_status').on(table.status),
+    issuerDidFormatCheck: check('ck_vc_issuer_did_format', sql`${table.issuerDid} LIKE 'did:%'`),
+    subjectDidFormatCheck: check('ck_vc_subject_did_format', sql`${table.subjectDid} LIKE 'did:%'`),
     statusCheck: check(
       'ck_vc_status',
       sql`${table.status} IN ('active', 'suspended', 'revoked', 'expired')`
@@ -281,11 +290,8 @@ export const verifiableCredentials = sqliteTable(
       'ck_vc_dates',
       sql`${table.expirationDate} IS NULL OR ${table.expirationDate} > ${table.issuanceDate}`
     ),
-    versionCheck: check(
-      'ck_vc_version',
-      sql`${table.version} > 0`
-    ),
-  }),
+    versionCheck: check('ck_vc_version', sql`${table.version} > 0`),
+  })
 );
 
 /* ============================================================================
@@ -320,17 +326,19 @@ export const verifiablePresentations = sqliteTable(
     userIdx: index('idx_vp_user').on(table.userId),
     verifierIdx: index('idx_vp_verifier').on(table.verifierDid),
     statusIdx: index('idx_vp_status').on(table.status),
-    statusCheck: check(
-      'ck_vp_status',
-      sql`${table.status} IN ('verified', 'rejected', 'expired')`
+    verifierDidFormatCheck: check(
+      'ck_vp_verifier_did_format',
+      sql`${table.verifierDid} LIKE 'did:%'`
     ),
+    statusCheck: check('ck_vp_status', sql`${table.status} IN ('verified', 'rejected', 'expired')`),
     verifiedStateCheck: check(
       'ck_vp_verified_state',
       sql`${table.status} != 'verified' OR ${table.verifiedAt} IS NOT NULL`
     ),
-    versionCheck: check(
-      'ck_vp_version',
-      sql`${table.version} > 0`
+    verifiedAfterSubmittedCheck: check(
+      'ck_vp_verified_after_submitted',
+      sql`${table.verifiedAt} IS NULL OR ${table.verifiedAt} >= ${table.submittedAt}`
     ),
-  }),
+    versionCheck: check('ck_vp_version', sql`${table.version} > 0`),
+  })
 );

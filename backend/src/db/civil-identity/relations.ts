@@ -4,6 +4,18 @@ import { users } from '../user/tables';
 
 /**
  * ============================================================================
+ * CIVIL-IDENTITY RELATIONS
+ * ============================================================================
+ * ARCHITECTURAL NOTE:
+ * Navigation from users to civil-identity entities is intentionally one-directional
+ * (child → parent only), per Section 05 boundary isolation matrix.
+ * Direct queries on civil-identity tables should be executed with { with: { user: true } }
+ * instead of querying bidirectionally from users.
+ * ============================================================================
+ */
+
+/**
+ * ============================================================================
  * CITIZENS RELATIONS
  * ============================================================================
  */

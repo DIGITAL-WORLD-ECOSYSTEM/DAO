@@ -1,11 +1,4 @@
-import {
-  sqliteTable,
-  text,
-  integer,
-  index,
-  uniqueIndex,
-  check,
-} from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, index, uniqueIndex, check } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
 import { users } from '../user/tables';
@@ -103,10 +96,7 @@ export const citizens = sqliteTable(
       `
     ),
 
-    versionCheck: check(
-      'ck_citizens_version',
-      sql`${table.version} > 0`
-    ),
+    versionCheck: check('ck_citizens_version', sql`${table.version} > 0`),
   })
 );
 
@@ -204,10 +194,7 @@ export const identityDocuments = sqliteTable(
       `
     ),
 
-    versionCheck: check(
-      'ck_identity_docs_version',
-      sql`${table.version} > 0`
-    ),
+    versionCheck: check('ck_identity_docs_version', sql`${table.version} > 0`),
   })
 );
 
@@ -306,9 +293,6 @@ export const kycVerifications = sqliteTable(
       `
     ),
 
-    versionCheck: check(
-      'ck_kyc_verifications_version',
-      sql`${table.version} > 0`
-    ),
+    versionCheck: check('ck_kyc_verifications_version', sql`${table.version} > 0`),
   })
 );
