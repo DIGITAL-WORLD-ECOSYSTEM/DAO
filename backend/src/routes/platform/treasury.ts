@@ -162,13 +162,41 @@ app.get('/analytics', async (c) => {
 
 app.get('/citizen/:citizenId/ledger', async (c) => {
   const citizenId = c.req.param('citizenId');
+
+  const normalizedTx = CONSOLIDATED_REPORT_TRANSACTIONS.map((tx) => ({
+    ...tx,
+    risk_score: (tx as any).risk_score || { level: 'low', score: 0 },
+    documents: (tx as any).documents || [],
+    ai_flags: (tx as any).ai_flags || [],
+  }));
+
+  const profileData = {
+    associate: {
+      id: citizenId || '2024001',
+      name: CLIENT_ACCOUNT_PROFILE.client_name,
+      cpf: CLIENT_ACCOUNT_PROFILE.cpf,
+      rg: '24.891.002-9',
+      status: 'active' as const,
+      category: 'Associado',
+    },
+    contract: {
+      contractedAmount: CLIENT_ACCOUNT_PROFILE.contract_total / 100, // 65000
+      paidAmount: CLIENT_ACCOUNT_PROFILE.total_paid / 100,         // 35823
+      openAmount: CLIENT_ACCOUNT_PROFILE.outstanding_balance / 100, // 29177
+      status: 'Em dia',
+    },
+    obligations: {
+      nextDueDate: '15/09/2026',
+      nextDueAmount: 800,
+      pendingInstallments: 36,
+      overdueInstallments: 0,
+    },
+    transactions: normalizedTx,
+  };
+
   return c.json({
     success: true,
-    data: {
-      citizenId,
-      profile: CLIENT_ACCOUNT_PROFILE,
-      ledger: CONSOLIDATED_REPORT_TRANSACTIONS,
-    },
+    data: profileData,
   });
 });
 

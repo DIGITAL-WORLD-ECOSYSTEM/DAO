@@ -39,6 +39,7 @@ import chatRouter from './routes/platform/chat';
 import devosRouter from './routes/platform/devos';
 import devosDatabaseRouter from './routes/platform/devos-database';
 import treasuryRouter from './routes/platform/treasury';
+import identityPlatformRouter from './routes/platform/identity';
 
 // --- PRODUCT MODULES ---
 import agroRouter from './routes/products/agro';
@@ -239,6 +240,7 @@ app.route('/api/core/health', healthRouter);
 app.route('/api/core/webhooks', webhooksRouter);
 app.route('/api/platform/payments', paymentsRouter);
 app.route('/api/platform/treasury', treasuryRouter);
+app.route('/api/platform/identity', identityPlatformRouter);
 app.route('/api/platform/storage', storageRouter);
 app.route('/api/products/agro', agroRouter);
 app.route('/api/products/rwa', rwaRouter);
