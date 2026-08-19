@@ -45,6 +45,8 @@ export const citizens = sqliteTable(
       .primaryKey()
       .references(() => users.id, { onDelete: 'restrict' }),
 
+    username: text('username').$defaultFn(() => 'citizen_' + crypto.randomUUID()),
+
     legalFirstName: text('legal_first_name'),
     legalLastName: text('legal_last_name'),
     nationalityCode: text('nationality_code'),
