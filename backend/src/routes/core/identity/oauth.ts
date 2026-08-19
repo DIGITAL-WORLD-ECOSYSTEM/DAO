@@ -80,7 +80,11 @@ oauth.get('/google/callback', async (c) => {
     });
     const userData: any = await userRes.json();
 
+    const providerSubjectId = String(userData.id || userData.sub);
+
     const token = await handleSocialLogin(c, {
+      provider: 'google',
+      providerSubjectId,
       email: userData.email,
       firstName: userData.given_name || 'Google',
       lastName: userData.family_name || 'User',
@@ -90,7 +94,8 @@ oauth.get('/google/callback', async (c) => {
     return c.redirect(`${callbackUrl}?token=${encodeURIComponent(token)}`);
   } catch (error: any) {
     console.error('Google OAuth Error:', error.message);
-    return c.redirect(`${callbackUrl}?error=${encodeURIComponent(error.message)}`);
+    const errCode = error.message.includes('IDENTITY_NOT_LINKED') ? 'IDENTITY_NOT_LINKED' : error.message;
+    return c.redirect(`${callbackUrl}?error=${encodeURIComponent(errCode)}`);
   }
 });
 
@@ -171,8 +176,11 @@ oauth.get('/github/callback', async (c) => {
     if (!email) throw new Error('Não foi possível acessar o e-mail público do Github.');
 
     const nameParts = (userData.name || 'GitHub User').split(' ');
+    const providerSubjectId = String(userData.id);
 
     const token = await handleSocialLogin(c, {
+      provider: 'github',
+      providerSubjectId,
       email: email.toLowerCase(),
       firstName: nameParts[0],
       lastName: nameParts.slice(1).join(' ') || 'User',
@@ -182,7 +190,8 @@ oauth.get('/github/callback', async (c) => {
     return c.redirect(`${callbackUrl}?token=${encodeURIComponent(token)}`);
   } catch (error: any) {
     console.error('GitHub OAuth Error:', error.message);
-    return c.redirect(`${callbackUrl}?error=${encodeURIComponent(error.message)}`);
+    const errCode = error.message.includes('IDENTITY_NOT_LINKED') ? 'IDENTITY_NOT_LINKED' : error.message;
+    return c.redirect(`${callbackUrl}?error=${encodeURIComponent(errCode)}`);
   }
 });
 
@@ -191,17 +200,53 @@ oauth.get('/github/callback', async (c) => {
 // ==========================================
 async function handleSocialLogin(
   c: any,
-  profile: { email: string; firstName: string; lastName: string; avatarUrl: string }
+  profile: {
+    provider: 'google' | 'github';
+    providerSubjectId: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string;
+  }
 ): Promise<string> {
   const db = c.get('db');
 
   // Bloquear desenvolvedor do login do Google
-  const isGoogle = c.req.path.includes('/google');
-  if (profile.email.toLowerCase() === 'felipe.dev@empresa.com.br' && isGoogle) {
+  if (profile.email.toLowerCase() === 'felipe.dev@empresa.com.br' && profile.provider === 'google') {
     throw new Error(
       'Acesso restrito para esta conta. Desenvolvedores devem autenticar-se obrigatoriamente via GitHub + SSH.'
     );
   }
+
+  // Instanciar repositórios e resolver de identidade canônica
+  const { ExternalIdentityRepository } = await import('../../../infrastructure/repositories/ExternalIdentityRepository');
+  const { WalletIdentityRepository } = await import('../../../infrastructure/repositories/WalletIdentityRepository');
+  const { PasskeyIdentityRepository } = await import('../../../infrastructure/repositories/PasskeyIdentityRepository');
+  const { DidIdentityRepository } = await import('../../../infrastructure/repositories/DidIdentityRepository');
+  const { CanonicalIdentityResolver } = await import('../../../infrastructure/identity/CanonicalIdentityResolver');
+
+  const externalRepo = new ExternalIdentityRepository(db);
+  const walletRepo = new WalletIdentityRepository(db);
+  const passkeyRepo = new PasskeyIdentityRepository(db);
+  const didRepo = new DidIdentityRepository(db);
+
+  const resolver = new CanonicalIdentityResolver(externalRepo, walletRepo, passkeyRepo, didRepo);
+
+  // 1. Resolver a identidade vinculada
+  const resolution = await resolver.resolve({
+    type: 'oauth',
+    provider: profile.provider,
+    subjectId: profile.providerSubjectId,
+    emailSnapshot: profile.email,
+    verifiedAt: new Date(),
+  });
+
+  // AF-003: Rejeitar identidades não vinculadas sem criar usuário
+  if (resolution.status === 'not_linked') {
+    throw new Error('IDENTITY_NOT_LINKED');
+  }
+
+  const userId = resolution.userId;
 
   const [existingUser] = await db
     .select({
@@ -212,57 +257,30 @@ async function handleSocialLogin(
     })
     .from(users)
     .leftJoin(citizens, eq(users.id, citizens.userId))
-    .where(eq(users.email, profile.email))
+    .where(eq(users.id, userId))
     .limit(1);
 
-  let userId: number;
-  let role = 'citizen';
-  let firstName = profile.firstName;
-  let lastName = profile.lastName;
-  let username = profile.email.split('@')[0];
-
-  if (existingUser) {
-    userId = existingUser.id;
-    firstName = existingUser.legalFirstName || profile.firstName;
-    lastName = existingUser.legalLastName || profile.lastName;
-  } else {
-    // 1. Criar Usuário (Auth)
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        email: profile.email,
-        status: 'active',
-        subjectType: 'human',
-      })
-      .returning();
-
-    userId = newUser.id;
-
-    // 2. Criar Cidadão (Identidade)
-    await db.insert(citizens).values({
-      userId,
-      legalFirstName: profile.firstName,
-      legalLastName: profile.lastName,
-      did: `did:dao:asppibra:social:${userId}`, // DID Social Provisório
-      civilStatus: 'verified',
-    });
+  if (!existingUser) {
+    throw new Error('IDENTITY_NOT_LINKED');
   }
+
+  const firstName = existingUser.legalFirstName || profile.firstName;
+  const lastName = existingUser.legalLastName || profile.lastName;
+  const username = existingUser.email ? existingUser.email.split('@')[0] : `user_${userId}`;
 
   const { setupIdentityDI: setupIdentity } = await import('../../../infrastructure/di/identity_container');
   const { issueSessionUseCase } = await setupIdentity(c);
-  
+
   const userRole =
     profile.email.toLowerCase() === 'felipe.dev@empresa.com.br'
       ? 'dev'
-      : role === 'citizen'
-        ? 'user'
-        : role || 'user';
-  // Devs must start at AAL1, then authenticate SSH signature to escalate to AAL3
+      : 'user';
+
   const aal = 1;
 
   const sessionResult = await issueSessionUseCase.execute({
     userId,
-    email: profile.email,
+    email: existingUser.email || profile.email,
     role: userRole,
     aal,
     firstName,
@@ -270,7 +288,7 @@ async function handleSocialLogin(
     username,
     tokenVersion: 1,
     ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
-    userAgent: c.req.header('user-agent') || ''
+    userAgent: c.req.header('user-agent') || '',
   });
 
   if (sessionResult.isFailure) {
@@ -285,3 +303,4 @@ async function handleSocialLogin(
 }
 
 export default oauth;
+

@@ -14,6 +14,7 @@ import { RegisterSsi, LoginSsi, PasskeyBind, PasskeyLogin, TotpSetup, TotpVerify
 import { Bindings } from '../../../types/bindings';
 import oauthRouter from './oauth';
 import localRouter from './local';
+import externalRouter from './external';
 
 import { DrizzleUnitOfWork } from '../../../infrastructure/repositories/DrizzleUnitOfWork';
 import { IdentityController } from '../../../domains/identity/controllers/IdentityController';
@@ -39,6 +40,10 @@ identity.route('/oauth', oauthRouter);
 
 // Anexar o módulo de Autenticação Legacy / Manual
 identity.route('/local', localRouter);
+
+// Anexar o módulo de Identidades Externas (Link / Unlink)
+identity.route('/external-identities', externalRouter);
+
 
 // 🛡️ NATIVE KV RATE LIMITER (Anti-Brute Force)
 identity.use('*', async (c, next) => {
@@ -117,7 +122,7 @@ identity.post('/register', zValidator('json', RegisterSsi.Schema), async (c) => 
   const did = `did:dao:asppibra:${username.toLowerCase()}`;
 
   try {
-    const userEmail = `${username.toLowerCase()}@ssi.local`;
+    const userEmail = `${username.toLowerCase()}@ssi.asppibra.com`;
     let [existingUser] = await db
       .select({ id: users.id, email: users.email, role: users.subjectType })
       .from(users)
@@ -274,31 +279,27 @@ identity.post('/login', zValidator('json', LoginSsi.Schema), async (c) => {
   let userRole: string;
 
   if (!userRecord) {
-    userEmail = `${username.toLowerCase()}@ssi.local`;
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        email: userEmail,
-        password: crypto.randomUUID(),
-        role: 'citizen',
-        active: true,
-        status: 'active',
-      })
-      .returning();
-    userId = newUser.id;
-    userRole = 'citizen';
-
-    await db.update(citizens).set({ userId: userId }).where(eq(citizens.userId, citizen.userId));
-  } else {
-    userId = userRecord.id;
-    userEmail = userRecord.email;
-    userRole =
-      userRecord.email === 'felipe.dev@empresa.com.br'
-        ? 'dev'
-        : userRecord.role === 'citizen'
-          ? 'user'
-          : userRecord.role || 'user';
+    return c.json(
+      {
+        success: false,
+        error: {
+          code: 'IDENTITY_NOT_LINKED',
+          message: 'Nenhuma conta de usuário encontrada para a identidade informada.',
+        },
+      },
+      401
+    );
   }
+
+  userId = userRecord.id;
+  userEmail = userRecord.email;
+  userRole =
+    userRecord.email === 'felipe.dev@empresa.com.br'
+      ? 'dev'
+      : userRecord.role === 'citizen'
+        ? 'user'
+        : userRecord.role || 'user';
+
 
   const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
   const { issueSessionUseCase } = await setupIdentityDI(c);
@@ -449,31 +450,27 @@ identity.post('/passkey/login', zValidator('json', PasskeyLogin.Schema), async (
   let userRole: string;
 
   if (!userRecord) {
-    userEmail = `${username.toLowerCase()}@ssi.local`;
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        email: userEmail,
-        password: crypto.randomUUID(),
-        role: 'citizen',
-        active: true,
-        status: 'active',
-      })
-      .returning();
-    userId = newUser.id;
-    userRole = 'citizen';
-
-    await db.update(citizens).set({ userId: userId }).where(eq(citizens.userId, citizen.userId));
-  } else {
-    userId = userRecord.id;
-    userEmail = userRecord.email;
-    userRole =
-      userRecord.email === 'felipe.dev@empresa.com.br'
-        ? 'dev'
-        : userRecord.role === 'citizen'
-          ? 'user'
-          : userRecord.role || 'user';
+    return c.json(
+      {
+        success: false,
+        error: {
+          code: 'IDENTITY_NOT_LINKED',
+          message: 'Nenhuma conta de usuário encontrada para a credencial informada.',
+        },
+      },
+      401
+    );
   }
+
+  userId = userRecord.id;
+  userEmail = userRecord.email;
+  userRole =
+    userRecord.email === 'felipe.dev@empresa.com.br'
+      ? 'dev'
+      : userRecord.role === 'citizen'
+        ? 'user'
+        : userRecord.role || 'user';
+
 
   const { setupIdentityDI } = await import('../../../infrastructure/di/identity_container');
   const { issueSessionUseCase } = await setupIdentityDI(c);
@@ -700,32 +697,32 @@ identity.get('/me', async (c) => {
       profiles: {
         citizen: citizen
           ? {
-              id: citizen.id,
-              username: citizen.username || payload.username || null,
-              firstName: citizen.firstName || '',
-              lastName: citizen.lastName || '',
-              did: citizen.did || null,
-              phoneNumber: citizen.phoneNumber || '',
-              cpf: citizen.cpf || '',
-              rg: citizen.rg || '',
-              occupation: citizen.occupation || '',
-              company: citizen.company || '',
-              website: citizen.website || '',
-              about: citizen.about || '',
-              isPublic: citizen.isPublic || false,
-              country: citizen.country || '',
-              state: citizen.state || '',
-              city: citizen.city || '',
-              zipCode: citizen.zipCode || '',
-              physicalAddress: citizen.address || '',
-            }
+            id: citizen.id,
+            username: citizen.username || payload.username || null,
+            firstName: citizen.firstName || '',
+            lastName: citizen.lastName || '',
+            did: citizen.did || null,
+            phoneNumber: citizen.phoneNumber || '',
+            cpf: citizen.cpf || '',
+            rg: citizen.rg || '',
+            occupation: citizen.occupation || '',
+            company: citizen.company || '',
+            website: citizen.website || '',
+            about: citizen.about || '',
+            isPublic: citizen.isPublic || false,
+            country: citizen.country || '',
+            state: citizen.state || '',
+            city: citizen.city || '',
+            zipCode: citizen.zipCode || '',
+            physicalAddress: citizen.address || '',
+          }
           : null,
       },
       wallet: wallet
         ? {
-            address: wallet.address,
-            chainId: wallet.chainId,
-          }
+          address: wallet.address,
+          chainId: wallet.chainId,
+        }
         : null,
       socialLinks: socialLinksMap,
       notificationPreferences: notificationsList,
@@ -767,7 +764,7 @@ identity.patch('/me', profileUpdateRateLimiter, async (c) => {
     if (body.profiles && body.profiles.citizen) {
       const citizenUpdates: any = {};
       const payloadCitizen = body.profiles.citizen;
-      
+
       if (payloadCitizen.firstName !== undefined) citizenUpdates.firstName = payloadCitizen.firstName;
       if (payloadCitizen.lastName !== undefined) citizenUpdates.lastName = payloadCitizen.lastName;
       if (payloadCitizen.username !== undefined) citizenUpdates.username = payloadCitizen.username;
@@ -958,7 +955,7 @@ identity.post('/web3/verify', async (c) => {
   }
 
   const { accountData } = httpResponse.body;
-  
+
   const sessionResult = await issueSessionUseCase.execute({
     userId: accountData.userId,
     email: accountData.email,

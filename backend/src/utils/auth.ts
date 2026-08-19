@@ -58,9 +58,9 @@ export async function getJwtSigningKeyForKid(kid: string, env: any): Promise<Cry
 }
 
 export async function verifySession(
-  c: Context, 
-  token: string, 
-  sessionRepository: any, 
+  c: Context,
+  token: string,
+  sessionRepository: any,
   userRepository: any
 ): Promise<any> {
   let kid = 'v1';
@@ -103,7 +103,7 @@ export async function verifySession(
   if (session.revoked) throw new Error('Sessão foi revogada.');
   const expiresAtMs = session.expiresAt instanceof Date ? session.expiresAt.getTime() : Number(session.expiresAt);
   if (Date.now() > expiresAtMs) throw new Error('Sessão expirada.');
-  
+
   if (session.aal !== null && session.aal !== undefined) {
     if ((payload.aal as number) > session.aal) {
       throw new Error('MFA/AAL verification mismatch.');
