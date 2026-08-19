@@ -109,9 +109,16 @@ externalRoutes.post('/link', async (c) => {
   const uow = {
     execute: async <T>(fn: (txCtx: any) => Promise<T>): Promise<T> => {
       if (typeof db.transaction === 'function') {
-        return db.transaction(async (tx: any) => {
-          return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: tx });
-        });
+        try {
+          return await db.transaction(async (tx: any) => {
+            return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: tx });
+          });
+        } catch (err: any) {
+          if (err?.message?.includes('not supported by D1 driver')) {
+            return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: db });
+          }
+          throw err;
+        }
       }
       return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: db });
     },
@@ -206,9 +213,16 @@ externalRoutes.post('/unlink', async (c) => {
   const uow = {
     execute: async <T>(fn: (txCtx: any) => Promise<T>): Promise<T> => {
       if (typeof db.transaction === 'function') {
-        return db.transaction(async (tx: any) => {
-          return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: tx });
-        });
+        try {
+          return await db.transaction(async (tx: any) => {
+            return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: tx });
+          });
+        } catch (err: any) {
+          if (err?.message?.includes('not supported by D1 driver')) {
+            return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: db });
+          }
+          throw err;
+        }
       }
       return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: db });
     },

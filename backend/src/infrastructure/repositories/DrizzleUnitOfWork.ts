@@ -62,17 +62,19 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
             tx.rollback();
           }
         });
+        if (result) return result;
       } catch (err: any) {
+        const errorMsg = err?.message || err?.toString() || '';
+        if (errorMsg.includes('not supported by D1 driver') || errorMsg.includes('Transactions are not supported')) {
+          const factory = new DrizzleRepositoryFactory(this.db);
+          return await work(factory);
+        }
         const failureResult = result as Result<T> | null;
         if (failureResult && failureResult.isFailure) {
           return failureResult;
         }
-        return Result.fail(err?.message || err?.toString() || 'Transaction aborted');
+        return Result.fail(errorMsg || 'Transaction aborted');
       }
-      if (!result) {
-        return Result.fail('Transaction finished without result');
-      }
-      return result;
     }
 
     const factory = new DrizzleRepositoryFactory(this.db);
