@@ -1,6 +1,7 @@
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { users, userProfiles } from '../../db/user/tables';
 import { citizens } from '../../db/civil-identity/tables';
+import { userAuthenticators, passwordCredentials } from '../../db/authentication/tables';
 import { IAccountRepository } from '../../application/ports/output/IAccountRepository';
 import { AccountMapper } from '../mappers/AccountMapper';
 import { Result } from '../../shared/kernel/Result';
@@ -15,7 +16,7 @@ export class DrizzleAccountRepository implements IAccountRepository {
         .select({
           id: users.id,
           email: users.email,
-          password: users.email, // fallback for interface compatibility
+          password: passwordCredentials.passwordHash,
           role: users.subjectType,
           active: users.status,
           status: users.status,
@@ -27,6 +28,14 @@ export class DrizzleAccountRepository implements IAccountRepository {
         .from(users)
         .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
         .leftJoin(citizens, eq(users.id, citizens.userId))
+        .leftJoin(
+          userAuthenticators,
+          and(eq(users.id, userAuthenticators.userId), eq(userAuthenticators.type, 'password'))
+        )
+        .leftJoin(
+          passwordCredentials,
+          eq(userAuthenticators.id, passwordCredentials.authenticatorId)
+        )
         .where(eq(users.email, email))
         .limit(1);
 
@@ -57,7 +66,7 @@ export class DrizzleAccountRepository implements IAccountRepository {
         .select({
           id: users.id,
           email: users.email,
-          password: users.email, // fallback for interface compatibility
+          password: passwordCredentials.passwordHash,
           role: users.subjectType,
           active: users.status,
           status: users.status,
@@ -69,6 +78,14 @@ export class DrizzleAccountRepository implements IAccountRepository {
         .from(users)
         .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
         .leftJoin(citizens, eq(users.id, citizens.userId))
+        .leftJoin(
+          userAuthenticators,
+          and(eq(users.id, userAuthenticators.userId), eq(userAuthenticators.type, 'password'))
+        )
+        .leftJoin(
+          passwordCredentials,
+          eq(userAuthenticators.id, passwordCredentials.authenticatorId)
+        )
         .where(eq(users.id, id))
         .limit(1);
 
@@ -80,6 +97,7 @@ export class DrizzleAccountRepository implements IAccountRepository {
       const raw = {
         id: row.id ?? id,
         email: row.email ?? '',
+        password: row.password ?? '',
         role: row.role ?? 'human',
         active: row.active === 'active' || row.status === 'active' || row.active === true,
         status: row.status ?? 'active',
@@ -119,7 +137,6 @@ export class DrizzleAccountRepository implements IAccountRepository {
           .values({
             email: account.email,
             emailNormalized: account.email ? account.email.toLowerCase() : null,
-            password: '',
             subjectType,
             status: account.active ? 'active' : 'suspended',
           })
