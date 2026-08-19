@@ -71,31 +71,17 @@ localAuth.post('/register', zValidator('json', Register.Schema), async (c) => {
 
     if (httpResponse.status === 201 && httpResponse.body.accountData) {
       const { accountData } = httpResponse.body;
-      
-      const sessionResult = await issueSessionUseCase.execute({
-        ...accountData,
-        tokenVersion: 1,
-        ip: c.req.header('cf-connecting-ip') || '127.0.0.1',
-        userAgent: c.req.header('user-agent') || ''
-      });
-
-      if (sessionResult.isSuccess) {
-        const { accessToken, refreshToken } = sessionResult.getValue();
-        setSessionCookies(c, accessToken, refreshToken);
-
-        return c.json({
-          success: true,
-          message: httpResponse.body.message,
-          accessToken,
-          user: { 
-            id: accountData.userId, 
-            email: accountData.email,
-            firstName: accountData.firstName,
-            lastName: accountData.lastName,
-            role: accountData.role 
-          },
-        }, 201);
-      }
+      return c.json({
+        success: true,
+        message: httpResponse.body.message,
+        user: { 
+          id: accountData.userId, 
+          email: accountData.email,
+          firstName: accountData.firstName,
+          lastName: accountData.lastName,
+          role: accountData.role 
+        },
+      }, 201);
     }
     
     return c.json(httpResponse.body, httpResponse.status as ContentfulStatusCode);

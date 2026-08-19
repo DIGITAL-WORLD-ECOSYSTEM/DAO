@@ -67,15 +67,7 @@ export const signUp = async ({
   };
 
   try {
-    const res = await axios.post(endpoints.auth.signUp, params);
-
-    const { accessToken } = res.data;
-
-    if (!accessToken) {
-      throw new Error('Access token not found in response');
-    }
-
-    setSession(accessToken);
+    await axios.post(endpoints.auth.signUp, params);
   } catch (error) {
     console.error('Error during sign up:', error);
     throw error;

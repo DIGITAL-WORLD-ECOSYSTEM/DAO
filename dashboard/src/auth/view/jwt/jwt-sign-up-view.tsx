@@ -84,7 +84,6 @@ export function JwtSignUpView() {
         firstName: data.firstName,
         lastName: data.lastName,
       });
-      await checkUserSession?.();
       router.push(`/verify?email=${encodeURIComponent(data.email)}`);
     } catch (error) {
       console.error(error);
