@@ -29,11 +29,11 @@ export const CLIENT_ACCOUNT_PROFILE = {
   report_ref: '2026-07-PM4',
 };
 
-// 45 Transações Auditadas da Planilha Auditoria_ASPPIBRA_Andressa.xlsx
+// 45 Transações Auditadas da Planilha Auditoria_ASPPIBRA_Andressa.xlsx (Datas Estabilizadas ISO 8601)
 const CONSOLIDATED_REPORT_TRANSACTIONS = [
   {
     "id": "tx_001",
-    "created_at": "2023-08-08T10:00:00Z",
+    "created_at": "2023-08-08T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Nu Pagamentos",
@@ -51,7 +51,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_002",
-    "created_at": "2023-08-09T10:00:00Z",
+    "created_at": "2023-08-09T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Nu Pagamentos",
@@ -69,7 +69,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_003",
-    "created_at": "2023-09-21T10:00:00Z",
+    "created_at": "2023-09-21T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Nu Pagamentos",
@@ -87,7 +87,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_004",
-    "created_at": "2023-10-20T10:00:00Z",
+    "created_at": "2023-10-20T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Nu Pagamentos",
@@ -105,7 +105,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_005",
-    "created_at": "2023-11-21T10:00:00Z",
+    "created_at": "2023-11-21T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Nu Pagamentos",
@@ -123,7 +123,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_006",
-    "created_at": "2023-12-21T10:00:00Z",
+    "created_at": "2023-12-21T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Bradesco",
@@ -141,7 +141,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_007",
-    "created_at": "2023-12-22T10:00:00Z",
+    "created_at": "2023-12-22T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Itaú Unibanco",
@@ -159,7 +159,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_008",
-    "created_at": "2024-02-16T10:00:00Z",
+    "created_at": "2024-02-16T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Itaú Unibanco",
@@ -177,7 +177,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_009",
-    "created_at": "2024-03-11T10:00:00Z",
+    "created_at": "2024-03-11T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Itaú Unibanco",
@@ -195,7 +195,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_010",
-    "created_at": "2024-04-30T10:00:00Z",
+    "created_at": "2024-04-30T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Bradesco",
@@ -213,7 +213,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_011",
-    "created_at": "2024-04-30T10:00:00Z",
+    "created_at": "2024-04-30T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -231,7 +231,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_012",
-    "created_at": "2024-05-29T10:00:00Z",
+    "created_at": "2024-05-29T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -249,7 +249,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_013",
-    "created_at": "2024-06-24T10:00:00Z",
+    "created_at": "2024-06-24T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -267,7 +267,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_014",
-    "created_at": "2024-07-28T10:00:00Z",
+    "created_at": "2024-07-28T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -285,7 +285,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_015",
-    "created_at": "2024-09-06T10:00:00Z",
+    "created_at": "2024-09-06T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Itaú Unibanco",
@@ -303,7 +303,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_016",
-    "created_at": "2024-09-06T10:00:00Z",
+    "created_at": "2024-09-06T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Bradesco",
@@ -321,7 +321,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_017",
-    "created_at": "2024-10-09T10:00:00Z",
+    "created_at": "2024-10-09T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Bradesco",
@@ -339,7 +339,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_018",
-    "created_at": "2024-11-09T10:00:00Z",
+    "created_at": "2024-11-09T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -357,7 +357,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_019",
-    "created_at": "2024-12-18T10:00:00Z",
+    "created_at": "2024-12-18T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -375,7 +375,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_020",
-    "created_at": "2025-01-21T10:00:00Z",
+    "created_at": "2025-01-21T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -393,7 +393,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_021",
-    "created_at": "2025-01-21T10:00:00Z",
+    "created_at": "2025-01-21T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Bradesco",
@@ -411,7 +411,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_022",
-    "created_at": "2025-02-10T10:00:00Z",
+    "created_at": "2025-02-10T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Itaú Unibanco",
@@ -429,7 +429,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_023",
-    "created_at": "2025-03-19T10:00:00Z",
+    "created_at": "2025-03-19T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -447,7 +447,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_024",
-    "created_at": "2025-04-22T10:00:00Z",
+    "created_at": "2025-04-22T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Bradesco",
@@ -465,7 +465,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_025",
-    "created_at": "2025-04-30T10:00:00Z",
+    "created_at": "2025-04-30T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Bradesco",
@@ -483,7 +483,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_026",
-    "created_at": "2025-05-17T10:00:00Z",
+    "created_at": "2025-05-17T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -501,7 +501,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_027",
-    "created_at": "2025-06-17T10:00:00Z",
+    "created_at": "2025-06-17T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Banco Inter",
@@ -519,7 +519,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_028",
-    "created_at": "2025-06-17T10:00:00Z",
+    "created_at": "2025-06-17T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Mercado Pago",
     "destination_institution": "Itaú Unibanco",
@@ -537,7 +537,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_029",
-    "created_at": "2025-07-26T10:00:00Z",
+    "created_at": "2025-07-26T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Nu Pagamentos",
     "destination_institution": "Itaú Unibanco",
@@ -555,7 +555,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_030",
-    "created_at": "2025-07-26T10:00:00Z",
+    "created_at": "2025-07-26T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Nu Pagamentos",
     "destination_institution": "Banco Inter",
@@ -573,7 +573,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_031",
-    "created_at": "2025-08-15T10:00:00Z",
+    "created_at": "2025-08-15T12:00:00Z",
     "counterparty_name": "Sandro Alves de Amorim",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Banco Inter",
@@ -591,7 +591,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_032",
-    "created_at": "2025-10-13T10:00:00Z",
+    "created_at": "2025-10-13T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Santander",
@@ -609,7 +609,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_033",
-    "created_at": "2025-11-17T10:00:00Z",
+    "created_at": "2025-11-17T12:00:00Z",
     "counterparty_name": "ASPPIBRA",
     "origin_institution": "Mercado Pago (boleto Cora)",
     "destination_institution": "Cora SCFI",
@@ -627,7 +627,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_034",
-    "created_at": "2025-12-05T10:00:00Z",
+    "created_at": "2025-12-05T12:00:00Z",
     "counterparty_name": "ASPPIBRA",
     "origin_institution": "Nu Pagamentos",
     "destination_institution": "Cora SCFI",
@@ -645,7 +645,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_035",
-    "created_at": "2026-02-09T10:00:00Z",
+    "created_at": "2026-02-09T12:00:00Z",
     "counterparty_name": "ASPPIBRA",
     "origin_institution": "Nu Pagamentos",
     "destination_institution": "Cora SCFI",
@@ -663,7 +663,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_036",
-    "created_at": "2026-02-09T10:00:00Z",
+    "created_at": "2026-02-09T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Nu Pagamentos",
     "destination_institution": "Santander",
@@ -681,7 +681,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_037",
-    "created_at": "2026-03-08T10:00:00Z",
+    "created_at": "2026-03-08T12:00:00Z",
     "counterparty_name": "ASPPIBRA",
     "origin_institution": "Nu Pagamentos",
     "destination_institution": "Cora SCFI",
@@ -699,7 +699,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_038",
-    "created_at": "2026-03-10T10:00:00Z",
+    "created_at": "2026-03-10T12:00:00Z",
     "counterparty_name": "ASPPIBRA",
     "origin_institution": "Itaú Unibanco",
     "destination_institution": "Cora SCFI",
@@ -717,7 +717,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_039",
-    "created_at": "2026-03-15T10:00:00Z",
+    "created_at": "2026-03-15T12:00:00Z",
     "counterparty_name": "ASPPIBRA",
     "origin_institution": "Banco Inter",
     "destination_institution": "Cora SCFI",
@@ -735,7 +735,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_040",
-    "created_at": "2026-03-27T10:00:00Z",
+    "created_at": "2026-03-27T12:00:00Z",
     "counterparty_name": "Paulo Roberto Batista Ferreira",
     "origin_institution": "Banco Inter",
     "destination_institution": "Santander",
@@ -753,7 +753,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_041",
-    "created_at": "2024-01-15T10:00:00Z",
+    "created_at": "2024-01-15T12:00:00Z",
     "counterparty_name": "Desconhecido",
     "origin_institution": "N/A",
     "destination_institution": "N/A",
@@ -771,7 +771,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_042",
-    "created_at": "2024-08-15T10:00:00Z",
+    "created_at": "2024-08-15T12:00:00Z",
     "counterparty_name": "Desconhecido",
     "origin_institution": "N/A",
     "destination_institution": "N/A",
@@ -789,7 +789,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_043",
-    "created_at": "2025-09-15T10:00:00Z",
+    "created_at": "2025-09-15T12:00:00Z",
     "counterparty_name": "Desconhecido",
     "origin_institution": "N/A",
     "destination_institution": "N/A",
@@ -807,7 +807,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_044",
-    "created_at": "2026-01-15T10:00:00Z",
+    "created_at": "2026-01-15T12:00:00Z",
     "counterparty_name": "Desconhecido",
     "origin_institution": "N/A",
     "destination_institution": "N/A",
@@ -825,7 +825,7 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   },
   {
     "id": "tx_045",
-    "created_at": "2026-04-15T10:00:00Z",
+    "created_at": "2026-04-15T12:00:00Z",
     "counterparty_name": "Desconhecido",
     "origin_institution": "N/A",
     "destination_institution": "N/A",
@@ -866,11 +866,11 @@ app.get('/analytics', async (c) => {
         contractTotal = totalPaid + outstandingBalance;
       }
 
-      // 2. Consulta as 45 transações gravadas no D1 diretamente
+      // 2. Consulta as 45 transações gravadas no D1 diretamente (Ordenadas por Data)
       const dbTx = await c.env.DB.prepare(`
         SELECT 
           ft.id,
-          datetime(ft.created_at, 'unixepoch') as created_at,
+          strftime('%Y-%m-%dT%H:%M:%SZ', ft.created_at, 'unixepoch') as created_at,
           ft.description,
           ft.category,
           ft.status,
@@ -878,7 +878,7 @@ app.get('/analytics', async (c) => {
         FROM financial_transactions ft
         LEFT JOIN financial_ledger_entries fle ON ft.id = fle.transaction_id
         WHERE ft.user_id = 10
-        ORDER BY ft.id ASC
+        ORDER BY ft.created_at ASC, ft.id ASC
       `).all<{
         id: number;
         created_at: string;
@@ -895,7 +895,7 @@ app.get('/analytics', async (c) => {
           return {
             ...fallbackTx,
             id: `tx_${String(index + 1).padStart(3, '0')}`,
-            created_at: row.created_at ? `${row.created_at}Z` : fallbackTx.created_at,
+            created_at: row.created_at || fallbackTx.created_at,
             amount: valInReais,
             base_amount: valInReais,
             category: row.category || fallbackTx.category,
@@ -1051,11 +1051,11 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
         }
       }
 
-      // 3. Transações Financeiras Diretas do D1
+      // 3. Transações Financeiras Diretas do D1 (Ordenadas por Data)
       const dbTx = await c.env.DB.prepare(`
         SELECT 
           ft.id,
-          datetime(ft.created_at, 'unixepoch') as created_at,
+          strftime('%Y-%m-%dT%H:%M:%SZ', ft.created_at, 'unixepoch') as created_at,
           ft.description,
           ft.category,
           ft.status,
@@ -1063,7 +1063,7 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
         FROM financial_transactions ft
         LEFT JOIN financial_ledger_entries fle ON ft.id = fle.transaction_id
         WHERE ft.user_id = 10
-        ORDER BY ft.id ASC
+        ORDER BY ft.created_at ASC, ft.id ASC
       `).all<{
         id: number;
         created_at: string;
@@ -1080,7 +1080,7 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
           return {
             ...fallbackTx,
             id: `tx_${String(index + 1).padStart(3, '0')}`,
-            created_at: row.created_at ? `${row.created_at}Z` : fallbackTx.created_at,
+            created_at: row.created_at || fallbackTx.created_at,
             amount: valInReais,
             base_amount: valInReais,
             category: row.category || fallbackTx.category,

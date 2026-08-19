@@ -45,15 +45,26 @@ export function FinancialHistoryView() {
 
   const availableYears = transactionYears.length > 0 ? ['Todos', ...transactionYears] : ['Todos'];
 
-  const dataFiltered = profileToRender.transactions.filter((tx: any) => {
+  const dataFiltered = profileToRender.transactions
+    .filter((tx: any) => {
+      const txYear = tx.created_at ? tx.created_at.substring(0, 4) : '';
+      const matchesYear = selectedYear === 'Todos' || txYear === selectedYear;
+
       const searchLower = searchQuery.toLowerCase();
-      return (
+      const matchesSearch =
+        !searchQuery ||
         tx.counterparty_name?.toLowerCase().includes(searchLower) ||
         tx.origin_institution?.toLowerCase().includes(searchLower) ||
         tx.destination_institution?.toLowerCase().includes(searchLower) ||
         tx.category?.toLowerCase().includes(searchLower) ||
-        tx.payment_method?.toLowerCase().includes(searchLower)
-      );
+        tx.payment_method?.toLowerCase().includes(searchLower);
+
+      return matchesYear && matchesSearch;
+    })
+    .sort((a: any, b: any) => {
+      const timeA = new Date(a.created_at).getTime();
+      const timeB = new Date(b.created_at).getTime();
+      return timeA - timeB;
     });
 
   return (
