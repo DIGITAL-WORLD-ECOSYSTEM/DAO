@@ -105,9 +105,15 @@ const nextConfig: NextConfig = {
     },
   },
   
-  // ✅ REDIRECIONAMENTOS 301 — SEO Preservado: /post → /news
+  // ✅ REDIRECIONAMENTOS 301/307 — SEO Preservado & Centralização no Dashboard
   async redirects() {
+    const dashboardUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://app.asppibra.com';
     return [
+      {
+        source: '/login',
+        destination: `${dashboardUrl}/login`,
+        permanent: false, // 307 - Redirecionamento temporário para o Dashboard
+      },
       {
         source: '/post',
         destination: '/news',

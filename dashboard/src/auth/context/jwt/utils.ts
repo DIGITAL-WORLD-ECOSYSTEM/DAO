@@ -70,12 +70,17 @@ export function tokenExpired(exp: number) {
 
 export async function setSession(accessToken: string | null) {
   try {
+    const domainAttr =
+      typeof window !== 'undefined' && window.location.hostname.includes('asppibra.com')
+        ? '; domain=.asppibra.com'
+        : '';
+
     if (accessToken) {
-      // 1. Salvar no LocalStorage (Compatível com Frontend)
+      // 1. Salvar no LocalStorage
       localStorage.setItem(JWT_STORAGE_KEY, accessToken);
 
-      // 2. Salvar no Cookie (Para o Middleware do Next.js)
-      document.cookie = `daoAccessToken=${accessToken}; path=/; domain=.asppibra.com; max-age=86400; SameSite=Lax`;
+      // 2. Salvar no Cookie
+      document.cookie = `daoAccessToken=${accessToken}; path=/${domainAttr}; max-age=86400; SameSite=Lax`;
 
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -87,8 +92,7 @@ export async function setSession(accessToken: string | null) {
     } else {
       // 3. Limpar Tudo no Logout
       localStorage.removeItem(JWT_STORAGE_KEY);
-      document.cookie =
-        'daoAccessToken=; path=/; domain=.asppibra.com; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax';
+      document.cookie = `daoAccessToken=; path=/${domainAttr}; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax`;
       delete axios.defaults.headers.common.Authorization;
     }
   } catch (error) {

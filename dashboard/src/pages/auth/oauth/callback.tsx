@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { paths } from 'src/routes/paths';
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/global-config';
@@ -15,18 +16,22 @@ export default function OAuthCallbackPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    const error = searchParams.get('error');
+    const handleCallback = async () => {
+      const token = searchParams.get('token');
+      const error = searchParams.get('error');
 
-    if (token) {
-      setSession(token);
-      window.location.href = CONFIG.auth.redirectPath;
-    } else if (error) {
-      console.error('OAuth Error:', error);
-      router.replace('/login');
-    } else {
-      router.replace('/login');
-    }
+      if (token) {
+        await setSession(token);
+        window.location.href = CONFIG.auth.redirectPath;
+      } else if (error) {
+        console.error('OAuth Error:', error);
+        router.replace(paths.auth.jwt.signIn);
+      } else {
+        router.replace(paths.auth.jwt.signIn);
+      }
+    };
+
+    handleCallback();
   }, [router, searchParams]);
 
   return <SplashScreen />;
