@@ -183,7 +183,7 @@ function FinancialTransactionsTableRow({ row }: FinancialTransactionsTableRowPro
         }}
       >
         <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
-          {isOutbound || isAudit ? '-' : '+'} {fCurrency(row.amount / 100)}
+          {isOutbound || isAudit ? '-' : '+'} {fCurrency(row.amount)}
         </Typography>
       </TableCell>
 
