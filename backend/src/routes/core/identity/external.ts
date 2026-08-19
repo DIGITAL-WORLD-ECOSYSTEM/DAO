@@ -114,7 +114,7 @@ externalRoutes.post('/link', async (c) => {
             return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: tx });
           });
         } catch (err: any) {
-          if (err?.message?.includes('not supported by D1 driver')) {
+          if (!err || err?.message?.toLowerCase()?.includes('begin') || err?.message?.includes('not supported by D1 driver') || err?.message?.includes('D1')) {
             return fn({ transactionId: crypto.randomUUID(), isScoped: true, nativeTx: db });
           }
           throw err;

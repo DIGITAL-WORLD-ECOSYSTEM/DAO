@@ -53,8 +53,10 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
   async execute<T>(work: (factory: IRepositoryFactory) => Promise<Result<T>>): Promise<Result<T>> {
     if (typeof this.db?.transaction === 'function') {
       let result: Result<T> | null = null;
+      let workStarted = false;
       try {
         await this.db.transaction(async (tx: any) => {
+          workStarted = true;
           const factory = new DrizzleRepositoryFactory(tx);
           result = await work(factory);
 
@@ -65,7 +67,7 @@ export class DrizzleUnitOfWork implements IUnitOfWork {
         if (result) return result;
       } catch (err: any) {
         const errorMsg = err?.message || err?.toString() || '';
-        if (errorMsg.includes('not supported by D1 driver') || errorMsg.includes('Transactions are not supported')) {
+        if (!workStarted || errorMsg.toLowerCase().includes('begin') || errorMsg.includes('not supported by D1 driver')) {
           const factory = new DrizzleRepositoryFactory(this.db);
           return await work(factory);
         }
