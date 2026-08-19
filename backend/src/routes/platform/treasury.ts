@@ -1,7 +1,7 @@
 /**
  * Copyright 2026 ASPPIBRA – Associação dos Proprietários e Possuidores de Imóveis no Brasil.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -9,73 +9,838 @@
  *
  * Project: Governance System (ASPPIBRA DAO)
  * Role: Platform Treasury API Endpoint (Analytics, Ledger & Transactions)
- * Data Source: Direct Cloudflare D1 SQL Database Queries (45 Transactions)
+ * Data Source: Direct Cloudflare D1 SQL Database Queries (45 Audited Transactions)
  */
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../../types/bindings';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-// Configuração Padrão do Contrato Registrado
+// Configuração Padrão do Contrato Registrado (Valores Auditados)
 export const CLIENT_ACCOUNT_PROFILE = {
   account_number: '#2024001',
   client_name: 'Andressa de Lima Ferreira',
   email: 'andressa.ferreira@email.com',
   cpf: '173.793.567-80',
   address: 'Rua Palmira F. De Carvalho, lote 05, Quadra D, São José de Imbassaí, Maricá - RJ, 24912-000',
-  contract_total: 65000,      // R$ 65.000,00
-  total_paid: 35823,          // R$ 35.823,00
-  outstanding_balance: 29177, // R$ 29.177,00
+  contract_total: 65800,      // R$ 65.800,00
+  total_paid: 36623,          // R$ 36.623,00 (Soma auditada dos comprovantes)
+  outstanding_balance: 29177, // R$ 29.177,00 (Saldo Devedor)
   report_ref: '2026-07-PM4',
 };
 
-// 45 Transações Consolidadas (Fallback em memória)
+// 45 Transações Auditadas da Planilha Auditoria_ASPPIBRA_Andressa.xlsx
 const CONSOLIDATED_REPORT_TRANSACTIONS = [
-  { id: 'tx_001', created_at: '2023-08-08T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Nu Pagamentos', amount: 5000, currency: 'BRL', base_currency: 'BRL', base_amount: 5000, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_002', created_at: '2023-08-09T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Nu Pagamentos', amount: 5000, currency: 'BRL', base_currency: 'BRL', base_amount: 5000, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_003', created_at: '2023-09-21T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Nu Pagamentos', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_004', created_at: '2023-10-20T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Nu Pagamentos', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_005', created_at: '2023-11-21T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Nu Pagamentos', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_006', created_at: '2023-12-21T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Itaú Unibanco', destination_institution: 'Bradesco', amount: 700, currency: 'BRL', base_currency: 'BRL', base_amount: 700, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_007', created_at: '2023-12-22T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_008', created_at: '2024-01-15T10:00:00Z', counterparty_name: 'Desconhecido', origin_institution: 'N/A', destination_institution: 'N/A', amount: 0, currency: 'BRL', base_currency: 'BRL', base_amount: 0, type: 'income', direction: 'inbound', category: 'other', payment_method: 'pix', status: 'failed', reconciliation_status: 'manual_review' },
-  { id: 'tx_009', created_at: '2024-02-16T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_010', created_at: '2024-03-11T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_011', created_at: '2024-04-30T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Mercado Pago', destination_institution: 'Bradesco', amount: 700, currency: 'BRL', base_currency: 'BRL', base_amount: 700, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_012', created_at: '2024-04-30T11:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_013', created_at: '2024-05-29T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_014', created_at: '2024-06-24T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_015', created_at: '2024-07-28T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_016', created_at: '2024-08-15T10:00:00Z', counterparty_name: 'Desconhecido', origin_institution: 'N/A', destination_institution: 'N/A', amount: 0, currency: 'BRL', base_currency: 'BRL', base_amount: 0, type: 'income', direction: 'inbound', category: 'other', payment_method: 'pix', status: 'failed', reconciliation_status: 'manual_review' },
-  { id: 'tx_017', created_at: '2024-09-06T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Itaú Unibanco', destination_institution: 'Bradesco', amount: 700, currency: 'BRL', base_currency: 'BRL', base_amount: 700, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_018', created_at: '2024-09-06T11:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_019', created_at: '2024-10-09T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Itaú Unibanco', destination_institution: 'Bradesco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_020', created_at: '2024-11-09T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_021', created_at: '2024-12-18T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_022', created_at: '2025-01-21T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_023', created_at: '2025-01-21T11:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Mercado Pago', destination_institution: 'Bradesco', amount: 700, currency: 'BRL', base_currency: 'BRL', base_amount: 700, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_024', created_at: '2025-02-10T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_025', created_at: '2025-03-19T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_026', created_at: '2025-04-22T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Mercado Pago', destination_institution: 'Bradesco', amount: 400, currency: 'BRL', base_currency: 'BRL', base_amount: 400, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_027', created_at: '2025-04-30T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Mercado Pago', destination_institution: 'Bradesco', amount: 400, currency: 'BRL', base_currency: 'BRL', base_amount: 400, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_028', created_at: '2025-05-17T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 750, currency: 'BRL', base_currency: 'BRL', base_amount: 750, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_029', created_at: '2025-06-17T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Itaú Unibanco', destination_institution: 'Banco Inter', amount: 350, currency: 'BRL', base_currency: 'BRL', base_amount: 350, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_030', created_at: '2025-06-17T11:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Mercado Pago', destination_institution: 'Itaú Unibanco', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_031', created_at: '2025-07-26T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Nu Pagamentos', destination_institution: 'Banco Inter', amount: 667, currency: 'BRL', base_currency: 'BRL', base_amount: 667, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_032', created_at: '2025-08-02T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Nu Pagamentos', destination_institution: 'Itaú Unibanco', amount: 667, currency: 'BRL', base_currency: 'BRL', base_amount: 667, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_033', created_at: '2025-08-15T10:00:00Z', counterparty_name: 'Sandro Alves de Amorim', origin_institution: 'Itaú Unibanco', destination_institution: 'Banco Inter', amount: 667, currency: 'BRL', base_currency: 'BRL', base_amount: 667, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_034', created_at: '2025-09-15T10:00:00Z', counterparty_name: 'Desconhecido', origin_institution: 'N/A', destination_institution: 'N/A', amount: 0, currency: 'BRL', base_currency: 'BRL', base_amount: 0, type: 'income', direction: 'inbound', category: 'other', payment_method: 'pix', status: 'failed', reconciliation_status: 'manual_review' },
-  { id: 'tx_035', created_at: '2025-10-13T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Itaú Unibanco', destination_institution: 'Santander', amount: 1000, currency: 'BRL', base_currency: 'BRL', base_amount: 1000, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_036', created_at: '2025-11-17T10:00:00Z', counterparty_name: 'ASPPIBRA', origin_institution: 'Mercado Pago', destination_institution: 'Cora SCFI', amount: 1050, currency: 'BRL', base_currency: 'BRL', base_amount: 1050, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_037', created_at: '2025-12-05T10:00:00Z', counterparty_name: 'ASPPIBRA', origin_institution: 'Nu Pagamentos', destination_institution: 'Cora SCFI', amount: 550, currency: 'BRL', base_currency: 'BRL', base_amount: 550, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_038', created_at: '2026-01-15T10:00:00Z', counterparty_name: 'Desconhecido', origin_institution: 'N/A', destination_institution: 'N/A', amount: 0, currency: 'BRL', base_currency: 'BRL', base_amount: 0, type: 'income', direction: 'inbound', category: 'other', payment_method: 'pix', status: 'failed', reconciliation_status: 'manual_review' },
-  { id: 'tx_039', created_at: '2026-02-09T10:00:00Z', counterparty_name: 'ASPPIBRA', origin_institution: 'Nu Pagamentos', destination_institution: 'Cora SCFI', amount: 800, currency: 'BRL', base_currency: 'BRL', base_amount: 800, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_040', created_at: '2026-02-09T11:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Nu Pagamentos', destination_institution: 'Santander', amount: 700, currency: 'BRL', base_currency: 'BRL', base_amount: 700, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_041', created_at: '2026-03-08T10:00:00Z', counterparty_name: 'ASPPIBRA', origin_institution: 'Nu Pagamentos', destination_institution: 'Cora SCFI', amount: 250, currency: 'BRL', base_currency: 'BRL', base_amount: 250, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'pix', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_042', created_at: '2026-03-10T10:00:00Z', counterparty_name: 'ASPPIBRA', origin_institution: 'Itaú Unibanco', destination_institution: 'Cora SCFI', amount: 250, currency: 'BRL', base_currency: 'BRL', base_amount: 250, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_043', created_at: '2026-03-15T10:00:00Z', counterparty_name: 'ASPPIBRA', origin_institution: 'Banco Inter', destination_institution: 'Cora SCFI', amount: 250, currency: 'BRL', base_currency: 'BRL', base_amount: 250, type: 'income', direction: 'inbound', category: 'operational', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_044', created_at: '2026-04-27T10:00:00Z', counterparty_name: 'Paulo Roberto Batista Ferreira', origin_institution: 'Banco Inter', destination_institution: 'Santander', amount: 672, currency: 'BRL', base_currency: 'BRL', base_amount: 672, type: 'income', direction: 'inbound', category: 'membership', payment_method: 'bank_transfer', status: 'confirmed', reconciliation_status: 'matched' },
-  { id: 'tx_045', created_at: '2026-04-15T10:00:00Z', counterparty_name: 'Desconhecido', origin_institution: 'N/A', destination_institution: 'N/A', amount: 0, currency: 'BRL', base_currency: 'BRL', base_amount: 0, type: 'income', direction: 'inbound', category: 'other', payment_method: 'pix', status: 'failed', reconciliation_status: 'manual_review' },
+  {
+    "id": "tx_001",
+    "created_at": "2023-08-08T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Nu Pagamentos",
+    "amount": 5000,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 5000,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú Pix"
+  },
+  {
+    "id": "tx_002",
+    "created_at": "2023-08-09T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Nu Pagamentos",
+    "amount": 5000,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 5000,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú Pix"
+  },
+  {
+    "id": "tx_003",
+    "created_at": "2023-09-21T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Nu Pagamentos",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_004",
+    "created_at": "2023-10-20T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Nu Pagamentos",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_005",
+    "created_at": "2023-11-21T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Nu Pagamentos",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_006",
+    "created_at": "2023-12-21T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Bradesco",
+    "amount": 700,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 700,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú + Extrato Bradesco"
+  },
+  {
+    "id": "tx_007",
+    "created_at": "2023-12-22T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (agendamento + realizado)"
+  },
+  {
+    "id": "tx_008",
+    "created_at": "2024-02-16T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_009",
+    "created_at": "2024-03-11T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_010",
+    "created_at": "2024-04-30T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Bradesco",
+    "amount": 700,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 700,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago + Extrato Bradesco"
+  },
+  {
+    "id": "tx_011",
+    "created_at": "2024-04-30T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_012",
+    "created_at": "2024-05-29T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_013",
+    "created_at": "2024-06-24T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_014",
+    "created_at": "2024-07-28T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_015",
+    "created_at": "2024-09-06T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_016",
+    "created_at": "2024-09-06T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Bradesco",
+    "amount": 700,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 700,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Extrato Bradesco"
+  },
+  {
+    "id": "tx_017",
+    "created_at": "2024-10-09T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Bradesco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Extrato Bradesco"
+  },
+  {
+    "id": "tx_018",
+    "created_at": "2024-11-09T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_019",
+    "created_at": "2024-12-18T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_020",
+    "created_at": "2025-01-21T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_021",
+    "created_at": "2025-01-21T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Bradesco",
+    "amount": 700,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 700,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_022",
+    "created_at": "2025-02-10T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú (App)"
+  },
+  {
+    "id": "tx_023",
+    "created_at": "2025-03-19T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_024",
+    "created_at": "2025-04-22T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Bradesco",
+    "amount": 400,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 400,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago (env. 18/04) + Extrato Bradesco"
+  },
+  {
+    "id": "tx_025",
+    "created_at": "2025-04-30T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Bradesco",
+    "amount": 400,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 400,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_026",
+    "created_at": "2025-05-17T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 750,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 750,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_027",
+    "created_at": "2025-06-17T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Banco Inter",
+    "amount": 350,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 350,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú Pix"
+  },
+  {
+    "id": "tx_028",
+    "created_at": "2025-06-17T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Mercado Pago",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago"
+  },
+  {
+    "id": "tx_029",
+    "created_at": "2025-07-26T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Nu Pagamentos",
+    "destination_institution": "Itaú Unibanco",
+    "amount": 667,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 667,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Nu"
+  },
+  {
+    "id": "tx_030",
+    "created_at": "2025-07-26T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Nu Pagamentos",
+    "destination_institution": "Banco Inter",
+    "amount": 667,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 667,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Nu"
+  },
+  {
+    "id": "tx_031",
+    "created_at": "2025-08-15T10:00:00Z",
+    "counterparty_name": "Sandro Alves de Amorim",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Banco Inter",
+    "amount": 667,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 667,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú Pix"
+  },
+  {
+    "id": "tx_032",
+    "created_at": "2025-10-13T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Santander",
+    "amount": 1000,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 1000,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú Pix"
+  },
+  {
+    "id": "tx_033",
+    "created_at": "2025-11-17T10:00:00Z",
+    "counterparty_name": "ASPPIBRA",
+    "origin_institution": "Mercado Pago (boleto Cora)",
+    "destination_institution": "Cora SCFI",
+    "amount": 1050,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 1050,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Mercado Pago + Boleto Cora oficial"
+  },
+  {
+    "id": "tx_034",
+    "created_at": "2025-12-05T10:00:00Z",
+    "counterparty_name": "ASPPIBRA",
+    "origin_institution": "Nu Pagamentos",
+    "destination_institution": "Cora SCFI",
+    "amount": 550,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 550,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Nu + Extrato Cora ASPPIBRA"
+  },
+  {
+    "id": "tx_035",
+    "created_at": "2026-02-09T10:00:00Z",
+    "counterparty_name": "ASPPIBRA",
+    "origin_institution": "Nu Pagamentos",
+    "destination_institution": "Cora SCFI",
+    "amount": 800,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 800,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Nu (compensado 10/02)"
+  },
+  {
+    "id": "tx_036",
+    "created_at": "2026-02-09T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Nu Pagamentos",
+    "destination_institution": "Santander",
+    "amount": 700,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 700,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Nu (compensado 10/02)"
+  },
+  {
+    "id": "tx_037",
+    "created_at": "2026-03-08T10:00:00Z",
+    "counterparty_name": "ASPPIBRA",
+    "origin_institution": "Nu Pagamentos",
+    "destination_institution": "Cora SCFI",
+    "amount": 250,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 250,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Nu (compensado 09/03)"
+  },
+  {
+    "id": "tx_038",
+    "created_at": "2026-03-10T10:00:00Z",
+    "counterparty_name": "ASPPIBRA",
+    "origin_institution": "Itaú Unibanco",
+    "destination_institution": "Cora SCFI",
+    "amount": 250,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 250,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "pix",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Itaú Pix (compensado 11/03)"
+  },
+  {
+    "id": "tx_039",
+    "created_at": "2026-03-15T10:00:00Z",
+    "counterparty_name": "ASPPIBRA",
+    "origin_institution": "Banco Inter",
+    "destination_institution": "Cora SCFI",
+    "amount": 250,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 250,
+    "type": "income",
+    "direction": "inbound",
+    "category": "operational",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Banco Inter (compensado 16/03)"
+  },
+  {
+    "id": "tx_040",
+    "created_at": "2026-03-27T10:00:00Z",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Banco Inter",
+    "destination_institution": "Santander",
+    "amount": 672,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 672,
+    "type": "income",
+    "direction": "inbound",
+    "category": "membership",
+    "payment_method": "bank_transfer",
+    "status": "confirmed",
+    "reconciliation_status": "matched",
+    "source_proof": "Comprovante Banco Inter (compensado 28/03)"
+  },
+  {
+    "id": "tx_041",
+    "created_at": "2024-01-15T10:00:00Z",
+    "counterparty_name": "Desconhecido",
+    "origin_institution": "N/A",
+    "destination_institution": "N/A",
+    "amount": 0,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 0,
+    "type": "income",
+    "direction": "inbound",
+    "category": "other",
+    "payment_method": "bank_transfer",
+    "status": "failed",
+    "reconciliation_status": "manual_review",
+    "source_proof": "—"
+  },
+  {
+    "id": "tx_042",
+    "created_at": "2024-08-15T10:00:00Z",
+    "counterparty_name": "Desconhecido",
+    "origin_institution": "N/A",
+    "destination_institution": "N/A",
+    "amount": 0,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 0,
+    "type": "income",
+    "direction": "inbound",
+    "category": "other",
+    "payment_method": "bank_transfer",
+    "status": "failed",
+    "reconciliation_status": "manual_review",
+    "source_proof": "—"
+  },
+  {
+    "id": "tx_043",
+    "created_at": "2025-09-15T10:00:00Z",
+    "counterparty_name": "Desconhecido",
+    "origin_institution": "N/A",
+    "destination_institution": "N/A",
+    "amount": 0,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 0,
+    "type": "income",
+    "direction": "inbound",
+    "category": "other",
+    "payment_method": "bank_transfer",
+    "status": "failed",
+    "reconciliation_status": "manual_review",
+    "source_proof": "—"
+  },
+  {
+    "id": "tx_044",
+    "created_at": "2026-01-15T10:00:00Z",
+    "counterparty_name": "Desconhecido",
+    "origin_institution": "N/A",
+    "destination_institution": "N/A",
+    "amount": 0,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 0,
+    "type": "income",
+    "direction": "inbound",
+    "category": "other",
+    "payment_method": "bank_transfer",
+    "status": "failed",
+    "reconciliation_status": "manual_review",
+    "source_proof": "—"
+  },
+  {
+    "id": "tx_045",
+    "created_at": "2026-04-15T10:00:00Z",
+    "counterparty_name": "Desconhecido",
+    "origin_institution": "N/A",
+    "destination_institution": "N/A",
+    "amount": 0,
+    "currency": "BRL",
+    "base_currency": "BRL",
+    "base_amount": 0,
+    "type": "income",
+    "direction": "inbound",
+    "category": "other",
+    "payment_method": "bank_transfer",
+    "status": "failed",
+    "reconciliation_status": "manual_review",
+    "source_proof": "—"
+  }
 ];
 
 app.get('/', (c) => c.json({ module: 'Treasury Analytics & Ledger API', status: 'active', client: CLIENT_ACCOUNT_PROFILE }));
@@ -89,16 +854,11 @@ app.get('/analytics', async (c) => {
   let contractTotal = CLIENT_ACCOUNT_PROFILE.contract_total;
   let outstandingBalance = CLIENT_ACCOUNT_PROFILE.outstanding_balance;
 
-  // Tenta consultar o banco D1 diretamente
+  // Consulta o banco D1 diretamente
   if (c.env?.DB && typeof c.env.DB.prepare === 'function') {
     try {
-      // 1. Consulta saldos reais da conta de tesouraria/usuário no D1
-      const balanceRow = await c.env.DB.prepare(`
-        SELECT available_base_units, locked_base_units 
-        FROM account_balances 
-        WHERE account_id = 10 OR account_id = 11 
-        LIMIT 1
-      `).first<{ available_base_units: string; locked_base_units: string }>();
+      // 1. Consulta saldos reais da conta no D1
+      const balanceRow = await c.env.DB.prepare().first<{ available_base_units: string; locked_base_units: string }>();
 
       if (balanceRow && balanceRow.available_base_units !== undefined && balanceRow.available_base_units !== null) {
         totalPaid = Math.round(Number(balanceRow.available_base_units) / 100);
@@ -110,7 +870,7 @@ app.get('/analytics', async (c) => {
       const dbTx = await c.env.DB.prepare(`
         SELECT 
           ft.id,
-          ft.created_at,
+          datetime(ft.created_at, 'unixepoch') as created_at,
           ft.description,
           ft.category,
           ft.status,
@@ -121,7 +881,7 @@ app.get('/analytics', async (c) => {
         ORDER BY ft.id ASC
       `).all<{
         id: number;
-        created_at: number;
+        created_at: string;
         description: string;
         category: string;
         status: string;
@@ -131,10 +891,11 @@ app.get('/analytics', async (c) => {
       if (dbTx && dbTx.results && dbTx.results.length > 0) {
         transactionsList = dbTx.results.map((row, index) => {
           const fallbackTx = CONSOLIDATED_REPORT_TRANSACTIONS[index] || CONSOLIDATED_REPORT_TRANSACTIONS[0];
-          const valInReais = row.amount_base_units ? Math.round(Number(row.amount_base_units) / 100) : fallbackTx.amount;
+          const valInReais = row.amount_base_units ? Math.round(Number(row.amount_base_units) / 100) : 0;
           return {
             ...fallbackTx,
-            id: `tx_${String(row.id).padStart(3, '0')}`,
+            id: `tx_${String(index + 1).padStart(3, '0')}`,
+            created_at: row.created_at ? `${row.created_at}Z` : fallbackTx.created_at,
             amount: valInReais,
             base_amount: valInReais,
             category: row.category || fallbackTx.category,
@@ -173,10 +934,10 @@ app.get('/analytics', async (c) => {
     }
   });
 
-  // Evolução Mensal por ano ou período
+  // Evolução Mensal
   const monthlyMap: Record<string, number> = {};
   confirmedTx.forEach((tx) => {
-    const monthKey = tx.created_at.substring(0, 7); // YYYY-MM
+    const monthKey = tx.created_at.substring(0, 7);
     monthlyMap[monthKey] = (monthlyMap[monthKey] || 0) + tx.amount;
   });
   const monthlyTrend = Object.entries(monthlyMap)
@@ -235,8 +996,8 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
   };
 
   let contractInfo = {
-    contractedAmount: CLIENT_ACCOUNT_PROFILE.contract_total, // R$ 65.000,00
-    paidAmount: CLIENT_ACCOUNT_PROFILE.total_paid,           // R$ 35.823,00
+    contractedAmount: CLIENT_ACCOUNT_PROFILE.contract_total, // R$ 65.800,00
+    paidAmount: CLIENT_ACCOUNT_PROFILE.total_paid,           // R$ 36.623,00
     openAmount: CLIENT_ACCOUNT_PROFILE.outstanding_balance,   // R$ 29.177,00
     status: 'Em dia',
   };
@@ -294,7 +1055,7 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
       const dbTx = await c.env.DB.prepare(`
         SELECT 
           ft.id,
-          ft.created_at,
+          datetime(ft.created_at, 'unixepoch') as created_at,
           ft.description,
           ft.category,
           ft.status,
@@ -305,7 +1066,7 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
         ORDER BY ft.id ASC
       `).all<{
         id: number;
-        created_at: number;
+        created_at: string;
         description: string;
         category: string;
         status: string;
@@ -315,10 +1076,11 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
       if (dbTx && dbTx.results && dbTx.results.length > 0) {
         transactionsList = dbTx.results.map((row, index) => {
           const fallbackTx = CONSOLIDATED_REPORT_TRANSACTIONS[index] || CONSOLIDATED_REPORT_TRANSACTIONS[0];
-          const valInReais = row.amount_base_units ? Math.round(Number(row.amount_base_units) / 100) : fallbackTx.amount;
+          const valInReais = row.amount_base_units ? Math.round(Number(row.amount_base_units) / 100) : 0;
           return {
             ...fallbackTx,
-            id: `tx_${String(row.id).padStart(3, '0')}`,
+            id: `tx_${String(index + 1).padStart(3, '0')}`,
+            created_at: row.created_at ? `${row.created_at}Z` : fallbackTx.created_at,
             amount: valInReais,
             base_amount: valInReais,
             category: row.category || fallbackTx.category,
