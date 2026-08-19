@@ -119,6 +119,7 @@ export class DrizzleAccountRepository implements IAccountRepository {
           .values({
             email: account.email,
             emailNormalized: account.email ? account.email.toLowerCase() : null,
+            password: '',
             subjectType,
             status: account.active ? 'active' : 'suspended',
           })
