@@ -143,6 +143,22 @@ export class DrizzleAccountRepository implements IAccountRepository {
           .returning();
 
         (account as any).id = inserted.id;
+
+        if (account.password) {
+          const authId = crypto.randomUUID();
+          await this.db.insert(userAuthenticators).values({
+            id: authId,
+            userId: inserted.id,
+            type: 'password',
+            label: 'Senha Principal',
+            verifiedAt: new Date(),
+          });
+
+          await this.db.insert(passwordCredentials).values({
+            authenticatorId: authId,
+            passwordHash: account.password,
+          });
+        }
       }
       return Result.ok(account);
     } catch (error: any) {
