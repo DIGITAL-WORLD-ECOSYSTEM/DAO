@@ -14,10 +14,15 @@
 > **Normative Governance Metadata**
 >
 > - **Contract Version:** 1.0.0
-> - **Last Validation:** 2026-08-17
+> - **Last Validation:** 2026-08-19
 > - **Schema Compatibility:** Drizzle ORM / Cloudflare D1 v2
 > - **Normative Level:** System Constitution / Single Source of Truth
 > - **Architecture Test Suite:** `tests/architecture/architecture-boundaries.test.ts`
+
+> [!IMPORTANT]
+> **RESERVA & LEMBRETE DE ARQUITETURA DE INTEGRIDADE CANÔNICA (v16.0)**:
+> - **Idempotência, Feedback Transversal & Resiliência**: O plano de especificação da Plataforma Transversal de Tratamento de Erros, Idempotência (Fencing Tokens, D1+R2 Offload, Envelope Criptográfico AES-GCM-256 com AAD, Protocolo UNKNOWN), Outbox Transacional e Feedback Policy Engine encontra-se preservado e congelado na **v16.0 (Production Integrity Baseline Candidate)**.
+> - **Fonte da Verdade e Checkpoint de Execução**: O artefato de execução está salvo e preservado em `implementation_plan.md` (no appData do projeto) e servirá como referência obrigatória para a revisão técnica e implementação subsequente das Fases 0 a 4.
 
 ---
 
@@ -25,6 +30,7 @@
 
 ### Architecture Change Log
 
+- **v1.3.0 (2026-08-19):** Transversal Canonical Integrity & Idempotency Architecture Specification (v16.0 Candidate). Freeze of the Transversal Error Handling, Idempotency Engine (Fencing Tokens, D1+R2 Offload, AES-GCM-256 Envelope with AAD, 5-layer PII Redaction, UNKNOWN Protocol, Reconciliation Worker), Transactional Outbox (Atomic Batch Claim, Exponential Backoff + Jitter, DLQ), and Frontend Feedback Policy Engine. Preserved as execution checkpoint for implementation.
 - **v1.2.0 (2026-08-18):** Account-First Identity Architecture Certification. Complete overhaul of the authentication and identity layer to enforce AF-001 to AF-014 rules. Elimination of all auto-provisioning / shadow accounts (`@web3.local`, `@ssi.local`). Implementation of `CanonicalIdentityResolver`, specialized repository ports (`IExternalIdentityRepository`, `IWalletIdentityRepository`, `IPasskeyIdentityRepository`, `IDidIdentityRepository`), `LinkExternalIdentityUseCase` (AAL2+), `UnlinkExternalIdentityUseCase` (Anti-Lockout), `/external-identities` HTTP endpoints, and AST static invariance tests (`tests/static_architecture.test.ts`).
 - **v1.1.0 (2026-08-17):** Forensic Audit Baseline & Persistence Layer Hardening. Line-by-line verification and certification of DB schemas and unidirectional relations for 6 Bounded Contexts (`user`, `web3`, `civil-identity`, `ssi`, `organizations`, `finance`). Audit intake in progress for `authentication` and `security`.
 - **v1.0.0 (2026-08-16):** Official consolidation of Target Architecture, Cross-Domain Dependency Matrix, 20 Golden Rules with Enforcement Levels, Dual Storage Abstraction (`IObjectStorage` R2 vs `IContentAddressedStorage` IPFS), Web3 × Finance Decoupling, STRIDE Security Threat Model, AAL1/AAL2/AAL3 Authentication Levels, Workers AI Squad, and Normative Contracts for 18 Bounded Contexts.

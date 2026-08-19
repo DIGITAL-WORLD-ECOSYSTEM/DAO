@@ -38,6 +38,7 @@ import emailRouter from './routes/platform/email';
 import chatRouter from './routes/platform/chat';
 import devosRouter from './routes/platform/devos';
 import devosDatabaseRouter from './routes/platform/devos-database';
+import treasuryRouter from './routes/platform/treasury';
 
 // --- PRODUCT MODULES ---
 import agroRouter from './routes/products/agro';
@@ -142,8 +143,8 @@ app.use('*', async (c: Context<AppType>, next: Next) => {
   }
 
   // Ativa apenas se o ambiente não for produção explícita
-  if (c.env.ENVIRONMENT !== 'production') {
-    if (c.env.CHAOS_D1_DOWN === 'true' && !c.req.path.startsWith('/api/core/health')) {
+  if (c.env?.ENVIRONMENT !== 'production') {
+    if (c.env?.CHAOS_D1_DOWN === 'true' && !c.req.path.startsWith('/api/core/health')) {
       return error(c, 'Simulated D1 Outage', null, 503);
     }
     if (c.env.CHAOS_KV_DOWN === 'true') {
@@ -237,6 +238,7 @@ app.route('/api/core/compliance', complianceRouter);
 app.route('/api/core/health', healthRouter);
 app.route('/api/core/webhooks', webhooksRouter);
 app.route('/api/platform/payments', paymentsRouter);
+app.route('/api/platform/treasury', treasuryRouter);
 app.route('/api/platform/storage', storageRouter);
 app.route('/api/products/agro', agroRouter);
 app.route('/api/products/rwa', rwaRouter);

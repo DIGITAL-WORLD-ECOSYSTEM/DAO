@@ -231,7 +231,7 @@ function FinancialTransactionsTableRow({ row }: FinancialTransactionsTableRowPro
               sx={{ color: 'info.main', width: 20 }}
             />
           )}
-          {row.risk_score.level !== 'low' && (
+          {row.risk_score?.level && row.risk_score.level !== 'low' && (
             <Iconify
               icon={'solar:shield-warning-bold-duotone' as any}
               sx={{ color: 'error.main', width: 20 }}
