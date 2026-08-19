@@ -1111,3 +1111,41 @@ export const userNotificationSettings = sqliteTable(
     ),
   })
 );
+
+/**
+ * ============================================================================
+ * USER EXTERNAL IDENTITIES (OAuth / Social Identity Bindings)
+ * ============================================================================
+ * Conceptual owner: Identity Core (src/domains/identity/external-identities/)
+ *
+ * Restrição Constitucional (AF-005):
+ * UNIQUE(provider, provider_subject_id)
+ */
+export const userExternalIdentities = sqliteTable(
+  'user_external_identities',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    provider: text('provider').notNull(),
+
+    providerSubjectId: text('provider_subject_id').notNull(),
+
+    emailAtBinding: text('email_at_binding'),
+
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .default(sql`(unixepoch())`)
+      .notNull(),
+  },
+  (table) => ({
+    providerSubjectUnique: uniqueIndex('uq_user_external_identities_provider_subject').on(
+      table.provider,
+      table.providerSubjectId
+    ),
+    userIdIdx: index('idx_user_external_identities_user_id').on(table.userId),
+  })
+);
+
