@@ -9,6 +9,7 @@ JWT_EXPIRE_IN = "24h"
 SENDER_EMAIL = "suporte@asppibra.com"
 
 [env.production]
+name = "asppibra-api"
 # Custom Domain — Produção
 routes = [
   { pattern = "api.asppibra.com", custom_domain = true }
