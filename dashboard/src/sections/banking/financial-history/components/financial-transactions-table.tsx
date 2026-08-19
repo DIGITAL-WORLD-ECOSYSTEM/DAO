@@ -17,7 +17,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
 import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import { fNumber } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -183,7 +183,7 @@ function FinancialTransactionsTableRow({ row }: FinancialTransactionsTableRowPro
         }}
       >
         <Typography variant="subtitle1" sx={{ fontWeight: 800 }}>
-          {isOutbound || isAudit ? '-' : '+'} {fCurrency(row.amount)}
+          {fNumber(row.amount, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </Typography>
       </TableCell>
 

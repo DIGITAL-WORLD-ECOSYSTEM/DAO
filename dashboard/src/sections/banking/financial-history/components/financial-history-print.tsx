@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import { fNumber } from 'src/utils/format-number';
 
 import { A4Page } from 'src/components/abnt-document/a4-page';
 
@@ -173,7 +173,7 @@ export function FinancialHistoryPrint({ transactions }: Props) {
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  {isOutbound ? '-' : '+'}{fCurrency(row.amount)}
+                  {fNumber(row.amount, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Box>
                 <Box component="td" sx={{ py: 1.5, px: 1.5, textAlign: 'center', verticalAlign: 'middle' }}>
                   <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: '0.65rem', color: row.status === 'confirmed' ? tokens.brandGreen : tokens.textMuted }}>
