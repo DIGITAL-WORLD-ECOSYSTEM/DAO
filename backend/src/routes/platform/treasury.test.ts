@@ -46,8 +46,8 @@ describe('Treasury Platform Route (/api/platform/treasury)', () => {
     expect(res.status).toBe(200);
     const json = (await res.json()) as any;
     expect(json.success).toBe(true);
-    expect(json.data.summary.totalInflow).toBe(3582300); // R$ 35.823,00 em centavos
-    expect(json.data.summary.outstandingBalance).toBe(2917700); // R$ 29.177,00 em centavos
+    expect(json.data.summary.totalInflow).toBe(35823); // R$ 35.823,00
+    expect(json.data.summary.outstandingBalance).toBe(29177); // R$ 29.177,00
     expect(json.data.transactions.length).toBe(45);
   });
 });
