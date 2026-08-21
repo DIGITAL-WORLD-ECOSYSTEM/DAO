@@ -80,8 +80,8 @@ export const MOCK_FINANCIAL_PROFILES: IFinancialProfile[] = [
       id: 'CTR-001',
       planName: 'Plano Premium DAO',
       contractedAmount: 65000,
-      paidAmount: 35823,
-      openAmount: 29177,
+      paidAmount: 36623,
+      openAmount: 28377,
       status: 'Adimplente',
     },
     obligations: {

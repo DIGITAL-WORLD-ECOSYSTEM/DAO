@@ -1,0 +1,4775 @@
+{
+  "metadata": {
+    "titulo": "Relatório e Banco de Dados Financeiro Completo - ASPPIBRA DAO",
+    "data_exportacao_utc": "2026-08-21T04:02:56.703076+00:00",
+    "banco_dados_origem": "./backend/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/05d4084730d36b1073d62c37ab83e9c425d795b5ff34ed949083cdbf02fd7b33.sqlite",
+    "tecnologia_db": "Cloudflare D1 / SQLite Engine (Drizzle ORM)",
+    "versao_padrao_financeiro": "Integridade Canônica V16 (Double-Entry Ledger Architecture)"
+  },
+  "resumo_executivo": {
+    "visão_geral": {
+      "total_transacoes": 47,
+      "transacoes_concluidas": 42,
+      "transacoes_falhas_ou_sem_comprovacao": 5,
+      "volume_total_movimentado_brl": "R$ 39,223.00",
+      "volume_total_pago_comprovado_brl": "R$ 39,223.00",
+      "total_lancamentos_contabeis_partidas_dobradas": 43
+    },
+    "resumo_tesouraria_andressa": {
+      "titular": "Andressa de Lima Ferreira (Conta #2024001)",
+      "total_pago_real_comprovado": "R$ 36.623,00",
+      "saldo_devedor_pendente": "R$ 28.377,00",
+      "total_auditado": "R$ 65.000,00"
+    },
+    "resumo_reserva_genesis": {
+      "conta": "DAO Treasury Account (#1)",
+      "saldo_inicial_brl": "R$ 1.000.000,00"
+    },
+    "distribuicao_por_categoria": {
+      "other": {
+        "quantidade": 6,
+        "total_base_units": 100000,
+        "valor_total_formatado": "R$ 1,000.00"
+      },
+      "membership": {
+        "quantidade": 24,
+        "total_base_units": 2738900,
+        "valor_total_formatado": "R$ 27,389.00"
+      },
+      "operational": {
+        "quantidade": 17,
+        "total_base_units": 1083400,
+        "valor_total_formatado": "R$ 10,834.00"
+      }
+    },
+    "distribuicao_por_status": {
+      "completed": 42,
+      "failed": 5
+    }
+  },
+  "titulares_e_identidades": [
+    {
+      "user_id": 1,
+      "subject_type": "system",
+      "display_name": "Administrador ASOT",
+      "email": "admin@asppibra.com",
+      "status": "active",
+      "username": "admin",
+      "nome_legal": null,
+      "nacionalidade": null,
+      "status_civil": null,
+      "documento": null,
+      "created_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "user_id": 2,
+      "subject_type": "human",
+      "display_name": "Felipe Dev",
+      "email": "felipe.dev@asppibra.com",
+      "status": "active",
+      "username": "felipedev",
+      "nome_legal": "Felipe Dev",
+      "nacionalidade": "BR",
+      "status_civil": "verified",
+      "documento": {
+        "tipo": "cpf",
+        "final_documento": "1111",
+        "status_verificacao": "verified"
+      },
+      "created_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "user_id": 10,
+      "subject_type": "human",
+      "display_name": "Andressa de Lima Ferreira",
+      "email": "andressa.ferreira@email.com",
+      "status": "active",
+      "username": "andressa2024001",
+      "nome_legal": "Andressa de Lima Ferreira",
+      "nacionalidade": "BR",
+      "status_civil": "verified",
+      "documento": {
+        "tipo": "cpf",
+        "final_documento": "780",
+        "status_verificacao": "verified"
+      },
+      "created_at_iso": "2023-08-08 00:00:00 UTC"
+    }
+  ],
+  "ativos_financeiros": [
+    {
+      "id": 1,
+      "code": "BRL",
+      "symbol": "R$",
+      "name": "Real Brasileiro",
+      "type": "fiat",
+      "decimals": 2,
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 2,
+      "code": "USD",
+      "symbol": "US$",
+      "name": "Dólar Americano",
+      "type": "fiat",
+      "decimals": 2,
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 3,
+      "code": "BTC",
+      "symbol": "₿",
+      "name": "Bitcoin",
+      "type": "crypto",
+      "decimals": 8,
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 4,
+      "code": "ETH",
+      "symbol": "Ξ",
+      "name": "Ethereum",
+      "type": "crypto",
+      "decimals": 18,
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    }
+  ],
+  "provedores_fiat_bancos": [
+    {
+      "id": 1,
+      "name": "Itaú Unibanco",
+      "code": "ITAU",
+      "type": "bank",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    },
+    {
+      "id": 2,
+      "name": "Nu Pagamentos",
+      "code": "NUBANK",
+      "type": "payment_provider",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    },
+    {
+      "id": 3,
+      "name": "Bradesco",
+      "code": "BRADESCO",
+      "type": "bank",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    },
+    {
+      "id": 4,
+      "name": "Mercado Pago",
+      "code": "MERCADO_PAGO",
+      "type": "payment_provider",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    },
+    {
+      "id": 5,
+      "name": "Banco Inter",
+      "code": "INTER",
+      "type": "bank",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    },
+    {
+      "id": 6,
+      "name": "Santander",
+      "code": "SANTANDER",
+      "type": "bank",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    },
+    {
+      "id": 7,
+      "name": "Cora SCFI",
+      "code": "CORA",
+      "type": "bank",
+      "status": "active",
+      "created_at_iso": "2026-08-19 15:53:06 UTC"
+    }
+  ],
+  "contas_financeiras": [
+    {
+      "id": 1,
+      "user_id": null,
+      "titular_nome": "Tesouraria / Sistema",
+      "account_type": "treasury",
+      "status": "active",
+      "name": "DAO Treasury Account",
+      "version": 1,
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 2,
+      "user_id": null,
+      "titular_nome": "Tesouraria / Sistema",
+      "account_type": "operating",
+      "status": "active",
+      "name": "DAO Operating Account",
+      "version": 1,
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 3,
+      "user_id": null,
+      "titular_nome": "Tesouraria / Sistema",
+      "account_type": "fees",
+      "status": "active",
+      "name": "DAO Platform Fees Account",
+      "version": 1,
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 4,
+      "user_id": 2,
+      "titular_nome": "Felipe Dev",
+      "account_type": "user_available",
+      "status": "active",
+      "name": "Felipe Dev Primary Account",
+      "version": 1,
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 10,
+      "user_id": 10,
+      "titular_nome": "Andressa de Lima Ferreira",
+      "account_type": "user_available",
+      "status": "active",
+      "name": "Conta Andressa de Lima Ferreira (#2024001)",
+      "version": 1,
+      "created_at_iso": "2026-08-19 15:57:58 UTC",
+      "updated_at_iso": "2026-08-19 15:57:58 UTC"
+    },
+    {
+      "id": 11,
+      "user_id": null,
+      "titular_nome": "Tesouraria / Sistema",
+      "account_type": "treasury",
+      "status": "active",
+      "name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "version": 1,
+      "created_at_iso": "2026-08-19 15:57:58 UTC",
+      "updated_at_iso": "2026-08-19 15:57:58 UTC"
+    }
+  ],
+  "saldos_contas": [
+    {
+      "id": 1,
+      "account_id": 1,
+      "account_name": "DAO Treasury Account",
+      "account_type": "treasury",
+      "titular": "Tesouraria / Sistema",
+      "ativo": {
+        "code": "BRL",
+        "symbol": "R$",
+        "name": "Real Brasileiro",
+        "type": "fiat"
+      },
+      "saldo_disponivel": {
+        "base_units": "100000000",
+        "valor_formatado": "R$ 1,000,000.00"
+      },
+      "saldo_bloqueado_devedor": {
+        "base_units": "0",
+        "valor_formatado": "R$ 0.00"
+      },
+      "saldo_total": {
+        "valor_formatado": "R$ 1,000,000.00"
+      },
+      "version": 1,
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 2,
+      "account_id": 4,
+      "account_name": "Felipe Dev Primary Account",
+      "account_type": "user_available",
+      "titular": "Felipe Dev",
+      "ativo": {
+        "code": "BRL",
+        "symbol": "R$",
+        "name": "Real Brasileiro",
+        "type": "fiat"
+      },
+      "saldo_disponivel": {
+        "base_units": "100000",
+        "valor_formatado": "R$ 1,000.00"
+      },
+      "saldo_bloqueado_devedor": {
+        "base_units": "0",
+        "valor_formatado": "R$ 0.00"
+      },
+      "saldo_total": {
+        "valor_formatado": "R$ 1,000.00"
+      },
+      "version": 1,
+      "updated_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 10,
+      "account_id": 10,
+      "account_name": "Conta Andressa de Lima Ferreira (#2024001)",
+      "account_type": "user_available",
+      "titular": "Andressa de Lima Ferreira",
+      "ativo": {
+        "code": "BRL",
+        "symbol": "R$",
+        "name": "Real Brasileiro",
+        "type": "fiat"
+      },
+      "saldo_disponivel": {
+        "base_units": "3662300",
+        "valor_formatado": "R$ 36,623.00"
+      },
+      "saldo_bloqueado_devedor": {
+        "base_units": "2837700",
+        "valor_formatado": "R$ 28,377.00"
+      },
+      "saldo_total": {
+        "valor_formatado": "R$ 65,000.00"
+      },
+      "version": 1,
+      "updated_at_iso": "2026-08-20 13:37:26 UTC"
+    },
+    {
+      "id": 11,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "account_type": "treasury",
+      "titular": "Tesouraria / Sistema",
+      "ativo": {
+        "code": "BRL",
+        "symbol": "R$",
+        "name": "Real Brasileiro",
+        "type": "fiat"
+      },
+      "saldo_disponivel": {
+        "base_units": "3662300",
+        "valor_formatado": "R$ 36,623.00"
+      },
+      "saldo_bloqueado_devedor": {
+        "base_units": "0",
+        "valor_formatado": "R$ 0.00"
+      },
+      "saldo_total": {
+        "valor_formatado": "R$ 36,623.00"
+      },
+      "version": 1,
+      "updated_at_iso": "2026-08-19 21:00:06 UTC"
+    }
+  ],
+  "transacoes_financeiras": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "user_name": "Felipe Dev",
+      "type": "deposit",
+      "category": "other",
+      "status": "completed",
+      "description": "Aporte Inicial Genesis (R$ 1.000,00)",
+      "amount_base_units": "100000",
+      "amount_formatted": "R$ 1,000.00",
+      "created_at_iso": "2026-08-19 15:57:47 UTC",
+      "completed_at_iso": "2026-08-19 15:57:47 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 1,
+          "transaction_id": 1,
+          "account_id": 4,
+          "account_name": "Felipe Dev Primary Account",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "100000",
+          "amount_formatted": "R$ 1,000.00",
+          "created_at_iso": "2026-08-19 15:57:47 UTC"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Nu Pagamentos",
+      "amount_base_units": "500000",
+      "amount_formatted": "R$ 5,000.00",
+      "created_at_iso": "2023-08-08 12:00:00 UTC",
+      "completed_at_iso": "2023-08-08 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 101,
+          "transaction_id": 101,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "500000",
+          "amount_formatted": "R$ 5,000.00",
+          "created_at_iso": "2023-08-08 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Nu Pagamentos",
+      "amount_base_units": "500000",
+      "amount_formatted": "R$ 5,000.00",
+      "created_at_iso": "2023-08-09 12:00:00 UTC",
+      "completed_at_iso": "2023-08-09 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 102,
+          "transaction_id": 102,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "500000",
+          "amount_formatted": "R$ 5,000.00",
+          "created_at_iso": "2023-08-09 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Nu Pagamentos",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-09-21 12:00:00 UTC",
+      "completed_at_iso": "2023-09-21 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 103,
+          "transaction_id": 103,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2023-09-21 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Nu Pagamentos",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-10-20 12:00:00 UTC",
+      "completed_at_iso": "2023-10-20 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 104,
+          "transaction_id": 104,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2023-10-20 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Nu Pagamentos",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-11-21 12:00:00 UTC",
+      "completed_at_iso": "2023-11-21 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 105,
+          "transaction_id": 105,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2023-11-21 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Itaú Unibanco -> Bradesco",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2023-12-21 12:00:00 UTC",
+      "completed_at_iso": "2023-12-21 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 106,
+          "transaction_id": 106,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "70000",
+          "amount_formatted": "R$ 700.00",
+          "created_at_iso": "2023-12-21 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-12-22 12:00:00 UTC",
+      "completed_at_iso": "2023-12-22 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 107,
+          "transaction_id": 107,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2023-12-22 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-02-16 12:00:00 UTC",
+      "completed_at_iso": "2024-02-16 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 108,
+          "transaction_id": 108,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-02-16 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-03-11 12:00:00 UTC",
+      "completed_at_iso": "2024-03-11 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 109,
+          "transaction_id": 109,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-03-11 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Mercado Pago -> Bradesco",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2024-04-30 12:00:00 UTC",
+      "completed_at_iso": "2024-04-30 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 110,
+          "transaction_id": 110,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "70000",
+          "amount_formatted": "R$ 700.00",
+          "created_at_iso": "2024-04-30 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-04-30 12:00:00 UTC",
+      "completed_at_iso": "2024-04-30 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 111,
+          "transaction_id": 111,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-04-30 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-05-29 12:00:00 UTC",
+      "completed_at_iso": "2024-05-29 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 112,
+          "transaction_id": 112,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-05-29 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-06-24 12:00:00 UTC",
+      "completed_at_iso": "2024-06-24 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 113,
+          "transaction_id": 113,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-06-24 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-07-28 12:00:00 UTC",
+      "completed_at_iso": "2024-07-28 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 114,
+          "transaction_id": 114,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-07-28 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-09-06 12:00:00 UTC",
+      "completed_at_iso": "2024-09-06 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 115,
+          "transaction_id": 115,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-09-06 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 116,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Itaú Unibanco -> Bradesco",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2024-09-06 12:00:00 UTC",
+      "completed_at_iso": "2024-09-06 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 116,
+          "transaction_id": 116,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "70000",
+          "amount_formatted": "R$ 700.00",
+          "created_at_iso": "2024-09-06 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Itaú Unibanco -> Bradesco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-10-09 12:00:00 UTC",
+      "completed_at_iso": "2024-10-09 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 117,
+          "transaction_id": 117,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-10-09 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 118,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-11-09 12:00:00 UTC",
+      "completed_at_iso": "2024-11-09 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 118,
+          "transaction_id": 118,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-11-09 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 119,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-12-18 12:00:00 UTC",
+      "completed_at_iso": "2024-12-18 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 119,
+          "transaction_id": 119,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2024-12-18 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 120,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-01-21 12:00:00 UTC",
+      "completed_at_iso": "2025-01-21 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 120,
+          "transaction_id": 120,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2025-01-21 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 121,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Mercado Pago -> Bradesco",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2025-01-21 12:00:00 UTC",
+      "completed_at_iso": "2025-01-21 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 121,
+          "transaction_id": 121,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "70000",
+          "amount_formatted": "R$ 700.00",
+          "created_at_iso": "2025-01-21 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-02-10 12:00:00 UTC",
+      "completed_at_iso": "2025-02-10 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 122,
+          "transaction_id": 122,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2025-02-10 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-03-19 12:00:00 UTC",
+      "completed_at_iso": "2025-03-19 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 123,
+          "transaction_id": 123,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2025-03-19 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 124,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Mercado Pago -> Bradesco",
+      "amount_base_units": "40000",
+      "amount_formatted": "R$ 400.00",
+      "created_at_iso": "2025-04-22 12:00:00 UTC",
+      "completed_at_iso": "2025-04-22 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 124,
+          "transaction_id": 124,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "40000",
+          "amount_formatted": "R$ 400.00",
+          "created_at_iso": "2025-04-22 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Mercado Pago -> Bradesco",
+      "amount_base_units": "40000",
+      "amount_formatted": "R$ 400.00",
+      "created_at_iso": "2025-04-30 12:00:00 UTC",
+      "completed_at_iso": "2025-04-30 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 125,
+          "transaction_id": 125,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "40000",
+          "amount_formatted": "R$ 400.00",
+          "created_at_iso": "2025-04-30 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 126,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "75000",
+      "amount_formatted": "R$ 750.00",
+      "created_at_iso": "2025-05-17 12:00:00 UTC",
+      "completed_at_iso": "2025-05-17 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 126,
+          "transaction_id": 126,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "75000",
+          "amount_formatted": "R$ 750.00",
+          "created_at_iso": "2025-05-17 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 127,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Itaú Unibanco -> Banco Inter",
+      "amount_base_units": "35000",
+      "amount_formatted": "R$ 350.00",
+      "created_at_iso": "2025-06-17 12:00:00 UTC",
+      "completed_at_iso": "2025-06-17 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 127,
+          "transaction_id": 127,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "35000",
+          "amount_formatted": "R$ 350.00",
+          "created_at_iso": "2025-06-17 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 128,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Mercado Pago -> Itaú Unibanco",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-06-17 12:00:00 UTC",
+      "completed_at_iso": "2025-06-17 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 128,
+          "transaction_id": 128,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2025-06-17 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 129,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Nu Pagamentos -> Itaú Unibanco",
+      "amount_base_units": "66700",
+      "amount_formatted": "R$ 667.00",
+      "created_at_iso": "2025-07-26 12:00:00 UTC",
+      "completed_at_iso": "2025-07-26 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 129,
+          "transaction_id": 129,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "66700",
+          "amount_formatted": "R$ 667.00",
+          "created_at_iso": "2025-07-26 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 130,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Nu Pagamentos -> Banco Inter",
+      "amount_base_units": "66700",
+      "amount_formatted": "R$ 667.00",
+      "created_at_iso": "2025-07-26 12:00:00 UTC",
+      "completed_at_iso": "2025-07-26 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 130,
+          "transaction_id": 130,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "66700",
+          "amount_formatted": "R$ 667.00",
+          "created_at_iso": "2025-07-26 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 131,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento Sandro Alves de Amorim via Itaú Unibanco -> Banco Inter",
+      "amount_base_units": "66700",
+      "amount_formatted": "R$ 667.00",
+      "created_at_iso": "2025-08-15 12:00:00 UTC",
+      "completed_at_iso": "2025-08-15 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 131,
+          "transaction_id": 131,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "66700",
+          "amount_formatted": "R$ 667.00",
+          "created_at_iso": "2025-08-15 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 132,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Itaú Unibanco -> Santander",
+      "amount_base_units": "100000",
+      "amount_formatted": "R$ 1,000.00",
+      "created_at_iso": "2025-10-13 12:00:00 UTC",
+      "completed_at_iso": "2025-10-13 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 132,
+          "transaction_id": 132,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "100000",
+          "amount_formatted": "R$ 1,000.00",
+          "created_at_iso": "2025-10-13 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 133,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento ASPPIBRA via Mercado Pago (boleto Cora) -> Cora SCFI",
+      "amount_base_units": "105000",
+      "amount_formatted": "R$ 1,050.00",
+      "created_at_iso": "2025-11-17 12:00:00 UTC",
+      "completed_at_iso": "2025-11-17 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 133,
+          "transaction_id": 133,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "105000",
+          "amount_formatted": "R$ 1,050.00",
+          "created_at_iso": "2025-11-17 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 134,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento ASPPIBRA via Nu Pagamentos -> Cora SCFI",
+      "amount_base_units": "55000",
+      "amount_formatted": "R$ 550.00",
+      "created_at_iso": "2025-12-05 12:00:00 UTC",
+      "completed_at_iso": "2025-12-05 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 134,
+          "transaction_id": 134,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "55000",
+          "amount_formatted": "R$ 550.00",
+          "created_at_iso": "2025-12-05 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 135,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento ASPPIBRA via Nu Pagamentos -> Cora SCFI",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2026-02-09 12:00:00 UTC",
+      "completed_at_iso": "2026-02-09 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 135,
+          "transaction_id": 135,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2026-02-09 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 136,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Nu Pagamentos -> Santander",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2026-02-09 12:00:00 UTC",
+      "completed_at_iso": "2026-02-09 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 136,
+          "transaction_id": 136,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "70000",
+          "amount_formatted": "R$ 700.00",
+          "created_at_iso": "2026-02-09 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 137,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento ASPPIBRA via Nu Pagamentos -> Cora SCFI",
+      "amount_base_units": "25000",
+      "amount_formatted": "R$ 250.00",
+      "created_at_iso": "2026-03-08 12:00:00 UTC",
+      "completed_at_iso": "2026-03-08 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 137,
+          "transaction_id": 137,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "25000",
+          "amount_formatted": "R$ 250.00",
+          "created_at_iso": "2026-03-08 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 138,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento ASPPIBRA via Itaú Unibanco -> Cora SCFI",
+      "amount_base_units": "25000",
+      "amount_formatted": "R$ 250.00",
+      "created_at_iso": "2026-03-10 12:00:00 UTC",
+      "completed_at_iso": "2026-03-10 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 138,
+          "transaction_id": 138,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "25000",
+          "amount_formatted": "R$ 250.00",
+          "created_at_iso": "2026-03-10 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Pagamento ASPPIBRA via Banco Inter -> Cora SCFI",
+      "amount_base_units": "25000",
+      "amount_formatted": "R$ 250.00",
+      "created_at_iso": "2026-03-15 12:00:00 UTC",
+      "completed_at_iso": "2026-03-15 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 139,
+          "transaction_id": 139,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "25000",
+          "amount_formatted": "R$ 250.00",
+          "created_at_iso": "2026-03-15 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 140,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "membership",
+      "status": "completed",
+      "description": "Pagamento Paulo Roberto Batista Ferreira via Banco Inter -> Santander",
+      "amount_base_units": "67200",
+      "amount_formatted": "R$ 672.00",
+      "created_at_iso": "2026-03-27 12:00:00 UTC",
+      "completed_at_iso": "2026-03-27 12:00:00 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 140,
+          "transaction_id": 140,
+          "account_id": 11,
+          "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "67200",
+          "amount_formatted": "R$ 672.00",
+          "created_at_iso": "2026-03-27 12:00:00 UTC"
+        }
+      ]
+    },
+    {
+      "id": 141,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "other",
+      "status": "failed",
+      "description": "Linha Falha - Sem transação real",
+      "amount_base_units": "0",
+      "amount_formatted": "R$ 0.00",
+      "created_at_iso": "2024-01-15 12:00:00 UTC",
+      "completed_at_iso": null,
+      "partidas_dobradas_ledger": []
+    },
+    {
+      "id": 142,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "other",
+      "status": "failed",
+      "description": "Linha Falha - Sem transação real",
+      "amount_base_units": "0",
+      "amount_formatted": "R$ 0.00",
+      "created_at_iso": "2024-08-15 12:00:00 UTC",
+      "completed_at_iso": null,
+      "partidas_dobradas_ledger": []
+    },
+    {
+      "id": 143,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "other",
+      "status": "failed",
+      "description": "Linha Falha - Sem transação real",
+      "amount_base_units": "0",
+      "amount_formatted": "R$ 0.00",
+      "created_at_iso": "2025-09-15 12:00:00 UTC",
+      "completed_at_iso": null,
+      "partidas_dobradas_ledger": []
+    },
+    {
+      "id": 144,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "other",
+      "status": "failed",
+      "description": "Linha Falha - Sem transação real",
+      "amount_base_units": "0",
+      "amount_formatted": "R$ 0.00",
+      "created_at_iso": "2026-01-15 12:00:00 UTC",
+      "completed_at_iso": null,
+      "partidas_dobradas_ledger": []
+    },
+    {
+      "id": 145,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "payment",
+      "category": "other",
+      "status": "failed",
+      "description": "Linha Falha - Sem transação real",
+      "amount_base_units": "0",
+      "amount_formatted": "R$ 0.00",
+      "created_at_iso": "2026-04-15 12:00:00 UTC",
+      "completed_at_iso": null,
+      "partidas_dobradas_ledger": []
+    },
+    {
+      "id": 146,
+      "user_id": 10,
+      "user_name": "Andressa de Lima Ferreira",
+      "type": "adjustment",
+      "category": "operational",
+      "status": "completed",
+      "description": "Ajuste de Reconciliação Auditada - Correção de Saldo Devedor",
+      "amount_base_units": "160000",
+      "amount_formatted": "R$ 1,600.00",
+      "created_at_iso": "2026-08-20 13:37:26 UTC",
+      "completed_at_iso": "2026-08-20 13:37:26 UTC",
+      "partidas_dobradas_ledger": [
+        {
+          "id": 145,
+          "transaction_id": 146,
+          "account_id": 10,
+          "account_name": "Conta Andressa de Lima Ferreira (#2024001)",
+          "asset_code": "BRL",
+          "direction": "credit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2026-08-20 13:37:26 UTC"
+        },
+        {
+          "id": 146,
+          "transaction_id": 146,
+          "account_id": 1,
+          "account_name": "DAO Treasury Account",
+          "asset_code": "BRL",
+          "direction": "debit",
+          "amount_base_units": "80000",
+          "amount_formatted": "R$ 800.00",
+          "created_at_iso": "2026-08-20 13:37:26 UTC"
+        }
+      ]
+    }
+  ],
+  "lancamentos_contabeis": [
+    {
+      "id": 1,
+      "transaction_id": 1,
+      "account_id": 4,
+      "account_name": "Felipe Dev Primary Account",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "100000",
+      "amount_formatted": "R$ 1,000.00",
+      "created_at_iso": "2026-08-19 15:57:47 UTC"
+    },
+    {
+      "id": 101,
+      "transaction_id": 101,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "500000",
+      "amount_formatted": "R$ 5,000.00",
+      "created_at_iso": "2023-08-08 12:00:00 UTC"
+    },
+    {
+      "id": 102,
+      "transaction_id": 102,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "500000",
+      "amount_formatted": "R$ 5,000.00",
+      "created_at_iso": "2023-08-09 12:00:00 UTC"
+    },
+    {
+      "id": 103,
+      "transaction_id": 103,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-09-21 12:00:00 UTC"
+    },
+    {
+      "id": 104,
+      "transaction_id": 104,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-10-20 12:00:00 UTC"
+    },
+    {
+      "id": 105,
+      "transaction_id": 105,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-11-21 12:00:00 UTC"
+    },
+    {
+      "id": 106,
+      "transaction_id": 106,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2023-12-21 12:00:00 UTC"
+    },
+    {
+      "id": 107,
+      "transaction_id": 107,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2023-12-22 12:00:00 UTC"
+    },
+    {
+      "id": 108,
+      "transaction_id": 108,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-02-16 12:00:00 UTC"
+    },
+    {
+      "id": 109,
+      "transaction_id": 109,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-03-11 12:00:00 UTC"
+    },
+    {
+      "id": 110,
+      "transaction_id": 110,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2024-04-30 12:00:00 UTC"
+    },
+    {
+      "id": 111,
+      "transaction_id": 111,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-04-30 12:00:00 UTC"
+    },
+    {
+      "id": 112,
+      "transaction_id": 112,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-05-29 12:00:00 UTC"
+    },
+    {
+      "id": 113,
+      "transaction_id": 113,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-06-24 12:00:00 UTC"
+    },
+    {
+      "id": 114,
+      "transaction_id": 114,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-07-28 12:00:00 UTC"
+    },
+    {
+      "id": 115,
+      "transaction_id": 115,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-09-06 12:00:00 UTC"
+    },
+    {
+      "id": 116,
+      "transaction_id": 116,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2024-09-06 12:00:00 UTC"
+    },
+    {
+      "id": 117,
+      "transaction_id": 117,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-10-09 12:00:00 UTC"
+    },
+    {
+      "id": 118,
+      "transaction_id": 118,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-11-09 12:00:00 UTC"
+    },
+    {
+      "id": 119,
+      "transaction_id": 119,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2024-12-18 12:00:00 UTC"
+    },
+    {
+      "id": 120,
+      "transaction_id": 120,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-01-21 12:00:00 UTC"
+    },
+    {
+      "id": 121,
+      "transaction_id": 121,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2025-01-21 12:00:00 UTC"
+    },
+    {
+      "id": 122,
+      "transaction_id": 122,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-02-10 12:00:00 UTC"
+    },
+    {
+      "id": 123,
+      "transaction_id": 123,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-03-19 12:00:00 UTC"
+    },
+    {
+      "id": 124,
+      "transaction_id": 124,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "40000",
+      "amount_formatted": "R$ 400.00",
+      "created_at_iso": "2025-04-22 12:00:00 UTC"
+    },
+    {
+      "id": 125,
+      "transaction_id": 125,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "40000",
+      "amount_formatted": "R$ 400.00",
+      "created_at_iso": "2025-04-30 12:00:00 UTC"
+    },
+    {
+      "id": 126,
+      "transaction_id": 126,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "75000",
+      "amount_formatted": "R$ 750.00",
+      "created_at_iso": "2025-05-17 12:00:00 UTC"
+    },
+    {
+      "id": 127,
+      "transaction_id": 127,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "35000",
+      "amount_formatted": "R$ 350.00",
+      "created_at_iso": "2025-06-17 12:00:00 UTC"
+    },
+    {
+      "id": 128,
+      "transaction_id": 128,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2025-06-17 12:00:00 UTC"
+    },
+    {
+      "id": 129,
+      "transaction_id": 129,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "66700",
+      "amount_formatted": "R$ 667.00",
+      "created_at_iso": "2025-07-26 12:00:00 UTC"
+    },
+    {
+      "id": 130,
+      "transaction_id": 130,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "66700",
+      "amount_formatted": "R$ 667.00",
+      "created_at_iso": "2025-07-26 12:00:00 UTC"
+    },
+    {
+      "id": 131,
+      "transaction_id": 131,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "66700",
+      "amount_formatted": "R$ 667.00",
+      "created_at_iso": "2025-08-15 12:00:00 UTC"
+    },
+    {
+      "id": 132,
+      "transaction_id": 132,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "100000",
+      "amount_formatted": "R$ 1,000.00",
+      "created_at_iso": "2025-10-13 12:00:00 UTC"
+    },
+    {
+      "id": 133,
+      "transaction_id": 133,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "105000",
+      "amount_formatted": "R$ 1,050.00",
+      "created_at_iso": "2025-11-17 12:00:00 UTC"
+    },
+    {
+      "id": 134,
+      "transaction_id": 134,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "55000",
+      "amount_formatted": "R$ 550.00",
+      "created_at_iso": "2025-12-05 12:00:00 UTC"
+    },
+    {
+      "id": 135,
+      "transaction_id": 135,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2026-02-09 12:00:00 UTC"
+    },
+    {
+      "id": 136,
+      "transaction_id": 136,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "70000",
+      "amount_formatted": "R$ 700.00",
+      "created_at_iso": "2026-02-09 12:00:00 UTC"
+    },
+    {
+      "id": 137,
+      "transaction_id": 137,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "25000",
+      "amount_formatted": "R$ 250.00",
+      "created_at_iso": "2026-03-08 12:00:00 UTC"
+    },
+    {
+      "id": 138,
+      "transaction_id": 138,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "25000",
+      "amount_formatted": "R$ 250.00",
+      "created_at_iso": "2026-03-10 12:00:00 UTC"
+    },
+    {
+      "id": 139,
+      "transaction_id": 139,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "25000",
+      "amount_formatted": "R$ 250.00",
+      "created_at_iso": "2026-03-15 12:00:00 UTC"
+    },
+    {
+      "id": 140,
+      "transaction_id": 140,
+      "account_id": 11,
+      "account_name": "Tesouraria Consolidada ASPPIBRA (Ref: 2026-07-PM4)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "67200",
+      "amount_formatted": "R$ 672.00",
+      "created_at_iso": "2026-03-27 12:00:00 UTC"
+    },
+    {
+      "id": 145,
+      "transaction_id": 146,
+      "account_id": 10,
+      "account_name": "Conta Andressa de Lima Ferreira (#2024001)",
+      "asset_code": "BRL",
+      "direction": "credit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2026-08-20 13:37:26 UTC"
+    },
+    {
+      "id": 146,
+      "transaction_id": 146,
+      "account_id": 1,
+      "account_name": "DAO Treasury Account",
+      "asset_code": "BRL",
+      "direction": "debit",
+      "amount_base_units": "80000",
+      "amount_formatted": "R$ 800.00",
+      "created_at_iso": "2026-08-20 13:37:26 UTC"
+    }
+  ],
+  "logs_auditoria_recentes": [
+    {
+      "id": 177,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:51:19 UTC"
+    },
+    {
+      "id": 176,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:51:12 UTC"
+    },
+    {
+      "id": 171,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "failure",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:50:44 UTC"
+    },
+    {
+      "id": 172,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "failure",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:50:44 UTC"
+    },
+    {
+      "id": 173,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:50:44 UTC"
+    },
+    {
+      "id": 174,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:50:44 UTC"
+    },
+    {
+      "id": 175,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-21 03:50:44 UTC"
+    },
+    {
+      "id": 170,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:54:02 UTC"
+    },
+    {
+      "id": 169,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:53:35 UTC"
+    },
+    {
+      "id": 167,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:53:33 UTC"
+    },
+    {
+      "id": 168,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:53:33 UTC"
+    },
+    {
+      "id": 165,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:53:25 UTC"
+    },
+    {
+      "id": 166,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:53:25 UTC"
+    },
+    {
+      "id": 164,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:45:56 UTC"
+    },
+    {
+      "id": 163,
+      "action": "API_REQUEST",
+      "actor_id": null,
+      "target_user_id": null,
+      "status": "success",
+      "ip_address": "127.0.0.1",
+      "created_at_iso": "2026-08-20 13:45:53 UTC"
+    }
+  ],
+  "detalhamento_andressa_de_lima_ferreira": {
+    "metadata": {
+      "titulo": "Relatório Financeiro Completo e Auditado - Andressa de Lima Ferreira",
+      "data_exportacao_utc": "2026-08-21T05:43:10.876759+00:00",
+      "relatorio_referencia": "2026-08-PM4 (Auditoria_ASPPIBRA_Andressa.xlsx)",
+      "versao_arquitetura": "Enterprise D1 V1.1 Hardened — DDL Estrito, Triggers de Imutabilidade e Partidas Dobradas"
+    },
+    "perfil_titular_e_cadastro": {
+      "nome_completo": "Andressa de Lima Ferreira",
+      "numero_conta": "#2024001",
+      "user_id": 10,
+      "email": "andressa.ferreira@email.com",
+      "cpf": "173.793.567-80",
+      "rg": "24.891.002-9",
+      "endereco_residencial": "Rua Palmira F. De Carvalho, lote 05, Quadra D, São José de Imbassaí, Maricá - RJ, 24912-000",
+      "nacionalidade": "BR",
+      "status_identidade_civil": "verified",
+      "status_documento_cpf": "verified",
+      "data_cadastro_iso": "2023-08-08 00:00:00 UTC"
+    },
+    "resumo_executivo_contrato": {
+      "numero_contrato": "#2024001",
+      "public_id_contrato": "ctr_2024001",
+      "valor_total_contrato": "R$ 65.000,00",
+      "total_pago_real_comprovado": "R$ 36.623,00",
+      "total_ajustes_reconciliacao": "R$ 800,00",
+      "saldo_devedor_reconciliado": "R$ 27.577,00",
+      "saldo_devedor_centavos": 2757700,
+      "status_contrato": "Em dia",
+      "proxima_obrigacao": {
+        "data_vencimento": "15/09/2026",
+        "valor_parcela": "R$ 800,00",
+        "parcelas_pendentes": 36,
+        "parcelas_em_atraso": 0
+      },
+      "estatisticas_transacoes": {
+        "total_transacoes_registradas": 46,
+        "transacoes_confirmadas_liquidadas": 40,
+        "transacoes_ajuste_auditado": 1,
+        "transacoes_sem_comprovante_inadimplentes": 5
+      }
+    },
+    "reconciliacao_migration_0003": {
+      "transacao_id": 46,
+      "public_id": "txn_adj_0003",
+      "tipo_ajuste": "reconciliation",
+      "direcao": "decrease",
+      "valor_ajuste": "R$ 800,00",
+      "motivo": "Reconciliação Auditada - Correção de Saldo Contratual (Migration 0003)",
+      "conta_debito": "1100 DAO Treasury Cash (ID 2)",
+      "conta_credito": "1200 Customer Receivables (ID 4)"
+    },
+    "distribuicao_financeira_auditada": {
+      "total_pago_por_favorecido": {
+        "Paulo Roberto Batista Ferreira": "R$ 27.389,00",
+        "Sandro Alves de Amorim": "R$ 6.084,00",
+        "ASPPIBRA": "R$ 3.150,00"
+      },
+      "total_pago_por_banco_origem": {
+        "Itaú Unibanco S.A.": "R$ 20.867,00",
+        "Mercado Pago IP Ltda": "R$ 10.150,00",
+        "Nu Pagamentos S.A.": "R$ 3.634,00",
+        "Sem Movimentação": "R$ 1.050,00",
+        "Banco Inter S.A.": "R$ 922,00"
+      },
+      "total_pago_por_banco_destino": {
+        "Nu Pagamentos S.A.": "R$ 12.400,00",
+        "Banco Bradesco S.A.": "R$ 4.400,00",
+        "Itaú Unibanco S.A.": "R$ 12.617,00",
+        "Banco Inter S.A.": "R$ 1.684,00",
+        "Sem Movimentação": "R$ 2.372,00",
+        "Cora Sociedade de Crédito": "R$ 3.150,00"
+      },
+      "total_pago_por_categoria": {
+        "Aporte / Mensalidade Contratual": "R$ 36.623,00"
+      },
+      "total_pago_por_forma_pagamento": {
+        "pix": "R$ 27.101,00",
+        "bank_transfer": "R$ 9.522,00"
+      }
+    },
+    "historico_detalhado_46_transacoes": [
+      {
+        "id_transacao": 1,
+        "public_id": "txn_001",
+        "codigo_referencia": "TX-001",
+        "data_iso": "2023-08-08 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 5.000,00",
+        "valor_centavos": 500000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Nu Pagamentos S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú Pix",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 2,
+        "public_id": "txn_002",
+        "codigo_referencia": "TX-002",
+        "data_iso": "2023-08-09 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 5.000,00",
+        "valor_centavos": 500000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Nu Pagamentos S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú Pix",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 3,
+        "public_id": "txn_003",
+        "codigo_referencia": "TX-003",
+        "data_iso": "2023-09-21 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Nu Pagamentos S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 4,
+        "public_id": "txn_004",
+        "codigo_referencia": "TX-004",
+        "data_iso": "2023-10-20 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Nu Pagamentos S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 5,
+        "public_id": "txn_005",
+        "codigo_referencia": "TX-005",
+        "data_iso": "2023-11-21 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Nu Pagamentos S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 6,
+        "public_id": "txn_006",
+        "codigo_referencia": "TX-006",
+        "data_iso": "2023-12-21 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 700,00",
+        "valor_centavos": 70000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú + Extrato Bradesco",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 7,
+        "public_id": "txn_007",
+        "codigo_referencia": "TX-007",
+        "data_iso": "2023-12-22 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (agendamento + realizado)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 8,
+        "public_id": "txn_008",
+        "codigo_referencia": "TX-008",
+        "data_iso": "2024-02-16 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 9,
+        "public_id": "txn_009",
+        "codigo_referencia": "TX-009",
+        "data_iso": "2024-03-11 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 10,
+        "public_id": "txn_010",
+        "codigo_referencia": "TX-010",
+        "data_iso": "2024-04-30 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 700,00",
+        "valor_centavos": 70000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago + Extrato Bradesco",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 11,
+        "public_id": "txn_011",
+        "codigo_referencia": "TX-011",
+        "data_iso": "2024-04-30 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 12,
+        "public_id": "txn_012",
+        "codigo_referencia": "TX-012",
+        "data_iso": "2024-05-29 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 13,
+        "public_id": "txn_013",
+        "codigo_referencia": "TX-013",
+        "data_iso": "2024-06-24 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 14,
+        "public_id": "txn_014",
+        "codigo_referencia": "TX-014",
+        "data_iso": "2024-07-28 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 15,
+        "public_id": "txn_015",
+        "codigo_referencia": "TX-015",
+        "data_iso": "2024-09-06 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 16,
+        "public_id": "txn_016",
+        "codigo_referencia": "TX-016",
+        "data_iso": "2024-09-06 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 700,00",
+        "valor_centavos": 70000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Extrato Bradesco",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 17,
+        "public_id": "txn_017",
+        "codigo_referencia": "TX-017",
+        "data_iso": "2024-10-09 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Extrato Bradesco",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 18,
+        "public_id": "txn_018",
+        "codigo_referencia": "TX-018",
+        "data_iso": "2024-11-09 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 19,
+        "public_id": "txn_019",
+        "codigo_referencia": "TX-019",
+        "data_iso": "2024-12-18 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 20,
+        "public_id": "txn_020",
+        "codigo_referencia": "TX-020",
+        "data_iso": "2025-01-21 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 21,
+        "public_id": "txn_021",
+        "codigo_referencia": "TX-021",
+        "data_iso": "2025-01-21 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 700,00",
+        "valor_centavos": 70000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 22,
+        "public_id": "txn_022",
+        "codigo_referencia": "TX-022",
+        "data_iso": "2025-02-10 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú (App)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 23,
+        "public_id": "txn_023",
+        "codigo_referencia": "TX-023",
+        "data_iso": "2025-03-19 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 24,
+        "public_id": "txn_024",
+        "codigo_referencia": "TX-024",
+        "data_iso": "2025-04-22 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 400,00",
+        "valor_centavos": 40000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago (env. 18/04) + Extrato Bradesco",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 25,
+        "public_id": "txn_025",
+        "codigo_referencia": "TX-025",
+        "data_iso": "2025-04-30 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 400,00",
+        "valor_centavos": 40000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Banco Bradesco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 26,
+        "public_id": "txn_026",
+        "codigo_referencia": "TX-026",
+        "data_iso": "2025-05-17 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 750,00",
+        "valor_centavos": 75000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 27,
+        "public_id": "txn_027",
+        "codigo_referencia": "TX-027",
+        "data_iso": "2025-06-17 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 350,00",
+        "valor_centavos": 35000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Banco Inter S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú Pix",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 28,
+        "public_id": "txn_028",
+        "codigo_referencia": "TX-028",
+        "data_iso": "2025-06-17 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Mercado Pago IP Ltda",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 29,
+        "public_id": "txn_029",
+        "codigo_referencia": "TX-029",
+        "data_iso": "2025-07-26 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 667,00",
+        "valor_centavos": 66700,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Nu Pagamentos S.A.",
+        "banco_destino": "Itaú Unibanco S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Nu",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 30,
+        "public_id": "txn_030",
+        "codigo_referencia": "TX-030",
+        "data_iso": "2025-07-26 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 667,00",
+        "valor_centavos": 66700,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Nu Pagamentos S.A.",
+        "banco_destino": "Banco Inter S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Nu",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 31,
+        "public_id": "txn_031",
+        "codigo_referencia": "TX-031",
+        "data_iso": "2025-08-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 667,00",
+        "valor_centavos": 66700,
+        "moeda": "BRL",
+        "favorecido_nome": "Sandro Alves de Amorim",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Banco Inter S.A.",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú Pix",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 32,
+        "public_id": "txn_032",
+        "codigo_referencia": "TX-032",
+        "data_iso": "2025-10-13 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 1.000,00",
+        "valor_centavos": 100000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú Pix",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 33,
+        "public_id": "txn_033",
+        "codigo_referencia": "TX-033",
+        "data_iso": "2025-11-17 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 1.050,00",
+        "valor_centavos": 105000,
+        "moeda": "BRL",
+        "favorecido_nome": "ASPPIBRA",
+        "banco_origem": "Sem Movimentação",
+        "banco_destino": "Cora Sociedade de Crédito",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Mercado Pago + Boleto Cora oficial",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 34,
+        "public_id": "txn_034",
+        "codigo_referencia": "TX-034",
+        "data_iso": "2025-12-05 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 550,00",
+        "valor_centavos": 55000,
+        "moeda": "BRL",
+        "favorecido_nome": "ASPPIBRA",
+        "banco_origem": "Nu Pagamentos S.A.",
+        "banco_destino": "Cora Sociedade de Crédito",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Nu + Extrato Cora ASPPIBRA",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 35,
+        "public_id": "txn_035",
+        "codigo_referencia": "TX-035",
+        "data_iso": "2026-02-09 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "ASPPIBRA",
+        "banco_origem": "Nu Pagamentos S.A.",
+        "banco_destino": "Cora Sociedade de Crédito",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Nu (compensado 10/02)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 36,
+        "public_id": "txn_036",
+        "codigo_referencia": "TX-036",
+        "data_iso": "2026-02-09 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 700,00",
+        "valor_centavos": 70000,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Nu Pagamentos S.A.",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Nu (compensado 10/02)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 37,
+        "public_id": "txn_037",
+        "codigo_referencia": "TX-037",
+        "data_iso": "2026-03-08 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 250,00",
+        "valor_centavos": 25000,
+        "moeda": "BRL",
+        "favorecido_nome": "ASPPIBRA",
+        "banco_origem": "Nu Pagamentos S.A.",
+        "banco_destino": "Cora Sociedade de Crédito",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Nu (compensado 09/03)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 38,
+        "public_id": "txn_038",
+        "codigo_referencia": "TX-038",
+        "data_iso": "2026-03-10 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 250,00",
+        "valor_centavos": 25000,
+        "moeda": "BRL",
+        "favorecido_nome": "ASPPIBRA",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Cora Sociedade de Crédito",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "pix",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Itaú Pix (compensado 11/03)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 39,
+        "public_id": "txn_039",
+        "codigo_referencia": "TX-039",
+        "data_iso": "2026-03-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 250,00",
+        "valor_centavos": 25000,
+        "moeda": "BRL",
+        "favorecido_nome": "ASPPIBRA",
+        "banco_origem": "Banco Inter S.A.",
+        "banco_destino": "Cora Sociedade de Crédito",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Banco Inter (compensado 16/03)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 40,
+        "public_id": "txn_040",
+        "codigo_referencia": "TX-040",
+        "data_iso": "2026-03-27 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 672,00",
+        "valor_centavos": 67200,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Banco Inter S.A.",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Comprovante Banco Inter (compensado 28/03)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      },
+      {
+        "id_transacao": 41,
+        "public_id": "txn_041",
+        "codigo_referencia": "TX-041",
+        "data_iso": "2024-01-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 0,00",
+        "valor_centavos": 0,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Sem Movimentação",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "failed",
+        "comprovante_fonte": "Sem comprovante (Inadimplência no período)",
+        "nota_contabil": "Sem movimentação financeira patrimonial (Inadimplência)"
+      },
+      {
+        "id_transacao": 42,
+        "public_id": "txn_042",
+        "codigo_referencia": "TX-042",
+        "data_iso": "2024-08-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 0,00",
+        "valor_centavos": 0,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Sem Movimentação",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "failed",
+        "comprovante_fonte": "Sem comprovante (Inadimplência no período)",
+        "nota_contabil": "Sem movimentação financeira patrimonial (Inadimplência)"
+      },
+      {
+        "id_transacao": 43,
+        "public_id": "txn_043",
+        "codigo_referencia": "TX-043",
+        "data_iso": "2025-09-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 0,00",
+        "valor_centavos": 0,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Sem Movimentação",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "failed",
+        "comprovante_fonte": "Sem comprovante (Inadimplência no período)",
+        "nota_contabil": "Sem movimentação financeira patrimonial (Inadimplência)"
+      },
+      {
+        "id_transacao": 44,
+        "public_id": "txn_044",
+        "codigo_referencia": "TX-044",
+        "data_iso": "2026-01-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 0,00",
+        "valor_centavos": 0,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Sem Movimentação",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "failed",
+        "comprovante_fonte": "Sem comprovante (Inadimplência no período)",
+        "nota_contabil": "Sem movimentação financeira patrimonial (Inadimplência)"
+      },
+      {
+        "id_transacao": 45,
+        "public_id": "txn_045",
+        "codigo_referencia": "TX-045",
+        "data_iso": "2026-04-15 12:00:00 UTC",
+        "valor_formatado_pt_br": "R$ 0,00",
+        "valor_centavos": 0,
+        "moeda": "BRL",
+        "favorecido_nome": "Paulo Roberto Batista Ferreira",
+        "banco_origem": "Sem Movimentação",
+        "banco_destino": "Sem Movimentação",
+        "tipo_transacao": "payment",
+        "categoria": "Aporte / Mensalidade Contratual",
+        "forma_pagamento": "bank_transfer",
+        "status_transacao": "failed",
+        "comprovante_fonte": "Sem comprovante (Inadimplência no período)",
+        "nota_contabil": "Sem movimentação financeira patrimonial (Inadimplência)"
+      },
+      {
+        "id_transacao": 46,
+        "public_id": "txn_adj_0003",
+        "codigo_referencia": "TX-046",
+        "data_iso": "2026-08-21 05:41:58 UTC",
+        "valor_formatado_pt_br": "R$ 800,00",
+        "valor_centavos": 80000,
+        "moeda": "BRL",
+        "favorecido_nome": "Sistema de Tesouraria ASPPIBRA",
+        "banco_origem": "Itaú Unibanco S.A.",
+        "banco_destino": "Banco Inter S.A.",
+        "tipo_transacao": "adjustment",
+        "categoria": "Ajuste / Operacional",
+        "forma_pagamento": "manual_adjustment",
+        "status_transacao": "settled",
+        "comprovante_fonte": "Audit_Proof_Ref_2026_08_20 (Migração 0003)",
+        "nota_contabil": "Transação efetivada e escriturada"
+      }
+    ],
+    "livro_razao_partidas_dobradas_journal": [
+      {
+        "journal_entry_id": 1,
+        "codigo_escrituracao": "je_001",
+        "id_transacao_vinculada": 1,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 1,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 500000,
+            "valor_formatado_pt_br": "R$ 5.000,00"
+          },
+          {
+            "id_linha": 2,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 500000,
+            "valor_formatado_pt_br": "R$ 5.000,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 2,
+        "codigo_escrituracao": "je_002",
+        "id_transacao_vinculada": 2,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 3,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 500000,
+            "valor_formatado_pt_br": "R$ 5.000,00"
+          },
+          {
+            "id_linha": 4,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 500000,
+            "valor_formatado_pt_br": "R$ 5.000,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 3,
+        "codigo_escrituracao": "je_003",
+        "id_transacao_vinculada": 3,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 5,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 6,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 4,
+        "codigo_escrituracao": "je_004",
+        "id_transacao_vinculada": 4,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 7,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 8,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 5,
+        "codigo_escrituracao": "je_005",
+        "id_transacao_vinculada": 5,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 9,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 10,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 6,
+        "codigo_escrituracao": "je_006",
+        "id_transacao_vinculada": 6,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 11,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          },
+          {
+            "id_linha": 12,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 7,
+        "codigo_escrituracao": "je_007",
+        "id_transacao_vinculada": 7,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 13,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 14,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 8,
+        "codigo_escrituracao": "je_008",
+        "id_transacao_vinculada": 8,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 15,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 16,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 9,
+        "codigo_escrituracao": "je_009",
+        "id_transacao_vinculada": 9,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 17,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 18,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 10,
+        "codigo_escrituracao": "je_010",
+        "id_transacao_vinculada": 10,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 19,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          },
+          {
+            "id_linha": 20,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 11,
+        "codigo_escrituracao": "je_011",
+        "id_transacao_vinculada": 11,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 21,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 22,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 12,
+        "codigo_escrituracao": "je_012",
+        "id_transacao_vinculada": 12,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 23,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 24,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 13,
+        "codigo_escrituracao": "je_013",
+        "id_transacao_vinculada": 13,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 25,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 26,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 14,
+        "codigo_escrituracao": "je_014",
+        "id_transacao_vinculada": 14,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 27,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 28,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 15,
+        "codigo_escrituracao": "je_015",
+        "id_transacao_vinculada": 15,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 29,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 30,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 16,
+        "codigo_escrituracao": "je_016",
+        "id_transacao_vinculada": 16,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 31,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          },
+          {
+            "id_linha": 32,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 17,
+        "codigo_escrituracao": "je_017",
+        "id_transacao_vinculada": 17,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 33,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 34,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 18,
+        "codigo_escrituracao": "je_018",
+        "id_transacao_vinculada": 18,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 35,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 36,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 19,
+        "codigo_escrituracao": "je_019",
+        "id_transacao_vinculada": 19,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 37,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 38,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 20,
+        "codigo_escrituracao": "je_020",
+        "id_transacao_vinculada": 20,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 39,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 40,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 21,
+        "codigo_escrituracao": "je_021",
+        "id_transacao_vinculada": 21,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 41,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          },
+          {
+            "id_linha": 42,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 22,
+        "codigo_escrituracao": "je_022",
+        "id_transacao_vinculada": 22,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 43,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 44,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 23,
+        "codigo_escrituracao": "je_023",
+        "id_transacao_vinculada": 23,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 45,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 46,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 24,
+        "codigo_escrituracao": "je_024",
+        "id_transacao_vinculada": 24,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 47,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 40000,
+            "valor_formatado_pt_br": "R$ 400,00"
+          },
+          {
+            "id_linha": 48,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 40000,
+            "valor_formatado_pt_br": "R$ 400,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 25,
+        "codigo_escrituracao": "je_025",
+        "id_transacao_vinculada": 25,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 49,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 40000,
+            "valor_formatado_pt_br": "R$ 400,00"
+          },
+          {
+            "id_linha": 50,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 40000,
+            "valor_formatado_pt_br": "R$ 400,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 26,
+        "codigo_escrituracao": "je_026",
+        "id_transacao_vinculada": 26,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 51,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 75000,
+            "valor_formatado_pt_br": "R$ 750,00"
+          },
+          {
+            "id_linha": 52,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 75000,
+            "valor_formatado_pt_br": "R$ 750,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 27,
+        "codigo_escrituracao": "je_027",
+        "id_transacao_vinculada": 27,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 53,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 35000,
+            "valor_formatado_pt_br": "R$ 350,00"
+          },
+          {
+            "id_linha": 54,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 35000,
+            "valor_formatado_pt_br": "R$ 350,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 28,
+        "codigo_escrituracao": "je_028",
+        "id_transacao_vinculada": 28,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 55,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 56,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 29,
+        "codigo_escrituracao": "je_029",
+        "id_transacao_vinculada": 29,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 57,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 66700,
+            "valor_formatado_pt_br": "R$ 667,00"
+          },
+          {
+            "id_linha": 58,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 66700,
+            "valor_formatado_pt_br": "R$ 667,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 30,
+        "codigo_escrituracao": "je_030",
+        "id_transacao_vinculada": 30,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 59,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 66700,
+            "valor_formatado_pt_br": "R$ 667,00"
+          },
+          {
+            "id_linha": 60,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 66700,
+            "valor_formatado_pt_br": "R$ 667,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 31,
+        "codigo_escrituracao": "je_031",
+        "id_transacao_vinculada": 31,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 61,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 66700,
+            "valor_formatado_pt_br": "R$ 667,00"
+          },
+          {
+            "id_linha": 62,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 66700,
+            "valor_formatado_pt_br": "R$ 667,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 32,
+        "codigo_escrituracao": "je_032",
+        "id_transacao_vinculada": 32,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 63,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 100000,
+            "valor_formatado_pt_br": "R$ 1.000,00"
+          },
+          {
+            "id_linha": 64,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 100000,
+            "valor_formatado_pt_br": "R$ 1.000,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 33,
+        "codigo_escrituracao": "je_033",
+        "id_transacao_vinculada": 33,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 65,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 105000,
+            "valor_formatado_pt_br": "R$ 1.050,00"
+          },
+          {
+            "id_linha": 66,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 105000,
+            "valor_formatado_pt_br": "R$ 1.050,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 34,
+        "codigo_escrituracao": "je_034",
+        "id_transacao_vinculada": 34,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 67,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 55000,
+            "valor_formatado_pt_br": "R$ 550,00"
+          },
+          {
+            "id_linha": 68,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 55000,
+            "valor_formatado_pt_br": "R$ 550,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 35,
+        "codigo_escrituracao": "je_035",
+        "id_transacao_vinculada": 35,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 69,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 70,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 36,
+        "codigo_escrituracao": "je_036",
+        "id_transacao_vinculada": 36,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 71,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          },
+          {
+            "id_linha": 72,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 70000,
+            "valor_formatado_pt_br": "R$ 700,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 37,
+        "codigo_escrituracao": "je_037",
+        "id_transacao_vinculada": 37,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 73,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 25000,
+            "valor_formatado_pt_br": "R$ 250,00"
+          },
+          {
+            "id_linha": 74,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 25000,
+            "valor_formatado_pt_br": "R$ 250,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 38,
+        "codigo_escrituracao": "je_038",
+        "id_transacao_vinculada": 38,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 75,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 25000,
+            "valor_formatado_pt_br": "R$ 250,00"
+          },
+          {
+            "id_linha": 76,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 25000,
+            "valor_formatado_pt_br": "R$ 250,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 39,
+        "codigo_escrituracao": "je_039",
+        "id_transacao_vinculada": 39,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 77,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 25000,
+            "valor_formatado_pt_br": "R$ 250,00"
+          },
+          {
+            "id_linha": 78,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 25000,
+            "valor_formatado_pt_br": "R$ 250,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 40,
+        "codigo_escrituracao": "je_040",
+        "id_transacao_vinculada": 40,
+        "tipo_escrituracao": "payment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 79,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 67200,
+            "valor_formatado_pt_br": "R$ 672,00"
+          },
+          {
+            "id_linha": 80,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 67200,
+            "valor_formatado_pt_br": "R$ 672,00"
+          }
+        ]
+      },
+      {
+        "journal_entry_id": 41,
+        "codigo_escrituracao": "je_adj_0003",
+        "id_transacao_vinculada": 46,
+        "tipo_escrituracao": "adjustment",
+        "status": "posted",
+        "ativo": {
+          "id": 1,
+          "codigo": "BRL",
+          "simbolo": "R$",
+          "nome": "Real Brasileiro",
+          "decimais": 2
+        },
+        "linhas_partida_dobrada": [
+          {
+            "id_linha": 81,
+            "id_conta": 2,
+            "codigo_conta": "1100",
+            "nome_conta": "DAO Treasury Cash (Conta 11)",
+            "direcao": "debit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          },
+          {
+            "id_linha": 82,
+            "id_conta": 4,
+            "codigo_conta": "1200",
+            "nome_conta": "Customer Receivables (Contas a Receber)",
+            "direcao": "credit",
+            "valor_unidades_menores": 80000,
+            "valor_formatado_pt_br": "R$ 800,00"
+          }
+        ]
+      }
+    ],
+    "cronograma_parcelas_e_alocacoes": [
+      {
+        "numero_parcela": 1,
+        "data_vencimento_iso": "2023-08-08 12:00:00 UTC",
+        "valor_parcela": "R$ 5.000,00",
+        "id_transacao_alocada": 1,
+        "valor_alocado": "R$ 5.000,00"
+      },
+      {
+        "numero_parcela": 2,
+        "data_vencimento_iso": "2023-08-09 12:00:00 UTC",
+        "valor_parcela": "R$ 5.000,00",
+        "id_transacao_alocada": 2,
+        "valor_alocado": "R$ 5.000,00"
+      },
+      {
+        "numero_parcela": 3,
+        "data_vencimento_iso": "2023-09-21 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 3,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 4,
+        "data_vencimento_iso": "2023-10-20 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 4,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 5,
+        "data_vencimento_iso": "2023-11-21 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 5,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 6,
+        "data_vencimento_iso": "2023-12-21 12:00:00 UTC",
+        "valor_parcela": "R$ 700,00",
+        "id_transacao_alocada": 6,
+        "valor_alocado": "R$ 700,00"
+      },
+      {
+        "numero_parcela": 7,
+        "data_vencimento_iso": "2023-12-22 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 7,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 8,
+        "data_vencimento_iso": "2024-02-16 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 8,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 9,
+        "data_vencimento_iso": "2024-03-11 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 9,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 10,
+        "data_vencimento_iso": "2024-04-30 12:00:00 UTC",
+        "valor_parcela": "R$ 700,00",
+        "id_transacao_alocada": 10,
+        "valor_alocado": "R$ 700,00"
+      },
+      {
+        "numero_parcela": 11,
+        "data_vencimento_iso": "2024-04-30 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 11,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 12,
+        "data_vencimento_iso": "2024-05-29 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 12,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 13,
+        "data_vencimento_iso": "2024-06-24 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 13,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 14,
+        "data_vencimento_iso": "2024-07-28 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 14,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 15,
+        "data_vencimento_iso": "2024-09-06 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 15,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 16,
+        "data_vencimento_iso": "2024-09-06 12:00:00 UTC",
+        "valor_parcela": "R$ 700,00",
+        "id_transacao_alocada": 16,
+        "valor_alocado": "R$ 700,00"
+      },
+      {
+        "numero_parcela": 17,
+        "data_vencimento_iso": "2024-10-09 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 17,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 18,
+        "data_vencimento_iso": "2024-11-09 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 18,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 19,
+        "data_vencimento_iso": "2024-12-18 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 19,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 20,
+        "data_vencimento_iso": "2025-01-21 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 20,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 21,
+        "data_vencimento_iso": "2025-01-21 12:00:00 UTC",
+        "valor_parcela": "R$ 700,00",
+        "id_transacao_alocada": 21,
+        "valor_alocado": "R$ 700,00"
+      },
+      {
+        "numero_parcela": 22,
+        "data_vencimento_iso": "2025-02-10 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 22,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 23,
+        "data_vencimento_iso": "2025-03-19 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 23,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 24,
+        "data_vencimento_iso": "2025-04-22 12:00:00 UTC",
+        "valor_parcela": "R$ 400,00",
+        "id_transacao_alocada": 24,
+        "valor_alocado": "R$ 400,00"
+      },
+      {
+        "numero_parcela": 25,
+        "data_vencimento_iso": "2025-04-30 12:00:00 UTC",
+        "valor_parcela": "R$ 400,00",
+        "id_transacao_alocada": 25,
+        "valor_alocado": "R$ 400,00"
+      },
+      {
+        "numero_parcela": 26,
+        "data_vencimento_iso": "2025-05-17 12:00:00 UTC",
+        "valor_parcela": "R$ 750,00",
+        "id_transacao_alocada": 26,
+        "valor_alocado": "R$ 750,00"
+      },
+      {
+        "numero_parcela": 27,
+        "data_vencimento_iso": "2025-06-17 12:00:00 UTC",
+        "valor_parcela": "R$ 350,00",
+        "id_transacao_alocada": 27,
+        "valor_alocado": "R$ 350,00"
+      },
+      {
+        "numero_parcela": 28,
+        "data_vencimento_iso": "2025-06-17 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 28,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 29,
+        "data_vencimento_iso": "2025-07-26 12:00:00 UTC",
+        "valor_parcela": "R$ 667,00",
+        "id_transacao_alocada": 29,
+        "valor_alocado": "R$ 667,00"
+      },
+      {
+        "numero_parcela": 30,
+        "data_vencimento_iso": "2025-07-26 12:00:00 UTC",
+        "valor_parcela": "R$ 667,00",
+        "id_transacao_alocada": 30,
+        "valor_alocado": "R$ 667,00"
+      },
+      {
+        "numero_parcela": 31,
+        "data_vencimento_iso": "2025-08-15 12:00:00 UTC",
+        "valor_parcela": "R$ 667,00",
+        "id_transacao_alocada": 31,
+        "valor_alocado": "R$ 667,00"
+      },
+      {
+        "numero_parcela": 32,
+        "data_vencimento_iso": "2025-10-13 12:00:00 UTC",
+        "valor_parcela": "R$ 1.000,00",
+        "id_transacao_alocada": 32,
+        "valor_alocado": "R$ 1.000,00"
+      },
+      {
+        "numero_parcela": 33,
+        "data_vencimento_iso": "2025-11-17 12:00:00 UTC",
+        "valor_parcela": "R$ 1.050,00",
+        "id_transacao_alocada": 33,
+        "valor_alocado": "R$ 1.050,00"
+      },
+      {
+        "numero_parcela": 34,
+        "data_vencimento_iso": "2025-12-05 12:00:00 UTC",
+        "valor_parcela": "R$ 550,00",
+        "id_transacao_alocada": 34,
+        "valor_alocado": "R$ 550,00"
+      },
+      {
+        "numero_parcela": 35,
+        "data_vencimento_iso": "2026-02-09 12:00:00 UTC",
+        "valor_parcela": "R$ 800,00",
+        "id_transacao_alocada": 35,
+        "valor_alocado": "R$ 800,00"
+      },
+      {
+        "numero_parcela": 36,
+        "data_vencimento_iso": "2026-02-09 12:00:00 UTC",
+        "valor_parcela": "R$ 700,00",
+        "id_transacao_alocada": 36,
+        "valor_alocado": "R$ 700,00"
+      },
+      {
+        "numero_parcela": 37,
+        "data_vencimento_iso": "2026-03-08 12:00:00 UTC",
+        "valor_parcela": "R$ 250,00",
+        "id_transacao_alocada": 37,
+        "valor_alocado": "R$ 250,00"
+      },
+      {
+        "numero_parcela": 38,
+        "data_vencimento_iso": "2026-03-10 12:00:00 UTC",
+        "valor_parcela": "R$ 250,00",
+        "id_transacao_alocada": 38,
+        "valor_alocado": "R$ 250,00"
+      },
+      {
+        "numero_parcela": 39,
+        "data_vencimento_iso": "2026-03-15 12:00:00 UTC",
+        "valor_parcela": "R$ 250,00",
+        "id_transacao_alocada": 39,
+        "valor_alocado": "R$ 250,00"
+      },
+      {
+        "numero_parcela": 40,
+        "data_vencimento_iso": "2026-03-27 12:00:00 UTC",
+        "valor_parcela": "R$ 672,00",
+        "id_transacao_alocada": 40,
+        "valor_alocado": "R$ 672,00"
+      }
+    ],
+    "trilha_auditoria_encadeada_sha256": [
+      {
+        "sequencia_auditoria": 1,
+        "ator_tipo": "migration",
+        "acao": "migration_0006_apply",
+        "entidade_tipo": "contract",
+        "entidade_public_id": "ctr_2024001",
+        "algoritmo_hash": "SHA-256",
+        "previous_event_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "22fd9aa4f95d676c90c6e93e902639a684beb64276a212bb61a9f65828439d84",
+        "data_evento_iso": "2026-08-21 05:41:58 UTC"
+      }
+    ]
+  },
+  "metadados_auditoria_v1_1": {
+    "versao": "Enterprise D1 V1.1 Hardened",
+    "total_transacoes": 46,
+    "total_journal_entries": 41,
+    "total_journal_lines": 82,
+    "status_partida_dobrada": "100% Balanceado por Ativo e Entrada",
+    "triggers_imutabilidade": "Ativos e operantes no D1"
+  }
+}

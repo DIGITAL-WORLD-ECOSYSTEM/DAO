@@ -35,9 +35,10 @@ const SectionTitle = ({ title, mt = 4 }: { title: string; mt?: number }) => (
 
 type Props = {
   transactions: ITreasuryTransaction[];
+  profile?: any;
 };
 
-export function FinancialHistoryPrint({ transactions }: Props) {
+export function FinancialHistoryPrint({ transactions, profile }: Props) {
   const totalInflow = transactions
     .filter(tx => tx.direction === 'inbound' || tx.type === 'income')
     .reduce((acc, tx) => acc + (Number(tx.amount) || 0), 0);
@@ -46,7 +47,9 @@ export function FinancialHistoryPrint({ transactions }: Props) {
     .filter(tx => tx.direction === 'outbound' || tx.type === 'expense')
     .reduce((acc, tx) => acc + (Number(tx.amount) || 0), 0);
 
-  const netBalance = totalInflow - totalOutflow;
+  const contractTotal = profile?.contract_total || 65000;
+  const totalPaid = profile?.total_paid ?? totalInflow;
+  const outstandingBalance = profile?.outstanding_balance ?? Math.max(0, contractTotal - totalPaid);
 
   const headerContent = (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: `1px solid ${tokens.borderGray}`, pb: 2 }}>
@@ -111,15 +114,15 @@ export function FinancialHistoryPrint({ transactions }: Props) {
       <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
         <Box sx={{ flex: 1, border: `1px solid ${tokens.borderGray}`, borderLeft: `4px solid ${tokens.brandDark}`, p: 1.5, borderRadius: 1 }}>
           <Typography variant="caption" sx={{ fontWeight: 'bold', color: tokens.textMuted }}>VALOR TOTAL</Typography>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: tokens.brandDark, mt: 0.5 }}>R$ 65.000,00</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: tokens.brandDark, mt: 0.5 }}>R$ {fNumber(contractTotal)}</Typography>
         </Box>
         <Box sx={{ flex: 1, border: `1px solid ${tokens.borderGray}`, borderLeft: `4px solid ${tokens.brandGreen}`, p: 1.5, borderRadius: 1 }}>
           <Typography variant="caption" sx={{ fontWeight: 'bold', color: tokens.textMuted }}>TOTAL PAGO</Typography>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: tokens.brandGreen, mt: 0.5 }}>R$ 35.823,00</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: tokens.brandGreen, mt: 0.5 }}>R$ {fNumber(totalPaid)}</Typography>
         </Box>
         <Box sx={{ flex: 1, border: `1px solid ${tokens.dangerRed}`, bgcolor: '#FFF5F5', p: 1.5, borderRadius: 1 }}>
           <Typography variant="caption" sx={{ fontWeight: 'bold', color: tokens.dangerRed }}>SALDO DEVEDOR</Typography>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: tokens.dangerRed, mt: 0.5 }}>R$ 29.177,00</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: tokens.dangerRed, mt: 0.5 }}>R$ {fNumber(outstandingBalance)}</Typography>
         </Box>
       </Box>
 
@@ -176,8 +179,21 @@ export function FinancialHistoryPrint({ transactions }: Props) {
                   {fNumber(row.amount, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Box>
                 <Box component="td" sx={{ py: 1.5, px: 1.5, textAlign: 'center', verticalAlign: 'middle' }}>
-                  <Typography variant="caption" sx={{ fontWeight: 'bold', fontSize: '0.65rem', color: row.status === 'confirmed' ? tokens.brandGreen : tokens.textMuted }}>
-                    {row.status === 'confirmed' ? 'Concluído' : row.status === 'pending' ? 'Pendente' : 'Falha'}
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontWeight: 'bold',
+                      fontSize: '0.65rem',
+                      color: row.status === 'confirmed' ? tokens.brandGreen : (row.amount === 0 || row.category === 'Falta de Pagamento') ? tokens.dangerRed : tokens.textMuted
+                    }}
+                  >
+                    {row.status === 'confirmed'
+                      ? 'Concluído'
+                      : (row.amount === 0 || row.category === 'Falta de Pagamento')
+                        ? 'Falta de Pagamento'
+                        : row.status === 'pending'
+                          ? 'Pendente'
+                          : 'Inadimplente'}
                   </Typography>
                 </Box>
               </Box>

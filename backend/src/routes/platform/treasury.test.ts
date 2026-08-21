@@ -47,7 +47,7 @@ describe('Treasury Platform Route (/api/platform/treasury)', () => {
     const json = (await res.json()) as any;
     expect(json.success).toBe(true);
     expect(json.data.summary.totalInflow).toBe(36623); // R$ 36.623,00 (Total Auditado Reconciliado)
-    expect(json.data.summary.outstandingBalance).toBe(29177); // R$ 29.177,00
+    expect(json.data.summary.outstandingBalance).toBe(28377); // R$ 28.377,00 (Saldo Devedor Reconciliado)
     expect(json.data.transactions.length).toBe(45);
   });
 });

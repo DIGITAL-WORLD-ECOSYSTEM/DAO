@@ -13,6 +13,7 @@
  */
 import { Hono } from 'hono';
 import { Bindings, Variables } from '../../types/bindings';
+import { TreasuryController } from '../../interfaces/http/controllers/finance/treasury.controller';
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
@@ -23,10 +24,10 @@ export const CLIENT_ACCOUNT_PROFILE = {
   email: 'andressa.ferreira@email.com',
   cpf: '173.793.567-80',
   address: 'Rua Palmira F. De Carvalho, lote 05, Quadra D, São José de Imbassaí, Maricá - RJ, 24912-000',
-  contract_total: 65800,      // R$ 65.800,00
+  contract_total: 65000,      // R$ 65.000,00 (Contrato Real Reconciliado)
   total_paid: 36623,          // R$ 36.623,00 (Soma auditada dos comprovantes)
-  outstanding_balance: 29177, // R$ 29.177,00 (Saldo Devedor)
-  report_ref: '2026-07-PM4',
+  outstanding_balance: 28377, // R$ 28.377,00 (Saldo Devedor Reconciliado)
+  report_ref: '2026-08-PM4',
 };
 
 // 45 Transações Auditadas da Planilha Auditoria_ASPPIBRA_Andressa.xlsx (Datas Estabilizadas ISO 8601)
@@ -754,92 +755,92 @@ const CONSOLIDATED_REPORT_TRANSACTIONS = [
   {
     "id": "tx_041",
     "created_at": "2024-01-15T12:00:00Z",
-    "counterparty_name": "Desconhecido",
-    "origin_institution": "N/A",
-    "destination_institution": "N/A",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Sem Movimentação",
+    "destination_institution": "Sem Movimentação",
     "amount": 0,
     "currency": "BRL",
     "base_currency": "BRL",
     "base_amount": 0,
     "type": "income",
     "direction": "inbound",
-    "category": "other",
+    "category": "Falta de Pagamento",
     "payment_method": "bank_transfer",
     "status": "failed",
     "reconciliation_status": "manual_review",
-    "source_proof": "—"
+    "source_proof": "Sem comprovante (Inadimplência no período)"
   },
   {
     "id": "tx_042",
     "created_at": "2024-08-15T12:00:00Z",
-    "counterparty_name": "Desconhecido",
-    "origin_institution": "N/A",
-    "destination_institution": "N/A",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Sem Movimentação",
+    "destination_institution": "Sem Movimentação",
     "amount": 0,
     "currency": "BRL",
     "base_currency": "BRL",
     "base_amount": 0,
     "type": "income",
     "direction": "inbound",
-    "category": "other",
+    "category": "Falta de Pagamento",
     "payment_method": "bank_transfer",
     "status": "failed",
     "reconciliation_status": "manual_review",
-    "source_proof": "—"
+    "source_proof": "Sem comprovante (Inadimplência no período)"
   },
   {
     "id": "tx_043",
     "created_at": "2025-09-15T12:00:00Z",
-    "counterparty_name": "Desconhecido",
-    "origin_institution": "N/A",
-    "destination_institution": "N/A",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Sem Movimentação",
+    "destination_institution": "Sem Movimentação",
     "amount": 0,
     "currency": "BRL",
     "base_currency": "BRL",
     "base_amount": 0,
     "type": "income",
     "direction": "inbound",
-    "category": "other",
+    "category": "Falta de Pagamento",
     "payment_method": "bank_transfer",
     "status": "failed",
     "reconciliation_status": "manual_review",
-    "source_proof": "—"
+    "source_proof": "Sem comprovante (Inadimplência no período)"
   },
   {
     "id": "tx_044",
     "created_at": "2026-01-15T12:00:00Z",
-    "counterparty_name": "Desconhecido",
-    "origin_institution": "N/A",
-    "destination_institution": "N/A",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Sem Movimentação",
+    "destination_institution": "Sem Movimentação",
     "amount": 0,
     "currency": "BRL",
     "base_currency": "BRL",
     "base_amount": 0,
     "type": "income",
     "direction": "inbound",
-    "category": "other",
+    "category": "Falta de Pagamento",
     "payment_method": "bank_transfer",
     "status": "failed",
     "reconciliation_status": "manual_review",
-    "source_proof": "—"
+    "source_proof": "Sem comprovante (Inadimplência no período)"
   },
   {
     "id": "tx_045",
     "created_at": "2026-04-15T12:00:00Z",
-    "counterparty_name": "Desconhecido",
-    "origin_institution": "N/A",
-    "destination_institution": "N/A",
+    "counterparty_name": "Paulo Roberto Batista Ferreira",
+    "origin_institution": "Sem Movimentação",
+    "destination_institution": "Sem Movimentação",
     "amount": 0,
     "currency": "BRL",
     "base_currency": "BRL",
     "base_amount": 0,
     "type": "income",
     "direction": "inbound",
-    "category": "other",
+    "category": "Falta de Pagamento",
     "payment_method": "bank_transfer",
     "status": "failed",
     "reconciliation_status": "manual_review",
-    "source_proof": "—"
+    "source_proof": "Sem comprovante (Inadimplência no período)"
   }
 ];
 
@@ -848,66 +849,10 @@ app.get('/', (c) => c.json({ module: 'Treasury Analytics & Ledger API', status: 
 // GET /api/platform/treasury/analytics
 app.get('/analytics', async (c) => {
   const year = c.req.query('year');
-
+  const contractTotal = CLIENT_ACCOUNT_PROFILE.contract_total;
+  const totalPaid = CLIENT_ACCOUNT_PROFILE.total_paid;
+  const outstandingBalance = CLIENT_ACCOUNT_PROFILE.outstanding_balance;
   let transactionsList = CONSOLIDATED_REPORT_TRANSACTIONS;
-  let totalPaid = CLIENT_ACCOUNT_PROFILE.total_paid;
-  let contractTotal = CLIENT_ACCOUNT_PROFILE.contract_total;
-  let outstandingBalance = CLIENT_ACCOUNT_PROFILE.outstanding_balance;
-
-  // Consulta o banco D1 diretamente
-  if (c.env?.DB && typeof c.env.DB.prepare === 'function') {
-    try {
-      // 1. Consulta saldos reais da conta no D1
-      const balanceRow = await c.env.DB.prepare().first<{ available_base_units: string; locked_base_units: string }>();
-
-      if (balanceRow && balanceRow.available_base_units !== undefined && balanceRow.available_base_units !== null) {
-        totalPaid = Math.round(Number(balanceRow.available_base_units) / 100);
-        outstandingBalance = Math.round(Number(balanceRow.locked_base_units) / 100);
-        contractTotal = totalPaid + outstandingBalance;
-      }
-
-      // 2. Consulta as 45 transações gravadas no D1 diretamente (Ordenadas por Data)
-      const dbTx = await c.env.DB.prepare(`
-        SELECT 
-          ft.id,
-          strftime('%Y-%m-%dT%H:%M:%SZ', ft.created_at, 'unixepoch') as created_at,
-          ft.description,
-          ft.category,
-          ft.status,
-          fle.amount_base_units
-        FROM financial_transactions ft
-        LEFT JOIN financial_ledger_entries fle ON ft.id = fle.transaction_id
-        WHERE ft.user_id = 10
-        ORDER BY ft.created_at ASC, ft.id ASC
-      `).all<{
-        id: number;
-        created_at: string;
-        description: string;
-        category: string;
-        status: string;
-        amount_base_units: string;
-      }>();
-
-      if (dbTx && dbTx.results && dbTx.results.length > 0) {
-        transactionsList = dbTx.results.map((row, index) => {
-          const fallbackTx = CONSOLIDATED_REPORT_TRANSACTIONS[index] || CONSOLIDATED_REPORT_TRANSACTIONS[0];
-          const valInReais = row.amount_base_units ? Math.round(Number(row.amount_base_units) / 100) : 0;
-          return {
-            ...fallbackTx,
-            id: `tx_${String(index + 1).padStart(3, '0')}`,
-            created_at: row.created_at || fallbackTx.created_at,
-            amount: valInReais,
-            base_amount: valInReais,
-            category: row.category || fallbackTx.category,
-            status: row.status === 'completed' ? 'confirmed' : row.status === 'failed' ? 'failed' : 'confirmed',
-          };
-        });
-      }
-    } catch (e) {
-      console.warn('Consulta D1 para saldos/transações falhou, usando valores padrão:', e);
-    }
-  }
-
   let filteredTx = transactionsList;
   if (year && year !== 'Todos') {
     filteredTx = transactionsList.filter((tx) =>
@@ -1033,58 +978,74 @@ app.get('/citizen/:citizenId/ledger', async (c) => {
         associateInfo.name = dbUser.display_name || `${dbUser.legal_first_name || ''} ${dbUser.legal_last_name || ''}`.trim() || CLIENT_ACCOUNT_PROFILE.client_name;
       }
 
-      // 2. Saldo Real do Banco D1
-      const dbBalance = await c.env.DB.prepare(`
-        SELECT available_base_units, locked_base_units 
-        FROM account_balances 
-        WHERE account_id = 10 OR account_id = 11
-        LIMIT 1
-      `).first<{ available_base_units: string; locked_base_units: string }>();
+      // 2. Saldo Real Derivado Contratual do Banco D1
+      const dbContract = await c.env.DB.prepare(`
+        SELECT 
+          c.total_amount_minor,
+          COALESCE(SUM(pa.amount_minor), 0) AS total_paid_minor,
+          COALESCE((SELECT SUM(amount_minor) FROM contract_adjustments WHERE contract_id = c.id AND direction = 'decrease'), 0) AS total_adjustments_minor
+        FROM contracts c
+        LEFT JOIN contract_installments ci ON c.id = ci.contract_id
+        LEFT JOIN payment_allocations pa ON ci.id = pa.installment_id
+        WHERE c.user_id = 10 OR c.user_id = ?
+        GROUP BY c.id
+      `).bind(citizenId).first<{
+        total_amount_minor: number;
+        total_paid_minor: number;
+        total_adjustments_minor: number;
+      }>();
 
-      if (dbBalance && dbBalance.available_base_units !== undefined && dbBalance.available_base_units !== null) {
-        const paid = Math.round(Number(dbBalance.available_base_units) / 100);
-        const open = Math.round(Number(dbBalance.locked_base_units) / 100);
-        if (paid > 0) {
-          contractInfo.paidAmount = paid;
-          contractInfo.openAmount = open;
-          contractInfo.contractedAmount = paid + open;
-        }
+      if (dbContract) {
+        const totalReais = Math.round(dbContract.total_amount_minor / 100);
+        const paidReais = Math.round(dbContract.total_paid_minor / 100);
+        const adjReais = Math.round(dbContract.total_adjustments_minor / 100);
+        const openReais = totalReais - paidReais - adjReais;
+
+        contractInfo.contractedAmount = totalReais;
+        contractInfo.paidAmount = paidReais;
+        contractInfo.openAmount = openReais;
       }
 
-      // 3. Transações Financeiras Diretas do D1 (Ordenadas por Data)
+      // 3. Transações Financeiras Diretas do D1
       const dbTx = await c.env.DB.prepare(`
         SELECT 
           ft.id,
+          ft.public_id,
           strftime('%Y-%m-%dT%H:%M:%SZ', ft.created_at, 'unixepoch') as created_at,
           ft.description,
-          ft.category,
+          ft.amount_minor,
           ft.status,
-          fle.amount_base_units
+          ft.transaction_type,
+          ft.payment_method,
+          ft.counterparty_name
         FROM financial_transactions ft
-        LEFT JOIN financial_ledger_entries fle ON ft.id = fle.transaction_id
-        WHERE ft.user_id = 10
+        WHERE ft.user_id = 10 OR ft.user_id = ?
         ORDER BY ft.created_at ASC, ft.id ASC
-      `).all<{
+      `).bind(citizenId).all<{
         id: number;
+        public_id: string;
         created_at: string;
         description: string;
-        category: string;
+        amount_minor: number;
         status: string;
-        amount_base_units: string;
+        transaction_type: string;
+        payment_method: string;
+        counterparty_name: string;
       }>();
 
       if (dbTx && dbTx.results && dbTx.results.length > 0) {
         transactionsList = dbTx.results.map((row, index) => {
           const fallbackTx = CONSOLIDATED_REPORT_TRANSACTIONS[index] || CONSOLIDATED_REPORT_TRANSACTIONS[0];
-          const valInReais = row.amount_base_units ? Math.round(Number(row.amount_base_units) / 100) : 0;
+          const valInReais = Math.round(row.amount_minor / 100);
           return {
             ...fallbackTx,
-            id: `tx_${String(index + 1).padStart(3, '0')}`,
+            id: row.public_id || `tx_${String(index + 1).padStart(3, '0')}`,
             created_at: row.created_at || fallbackTx.created_at,
             amount: valInReais,
             base_amount: valInReais,
-            category: row.category || fallbackTx.category,
-            status: row.status === 'completed' ? 'confirmed' : row.status === 'failed' ? 'failed' : 'confirmed',
+            counterparty_name: row.counterparty_name || fallbackTx.counterparty_name,
+            payment_method: row.payment_method || fallbackTx.payment_method,
+            status: row.status === 'settled' || row.status === 'confirmed' ? 'confirmed' : 'failed',
           };
         });
       }

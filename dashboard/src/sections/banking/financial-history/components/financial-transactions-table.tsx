@@ -206,8 +206,8 @@ function FinancialTransactionsTableRow({ row }: FinancialTransactionsTableRowPro
             />
           </Tooltip>
         )}
-        {row.status === 'failed' && (
-          <Tooltip title="Falhou" placement="top">
+        {(row.status === 'failed' || row.amount === 0 || row.category === 'Falta de Pagamento') && (
+          <Tooltip title="Falta de Pagamento" placement="top">
             <Iconify
               icon={'solar:close-circle-bold-duotone' as any}
               width={24}

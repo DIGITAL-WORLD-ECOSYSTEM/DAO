@@ -136,7 +136,7 @@ export function FinancialHistoryView() {
 
       {/* Documento de Impressão (Só aparece no @media print) */}
       {profile && (
-        <FinancialHistoryPrint transactions={dataFiltered} />
+        <FinancialHistoryPrint transactions={dataFiltered} profile={profileToRender} />
       )}
     </>
   );

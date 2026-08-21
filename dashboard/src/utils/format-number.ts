@@ -26,8 +26,8 @@ export function fNumber(inputValue: InputNumberValue, options?: Options) {
   const number = processInput(inputValue);
   if (number === null) return '';
 
-  const fm = new Intl.NumberFormat(locale.code, {
-    minimumFractionDigits: 0,
+  const fm = new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
     ...options,
   }).format(number);
