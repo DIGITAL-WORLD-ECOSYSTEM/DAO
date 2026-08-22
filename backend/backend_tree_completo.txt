@@ -1,0 +1,396 @@
+.
+├── public
+│   ├── assets
+│   │   └── images
+│   │       └── avatars
+│   │           └── synthetic
+│   │               ├── arthur_guimaraes.png
+│   │               ├── carolina_alves.png
+│   │               ├── eleonora_bittencourt.png
+│   │               ├── felipe_rios.png
+│   │               ├── helena_moraes.png
+│   │               ├── isabella_viana.png
+│   │               ├── leonardo_ferraz.png
+│   │               ├── livia_guedes.png
+│   │               ├── rafael_costa.png
+│   │               └── thiago_mendes.png
+│   ├── css
+│   │   └── style.css
+│   ├── icons
+│   │   ├── android-chrome-192x192.png
+│   │   ├── android-chrome-512x512.png
+│   │   ├── apple-touch-icon.png
+│   │   ├── favicon-16x16.png
+│   │   └── favicon-32x32.png
+│   ├── img
+│   │   └── social-preview.png
+│   ├── js
+│   │   └── dashboard.js
+│   ├── favicon.ico
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── site.webmanifest
+├── src
+│   ├── application
+│   │   ├── dto
+│   │   │   ├── IdentityAssertion.ts
+│   │   │   ├── IdentityResolutionResult.ts
+│   │   │   └── TransactionContext.ts
+│   │   └── ports
+│   │       ├── input
+│   │       │   └── IHttp.ts
+│   │       ├── output
+│   │       │   ├── finance
+│   │       │   │   └── ITreasuryRepository.ts
+│   │       │   ├── IAccountRepository.ts
+│   │       │   ├── ICitizenRepository.ts
+│   │       │   ├── IClock.ts
+│   │       │   ├── IDidIdentityRepository.ts
+│   │       │   ├── IEventBus.ts
+│   │       │   ├── IExternalIdentityRepository.ts
+│   │       │   ├── IIdentityResolverPort.ts
+│   │       │   ├── INotificationPort.ts
+│   │       │   ├── INotificationRepository.ts
+│   │       │   ├── IOutboxRepository.ts
+│   │       │   ├── IPasskeyIdentityRepository.ts
+│   │       │   ├── IPasswordResetRepository.ts
+│   │       │   ├── ISecurityAuditPort.ts
+│   │       │   ├── ISessionRepository.ts
+│   │       │   ├── ITransactionRepository.ts
+│   │       │   ├── IUnitOfWork.ts
+│   │       │   ├── IWalletIdentityRepository.ts
+│   │       │   └── IWalletRepository.ts
+│   │       └── security
+│   │           ├── IJwtService.ts
+│   │           └── IPasswordHasher.ts
+│   ├── db
+│   │   ├── authentication
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── authorization
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── civil-identity
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── communication
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── compliance
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── contracts
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── contributions
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── finance
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── governance
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── infrastructure
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── integrations
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── migrations
+│   │   │   ├── 0002_add_domain_columns.up.sql
+│   │   │   └── 0003_reconcile_account_10_balance.sql
+│   │   ├── organizations
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── real-estate
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── security
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── social
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── ssi
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── user
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── web3
+│   │   │   ├── relations.ts
+│   │   │   └── tables.ts
+│   │   ├── constants.ts
+│   │   ├── index.ts
+│   │   ├── schema.ts
+│   │   ├── seed.sql
+│   │   └── seed_treasury_report.sql
+│   ├── domains
+│   │   ├── citizens
+│   │   │   ├── controllers
+│   │   │   │   └── CitizenController.ts
+│   │   │   ├── entities
+│   │   │   │   ├── CitizenEvents.ts
+│   │   │   │   └── Citizen.ts
+│   │   │   └── usecases
+│   │   │       ├── GetCitizenProfileUseCase.test.ts
+│   │   │       ├── GetCitizenProfileUseCase.ts
+│   │   │       ├── SuspendCitizenUseCase.test.ts
+│   │   │       ├── SuspendCitizenUseCase.ts
+│   │   │       ├── UpdateCitizenProfileUseCase.test.ts
+│   │   │       ├── UpdateCitizenProfileUseCase.ts
+│   │   │       ├── VerifyCitizenUseCase.test.ts
+│   │   │       └── VerifyCitizenUseCase.ts
+│   │   ├── identity
+│   │   │   ├── controllers
+│   │   │   │   └── IdentityController.ts
+│   │   │   ├── entities
+│   │   │   │   └── Account.ts
+│   │   │   └── usecases
+│   │   │       ├── AuthenticateAccountUseCase.test.ts
+│   │   │       ├── AuthenticateAccountUseCase.ts
+│   │   │       ├── ChangePasswordUseCase.test.ts
+│   │   │       ├── ChangePasswordUseCase.ts
+│   │   │       ├── IssueSessionUseCase.ts
+│   │   │       ├── LinkExternalIdentityUseCase.ts
+│   │   │       ├── RegisterAccountUseCase.test.ts
+│   │   │       ├── RegisterAccountUseCase.ts
+│   │   │       ├── RequestPasswordResetUseCase.ts
+│   │   │       ├── ResetPasswordUseCase.test.ts
+│   │   │       ├── ResetPasswordUseCase.ts
+│   │   │       ├── UnlinkExternalIdentityUseCase.ts
+│   │   │       └── VerifyExternalIdentityUseCase.ts
+│   │   ├── notifications
+│   │   │   ├── controllers
+│   │   │   │   └── NotificationController.ts
+│   │   │   ├── entities
+│   │   │   │   ├── Notification.test.ts
+│   │   │   │   └── Notification.ts
+│   │   │   └── usecases
+│   │   │       ├── CountUnreadNotificationsUseCase.ts
+│   │   │       ├── CreateNotificationUseCase.ts
+│   │   │       ├── ListNotificationsUseCase.ts
+│   │   │       ├── MarkAllNotificationsAsReadUseCase.ts
+│   │   │       ├── MarkNotificationAsReadUseCase.ts
+│   │   │       └── NotificationUseCases.test.ts
+│   │   └── treasury
+│   │       ├── controllers
+│   │       ├── entities
+│   │       │   └── TreasuryTransaction.ts
+│   │       └── usecases
+│   │           └── GetFinancialAnalyticsUseCase.ts
+│   ├── dto
+│   │   ├── chat.dto.ts
+│   │   ├── email-event.ts
+│   │   ├── normalize-email.ts
+│   │   └── queue-envelope.ts
+│   ├── events
+│   │   └── chat.events.ts
+│   ├── infrastructure
+│   │   ├── di
+│   │   │   ├── citizens_container.ts
+│   │   │   ├── identity_container.ts
+│   │   │   ├── notifications_container.ts
+│   │   │   └── treasury_container.ts
+│   │   ├── events
+│   │   │   ├── CloudflareQueueEventBus.ts
+│   │   │   ├── NullPublisher.ts
+│   │   │   └── OutboxProcessor.ts
+│   │   ├── http
+│   │   │   └── HonoAdapter.ts
+│   │   ├── identity
+│   │   │   └── CanonicalIdentityResolver.ts
+│   │   ├── mappers
+│   │   │   ├── AccountMapper.ts
+│   │   │   └── CitizenMapper.ts
+│   │   ├── notifications
+│   │   │   └── ResendNotificationAdapter.ts
+│   │   ├── persistence
+│   │   │   └── repositories
+│   │   │       └── finance
+│   │   │           └── D1TreasuryRepository.ts
+│   │   ├── repositories
+│   │   │   ├── AuthMethodCounterAdapter.ts
+│   │   │   ├── DidIdentityRepository.ts
+│   │   │   ├── DrizzleAccountRepository.test.ts
+│   │   │   ├── DrizzleAccountRepository.ts
+│   │   │   ├── DrizzleCitizenRepository.test.ts
+│   │   │   ├── DrizzleCitizenRepository.ts
+│   │   │   ├── DrizzleGovernanceRepository.test.ts
+│   │   │   ├── DrizzleGovernanceRepository.ts
+│   │   │   ├── DrizzleNotificationRepository.test.ts
+│   │   │   ├── DrizzleNotificationRepository.ts
+│   │   │   ├── DrizzleOutboxRepository.ts
+│   │   │   ├── DrizzlePasswordResetRepository.ts
+│   │   │   ├── DrizzleSessionRepository.test.ts
+│   │   │   ├── DrizzleSessionRepository.ts
+│   │   │   ├── DrizzleSsiRepository.test.ts
+│   │   │   ├── DrizzleSsiRepository.ts
+│   │   │   ├── DrizzleUnitOfWork.test.ts
+│   │   │   ├── DrizzleUnitOfWork.ts
+│   │   │   ├── DrizzleWalletRepository.test.ts
+│   │   │   ├── DrizzleWalletRepository.ts
+│   │   │   ├── ExternalIdentityRepository.ts
+│   │   │   ├── PasskeyIdentityRepository.ts
+│   │   │   └── WalletIdentityRepository.ts
+│   │   └── security
+│   │       ├── crypto
+│   │       │   └── PBKDF2PasswordHasher.ts
+│   │       ├── jwt
+│   │       │   └── JwtService.ts
+│   │       └── SecurityAuditAdapter.ts
+│   ├── interfaces
+│   │   └── http
+│   │       ├── controllers
+│   │       │   └── finance
+│   │       │       └── treasury.controller.ts
+│   │       └── routes
+│   │           └── finance
+│   │               ├── treasury.test.ts
+│   │               └── treasury.ts
+│   ├── middleware
+│   │   ├── auth_signature.test.ts
+│   │   ├── auth_signature.ts
+│   │   ├── correlation_id.ts
+│   │   ├── rate_limit.ts
+│   │   └── rbac.ts
+│   ├── __mocks__
+│   │   └── cloudflare-workers.ts
+│   ├── repositories
+│   │   ├── attachment.repository.ts
+│   │   ├── chat.repository.ts
+│   │   ├── email.repository.ts
+│   │   ├── event.repository.ts
+│   │   └── thread.repository.ts
+│   ├── routes
+│   │   ├── ai
+│   │   │   ├── pipeline-test.ts
+│   │   │   ├── publish.ts
+│   │   │   └── test.ts
+│   │   ├── core
+│   │   │   ├── citizens
+│   │   │   │   ├── citizens.test.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── identity
+│   │   │   │   ├── developer_ssh.test.ts
+│   │   │   │   ├── external.ts
+│   │   │   │   ├── identity.test.ts
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── local.test.ts
+│   │   │   │   ├── local.ts
+│   │   │   │   └── oauth.ts
+│   │   │   ├── notifications
+│   │   │   │   └── index.ts
+│   │   │   ├── compliance.test.ts
+│   │   │   ├── compliance.ts
+│   │   │   ├── health.test.ts
+│   │   │   ├── health.ts
+│   │   │   └── webhooks.ts
+│   │   ├── platform
+│   │   │   ├── chat.ts
+│   │   │   ├── devos-database.ts
+│   │   │   ├── devos.ts
+│   │   │   ├── email.ts
+│   │   │   ├── governance.ts
+│   │   │   ├── identity.test.ts
+│   │   │   ├── identity.ts
+│   │   │   ├── payments.ts
+│   │   │   └── storage.ts
+│   │   └── products
+│   │       ├── agro
+│   │       │   └── index.ts
+│   │       ├── exchange
+│   │       │   └── index.ts
+│   │       ├── real-estate
+│   │       │   ├── index.ts
+│   │       │   └── real-estate.test.ts
+│   │       ├── rwa
+│   │       │   └── index.ts
+│   │       └── blog.ts
+│   ├── services
+│   │   ├── ai
+│   │   │   ├── agents
+│   │   │   │   ├── AuditorAgent.ts
+│   │   │   │   ├── ObserverAgent.ts
+│   │   │   │   ├── VisualAgent.ts
+│   │   │   │   └── WriterAgent.ts
+│   │   │   ├── skills
+│   │   │   │   ├── formatter.ts
+│   │   │   │   └── search.ts
+│   │   │   ├── base.ts
+│   │   │   └── orchestrator.ts
+│   │   ├── chat
+│   │   │   └── chat.service.ts
+│   │   ├── email
+│   │   │   ├── providers
+│   │   │   │   ├── cloudflare-provider.ts
+│   │   │   │   ├── parser-provider.ts
+│   │   │   │   ├── provider.ts
+│   │   │   │   ├── resend-provider.ts
+│   │   │   │   ├── spam-provider.ts
+│   │   │   │   └── storage-provider.ts
+│   │   │   ├── services
+│   │   │   │   ├── attachment-service.ts
+│   │   │   │   ├── email-event.service.ts
+│   │   │   │   ├── inbound-service.ts
+│   │   │   │   ├── outbound-service.ts
+│   │   │   │   └── thread-service.ts
+│   │   │   └── index.ts
+│   │   ├── identity
+│   │   │   └── IdentityNotificationService.ts
+│   │   ├── audit.ts
+│   │   └── market.ts
+│   ├── shared
+│   │   └── kernel
+│   │       ├── BaseEntity.ts
+│   │       ├── DomainError.ts
+│   │       ├── DomainEvent.ts
+│   │       ├── IClock.ts
+│   │       ├── IIdGenerator.ts
+│   │       ├── Result.ts
+│   │       ├── Specification.ts
+│   │       └── ValueObject.ts
+│   ├── types
+│   │   ├── bindings.d.ts
+│   │   └── manifest.d.ts
+│   ├── utils
+│   │   ├── auth.ts
+│   │   ├── crypto.ts
+│   │   ├── did_resolver.ts
+│   │   ├── format.ts
+│   │   ├── logger.ts
+│   │   ├── response.ts
+│   │   ├── ssh_crypto.ts
+│   │   ├── timing_safe.ts
+│   │   └── totp_crypto.ts
+│   ├── validators
+│   │   ├── email.ts
+│   │   └── real-estate.ts
+│   ├── views
+│   │   └── dashboard.ts
+│   ├── workers
+│   │   ├── durable
+│   │   │   └── chat-room-do.ts
+│   │   ├── handlers
+│   │   │   ├── inbound.handler.ts
+│   │   │   └── outbound.handler.ts
+│   │   ├── chat-queue.worker.ts
+│   │   ├── email.worker.ts
+│   │   └── queue.worker.ts
+│   └── index.ts
+├── backend_tree_completo.txt
+├── CANONICAL_INTEGRITY_V16.md
+├── .dev.vars
+├── drizzle.config.ts
+├── .gitignore
+├── LICENSE
+├── package.json
+├── pnpm-lock.yaml
+├── tsconfig.json
+├── USER_ARCHITECTURE.md
+├── vitest.config.ts
+├── worker-configuration.d.ts
+└── wrangler.toml
+
+109 directories, 284 files

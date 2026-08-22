@@ -5,7 +5,7 @@ import { ListNotificationsUseCase } from '../../domains/notifications/usecases/L
 import { CountUnreadNotificationsUseCase } from '../../domains/notifications/usecases/CountUnreadNotificationsUseCase';
 import { MarkNotificationAsReadUseCase } from '../../domains/notifications/usecases/MarkNotificationAsReadUseCase';
 import { MarkAllNotificationsAsReadUseCase } from '../../domains/notifications/usecases/MarkAllNotificationsAsReadUseCase';
-import { NotificationController } from '../../domains/notifications/controllers/NotificationController';
+import { NotificationController } from '../../interfaces/http/controllers/notifications/notification.controller';
 
 export async function setupNotificationsDI(c: Context) {
   const db = c.get('db' as any);

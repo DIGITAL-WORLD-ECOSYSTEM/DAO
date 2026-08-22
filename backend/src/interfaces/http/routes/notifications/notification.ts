@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { setupNotificationsDI } from '../../../infrastructure/di/notifications_container';
-import { verifyRole } from '../../../middleware/rbac';
-import { rateLimit } from '../../../middleware/rate_limit';
+import { setupNotificationsDI } from '../../../../infrastructure/di/notifications_container';
+import { verifyRole } from '../../../../middleware/rbac';
+import { rateLimit } from '../../../../middleware/rate_limit';
 
 const notificationsRouter = new Hono();
 
@@ -69,4 +69,5 @@ notificationsRouter.put('/read-all', async (c) => {
   }
 });
 
+export { notificationsRouter };
 export default notificationsRouter;

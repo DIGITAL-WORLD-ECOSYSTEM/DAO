@@ -1,8 +1,8 @@
-import { CreateNotificationUseCase, CreateNotificationRequest } from '../usecases/CreateNotificationUseCase';
-import { ListNotificationsUseCase, ListNotificationsRequest } from '../usecases/ListNotificationsUseCase';
-import { MarkNotificationAsReadUseCase, MarkNotificationAsReadRequest } from '../usecases/MarkNotificationAsReadUseCase';
-import { MarkAllNotificationsAsReadUseCase, MarkAllNotificationsAsReadRequest } from '../usecases/MarkAllNotificationsAsReadUseCase';
-import { CountUnreadNotificationsUseCase, CountUnreadNotificationsRequest } from '../usecases/CountUnreadNotificationsUseCase';
+import { CreateNotificationUseCase, CreateNotificationRequest } from '../../../../domains/notifications/usecases/CreateNotificationUseCase';
+import { ListNotificationsUseCase, ListNotificationsRequest } from '../../../../domains/notifications/usecases/ListNotificationsUseCase';
+import { MarkNotificationAsReadUseCase, MarkNotificationAsReadRequest } from '../../../../domains/notifications/usecases/MarkNotificationAsReadUseCase';
+import { MarkAllNotificationsAsReadUseCase, MarkAllNotificationsAsReadRequest } from '../../../../domains/notifications/usecases/MarkAllNotificationsAsReadUseCase';
+import { CountUnreadNotificationsUseCase, CountUnreadNotificationsRequest } from '../../../../domains/notifications/usecases/CountUnreadNotificationsUseCase';
 
 export interface HttpRequest {
   body?: any;
