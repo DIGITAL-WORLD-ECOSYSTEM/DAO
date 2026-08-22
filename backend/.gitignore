@@ -130,3 +130,6 @@ lcov-report/
 # ------------------------------------------------------
 .env.ci
 .env.build
+
+# Artefatos de Diagnóstico
+backend_tree_completo.txt
