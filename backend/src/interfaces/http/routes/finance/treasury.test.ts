@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { app } from '../../index';
+import { app } from '../../../../index';
 
 const mockEnv = {
   ENVIRONMENT: 'test',
@@ -24,8 +24,8 @@ const mockEnv = {
 
 const mockCtx = { waitUntil: () => {}, passThroughOnException: () => {} } as any;
 
-describe('Treasury Platform Route (/api/platform/treasury)', () => {
-  it('should return 200 OK for treasury root endpoint', async () => {
+describe('Canonical Treasury Route (/api/platform/treasury)', () => {
+  it('should return 200 OK for canonical treasury root endpoint', async () => {
     const res = await app.fetch(
       new Request('http://localhost/api/platform/treasury'),
       mockEnv,
@@ -37,7 +37,7 @@ describe('Treasury Platform Route (/api/platform/treasury)', () => {
     expect(json.client.client_name).toBe('Andressa de Lima Ferreira');
   });
 
-  it('should return analytics data populated with report 2026-07-PM4', async () => {
+  it('should return analytics data populated with report 2026-07-PM4 with exact parity', async () => {
     const res = await app.fetch(
       new Request('http://localhost/api/platform/treasury/analytics'),
       mockEnv,
@@ -48,6 +48,19 @@ describe('Treasury Platform Route (/api/platform/treasury)', () => {
     expect(json.success).toBe(true);
     expect(json.data.summary.totalInflow).toBe(36623); // R$ 36.623,00 (Total Auditado Reconciliado)
     expect(json.data.summary.outstandingBalance).toBe(28377); // R$ 28.377,00 (Saldo Devedor Reconciliado)
+    expect(json.data.transactions.length).toBe(45);
+  });
+
+  it('should return citizen ledger data with associate details', async () => {
+    const res = await app.fetch(
+      new Request('http://localhost/api/platform/treasury/citizen/10/ledger'),
+      mockEnv,
+      mockCtx
+    );
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as any;
+    expect(json.success).toBe(true);
+    expect(json.data.associate.name).toBe('Andressa de Lima Ferreira');
     expect(json.data.transactions.length).toBe(45);
   });
 });

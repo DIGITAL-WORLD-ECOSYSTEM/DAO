@@ -1,11 +1,9 @@
 import { IUnitOfWork, IRepositoryFactory } from '../../application/ports/output/IUnitOfWork';
 import { IAccountRepository } from '../../application/ports/output/IAccountRepository';
 import { ICitizenRepository } from '../../application/ports/output/ICitizenRepository';
-import { ITreasuryRepository } from '../../application/ports/output/ITreasuryRepository';
 import { Result } from '../../shared/kernel/Result';
 import { DrizzleAccountRepository } from './DrizzleAccountRepository';
 import { DrizzleCitizenRepository } from './DrizzleCitizenRepository';
-import { DrizzleTreasuryRepository } from './DrizzleTreasuryRepository';
 import { IPasswordResetRepository } from '../../application/ports/output/IPasswordResetRepository';
 import { DrizzlePasswordResetRepository } from './DrizzlePasswordResetRepository';
 import { IOutboxRepository } from '../../application/ports/output/IOutboxRepository';
@@ -24,10 +22,6 @@ class DrizzleRepositoryFactory implements IRepositoryFactory {
 
   getCitizenRepository(): ICitizenRepository {
     return new DrizzleCitizenRepository(this.tx, this.getOutboxRepository());
-  }
-
-  getTreasuryRepository(): ITreasuryRepository {
-    return new DrizzleTreasuryRepository(this.tx);
   }
 
   getPasswordResetRepository(): IPasswordResetRepository {

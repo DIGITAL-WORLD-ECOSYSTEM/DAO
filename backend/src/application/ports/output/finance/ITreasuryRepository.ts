@@ -19,4 +19,8 @@ export interface TreasuryTransactionDTO {
 
 export interface ITreasuryRepository {
   findTransactionsByUserId(userId: number): Promise<TreasuryTransactionDTO[]>;
+  getSummaryStats?(year?: string): Promise<any>;
+  getMonthlyTrend?(year?: string): Promise<any>;
+  getLatestTransactions?(year?: string): Promise<any[]>;
+  getAvailableYears?(): Promise<any[]>;
 }

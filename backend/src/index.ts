@@ -38,7 +38,7 @@ import emailRouter from './routes/platform/email';
 import chatRouter from './routes/platform/chat';
 import devosRouter from './routes/platform/devos';
 import devosDatabaseRouter from './routes/platform/devos-database';
-import treasuryRouter from './routes/platform/treasury';
+import { treasuryRouter as financeTreasuryRouter } from './interfaces/http/routes/finance/treasury';
 import identityPlatformRouter from './routes/platform/identity';
 
 // --- PRODUCT MODULES ---
@@ -239,7 +239,7 @@ app.route('/api/core/compliance', complianceRouter);
 app.route('/api/core/health', healthRouter);
 app.route('/api/core/webhooks', webhooksRouter);
 app.route('/api/platform/payments', paymentsRouter);
-app.route('/api/platform/treasury', treasuryRouter);
+app.route('/api/platform/treasury', financeTreasuryRouter);
 app.route('/api/platform/identity', identityPlatformRouter);
 app.route('/api/platform/storage', storageRouter);
 app.route('/api/products/agro', agroRouter);

@@ -1,4 +1,4 @@
-import { ITreasuryRepository } from '../../../application/ports/output/ITreasuryRepository';
+import { ITreasuryRepository } from '../../../application/ports/output/finance/ITreasuryRepository';
 
 export class GetFinancialAnalyticsUseCase {
   constructor(private repo: ITreasuryRepository) {}

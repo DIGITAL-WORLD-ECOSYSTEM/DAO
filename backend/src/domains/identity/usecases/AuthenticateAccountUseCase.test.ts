@@ -23,7 +23,6 @@ describe('AuthenticateAccountUseCase (BDD)', () => {
     mockFactory = {
       getAccountRepository: vi.fn(() => mockAccountRepo),
       getCitizenRepository: vi.fn(),
-      getTreasuryRepository: vi.fn(),
     };
 
     mockUow = {
