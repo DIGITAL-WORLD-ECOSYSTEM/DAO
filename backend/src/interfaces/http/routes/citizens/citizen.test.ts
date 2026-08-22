@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import citizens from './index';
+import citizens from './citizen';
 
 // Mock DB Simples
 const makeD1Mock = (mockResolvedValue: any = []) => {
@@ -26,7 +26,6 @@ const baseEnv = {
 describe('API Core - Citizens Domain (/api/core/citizens)', () => {
   describe('GET /profile/:accountId', () => {
     it('Cenário 1: Retorna perfil (E2E Integration)', async () => {
-      // Configuramos o mock para retornar um array de 1 citizen
       const dbMock = makeD1Mock([{
         id: 1,
         user_id: 1,
@@ -53,19 +52,12 @@ describe('API Core - Citizens Domain (/api/core/citizens)', () => {
       );
 
       const body = await res.json() as any;
-      
-      // Quando mockamos D1 dessa forma simplificada, o drizzle query (usando select, from, where)
-      // pode quebrar se não mockarmos as funcoes internas do Drizzle.
-      // Entretanto, o objetivo desse teste de integração é validar as camadas Hono -> Controller -> UseCase.
-      // Para fins do mock D1 que não suporta Drizzle, esperamos que ele não dê erro 500 ou que devolva os dados do MockDb.
-      
       expect(res.status).toBeLessThan(500); 
     });
   });
 
   describe('POST /profile/:accountId', () => {
     it('Cenário 2: Atualiza perfil via DTO (E2E Integration)', async () => {
-      // Configuramos o mock para retornar um array de 1 citizen
       const dbMock = makeD1Mock([{
         id: 1,
         user_id: 1,

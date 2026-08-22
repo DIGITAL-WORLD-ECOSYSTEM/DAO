@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { setupCitizensDI } from '../../../infrastructure/di/citizens_container';
+import { setupCitizensDI } from '../../../../infrastructure/di/citizens_container';
 
 const citizens = new Hono<{ Bindings: any }>();
 
@@ -79,4 +79,5 @@ citizens.post('/:accountId/suspend', async (c) => {
   }
 });
 
+export { citizens as citizensRouter };
 export default citizens;

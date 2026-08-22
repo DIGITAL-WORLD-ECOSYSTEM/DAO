@@ -4,7 +4,7 @@ import { GetCitizenProfileUseCase } from '../../domains/citizens/usecases/GetCit
 import { UpdateCitizenProfileUseCase } from '../../domains/citizens/usecases/UpdateCitizenProfileUseCase';
 import { VerifyCitizenUseCase } from '../../domains/citizens/usecases/VerifyCitizenUseCase';
 import { SuspendCitizenUseCase } from '../../domains/citizens/usecases/SuspendCitizenUseCase';
-import { CitizenController } from '../../domains/citizens/controllers/CitizenController';
+import { CitizenController } from '../../interfaces/http/controllers/citizens/citizen.controller';
 
 export async function setupCitizensDI(c: Context) {
   const db = c.get('db' as any);

@@ -21,7 +21,7 @@ import { eq } from 'drizzle-orm';
 
 // --- CORE MODULES ---
 import authRouter from './routes/core/identity';
-import citizensRouter from './routes/core/citizens';
+import { citizensRouter as canonicalCitizensRouter } from './interfaces/http/routes/citizens/citizen';
 import healthRouter from './routes/core/health';
 import webhooksRouter from './routes/core/webhooks';
 import complianceRouter from './routes/core/compliance';
@@ -233,7 +233,7 @@ app.get('/api/stats', async (c) => {
 // =================================================================
 
 app.route('/api/core/identity', authRouter);
-app.route('/api/core/citizens', citizensRouter);
+app.route('/api/core/citizens', canonicalCitizensRouter);
 app.route('/api/core/notifications', canonicalNotificationsRouter);
 app.route('/api/core/compliance', complianceRouter);
 app.route('/api/core/health', healthRouter);

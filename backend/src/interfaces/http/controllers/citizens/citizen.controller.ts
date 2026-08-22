@@ -1,9 +1,9 @@
-import { GetCitizenProfileUseCase } from '../usecases/GetCitizenProfileUseCase';
-import { UpdateCitizenProfileUseCase } from '../usecases/UpdateCitizenProfileUseCase';
-import { VerifyCitizenUseCase } from '../usecases/VerifyCitizenUseCase';
-import { SuspendCitizenUseCase } from '../usecases/SuspendCitizenUseCase';
-import { HttpRequest, HttpResponse } from '../../../application/ports/input/IHttp';
-import { SuspensionReason } from '../entities/Citizen';
+import { GetCitizenProfileUseCase } from '../../../../domains/citizens/usecases/GetCitizenProfileUseCase';
+import { UpdateCitizenProfileUseCase } from '../../../../domains/citizens/usecases/UpdateCitizenProfileUseCase';
+import { VerifyCitizenUseCase } from '../../../../domains/citizens/usecases/VerifyCitizenUseCase';
+import { SuspendCitizenUseCase } from '../../../../domains/citizens/usecases/SuspendCitizenUseCase';
+import { HttpRequest, HttpResponse } from '../../../../application/ports/input/IHttp';
+import { SuspensionReason } from '../../../../domains/citizens/entities/Citizen';
 
 export class CitizenController {
   constructor(
